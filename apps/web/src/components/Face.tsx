@@ -34,10 +34,12 @@ export function Face({
   helper,
   mood = "idle",
   sizePx = 96,
+  track = true,
 }: {
   helper: Helper;
   mood?: Mood;
   sizePx?: number;
+  track?: boolean;
 }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const pupilsRef = useRef<SVGGElement>(null);
@@ -47,6 +49,7 @@ export function Face({
 
   // Зрачки следят за курсором.
   useEffect(() => {
+    if (!track) return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
     let frame = 0;
     function onMove(e: MouseEvent) {
@@ -72,7 +75,7 @@ export function Face({
       cancelAnimationFrame(frame);
       window.removeEventListener("mousemove", onMove);
     };
-  }, []);
+  }, [track]);
 
   return (
     <svg

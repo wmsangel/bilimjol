@@ -42,7 +42,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <main className="mx-auto w-full max-w-5xl flex-1 px-6">
         <section className="flex flex-col items-center py-14 text-center sm:py-20">
           {/* Парящие персонажи */}
-          <div className="mb-8 flex gap-3 sm:gap-4">
+          <div className="mb-8 flex max-w-2xl flex-wrap justify-center gap-3 sm:gap-4">
             {helpers.map((h, i) => (
               <span
                 key={h.id}
@@ -50,7 +50,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
                   "animate-float flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br text-2xl shadow-md sm:h-14 sm:w-14 sm:text-3xl " +
                   helperGradient[h.color]
                 }
-                style={{ animationDelay: `${i * 0.25}s` }}
+                style={{ animationDelay: `${i * 0.2}s` }}
               >
                 {h.emoji}
               </span>
