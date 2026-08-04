@@ -8,15 +8,17 @@ export interface Helper {
   name: LocalizedText;
   /** Акцентный цвет персонажа (Tailwind-friendly hue name). */
   color: "orange" | "amber" | "violet" | "pink" | "sky" | "emerald";
+  /** Форма ушек для рисованного лица. */
+  ear: "pointy" | "round" | "none";
 }
 
 export const helpers: Helper[] = [
-  { id: "fox", emoji: "🦊", name: { ru: "Лисёнок", ky: "Түлкү" }, color: "orange" },
-  { id: "bear", emoji: "🐻", name: { ru: "Мишка", ky: "Аюу" }, color: "amber" },
-  { id: "owl", emoji: "🦉", name: { ru: "Совёнок", ky: "Үкү" }, color: "violet" },
-  { id: "cat", emoji: "🐱", name: { ru: "Котик", ky: "Мышык" }, color: "pink" },
-  { id: "penguin", emoji: "🐧", name: { ru: "Пингвинчик", ky: "Пингвин" }, color: "sky" },
-  { id: "frog", emoji: "🐸", name: { ru: "Лягушонок", ky: "Бака" }, color: "emerald" },
+  { id: "fox", emoji: "🦊", name: { ru: "Лисёнок", ky: "Түлкү" }, color: "orange", ear: "pointy" },
+  { id: "bear", emoji: "🐻", name: { ru: "Мишка", ky: "Аюу" }, color: "amber", ear: "round" },
+  { id: "owl", emoji: "🦉", name: { ru: "Совёнок", ky: "Үкү" }, color: "violet", ear: "pointy" },
+  { id: "cat", emoji: "🐱", name: { ru: "Котик", ky: "Мышык" }, color: "pink", ear: "pointy" },
+  { id: "penguin", emoji: "🐧", name: { ru: "Пингвинчик", ky: "Пингвин" }, color: "sky", ear: "none" },
+  { id: "frog", emoji: "🐸", name: { ru: "Лягушонок", ky: "Бака" }, color: "emerald", ear: "round" },
 ];
 
 export function getHelper(id: string | null | undefined): Helper | undefined {

@@ -19,3 +19,13 @@ export const helperGradient: Record<Helper["color"], string> = {
   sky: "from-sky-300 to-blue-400",
   emerald: "from-emerald-300 to-green-400",
 };
+
+// Hex-цвета для рисованного SVG-лица: [светлый, тёмный] для градиента головы.
+export const helperFace: Record<Helper["color"], { light: string; dark: string }> = {
+  orange: { light: "#fdba74", dark: "#f97316" },
+  amber: { light: "#fcd34d", dark: "#f59e0b" },
+  violet: { light: "#c4b5fd", dark: "#a78bfa" },
+  pink: { light: "#f9a8d4", dark: "#f472b6" },
+  sky: { light: "#7dd3fc", dark: "#38bdf8" },
+  emerald: { light: "#6ee7b7", dark: "#34d399" },
+};
