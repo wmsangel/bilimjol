@@ -2,7 +2,7 @@
 
 export type Locale = "ru" | "ky";
 
-export type Subject = "logic" | "math";
+export type Subject = "logic" | "math" | "reading";
 
 /** Уровень сложности: 1 — лёгкий, 2 — средний, 3 — сложный. */
 export type Difficulty = 1 | 2 | 3;
@@ -16,6 +16,8 @@ export type LocalizedText = Record<Locale, string>;
 interface TaskBase {
   id: string;
   subject: Subject;
+  /** Идентификатор темы, к которой относится задание. */
+  topic: string;
   grade: Grade;
   difficulty: Difficulty;
   /** Условие задачи. */
@@ -62,11 +64,12 @@ export type Task =
 
 export type TaskType = Task["type"];
 
-export const SUBJECTS: readonly Subject[] = ["logic", "math"] as const;
+export const SUBJECTS: readonly Subject[] = ["logic", "math", "reading"] as const;
 
 export const subjectLabels: Record<Subject, LocalizedText> = {
   logic: { ru: "Логика", ky: "Логика" },
   math: { ru: "Математика", ky: "Математика" },
+  reading: { ru: "Чтение", ky: "Окуу" },
 };
 
 /**

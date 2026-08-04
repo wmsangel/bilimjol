@@ -1,20 +1,18 @@
 import type { Task } from "./types";
 
-// Стартовый набор заданий для MVP: 1–2 класс, логика + математика, ru/ky.
-// Часть заданий бесплатна (free: true), остальные — по подписке.
+// Задания сгруппированы по темам (topic). Часть бесплатна (free: true).
 export const tasks: Task[] = [
+  // ── Логика · Найди лишнее ──────────────────────────────
   {
     id: "log-1-1",
     type: "single_choice",
     subject: "logic",
+    topic: "log-odd",
     grade: 1,
     difficulty: 1,
     free: true,
     illustration: "🍎 🍐 🥕 🍌",
-    prompt: {
-      ru: "Что здесь лишнее?",
-      ky: "Бул жерде эмне ашык?",
-    },
+    prompt: { ru: "Что здесь лишнее?", ky: "Бул жерде эмне ашык?" },
     options: [
       { ru: "Яблоко", ky: "Алма" },
       { ru: "Груша", ky: "Алмурут" },
@@ -28,27 +26,55 @@ export const tasks: Task[] = [
     },
   },
   {
-    id: "math-1-1",
-    type: "number_input",
-    subject: "math",
+    id: "log-odd-2",
+    type: "single_choice",
+    subject: "logic",
+    topic: "log-odd",
     grade: 1,
     difficulty: 1,
     free: true,
-    illustration: "🍎🍎 ➕ 🍎🍎🍎",
-    prompt: {
-      ru: "Сколько будет 2 + 3?",
-      ky: "2 + 3 канчага барабар?",
-    },
-    answer: 5,
+    illustration: "🐶 🐱 🪑 🐰",
+    prompt: { ru: "Что здесь лишнее?", ky: "Бул жерде эмне ашык?" },
+    options: [
+      { ru: "Собака", ky: "Ит" },
+      { ru: "Кошка", ky: "Мышык" },
+      { ru: "Стол", ky: "Үстөл" },
+      { ru: "Заяц", ky: "Коён" },
+    ],
+    correctIndex: 2,
     explanation: {
-      ru: "К двум прибавляем три — получается пять.",
-      ky: "Экиге үчтү кошсок — беш болот.",
+      ru: "Стол — это мебель, а остальные — животные.",
+      ky: "Үстөл — эмерек, калгандары — жаныбарлар.",
     },
   },
+  {
+    id: "log-odd-3",
+    type: "single_choice",
+    subject: "logic",
+    topic: "log-odd",
+    grade: 2,
+    difficulty: 2,
+    free: false,
+    prompt: { ru: "Кто здесь лишний?", ky: "Бул жерде эмне ашык?" },
+    options: [
+      { ru: "Роза", ky: "Роза" },
+      { ru: "Ромашка", ky: "Түймөгүл" },
+      { ru: "Тюльпан", ky: "Кызгалдак" },
+      { ru: "Яблоко", ky: "Алма" },
+    ],
+    correctIndex: 3,
+    explanation: {
+      ru: "Яблоко — это фрукт, а остальные — цветы.",
+      ky: "Алма — мөмө, калгандары — гүлдөр.",
+    },
+  },
+
+  // ── Логика · Закономерности ────────────────────────────
   {
     id: "log-1-2",
     type: "single_choice",
     subject: "logic",
+    topic: "log-seq",
     grade: 1,
     difficulty: 1,
     free: true,
@@ -68,34 +94,62 @@ export const tasks: Task[] = [
     },
   },
   {
-    id: "math-1-2",
-    type: "number_input",
-    subject: "math",
+    id: "ord-logic-1",
+    type: "ordering",
+    subject: "logic",
+    topic: "log-seq",
     grade: 1,
     difficulty: 2,
     free: true,
-    illustration: "🍬🍬🍬🍬🍬🍬",
     prompt: {
-      ru: "У Ани было 6 конфет. 2 она съела. Сколько осталось?",
-      ky: "Анада 6 конфет бар эле. 2өөнү жеди. Канчасы калды?",
+      ru: "Расставь по размеру: от маленького к большому",
+      ky: "Өлчөмү боюнча кой: кичинесинен чоңуна",
     },
-    answer: 4,
+    items: [
+      { ru: "🐜", ky: "🐜" },
+      { ru: "🐱", ky: "🐱" },
+      { ru: "🐶", ky: "🐶" },
+      { ru: "🐘", ky: "🐘" },
+    ],
     explanation: {
-      ru: "Из шести вычитаем две — остаётся четыре.",
-      ky: "Алтыдан экини кемитсек — төртөө калат.",
+      ru: "Муравей меньше всех, а слон — самый большой.",
+      ky: "Кумурска эң кичине, пил эң чоң.",
     },
   },
   {
-    id: "log-2-1",
+    id: "log-seq-2",
     type: "single_choice",
     subject: "logic",
+    topic: "log-seq",
     grade: 2,
     difficulty: 2,
     free: false,
     prompt: {
-      ru: "Какое число лишнее: 2, 4, 7, 8?",
-      ky: "Кайсы сан ашык: 2, 4, 7, 8?",
+      ru: "Продолжи ряд: 🐱 🐶 🐱 🐶 …",
+      ky: "Катарды улант: 🐱 🐶 🐱 🐶 …",
     },
+    options: [
+      { ru: "🐱", ky: "🐱" },
+      { ru: "🐶", ky: "🐶" },
+      { ru: "🐰", ky: "🐰" },
+    ],
+    correctIndex: 0,
+    explanation: {
+      ru: "Кошка и собака чередуются, дальше снова кошка.",
+      ky: "Мышык менен ит алмашат, кийинки — кайра мышык.",
+    },
+  },
+
+  // ── Логика · Логика и сравнение ────────────────────────
+  {
+    id: "log-2-1",
+    type: "single_choice",
+    subject: "logic",
+    topic: "log-think",
+    grade: 2,
+    difficulty: 2,
+    free: true,
+    prompt: { ru: "Какое число лишнее: 2, 4, 7, 8?", ky: "Кайсы сан ашык: 2, 4, 7, 8?" },
     options: [
       { ru: "2", ky: "2" },
       { ru: "4", ky: "4" },
@@ -109,26 +163,10 @@ export const tasks: Task[] = [
     },
   },
   {
-    id: "math-2-1",
-    type: "number_input",
-    subject: "math",
-    grade: 2,
-    difficulty: 2,
-    free: false,
-    prompt: {
-      ru: "Продолжи ряд: 2, 4, 6, 8, ?",
-      ky: "Катарды улант: 2, 4, 6, 8, ?",
-    },
-    answer: 10,
-    explanation: {
-      ru: "Каждое следующее число на 2 больше предыдущего.",
-      ky: "Ар бир кийинки сан мурункусунан 2ге чоң.",
-    },
-  },
-  {
     id: "log-2-2",
     type: "single_choice",
     subject: "logic",
+    topic: "log-think",
     grade: 2,
     difficulty: 3,
     free: false,
@@ -148,26 +186,130 @@ export const tasks: Task[] = [
     },
   },
   {
+    id: "match-logic-1",
+    type: "match_pairs",
+    subject: "logic",
+    topic: "log-think",
+    grade: 2,
+    difficulty: 2,
+    free: false,
+    prompt: { ru: "Соедини противоположности", ky: "Карама-каршылыктарды дал келтир" },
+    left: [
+      { ru: "День", ky: "Күн" },
+      { ru: "Лето", ky: "Жай" },
+    ],
+    right: [
+      { ru: "Ночь", ky: "Түн" },
+      { ru: "Зима", ky: "Кыш" },
+    ],
+    explanation: { ru: "День — ночь, лето — зима.", ky: "Күн — түн, жай — кыш." },
+  },
+
+  // ── Математика · Счёт ──────────────────────────────────
+  {
+    id: "math-1-1",
+    type: "number_input",
+    subject: "math",
+    topic: "math-count",
+    grade: 1,
+    difficulty: 1,
+    free: true,
+    illustration: "🍎🍎 ➕ 🍎🍎🍎",
+    prompt: { ru: "Сколько будет 2 + 3?", ky: "2 + 3 канчага барабар?" },
+    answer: 5,
+    explanation: {
+      ru: "К двум прибавляем три — получается пять.",
+      ky: "Экиге үчтү кошсок — беш болот.",
+    },
+  },
+  {
+    id: "math-count-1",
+    type: "number_input",
+    subject: "math",
+    topic: "math-count",
+    grade: 1,
+    difficulty: 1,
+    free: true,
+    illustration: "🍎🍎🍎🍎",
+    prompt: { ru: "Сколько здесь яблок?", ky: "Бул жерде канча алма бар?" },
+    answer: 4,
+    explanation: { ru: "Посчитай яблоки — их четыре.", ky: "Алмаларды сана — алар төртөө." },
+  },
+  {
+    id: "match-math-1",
+    type: "match_pairs",
+    subject: "math",
+    topic: "math-count",
+    grade: 1,
+    difficulty: 1,
+    free: true,
+    prompt: { ru: "Соедини число и количество", ky: "Санды жана анын санын дал келтир" },
+    left: [
+      { ru: "2", ky: "2" },
+      { ru: "3", ky: "3" },
+    ],
+    right: [
+      { ru: "🍎🍎", ky: "🍎🍎" },
+      { ru: "🍎🍎🍎", ky: "🍎🍎🍎" },
+    ],
+    explanation: { ru: "2 — это два яблока, 3 — три яблока.", ky: "2 — эки алма, 3 — үч алма." },
+  },
+
+  // ── Математика · Сложение и вычитание ──────────────────
+  {
+    id: "math-add-1",
+    type: "number_input",
+    subject: "math",
+    topic: "math-add",
+    grade: 1,
+    difficulty: 1,
+    free: true,
+    illustration: "🍏 ➕ 🍏",
+    prompt: { ru: "Сколько будет 1 + 1?", ky: "1 + 1 канчага барабар?" },
+    answer: 2,
+    explanation: { ru: "Одно яблоко и ещё одно — два.", ky: "Бир алма жана дагы бир — эки." },
+  },
+  {
+    id: "math-1-2",
+    type: "number_input",
+    subject: "math",
+    topic: "math-add",
+    grade: 1,
+    difficulty: 2,
+    free: true,
+    illustration: "🍬🍬🍬🍬🍬🍬",
+    prompt: {
+      ru: "У Ани было 6 конфет. 2 она съела. Сколько осталось?",
+      ky: "Анада 6 конфет бар эле. 2өөнү жеди. Канчасы калды?",
+    },
+    answer: 4,
+    explanation: {
+      ru: "Из шести вычитаем две — остаётся четыре.",
+      ky: "Алтыдан экини кемитсек — төртөө калат.",
+    },
+  },
+  {
     id: "math-2-2",
     type: "number_input",
     subject: "math",
+    topic: "math-add",
     grade: 2,
     difficulty: 3,
     free: false,
-    prompt: {
-      ru: "Посчитай: 3 + 4 + 2 = ?",
-      ky: "Эсепте: 3 + 4 + 2 = ?",
-    },
+    prompt: { ru: "Посчитай: 3 + 4 + 2 = ?", ky: "Эсепте: 3 + 4 + 2 = ?" },
     answer: 9,
     explanation: {
       ru: "Сначала 3 + 4 = 7, затем 7 + 2 = 9.",
       ky: "Адегенде 3 + 4 = 7, анан 7 + 2 = 9.",
     },
   },
+
+  // ── Математика · Числовые ряды ─────────────────────────
   {
     id: "ord-math-1",
     type: "ordering",
     subject: "math",
+    topic: "math-seq",
     grade: 1,
     difficulty: 1,
     free: true,
@@ -188,84 +330,86 @@ export const tasks: Task[] = [
     },
   },
   {
-    id: "ord-logic-1",
-    type: "ordering",
-    subject: "logic",
-    grade: 1,
-    difficulty: 2,
-    free: true,
-    prompt: {
-      ru: "Расставь по размеру: от маленького к большому",
-      ky: "Өлчөмү боюнча кой: кичинесинен чоңуна",
-    },
-    items: [
-      { ru: "🐜", ky: "🐜" },
-      { ru: "🐱", ky: "🐱" },
-      { ru: "🐶", ky: "🐶" },
-      { ru: "🐘", ky: "🐘" },
-    ],
-    explanation: {
-      ru: "Муравей меньше всех, а слон — самый большой.",
-      ky: "Кумурска эң кичине, пил эң чоң.",
-    },
-  },
-  {
-    id: "match-math-1",
-    type: "match_pairs",
+    id: "math-2-1",
+    type: "number_input",
     subject: "math",
-    grade: 1,
-    difficulty: 1,
-    free: true,
-    prompt: {
-      ru: "Соедини число и количество",
-      ky: "Санды жана анын санын дал келтир",
-    },
-    left: [
-      { ru: "2", ky: "2" },
-      { ru: "3", ky: "3" },
-    ],
-    right: [
-      { ru: "🍎🍎", ky: "🍎🍎" },
-      { ru: "🍎🍎🍎", ky: "🍎🍎🍎" },
-    ],
-    explanation: {
-      ru: "2 — это два яблока, 3 — три яблока.",
-      ky: "2 — эки алма, 3 — үч алма.",
-    },
-  },
-  {
-    id: "match-logic-1",
-    type: "match_pairs",
-    subject: "logic",
+    topic: "math-seq",
     grade: 2,
     difficulty: 2,
     free: false,
-    prompt: {
-      ru: "Соедини противоположности",
-      ky: "Карама-каршылыктарды дал келтир",
-    },
-    left: [
-      { ru: "День", ky: "Күн" },
-      { ru: "Лето", ky: "Жай" },
-    ],
-    right: [
-      { ru: "Ночь", ky: "Түн" },
-      { ru: "Зима", ky: "Кыш" },
-    ],
+    prompt: { ru: "Продолжи ряд: 2, 4, 6, 8, ?", ky: "Катарды улант: 2, 4, 6, 8, ?" },
+    answer: 10,
     explanation: {
-      ru: "День — ночь, лето — зима.",
-      ky: "Күн — түн, жай — кыш.",
+      ru: "Каждое следующее число на 2 больше предыдущего.",
+      ky: "Ар бир кийинки сан мурункусунан 2ге чоң.",
     },
+  },
+  {
+    id: "math-seq-2",
+    type: "number_input",
+    subject: "math",
+    topic: "math-seq",
+    grade: 2,
+    difficulty: 2,
+    free: false,
+    prompt: { ru: "Продолжи ряд: 5, 10, 15, ?", ky: "Катарды улант: 5, 10, 15, ?" },
+    answer: 20,
+    explanation: {
+      ru: "Каждое число на 5 больше: 15 + 5 = 20.",
+      ky: "Ар бир сан 5ке чоң: 15 + 5 = 20.",
+    },
+  },
+
+  // ── Чтение · Буквы и звуки ─────────────────────────────
+  {
+    id: "read-1",
+    type: "single_choice",
+    subject: "reading",
+    topic: "read-letters",
+    grade: 1,
+    difficulty: 1,
+    free: true,
+    illustration: "А → ?",
+    prompt: {
+      ru: "Какая буква идёт после «А»?",
+      ky: "«А» тамгасынан кийин кайсы тамга келет?",
+    },
+    options: [
+      { ru: "Б", ky: "Б" },
+      { ru: "В", ky: "В" },
+      { ru: "Д", ky: "Д" },
+    ],
+    correctIndex: 0,
+    explanation: { ru: "После «А» в алфавите идёт «Б».", ky: "Алфавитте «А»дан кийин «Б» келет." },
+  },
+  {
+    id: "read-2",
+    type: "single_choice",
+    subject: "reading",
+    topic: "read-letters",
+    grade: 1,
+    difficulty: 1,
+    free: true,
+    prompt: { ru: "Найди гласную букву", ky: "Үндүү тамганы тап" },
+    options: [
+      { ru: "М", ky: "М" },
+      { ru: "А", ky: "А" },
+      { ru: "К", ky: "К" },
+    ],
+    correctIndex: 1,
+    explanation: { ru: "«А» — это гласная буква.", ky: "«А» — үндүү тыбыш." },
   },
 ];
 
 export function getTasks(filter?: {
   subject?: Task["subject"];
+  topic?: string;
   grade?: Task["grade"];
   freeOnly?: boolean;
 }): Task[] {
   return tasks.filter((task) => {
     if (filter?.subject && task.subject !== filter.subject) return false;
+    if (filter?.topic && task.topic !== filter.topic) return false;
     if (filter?.grade && task.grade !== filter.grade) return false;
     if (filter?.freeOnly && !task.free) return false;
     return true;

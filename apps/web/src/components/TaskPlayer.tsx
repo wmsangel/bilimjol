@@ -5,9 +5,10 @@ import Link from "next/link";
 import {
   checkAnswer,
   getHelper,
+  getTopics,
   subjectLabels,
+  SUBJECTS,
   type Locale,
-  type Subject,
   type Task,
 } from "@izn-study/shared";
 import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
@@ -44,11 +45,10 @@ export interface GameLabels {
   chooseCta: string;
   subjectTitle: string;
   subjectAll: string;
+  topicsTitle: string;
   unlockFor: string;
   notEnoughStars: string;
 }
-
-type SubjectChoice = Subject | "all";
 
 const PRIMARY_BTN =
   "w-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 text-lg font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none";
@@ -88,7 +88,7 @@ export function TaskPlayer({
   const [loaded, setLoaded] = useState(false);
   const [helperId, setHelperId] = useState<string | null>(null);
   const [pendingHelper, setPendingHelper] = useState<string | null>(null);
-  const [subject, setSubject] = useState<SubjectChoice | null>(null);
+  const [topicId, setTopicId] = useState<string | null>(null);
   const [results, setResults] = useState<ProgressMap>({});
   const [index, setIndex] = useState(0);
   const [finished, setFinished] = useState(false);
@@ -111,23 +111,16 @@ export function TaskPlayer({
   const helper = getHelper(helperId);
 
   const activeTasks = useMemo(
-    () =>
-      subject
-        ? allTasks.filter(
-            (t) => (subject === "all" || t.subject === subject) && t.free,
-          )
-        : [],
-    [subject, allTasks],
+    () => (topicId ? allTasks.filter((t) => t.topic === topicId && t.free) : []),
+    [topicId, allTasks],
   );
 
   const lockedCount = useMemo(
     () =>
-      subject
-        ? allTasks.filter(
-            (t) => (subject === "all" || t.subject === subject) && !t.free,
-          ).length
+      topicId
+        ? allTasks.filter((t) => t.topic === topicId && !t.free).length
         : 0,
-    [subject, allTasks],
+    [topicId, allTasks],
   );
 
   const task = activeTasks[index];
@@ -157,12 +150,10 @@ export function TaskPlayer({
     setHelperId(pendingHelper);
   }
 
-  function chooseSubject(choice: SubjectChoice) {
-    const list = allTasks.filter(
-      (t) => (choice === "all" || t.subject === choice) && t.free,
-    );
+  function chooseTopic(id: string) {
+    const list = allTasks.filter((t) => t.topic === id && t.free);
     const firstUndone = list.findIndex((t) => !(t.id in results));
-    setSubject(choice);
+    setTopicId(id);
     if (firstUndone === -1) setFinished(true);
     else {
       setIndex(firstUndone);
@@ -259,33 +250,63 @@ export function TaskPlayer({
     );
   }
 
-  // 2. Выбор предмета
-  if (!subject) {
-    const options: { key: SubjectChoice; emoji: string; label: string }[] = [
-      { key: "all", emoji: "🌈", label: gameLabels.subjectAll },
-      { key: "logic", emoji: "🧩", label: subjectLabels.logic[locale] },
-      { key: "math", emoji: "🔢", label: subjectLabels.math[locale] },
-    ];
+  // 2. Карта тем
+  if (!topicId) {
     return (
-      <div className="mx-auto w-full max-w-lg text-center">
-        <div className="mb-6 flex justify-center">
+      <div className="mx-auto w-full max-w-lg">
+        <div className="mb-5 flex justify-center">
           <Mascot helper={helper} mood="idle" />
         </div>
-        <h2 className="font-display text-3xl font-extrabold">
-          {gameLabels.subjectTitle}
+        <h2 className="text-center font-display text-3xl font-extrabold">
+          {gameLabels.topicsTitle}
         </h2>
-        <div className="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
-          {options.map((o) => (
-            <button
-              key={o.key}
-              onClick={() => chooseSubject(o.key)}
-              className="flex flex-col items-center gap-2 rounded-3xl border-2 border-black/[.06] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-indigo-300 hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
-            >
-              <span className="text-5xl">{o.emoji}</span>
-              <span className="font-display font-bold">{o.label}</span>
-            </button>
-          ))}
-        </div>
+
+        {SUBJECTS.map((subj) => {
+          const subjTopics = getTopics(subj);
+          if (subjTopics.length === 0) return null;
+          return (
+            <div key={subj} className="mt-6">
+              <h3 className="mb-2 font-display text-sm font-bold uppercase tracking-wide text-zinc-400">
+                {subjectLabels[subj][locale]}
+              </h3>
+              <div className="space-y-2.5">
+                {subjTopics.map((topic) => {
+                  const free = allTasks.filter(
+                    (t) => t.topic === topic.id && t.free,
+                  );
+                  const done = free.filter((t) => t.id in results).length;
+                  const complete = free.length > 0 && done === free.length;
+                  return (
+                    <button
+                      key={topic.id}
+                      onClick={() => chooseTopic(topic.id)}
+                      className="flex w-full items-center gap-3 rounded-2xl border-2 border-black/[.06] bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/10 dark:bg-zinc-900"
+                    >
+                      <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-violet-100 text-2xl dark:from-indigo-500/15 dark:to-violet-500/15">
+                        {topic.icon}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="font-display font-bold">
+                          {topic.title[locale]}
+                        </div>
+                        <div className="mt-0.5 flex items-center gap-2 text-xs text-zinc-400">
+                          <span className="text-amber-500">
+                            {"●".repeat(topic.difficulty)}
+                            {"○".repeat(3 - topic.difficulty)}
+                          </span>
+                          <span>
+                            {done}/{free.length}
+                          </span>
+                        </div>
+                      </div>
+                      {complete && <span className="text-lg">✅</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   }
