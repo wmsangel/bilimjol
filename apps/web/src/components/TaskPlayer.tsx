@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   checkAnswer,
   getHelper,
-  type Helper,
+  subjectLabels,
   type Locale,
+  type Subject,
   type Task,
 } from "@izn-study/shared";
 import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
@@ -23,6 +24,8 @@ export interface PlayLabels {
   cheerCorrect: string;
   cheerWrong: string;
   starsLabel: string;
+  orderingHint: string;
+  matchHint: string;
   numberPlaceholder: string;
   progress: string;
   finishTitle: string;
@@ -37,72 +40,162 @@ export interface GameLabels {
   chooseTitle: string;
   chooseSubtitle: string;
   chooseCta: string;
+  subjectTitle: string;
+  subjectAll: string;
 }
 
-// Простая подстановка {переменных} в строку словаря.
+type SubjectChoice = Subject | "all";
+
 function tpl(str: string, vars: Record<string, string | number>) {
   return str.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ""));
+}
+
+function range(n: number): number[] {
+  return Array.from({ length: n }, (_, i) => i);
+}
+
+function shuffle(arr: number[]): number[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
 type Status = "answering" | "correct" | "wrong";
 
 export function TaskPlayer({
   locale,
-  tasks,
+  allTasks,
   labels,
   gameLabels,
-  lockedCount,
   homeHref,
 }: {
   locale: Locale;
-  tasks: Task[];
+  allTasks: Task[];
   labels: PlayLabels;
   gameLabels: GameLabels;
-  lockedCount: number;
   homeHref: string;
 }) {
   const [loaded, setLoaded] = useState(false);
   const [helperId, setHelperId] = useState<string | null>(null);
   const [pendingHelper, setPendingHelper] = useState<string | null>(null);
+  const [subject, setSubject] = useState<SubjectChoice | null>(null);
   const [results, setResults] = useState<ProgressMap>({});
   const [index, setIndex] = useState(0);
+  const [finished, setFinished] = useState(false);
+  const [status, setStatus] = useState<Status>("answering");
+
+  // Ответы разных типов
   const [selected, setSelected] = useState<number | null>(null);
   const [numberValue, setNumberValue] = useState("");
-  const [status, setStatus] = useState<Status>("answering");
-  const [finished, setFinished] = useState(false);
+  const [orderShuffled, setOrderShuffled] = useState<number[]>([]);
+  const [orderPicked, setOrderPicked] = useState<number[]>([]);
+  const [rightShuffled, setRightShuffled] = useState<number[]>([]);
+  const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
+  const [pairs, setPairs] = useState<Record<number, number>>({});
 
-  // При монтировании восстанавливаем помощника и прогресс.
   useEffect(() => {
     setHelperId(loadHelperId());
-    const saved = loadProgress();
-    setResults(saved);
-    const firstUndone = tasks.findIndex((t) => !(t.id in saved));
-    if (firstUndone === -1) setFinished(true);
-    else setIndex(firstUndone);
+    setResults(loadProgress());
     setLoaded(true);
-  }, [tasks]);
+  }, []);
 
   const helper = getHelper(helperId);
-  const task = tasks[index];
-  const answered = status !== "answering";
-  const stars = tasks.filter((t) => results[t.id]?.correct).length;
 
-  function reset() {
+  const activeTasks = useMemo(
+    () =>
+      subject
+        ? allTasks.filter(
+            (t) => (subject === "all" || t.subject === subject) && t.free,
+          )
+        : [],
+    [subject, allTasks],
+  );
+
+  const lockedCount = useMemo(
+    () =>
+      subject
+        ? allTasks.filter(
+            (t) => (subject === "all" || t.subject === subject) && !t.free,
+          ).length
+        : 0,
+    [subject, allTasks],
+  );
+
+  const task = activeTasks[index];
+  const answered = status !== "answering";
+  const stars = activeTasks.filter((t) => results[t.id]?.correct).length;
+
+  // Настройка состояния под каждое задание (перемешивание, сброс ответа).
+  useEffect(() => {
+    if (!task) return;
+    setStatus("answering");
     setSelected(null);
     setNumberValue("");
-    setStatus("answering");
-  }
+    setOrderPicked([]);
+    setPairs({});
+    setSelectedLeft(null);
+    if (task.type === "ordering") {
+      setOrderShuffled(shuffle(range(task.items.length)));
+    }
+    if (task.type === "match_pairs") {
+      setRightShuffled(shuffle(range(task.right.length)));
+    }
+  }, [task]);
 
-  function confirmHelper() {
+  function chooseHelper() {
     if (!pendingHelper) return;
     saveHelperId(pendingHelper);
     setHelperId(pendingHelper);
   }
 
+  function chooseSubject(choice: SubjectChoice) {
+    const list = allTasks.filter(
+      (t) => (choice === "all" || t.subject === choice) && t.free,
+    );
+    const firstUndone = list.findIndex((t) => !(t.id in results));
+    setSubject(choice);
+    if (firstUndone === -1) {
+      setFinished(true);
+    } else {
+      setIndex(firstUndone);
+      setFinished(false);
+    }
+  }
+
+  function currentResponse(): number | number[] | null {
+    switch (task.type) {
+      case "single_choice":
+        return selected;
+      case "number_input":
+        return numberValue.trim() === "" ? null : Number(numberValue);
+      case "ordering":
+        return orderPicked;
+      case "match_pairs":
+        return task.left.map((_, i) => pairs[i]);
+    }
+  }
+
+  const canSubmit = (() => {
+    if (!task) return false;
+    switch (task.type) {
+      case "single_choice":
+        return selected !== null;
+      case "number_input":
+        return numberValue.trim() !== "";
+      case "ordering":
+        return orderPicked.length === task.items.length;
+      case "match_pairs":
+        return Object.keys(pairs).length === task.left.length;
+    }
+  })();
+
   function submit() {
-    const response =
-      task.type === "single_choice" ? selected : Number(numberValue);
-    if (response === null || Number.isNaN(response)) return;
+    const response = currentResponse();
+    if (response === null || (typeof response === "number" && Number.isNaN(response)))
+      return;
 
     const correct = checkAnswer(task, response);
     const nextResults = { ...results, [task.id]: { correct } };
@@ -112,37 +205,26 @@ export function TaskPlayer({
   }
 
   function next() {
-    if (index < tasks.length - 1) {
-      setIndex((i) => i + 1);
-      reset();
-    } else {
-      setFinished(true);
-    }
+    if (index < activeTasks.length - 1) setIndex((i) => i + 1);
+    else setFinished(true);
   }
 
   function restart() {
     const cleared = { ...results };
-    for (const t of tasks) delete cleared[t.id];
+    for (const t of activeTasks) delete cleared[t.id];
     setResults(cleared);
     saveProgress(cleared);
-    setIndex(0);
     setFinished(false);
-    reset();
+    setIndex(0);
   }
 
-  const canSubmit =
-    task?.type === "single_choice"
-      ? selected !== null
-      : numberValue.trim() !== "";
-
-  // До восстановления состояния — лёгкий плейсхолдер.
   if (!loaded) {
     return (
       <div className="mx-auto h-64 w-full max-w-lg animate-pulse rounded-3xl border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
     );
   }
 
-  // Экран выбора помощника (если ещё не выбран).
+  // 1. Выбор помощника
   if (!helper) {
     return (
       <div className="mx-auto w-full max-w-lg text-center">
@@ -158,7 +240,7 @@ export function TaskPlayer({
           />
         </div>
         <button
-          onClick={confirmHelper}
+          onClick={chooseHelper}
           disabled={!pendingHelper}
           className="mt-6 w-full rounded-full bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
         >
@@ -168,17 +250,42 @@ export function TaskPlayer({
     );
   }
 
+  // 2. Выбор предмета
+  if (!subject) {
+    const options: { key: SubjectChoice; emoji: string; label: string }[] = [
+      { key: "all", emoji: "🌈", label: gameLabels.subjectAll },
+      { key: "logic", emoji: "🧩", label: subjectLabels.logic[locale] },
+      { key: "math", emoji: "🔢", label: subjectLabels.math[locale] },
+    ];
+    return (
+      <div className="mx-auto w-full max-w-lg text-center">
+        <h2 className="text-2xl font-bold">{gameLabels.subjectTitle}</h2>
+        <div className="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
+          {options.map((o) => (
+            <button
+              key={o.key}
+              onClick={() => chooseSubject(o.key)}
+              className="flex flex-col items-center gap-2 rounded-2xl border border-black/10 p-5 transition hover:border-indigo-300 dark:border-white/15"
+            >
+              <span className="text-4xl">{o.emoji}</span>
+              <span className="text-sm font-medium">{o.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Финальный экран
   if (finished) {
     return (
       <div className="mx-auto w-full max-w-lg rounded-3xl border border-black/[.06] bg-white p-8 text-center shadow-sm dark:border-white/10 dark:bg-zinc-900">
         <div className="text-5xl">🎉</div>
         <h2 className="mt-4 text-2xl font-bold">{labels.finishTitle}</h2>
         <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
-          {tpl(labels.finishScore, { score: stars, total: tasks.length })}
+          {tpl(labels.finishScore, { score: stars, total: activeTasks.length })}
         </p>
-        <p className="mt-3 text-2xl">
-          {"⭐".repeat(Math.max(stars, 0)) || "—"}
-        </p>
+        <p className="mt-3 text-2xl">{"⭐".repeat(Math.max(stars, 0)) || "—"}</p>
 
         {lockedCount > 0 && (
           <div className="mt-6 rounded-2xl border border-indigo-200 bg-indigo-50 p-5 dark:border-indigo-500/30 dark:bg-indigo-500/10">
@@ -209,6 +316,8 @@ export function TaskPlayer({
     );
   }
 
+  if (!task) return null;
+
   return (
     <div className="mx-auto w-full max-w-lg">
       {/* Прогресс */}
@@ -216,13 +325,16 @@ export function TaskPlayer({
         <div className="mb-2 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400">
           <span>{labels.eyebrow}</span>
           <span>
-            {tpl(labels.progress, { current: index + 1, total: tasks.length })}
+            {tpl(labels.progress, {
+              current: index + 1,
+              total: activeTasks.length,
+            })}
           </span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
           <div
             className="h-full rounded-full bg-indigo-600 transition-all duration-300"
-            style={{ width: `${((index + 1) / tasks.length) * 100}%` }}
+            style={{ width: `${((index + 1) / activeTasks.length) * 100}%` }}
           />
         </div>
       </div>
@@ -257,35 +369,39 @@ export function TaskPlayer({
 
         <p className="text-xl font-semibold leading-8">{task.prompt[locale]}</p>
 
-        <div className="mt-6 space-y-3">
-          {task.type === "single_choice" &&
-            task.options.map((opt, i) => {
-              const isSelected = selected === i;
-              const isCorrect = i === task.correctIndex;
-              let cls =
-                "w-full rounded-2xl border px-5 py-4 text-left text-lg transition-colors ";
-              if (!answered) {
-                cls += isSelected
-                  ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
-                  : "border-black/10 hover:border-indigo-300 dark:border-white/15";
-              } else if (isCorrect) {
-                cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
-              } else if (isSelected) {
-                cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
-              } else {
-                cls += "border-black/10 opacity-60 dark:border-white/15";
-              }
-              return (
-                <button
-                  key={i}
-                  disabled={answered}
-                  onClick={() => setSelected(i)}
-                  className={cls}
-                >
-                  {opt[locale]}
-                </button>
-              );
-            })}
+        {/* --- Варианты ответа по типу задания --- */}
+        <div className="mt-6">
+          {task.type === "single_choice" && (
+            <div className="space-y-3">
+              {task.options.map((opt, i) => {
+                const isSelected = selected === i;
+                const isCorrect = i === task.correctIndex;
+                let cls =
+                  "w-full rounded-2xl border px-5 py-4 text-left text-lg transition-colors ";
+                if (!answered) {
+                  cls += isSelected
+                    ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                    : "border-black/10 hover:border-indigo-300 dark:border-white/15";
+                } else if (isCorrect) {
+                  cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
+                } else if (isSelected) {
+                  cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
+                } else {
+                  cls += "border-black/10 opacity-60 dark:border-white/15";
+                }
+                return (
+                  <button
+                    key={i}
+                    disabled={answered}
+                    onClick={() => setSelected(i)}
+                    className={cls}
+                  >
+                    {opt[locale]}
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
           {task.type === "number_input" && (
             <input
@@ -300,6 +416,131 @@ export function TaskPlayer({
               placeholder={labels.numberPlaceholder}
               className="w-full rounded-2xl border border-black/10 bg-transparent px-5 py-4 text-lg outline-none focus:border-indigo-500 dark:border-white/15"
             />
+          )}
+
+          {task.type === "ordering" && (
+            <div>
+              <p className="mb-3 text-sm text-zinc-500 dark:text-zinc-400">
+                {labels.orderingHint}
+              </p>
+              {/* Выбранный порядок */}
+              <div className="mb-3 flex min-h-14 flex-wrap gap-2 rounded-2xl border border-dashed border-black/15 p-3 dark:border-white/15">
+                {orderPicked.map((origIdx, pos) => {
+                  const stateCls = !answered
+                    ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                    : status === "correct"
+                      ? "border-green-500 bg-green-50 dark:bg-green-500/10"
+                      : "border-red-400 bg-red-50 dark:bg-red-500/10";
+                  return (
+                    <button
+                      key={origIdx}
+                      disabled={answered}
+                      onClick={() =>
+                        setOrderPicked(orderPicked.filter((_, p) => p !== pos))
+                      }
+                      className={`rounded-xl border px-4 py-2 text-lg ${stateCls}`}
+                    >
+                      {task.items[origIdx][locale]}
+                    </button>
+                  );
+                })}
+              </div>
+              {/* Доступные элементы */}
+              <div className="flex flex-wrap gap-2">
+                {orderShuffled
+                  .filter((i) => !orderPicked.includes(i))
+                  .map((i) => (
+                    <button
+                      key={i}
+                      disabled={answered}
+                      onClick={() => setOrderPicked([...orderPicked, i])}
+                      className="rounded-xl border border-black/10 px-4 py-2 text-lg transition-colors hover:border-indigo-300 dark:border-white/15"
+                    >
+                      {task.items[i][locale]}
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {task.type === "match_pairs" && (
+            <div>
+              <p className="mb-3 text-sm text-zinc-500 dark:text-zinc-400">
+                {labels.matchHint}
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-3">
+                  {task.left.map((l, i) => {
+                    const matchedRight = pairs[i];
+                    const isMatched = matchedRight !== undefined;
+                    let cls =
+                      "w-full rounded-2xl border px-4 py-3 text-left text-lg transition-colors ";
+                    if (answered && isMatched) {
+                      cls +=
+                        matchedRight === i
+                          ? "border-green-500 bg-green-50 dark:bg-green-500/10"
+                          : "border-red-400 bg-red-50 dark:bg-red-500/10";
+                    } else if (selectedLeft === i) {
+                      cls += "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10";
+                    } else if (isMatched) {
+                      cls += "border-indigo-300 dark:border-indigo-500/40";
+                    } else {
+                      cls += "border-black/10 hover:border-indigo-300 dark:border-white/15";
+                    }
+                    return (
+                      <button
+                        key={i}
+                        disabled={answered}
+                        onClick={() => {
+                          if (isMatched) {
+                            const p = { ...pairs };
+                            delete p[i];
+                            setPairs(p);
+                            setSelectedLeft(null);
+                          } else {
+                            setSelectedLeft(i);
+                          }
+                        }}
+                        className={cls}
+                      >
+                        {l[locale]}
+                        {isMatched && (
+                          <span className="text-zinc-500 dark:text-zinc-400">
+                            {" → "}
+                            {task.right[matchedRight][locale]}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="space-y-3">
+                  {rightShuffled.map((j) => {
+                    const used = Object.values(pairs).includes(j);
+                    return (
+                      <button
+                        key={j}
+                        disabled={answered || used}
+                        onClick={() => {
+                          if (selectedLeft !== null && !used) {
+                            setPairs({ ...pairs, [selectedLeft]: j });
+                            setSelectedLeft(null);
+                          }
+                        }}
+                        className={
+                          "w-full rounded-2xl border px-4 py-3 text-left text-lg transition-colors " +
+                          (used
+                            ? "border-black/10 opacity-40 dark:border-white/15"
+                            : "border-black/10 hover:border-indigo-300 dark:border-white/15")
+                        }
+                      >
+                        {task.right[j][locale]}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           )}
         </div>
 

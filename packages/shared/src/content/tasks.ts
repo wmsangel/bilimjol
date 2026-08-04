@@ -164,6 +164,99 @@ export const tasks: Task[] = [
       ky: "Адегенде 3 + 4 = 7, анан 7 + 2 = 9.",
     },
   },
+  {
+    id: "ord-math-1",
+    type: "ordering",
+    subject: "math",
+    grade: 1,
+    difficulty: 1,
+    free: true,
+    illustration: "🔢",
+    prompt: {
+      ru: "Расставь по порядку: от меньшего к большему",
+      ky: "Ирети менен кой: кичинесинен чоңуна",
+    },
+    items: [
+      { ru: "1", ky: "1" },
+      { ru: "2", ky: "2" },
+      { ru: "3", ky: "3" },
+      { ru: "4", ky: "4" },
+    ],
+    explanation: {
+      ru: "От самого маленького числа к самому большому: 1, 2, 3, 4.",
+      ky: "Эң кичине сандан эң чоңуна карай: 1, 2, 3, 4.",
+    },
+  },
+  {
+    id: "ord-logic-1",
+    type: "ordering",
+    subject: "logic",
+    grade: 1,
+    difficulty: 2,
+    free: true,
+    prompt: {
+      ru: "Расставь по размеру: от маленького к большому",
+      ky: "Өлчөмү боюнча кой: кичинесинен чоңуна",
+    },
+    items: [
+      { ru: "🐜", ky: "🐜" },
+      { ru: "🐱", ky: "🐱" },
+      { ru: "🐶", ky: "🐶" },
+      { ru: "🐘", ky: "🐘" },
+    ],
+    explanation: {
+      ru: "Муравей меньше всех, а слон — самый большой.",
+      ky: "Кумурска эң кичине, пил эң чоң.",
+    },
+  },
+  {
+    id: "match-math-1",
+    type: "match_pairs",
+    subject: "math",
+    grade: 1,
+    difficulty: 1,
+    free: true,
+    prompt: {
+      ru: "Соедини число и количество",
+      ky: "Санды жана анын санын дал келтир",
+    },
+    left: [
+      { ru: "2", ky: "2" },
+      { ru: "3", ky: "3" },
+    ],
+    right: [
+      { ru: "🍎🍎", ky: "🍎🍎" },
+      { ru: "🍎🍎🍎", ky: "🍎🍎🍎" },
+    ],
+    explanation: {
+      ru: "2 — это два яблока, 3 — три яблока.",
+      ky: "2 — эки алма, 3 — үч алма.",
+    },
+  },
+  {
+    id: "match-logic-1",
+    type: "match_pairs",
+    subject: "logic",
+    grade: 2,
+    difficulty: 2,
+    free: false,
+    prompt: {
+      ru: "Соедини противоположности",
+      ky: "Карама-каршылыктарды дал келтир",
+    },
+    left: [
+      { ru: "День", ky: "Күн" },
+      { ru: "Лето", ky: "Жай" },
+    ],
+    right: [
+      { ru: "Ночь", ky: "Түн" },
+      { ru: "Зима", ky: "Кыш" },
+    ],
+    explanation: {
+      ru: "День — ночь, лето — зима.",
+      ky: "Күн — түн, жай — кыш.",
+    },
+  },
 ];
 
 export function getTasks(filter?: {

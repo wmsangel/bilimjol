@@ -41,7 +41,24 @@ export interface NumberInputTask extends TaskBase {
   answer: number;
 }
 
-export type Task = SingleChoiceTask | NumberInputTask;
+/** Расставить элементы по порядку. `items` заданы в ПРАВИЛЬНОМ порядке. */
+export interface OrderingTask extends TaskBase {
+  type: "ordering";
+  items: LocalizedText[];
+}
+
+/** Соединить пары. `right[i]` — правильная пара к `left[i]`. */
+export interface MatchPairsTask extends TaskBase {
+  type: "match_pairs";
+  left: LocalizedText[];
+  right: LocalizedText[];
+}
+
+export type Task =
+  | SingleChoiceTask
+  | NumberInputTask
+  | OrderingTask
+  | MatchPairsTask;
 
 export type TaskType = Task["type"];
 
@@ -54,11 +71,30 @@ export const subjectLabels: Record<Subject, LocalizedText> = {
 
 /**
  * Проверяет ответ ученика.
- * Для single_choice `response` — индекс выбранного варианта,
- * для number_input — введённое число.
+ * - single_choice: `response` — индекс выбранного варианта;
+ * - number_input: введённое число;
+ * - ordering: массив исходных индексов в порядке, выбранном учеником
+ *   (верно, если совпадает с [0,1,…,n-1], т.к. items хранятся по порядку);
+ * - match_pairs: массив, где по индексу левого элемента — исходный индекс
+ *   выбранного правого (верно, если response[i] === i для всех i).
  */
-export function checkAnswer(task: Task, response: number): boolean {
-  return task.type === "single_choice"
-    ? response === task.correctIndex
-    : response === task.answer;
+export function checkAnswer(task: Task, response: number | number[]): boolean {
+  switch (task.type) {
+    case "single_choice":
+      return response === task.correctIndex;
+    case "number_input":
+      return response === task.answer;
+    case "ordering":
+      return (
+        Array.isArray(response) &&
+        response.length === task.items.length &&
+        response.every((v, i) => v === i)
+      );
+    case "match_pairs":
+      return (
+        Array.isArray(response) &&
+        response.length === task.left.length &&
+        response.every((v, i) => v === i)
+      );
+  }
 }

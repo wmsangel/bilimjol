@@ -58,6 +58,8 @@
     "cheerCorrect": "Молодец!",
     "cheerWrong": "Почти! Давай разберёмся",
     "starsLabel": "звёзд",
+    "orderingHint": "Нажимай по порядку",
+    "matchHint": "Выбери слева, потом справа",
     "numberPlaceholder": "Введите ответ",
     "progress": "Задание {current} из {total}",
     "finishTitle": "Молодец, готово!",
@@ -70,7 +72,9 @@
   "game": {
     "chooseTitle": "Выбери помощника",
     "chooseSubtitle": "Он будет заниматься вместе с тобой",
-    "chooseCta": "Поехали!"
+    "chooseCta": "Поехали!",
+    "subjectTitle": "Что порешаем?",
+    "subjectAll": "Всё вместе"
   },
   "cabinet": {
     "title": "Мой кабинет",

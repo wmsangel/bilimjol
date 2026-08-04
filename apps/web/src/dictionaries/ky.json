@@ -58,6 +58,8 @@
     "cheerCorrect": "Азамат!",
     "cheerWrong": "Аз калды! Кел, чечели",
     "starsLabel": "жылдыз",
+    "orderingHint": "Ирети менен басып тандаңыз",
+    "matchHint": "Алгач солдон, анан оңдон танда",
     "numberPlaceholder": "Жоопту жазыңыз",
     "progress": "{total} тапшырманын {current}-и",
     "finishTitle": "Азаматсың, бүттү!",
@@ -70,7 +72,9 @@
   "game": {
     "chooseTitle": "Жардамчыны танда",
     "chooseSubtitle": "Ал сени менен чогуу окуйт",
-    "chooseCta": "Кеттик!"
+    "chooseCta": "Кеттик!",
+    "subjectTitle": "Эмнени чечебиз?",
+    "subjectAll": "Баары чогуу"
   },
   "cabinet": {
     "title": "Менин кабинетим",

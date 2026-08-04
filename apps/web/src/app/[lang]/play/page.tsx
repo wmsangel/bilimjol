@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getTasks, tasks as allTasks } from "@izn-study/shared";
+import { tasks } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "../dictionaries";
 import { TaskPlayer } from "@/components/TaskPlayer";
@@ -14,8 +14,6 @@ export default async function PlayPage({
   if (!isLocale(lang)) notFound();
 
   const dict = await getDictionary(lang);
-  const freeTasks = getTasks({ freeOnly: true });
-  const lockedCount = allTasks.length - freeTasks.length;
 
   return (
     <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-zinc-950">
@@ -34,10 +32,9 @@ export default async function PlayPage({
       <main className="mx-auto flex w-full max-w-5xl flex-1 items-start justify-center px-6 py-10">
         <TaskPlayer
           locale={lang}
-          tasks={freeTasks}
+          allTasks={tasks}
           labels={dict.play}
           gameLabels={dict.game}
-          lockedCount={lockedCount}
           homeHref={`/${lang}`}
         />
       </main>
