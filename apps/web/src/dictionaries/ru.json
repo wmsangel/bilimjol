@@ -74,7 +74,9 @@
     "chooseSubtitle": "Он будет заниматься вместе с тобой",
     "chooseCta": "Поехали!",
     "subjectTitle": "Что порешаем?",
-    "subjectAll": "Всё вместе"
+    "subjectAll": "Всё вместе",
+    "unlockFor": "Открой за",
+    "notEnoughStars": "Мало звёзд"
   },
   "cabinet": {
     "title": "Мой кабинет",
@@ -84,7 +86,20 @@
     "continue": "Продолжить занятия",
     "changeHelper": "Сменить помощника",
     "noHelper": "Ты ещё не выбрал помощника.",
-    "noHelperCta": "Выбрать помощника"
+    "noHelperCta": "Выбрать помощника",
+    "level": "Уровень",
+    "streak": "дней подряд",
+    "daily": "Цель на сегодня",
+    "dailyDone": "Цель выполнена! 🎉",
+    "achievementsTitle": "Достижения"
+  },
+  "achievements": {
+    "firstTask": "Первый шаг",
+    "stars5": "5 звёзд",
+    "tasks10": "10 заданий",
+    "streak3": "3 дня подряд",
+    "bothSubjects": "Логика и математика",
+    "unlockHero": "Новый герой"
   },
   "footer": {
     "tagline": "izn.study — поддерживаем и развиваем знания каждый день.",

@@ -12,6 +12,7 @@ import {
 } from "@izn-study/shared";
 import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
 import { loadHelperId, saveHelperId } from "@/lib/prefs";
+import { recordActivity } from "@/lib/stats";
 import { HelperPicker } from "./HelperPicker";
 import { Mascot } from "./Mascot";
 import { Confetti } from "./Confetti";
@@ -43,6 +44,8 @@ export interface GameLabels {
   chooseCta: string;
   subjectTitle: string;
   subjectAll: string;
+  unlockFor: string;
+  notEnoughStars: string;
 }
 
 type SubjectChoice = Subject | "all";
@@ -130,6 +133,7 @@ export function TaskPlayer({
   const task = activeTasks[index];
   const answered = status !== "answering";
   const stars = activeTasks.filter((t) => results[t.id]?.correct).length;
+  const earnedStars = Object.values(results).filter((r) => r.correct).length;
 
   useEffect(() => {
     if (!task) return;
@@ -204,6 +208,7 @@ export function TaskPlayer({
     const nextResults = { ...results, [task.id]: { correct } };
     setResults(nextResults);
     saveProgress(nextResults);
+    recordActivity();
     setStatus(correct ? "correct" : "wrong");
   }
 
@@ -242,6 +247,9 @@ export function TaskPlayer({
             locale={locale}
             selectedId={pendingHelper}
             onSelect={(h) => setPendingHelper(h.id)}
+            earnedStars={earnedStars}
+            unlockForLabel={gameLabels.unlockFor}
+            notEnoughLabel={gameLabels.notEnoughStars}
           />
         </div>
         <button onClick={chooseHelper} disabled={!pendingHelper} className={"mt-6 " + PRIMARY_BTN}>

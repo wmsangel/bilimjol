@@ -74,7 +74,9 @@
     "chooseSubtitle": "Ал сени менен чогуу окуйт",
     "chooseCta": "Кеттик!",
     "subjectTitle": "Эмнени чечебиз?",
-    "subjectAll": "Баары чогуу"
+    "subjectAll": "Баары чогуу",
+    "unlockFor": "Ач:",
+    "notEnoughStars": "Жылдыз жетишсиз"
   },
   "cabinet": {
     "title": "Менин кабинетим",
@@ -84,7 +86,20 @@
     "continue": "Сабакты улантуу",
     "changeHelper": "Жардамчыны алмаштыруу",
     "noHelper": "Сен азырынча жардамчы тандай элексиң.",
-    "noHelperCta": "Жардамчыны тандоо"
+    "noHelperCta": "Жардамчыны тандоо",
+    "level": "Деңгээл",
+    "streak": "күн катары менен",
+    "daily": "Бүгүнкү максат",
+    "dailyDone": "Максат аткарылды! 🎉",
+    "achievementsTitle": "Жетишкендиктер"
+  },
+  "achievements": {
+    "firstTask": "Биринчи кадам",
+    "stars5": "5 жылдыз",
+    "tasks10": "10 тапшырма",
+    "streak3": "3 күн катары менен",
+    "bothSubjects": "Логика жана математика",
+    "unlockHero": "Жаңы каарман"
   },
   "footer": {
     "tagline": "izn.study — билимди күн сайын колдойбуз жана өнүктүрөбүз.",

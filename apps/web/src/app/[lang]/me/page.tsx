@@ -35,6 +35,7 @@ export default async function MePage({
         <Cabinet
           locale={lang}
           labels={dict.cabinet}
+          achievementsLabels={dict.achievements}
           playHref={`/${lang}/play`}
         />
       </main>
