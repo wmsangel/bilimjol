@@ -19,12 +19,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         </span>
         <div className="flex items-center gap-3">
           <LanguageSwitcher current={lang} />
-          <a
-            href="#"
+          <Link
+            href={`/${lang}/me`}
             className="hidden text-sm font-medium text-zinc-600 hover:text-foreground sm:inline dark:text-zinc-300"
           >
-            {dict.nav.signIn}
-          </a>
+            {dict.nav.cabinet}
+          </Link>
           <Link
             href={`/${lang}/play`}
             className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"

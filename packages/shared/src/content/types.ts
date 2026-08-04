@@ -24,6 +24,8 @@ interface TaskBase {
   explanation: LocalizedText;
   /** Доступно ли задание в бесплатной версии. */
   free: boolean;
+  /** Необязательная иллюстрация к заданию (в MVP — эмодзи, позже — картинка). */
+  illustration?: string;
 }
 
 /** Выбор одного варианта из нескольких. */

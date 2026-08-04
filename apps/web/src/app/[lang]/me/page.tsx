@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getTasks, tasks as allTasks } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "../dictionaries";
-import { TaskPlayer } from "@/components/TaskPlayer";
+import { Cabinet } from "@/components/Cabinet";
 
-export default async function PlayPage({
+export default async function MePage({
   params,
 }: {
   params: Promise<{ lang: string }>;
@@ -14,8 +13,6 @@ export default async function PlayPage({
   if (!isLocale(lang)) notFound();
 
   const dict = await getDictionary(lang);
-  const freeTasks = getTasks({ freeOnly: true });
-  const lockedCount = allTasks.length - freeTasks.length;
 
   return (
     <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-zinc-950">
@@ -31,14 +28,14 @@ export default async function PlayPage({
         </Link>
       </header>
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 items-start justify-center px-6 py-10">
-        <TaskPlayer
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center px-6 py-10">
+        <h1 className="mb-8 text-2xl font-bold tracking-tight">
+          {dict.cabinet.title}
+        </h1>
+        <Cabinet
           locale={lang}
-          tasks={freeTasks}
-          labels={dict.play}
-          gameLabels={dict.game}
-          lockedCount={lockedCount}
-          homeHref={`/${lang}`}
+          labels={dict.cabinet}
+          playHref={`/${lang}/play`}
         />
       </main>
     </div>

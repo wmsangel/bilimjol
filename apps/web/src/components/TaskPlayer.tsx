@@ -2,8 +2,17 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { checkAnswer, type Locale, type Task } from "@izn-study/shared";
+import {
+  checkAnswer,
+  getHelper,
+  type Helper,
+  type Locale,
+  type Task,
+} from "@izn-study/shared";
 import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
+import { loadHelperId, saveHelperId } from "@/lib/prefs";
+import { helperBg } from "@/lib/helperTheme";
+import { HelperPicker } from "./HelperPicker";
 
 export interface PlayLabels {
   eyebrow: string;
@@ -11,6 +20,9 @@ export interface PlayLabels {
   next: string;
   correct: string;
   wrong: string;
+  cheerCorrect: string;
+  cheerWrong: string;
+  starsLabel: string;
   numberPlaceholder: string;
   progress: string;
   finishTitle: string;
@@ -19,6 +31,12 @@ export interface PlayLabels {
   lockedTitle: string;
   lockedText: string;
   backHome: string;
+}
+
+export interface GameLabels {
+  chooseTitle: string;
+  chooseSubtitle: string;
+  chooseCta: string;
 }
 
 // Простая подстановка {переменных} в строку словаря.
@@ -32,16 +50,20 @@ export function TaskPlayer({
   locale,
   tasks,
   labels,
+  gameLabels,
   lockedCount,
   homeHref,
 }: {
   locale: Locale;
   tasks: Task[];
   labels: PlayLabels;
+  gameLabels: GameLabels;
   lockedCount: number;
   homeHref: string;
 }) {
   const [loaded, setLoaded] = useState(false);
+  const [helperId, setHelperId] = useState<string | null>(null);
+  const [pendingHelper, setPendingHelper] = useState<string | null>(null);
   const [results, setResults] = useState<ProgressMap>({});
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -49,27 +71,32 @@ export function TaskPlayer({
   const [status, setStatus] = useState<Status>("answering");
   const [finished, setFinished] = useState(false);
 
-  // При монтировании восстанавливаем прогресс и продолжаем с первого нерешённого.
+  // При монтировании восстанавливаем помощника и прогресс.
   useEffect(() => {
+    setHelperId(loadHelperId());
     const saved = loadProgress();
     setResults(saved);
     const firstUndone = tasks.findIndex((t) => !(t.id in saved));
-    if (firstUndone === -1) {
-      setFinished(true);
-    } else {
-      setIndex(firstUndone);
-    }
+    if (firstUndone === -1) setFinished(true);
+    else setIndex(firstUndone);
     setLoaded(true);
   }, [tasks]);
 
+  const helper = getHelper(helperId);
   const task = tasks[index];
   const answered = status !== "answering";
-  const score = tasks.filter((t) => results[t.id]?.correct).length;
+  const stars = tasks.filter((t) => results[t.id]?.correct).length;
 
   function reset() {
     setSelected(null);
     setNumberValue("");
     setStatus("answering");
+  }
+
+  function confirmHelper() {
+    if (!pendingHelper) return;
+    saveHelperId(pendingHelper);
+    setHelperId(pendingHelper);
   }
 
   function submit() {
@@ -108,10 +135,36 @@ export function TaskPlayer({
       ? selected !== null
       : numberValue.trim() !== "";
 
-  // До восстановления прогресса — лёгкий плейсхолдер (без мигания «задание 1»).
+  // До восстановления состояния — лёгкий плейсхолдер.
   if (!loaded) {
     return (
       <div className="mx-auto h-64 w-full max-w-lg animate-pulse rounded-3xl border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+    );
+  }
+
+  // Экран выбора помощника (если ещё не выбран).
+  if (!helper) {
+    return (
+      <div className="mx-auto w-full max-w-lg text-center">
+        <h2 className="text-2xl font-bold">{gameLabels.chooseTitle}</h2>
+        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+          {gameLabels.chooseSubtitle}
+        </p>
+        <div className="mt-6">
+          <HelperPicker
+            locale={locale}
+            selectedId={pendingHelper}
+            onSelect={(h) => setPendingHelper(h.id)}
+          />
+        </div>
+        <button
+          onClick={confirmHelper}
+          disabled={!pendingHelper}
+          className="mt-6 w-full rounded-full bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {gameLabels.chooseCta}
+        </button>
+      </div>
     );
   }
 
@@ -121,7 +174,10 @@ export function TaskPlayer({
         <div className="text-5xl">🎉</div>
         <h2 className="mt-4 text-2xl font-bold">{labels.finishTitle}</h2>
         <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
-          {tpl(labels.finishScore, { score, total: tasks.length })}
+          {tpl(labels.finishScore, { score: stars, total: tasks.length })}
+        </p>
+        <p className="mt-3 text-2xl">
+          {"⭐".repeat(Math.max(stars, 0)) || "—"}
         </p>
 
         {lockedCount > 0 && (
@@ -173,6 +229,32 @@ export function TaskPlayer({
 
       {/* Карточка задания */}
       <div className="rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm sm:p-8 dark:border-white/10 dark:bg-zinc-900">
+        {/* Помощник + звёзды */}
+        <div className="mb-5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span
+              className={
+                "flex h-11 w-11 items-center justify-center rounded-full text-2xl " +
+                helperBg[helper.color]
+              }
+            >
+              {helper.emoji}
+            </span>
+            <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              {helper.name[locale]}
+            </span>
+          </div>
+          <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+            ⭐ {stars}
+          </span>
+        </div>
+
+        {task.illustration && (
+          <div className="mb-4 rounded-2xl bg-zinc-50 py-6 text-center text-4xl dark:bg-white/5">
+            {task.illustration}
+          </div>
+        )}
+
         <p className="text-xl font-semibold leading-8">{task.prompt[locale]}</p>
 
         <div className="mt-6 space-y-3">
@@ -221,27 +303,32 @@ export function TaskPlayer({
           )}
         </div>
 
-        {/* Обратная связь */}
+        {/* Реакция помощника + разбор */}
         {answered && (
           <div
             className={
               status === "correct"
-                ? "mt-6 rounded-2xl bg-green-50 p-4 dark:bg-green-500/10"
-                : "mt-6 rounded-2xl bg-red-50 p-4 dark:bg-red-500/10"
+                ? "mt-6 flex gap-3 rounded-2xl bg-green-50 p-4 dark:bg-green-500/10"
+                : "mt-6 flex gap-3 rounded-2xl bg-red-50 p-4 dark:bg-red-500/10"
             }
           >
-            <p
-              className={
-                status === "correct"
-                  ? "font-semibold text-green-700 dark:text-green-400"
-                  : "font-semibold text-red-600 dark:text-red-400"
-              }
-            >
-              {status === "correct" ? labels.correct : labels.wrong}
-            </p>
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {task.explanation[locale]}
-            </p>
+            <span className="text-3xl">
+              {status === "correct" ? "🎉" : helper.emoji}
+            </span>
+            <div>
+              <p
+                className={
+                  status === "correct"
+                    ? "font-semibold text-green-700 dark:text-green-400"
+                    : "font-semibold text-red-600 dark:text-red-400"
+                }
+              >
+                {status === "correct" ? labels.cheerCorrect : labels.cheerWrong}
+              </p>
+              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                {task.explanation[locale]}
+              </p>
+            </div>
           </div>
         )}
 

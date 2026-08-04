@@ -10,6 +10,7 @@ export const tasks: Task[] = [
     grade: 1,
     difficulty: 1,
     free: true,
+    illustration: "🍎 🍐 🥕 🍌",
     prompt: {
       ru: "Что здесь лишнее?",
       ky: "Бул жерде эмне ашык?",
@@ -33,6 +34,7 @@ export const tasks: Task[] = [
     grade: 1,
     difficulty: 1,
     free: true,
+    illustration: "🍎🍎 ➕ 🍎🍎🍎",
     prompt: {
       ru: "Сколько будет 2 + 3?",
       ky: "2 + 3 канчага барабар?",
@@ -72,6 +74,7 @@ export const tasks: Task[] = [
     grade: 1,
     difficulty: 2,
     free: true,
+    illustration: "🍬🍬🍬🍬🍬🍬",
     prompt: {
       ru: "У Ани было 6 конфет. 2 она съела. Сколько осталось?",
       ky: "Анада 6 конфет бар эле. 2өөнү жеди. Канчасы калды?",

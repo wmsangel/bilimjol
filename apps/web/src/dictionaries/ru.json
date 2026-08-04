@@ -5,7 +5,8 @@
   },
   "nav": {
     "signIn": "Войти",
-    "start": "Начать бесплатно"
+    "start": "Начать бесплатно",
+    "cabinet": "Кабинет"
   },
   "hero": {
     "badge": "От садика до 11 класса",
@@ -54,6 +55,9 @@
     "next": "Дальше",
     "correct": "Правильно!",
     "wrong": "Не совсем так",
+    "cheerCorrect": "Молодец!",
+    "cheerWrong": "Почти! Давай разберёмся",
+    "starsLabel": "звёзд",
     "numberPlaceholder": "Введите ответ",
     "progress": "Задание {current} из {total}",
     "finishTitle": "Молодец, готово!",
@@ -62,6 +66,21 @@
     "lockedTitle": "Хочешь ещё?",
     "lockedText": "Ещё {count} заданий и все предметы открываются по подписке.",
     "backHome": "На главную"
+  },
+  "game": {
+    "chooseTitle": "Выбери помощника",
+    "chooseSubtitle": "Он будет заниматься вместе с тобой",
+    "chooseCta": "Поехали!"
+  },
+  "cabinet": {
+    "title": "Мой кабинет",
+    "greeting": "Привет!",
+    "stars": "Звёзды",
+    "completed": "Пройдено заданий",
+    "continue": "Продолжить занятия",
+    "changeHelper": "Сменить помощника",
+    "noHelper": "Ты ещё не выбрал помощника.",
+    "noHelperCta": "Выбрать помощника"
   },
   "footer": {
     "tagline": "izn.study — поддерживаем и развиваем знания каждый день.",
