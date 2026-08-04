@@ -9,3 +9,13 @@ export const helperBg: Record<Helper["color"], string> = {
   sky: "bg-sky-100 dark:bg-sky-500/15",
   emerald: "bg-emerald-100 dark:bg-emerald-500/15",
 };
+
+// Яркие градиенты для крупного аватара помощника.
+export const helperGradient: Record<Helper["color"], string> = {
+  orange: "from-orange-300 to-amber-400",
+  amber: "from-amber-300 to-yellow-400",
+  violet: "from-violet-300 to-purple-400",
+  pink: "from-pink-300 to-rose-400",
+  sky: "from-sky-300 to-blue-400",
+  emerald: "from-emerald-300 to-green-400",
+};

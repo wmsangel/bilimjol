@@ -15,7 +15,7 @@ export default async function MePage({
   const dict = await getDictionary(lang);
 
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-5">
         <Link href={`/${lang}`} className="text-lg font-bold tracking-tight">
           izn<span className="text-indigo-600 dark:text-indigo-400">.study</span>
@@ -29,7 +29,7 @@ export default async function MePage({
       </header>
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center px-6 py-10">
-        <h1 className="mb-8 text-2xl font-bold tracking-tight">
+        <h1 className="mb-8 font-display text-3xl font-extrabold tracking-tight">
           {dict.cabinet.title}
         </h1>
         <Cabinet

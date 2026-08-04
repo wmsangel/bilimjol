@@ -1,7 +1,8 @@
 "use client";
 
-import { helpers, type Helper, type Locale } from "@izn-study/shared";
-import { helperBg } from "@/lib/helperTheme";
+import { helpers, type Locale } from "@izn-study/shared";
+import type { Helper } from "@izn-study/shared";
+import { helperGradient } from "@/lib/helperTheme";
 
 export function HelperPicker({
   locale,
@@ -21,21 +22,24 @@ export function HelperPicker({
             key={helper.id}
             onClick={() => onSelect(helper)}
             className={
-              "flex flex-col items-center gap-2 rounded-2xl border p-4 transition " +
+              "flex flex-col items-center gap-2 rounded-3xl border-2 bg-white p-4 shadow-sm transition hover:-translate-y-1 dark:bg-zinc-900 " +
               (active
-                ? "border-indigo-500 ring-2 ring-indigo-400"
-                : "border-black/10 hover:border-indigo-300 dark:border-white/15")
+                ? "border-indigo-500 ring-2 ring-indigo-300"
+                : "border-black/[.06] hover:border-indigo-300 dark:border-white/10")
             }
           >
             <span
               className={
-                "flex h-16 w-16 items-center justify-center rounded-full text-4xl " +
-                helperBg[helper.color]
+                "flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br text-4xl shadow-md " +
+                helperGradient[helper.color] +
+                (active ? " animate-bob" : "")
               }
             >
               {helper.emoji}
             </span>
-            <span className="text-sm font-medium">{helper.name[locale]}</span>
+            <span className="font-display text-sm font-bold">
+              {helper.name[locale]}
+            </span>
           </button>
         );
       })}

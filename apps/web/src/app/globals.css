@@ -8,13 +8,13 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-nunito);
+  --font-display: var(--font-comfortaa);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0b0b12;
     --foreground: #ededed;
   }
 }
@@ -22,5 +22,69 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-nunito), system-ui, sans-serif;
+}
+
+/* ---------- Анимации для детского интерфейса ---------- */
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-bob { animation: bob 2.4s ease-in-out infinite; }
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float { animation: floaty 3.2s ease-in-out infinite; }
+
+@keyframes pop-in {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.12); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-pop { animation: pop-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+
+/* Радость помощника: подпрыгивает и покачивается */
+@keyframes happy {
+  0% { transform: translateY(0) scale(1) rotate(0); }
+  25% { transform: translateY(-18px) scale(1.12) rotate(-8deg); }
+  45% { transform: translateY(0) scale(1) rotate(0); }
+  65% { transform: translateY(-10px) rotate(8deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+.animate-happy { animation: happy 0.8s ease; }
+
+/* Огорчение: лёгкая тряска */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+.animate-shake { animation: shake 0.5s ease; }
+
+/* Конфетти */
+@keyframes confetti-fall {
+  0% { transform: translateY(-20px) rotate(0); opacity: 1; }
+  100% { transform: translateY(420px) rotate(720deg); opacity: 0; }
+}
+.confetti-piece {
+  position: absolute;
+  top: 0;
+  will-change: transform, opacity;
+  animation: confetti-fall linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-bob,
+  .animate-float,
+  .animate-pop,
+  .animate-happy,
+  .animate-shake,
+  .confetti-piece {
+    animation: none;
+  }
 }

@@ -12,8 +12,9 @@ import {
 } from "@izn-study/shared";
 import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
 import { loadHelperId, saveHelperId } from "@/lib/prefs";
-import { helperBg } from "@/lib/helperTheme";
 import { HelperPicker } from "./HelperPicker";
+import { Mascot } from "./Mascot";
+import { Confetti } from "./Confetti";
 
 export interface PlayLabels {
   eyebrow: string;
@@ -45,6 +46,9 @@ export interface GameLabels {
 }
 
 type SubjectChoice = Subject | "all";
+
+const PRIMARY_BTN =
+  "w-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 text-lg font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none";
 
 function tpl(str: string, vars: Record<string, string | number>) {
   return str.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ""));
@@ -87,7 +91,6 @@ export function TaskPlayer({
   const [finished, setFinished] = useState(false);
   const [status, setStatus] = useState<Status>("answering");
 
-  // Ответы разных типов
   const [selected, setSelected] = useState<number | null>(null);
   const [numberValue, setNumberValue] = useState("");
   const [orderShuffled, setOrderShuffled] = useState<number[]>([]);
@@ -128,7 +131,6 @@ export function TaskPlayer({
   const answered = status !== "answering";
   const stars = activeTasks.filter((t) => results[t.id]?.correct).length;
 
-  // Настройка состояния под каждое задание (перемешивание, сброс ответа).
   useEffect(() => {
     if (!task) return;
     setStatus("answering");
@@ -157,9 +159,8 @@ export function TaskPlayer({
     );
     const firstUndone = list.findIndex((t) => !(t.id in results));
     setSubject(choice);
-    if (firstUndone === -1) {
-      setFinished(true);
-    } else {
+    if (firstUndone === -1) setFinished(true);
+    else {
       setIndex(firstUndone);
       setFinished(false);
     }
@@ -194,9 +195,11 @@ export function TaskPlayer({
 
   function submit() {
     const response = currentResponse();
-    if (response === null || (typeof response === "number" && Number.isNaN(response)))
+    if (
+      response === null ||
+      (typeof response === "number" && Number.isNaN(response))
+    )
       return;
-
     const correct = checkAnswer(task, response);
     const nextResults = { ...results, [task.id]: { correct } };
     setResults(nextResults);
@@ -220,7 +223,7 @@ export function TaskPlayer({
 
   if (!loaded) {
     return (
-      <div className="mx-auto h-64 w-full max-w-lg animate-pulse rounded-3xl border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+      <div className="mx-auto h-72 w-full max-w-lg animate-pulse rounded-[2rem] border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
     );
   }
 
@@ -228,7 +231,9 @@ export function TaskPlayer({
   if (!helper) {
     return (
       <div className="mx-auto w-full max-w-lg text-center">
-        <h2 className="text-2xl font-bold">{gameLabels.chooseTitle}</h2>
+        <h2 className="font-display text-3xl font-extrabold">
+          {gameLabels.chooseTitle}
+        </h2>
         <p className="mt-2 text-zinc-600 dark:text-zinc-400">
           {gameLabels.chooseSubtitle}
         </p>
@@ -239,11 +244,7 @@ export function TaskPlayer({
             onSelect={(h) => setPendingHelper(h.id)}
           />
         </div>
-        <button
-          onClick={chooseHelper}
-          disabled={!pendingHelper}
-          className="mt-6 w-full rounded-full bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
-        >
+        <button onClick={chooseHelper} disabled={!pendingHelper} className={"mt-6 " + PRIMARY_BTN}>
           {gameLabels.chooseCta}
         </button>
       </div>
@@ -259,16 +260,21 @@ export function TaskPlayer({
     ];
     return (
       <div className="mx-auto w-full max-w-lg text-center">
-        <h2 className="text-2xl font-bold">{gameLabels.subjectTitle}</h2>
+        <div className="mb-6 flex justify-center">
+          <Mascot helper={helper} mood="idle" />
+        </div>
+        <h2 className="font-display text-3xl font-extrabold">
+          {gameLabels.subjectTitle}
+        </h2>
         <div className="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
           {options.map((o) => (
             <button
               key={o.key}
               onClick={() => chooseSubject(o.key)}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-black/10 p-5 transition hover:border-indigo-300 dark:border-white/15"
+              className="flex flex-col items-center gap-2 rounded-3xl border-2 border-black/[.06] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-indigo-300 hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
             >
-              <span className="text-4xl">{o.emoji}</span>
-              <span className="text-sm font-medium">{o.label}</span>
+              <span className="text-5xl">{o.emoji}</span>
+              <span className="font-display font-bold">{o.label}</span>
             </button>
           ))}
         </div>
@@ -279,38 +285,45 @@ export function TaskPlayer({
   // 3. Финальный экран
   if (finished) {
     return (
-      <div className="mx-auto w-full max-w-lg rounded-3xl border border-black/[.06] bg-white p-8 text-center shadow-sm dark:border-white/10 dark:bg-zinc-900">
-        <div className="text-5xl">🎉</div>
-        <h2 className="mt-4 text-2xl font-bold">{labels.finishTitle}</h2>
-        <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
-          {tpl(labels.finishScore, { score: stars, total: activeTasks.length })}
-        </p>
-        <p className="mt-3 text-2xl">{"⭐".repeat(Math.max(stars, 0)) || "—"}</p>
+      <div className="relative mx-auto w-full max-w-lg text-center">
+        <Confetti />
+        <div className="mb-5 flex justify-center">
+          <Mascot helper={helper} mood="happy" size="lg" />
+        </div>
+        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-xl dark:border-white/10 dark:bg-zinc-900">
+          <h2 className="font-display text-3xl font-extrabold">
+            {labels.finishTitle}
+          </h2>
+          <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
+            {tpl(labels.finishScore, {
+              score: stars,
+              total: activeTasks.length,
+            })}
+          </p>
+          <p className="mt-3 text-3xl">{"⭐".repeat(Math.max(stars, 0)) || "—"}</p>
 
-        {lockedCount > 0 && (
-          <div className="mt-6 rounded-2xl border border-indigo-200 bg-indigo-50 p-5 dark:border-indigo-500/30 dark:bg-indigo-500/10">
-            <p className="font-semibold text-indigo-700 dark:text-indigo-300">
-              {labels.lockedTitle}
-            </p>
-            <p className="mt-1 text-sm text-indigo-700/80 dark:text-indigo-300/80">
-              {tpl(labels.lockedText, { count: lockedCount })}
-            </p>
+          {lockedCount > 0 && (
+            <div className="mt-6 rounded-2xl border-2 border-indigo-200 bg-indigo-50 p-5 dark:border-indigo-500/30 dark:bg-indigo-500/10">
+              <p className="font-display font-bold text-indigo-700 dark:text-indigo-300">
+                {labels.lockedTitle}
+              </p>
+              <p className="mt-1 text-sm text-indigo-700/80 dark:text-indigo-300/80">
+                {tpl(labels.lockedText, { count: lockedCount })}
+              </p>
+            </div>
+          )}
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <button onClick={restart} className={PRIMARY_BTN + " sm:w-auto sm:px-8"}>
+              {labels.restart}
+            </button>
+            <Link
+              href={homeHref}
+              className="rounded-full border-2 border-black/10 px-8 py-3.5 text-lg font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+            >
+              {labels.backHome}
+            </Link>
           </div>
-        )}
-
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <button
-            onClick={restart}
-            className="rounded-full bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-500"
-          >
-            {labels.restart}
-          </button>
-          <Link
-            href={homeHref}
-            className="rounded-full border border-black/10 px-6 py-3 font-semibold transition-colors hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
-          >
-            {labels.backHome}
-          </Link>
         </div>
       </div>
     );
@@ -318,11 +331,21 @@ export function TaskPlayer({
 
   if (!task) return null;
 
+  const mood: "idle" | "happy" | "sad" =
+    status === "correct" ? "happy" : status === "wrong" ? "sad" : "idle";
+  const mascotMessage = answered
+    ? status === "correct"
+      ? labels.cheerCorrect
+      : labels.cheerWrong
+    : undefined;
+
   return (
-    <div className="mx-auto w-full max-w-lg">
+    <div className="relative mx-auto w-full max-w-lg">
+      {status === "correct" && <Confetti />}
+
       {/* Прогресс */}
-      <div className="mb-6">
-        <div className="mb-2 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400">
+      <div className="mb-5">
+        <div className="mb-2 flex items-center justify-between text-sm font-semibold text-zinc-500 dark:text-zinc-400">
           <span>{labels.eyebrow}</span>
           <span>
             {tpl(labels.progress, {
@@ -331,45 +354,38 @@ export function TaskPlayer({
             })}
           </span>
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
+        <div className="h-3 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
           <div
-            className="h-full rounded-full bg-indigo-600 transition-all duration-300"
+            className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500"
             style={{ width: `${((index + 1) / activeTasks.length) * 100}%` }}
           />
         </div>
       </div>
 
+      {/* Большой помощник */}
+      <div className="mb-4 flex justify-center">
+        <Mascot helper={helper} mood={mood} message={mascotMessage} />
+      </div>
+
       {/* Карточка задания */}
-      <div className="rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm sm:p-8 dark:border-white/10 dark:bg-zinc-900">
-        {/* Помощник + звёзды */}
-        <div className="mb-5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span
-              className={
-                "flex h-11 w-11 items-center justify-center rounded-full text-2xl " +
-                helperBg[helper.color]
-              }
-            >
-              {helper.emoji}
-            </span>
-            <span className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-              {helper.name[locale]}
-            </span>
-          </div>
-          <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+      <div className="rounded-[2rem] border border-black/[.06] bg-white p-6 shadow-xl sm:p-8 dark:border-white/10 dark:bg-zinc-900">
+        <div className="mb-4 flex items-center justify-end">
+          <span className="rounded-full bg-gradient-to-r from-amber-300 to-yellow-400 px-4 py-1.5 text-sm font-extrabold text-amber-900 shadow-sm">
             ⭐ {stars}
           </span>
         </div>
 
         {task.illustration && (
-          <div className="mb-4 rounded-2xl bg-zinc-50 py-6 text-center text-4xl dark:bg-white/5">
+          <div className="mb-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 py-7 text-center text-5xl dark:from-indigo-500/10 dark:to-violet-500/10">
             {task.illustration}
           </div>
         )}
 
-        <p className="text-xl font-semibold leading-8">{task.prompt[locale]}</p>
+        <p className="font-display text-2xl font-bold leading-8">
+          {task.prompt[locale]}
+        </p>
 
-        {/* --- Варианты ответа по типу задания --- */}
+        {/* Ответы по типу задания */}
         <div className="mt-6">
           {task.type === "single_choice" && (
             <div className="space-y-3">
@@ -377,11 +393,11 @@ export function TaskPlayer({
                 const isSelected = selected === i;
                 const isCorrect = i === task.correctIndex;
                 let cls =
-                  "w-full rounded-2xl border px-5 py-4 text-left text-lg transition-colors ";
+                  "w-full rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
                 if (!answered) {
                   cls += isSelected
                     ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
-                    : "border-black/10 hover:border-indigo-300 dark:border-white/15";
+                    : "border-black/10 hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15";
                 } else if (isCorrect) {
                   cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
                 } else if (isSelected) {
@@ -414,17 +430,16 @@ export function TaskPlayer({
                 if (e.key === "Enter" && canSubmit && !answered) submit();
               }}
               placeholder={labels.numberPlaceholder}
-              className="w-full rounded-2xl border border-black/10 bg-transparent px-5 py-4 text-lg outline-none focus:border-indigo-500 dark:border-white/15"
+              className="w-full rounded-2xl border-2 border-black/10 bg-transparent px-5 py-4 text-center text-2xl font-bold outline-none focus:border-indigo-500 dark:border-white/15"
             />
           )}
 
           {task.type === "ordering" && (
             <div>
-              <p className="mb-3 text-sm text-zinc-500 dark:text-zinc-400">
+              <p className="mb-3 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
                 {labels.orderingHint}
               </p>
-              {/* Выбранный порядок */}
-              <div className="mb-3 flex min-h-14 flex-wrap gap-2 rounded-2xl border border-dashed border-black/15 p-3 dark:border-white/15">
+              <div className="mb-3 flex min-h-16 flex-wrap gap-2 rounded-2xl border-2 border-dashed border-black/15 p-3 dark:border-white/15">
                 {orderPicked.map((origIdx, pos) => {
                   const stateCls = !answered
                     ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
@@ -438,14 +453,13 @@ export function TaskPlayer({
                       onClick={() =>
                         setOrderPicked(orderPicked.filter((_, p) => p !== pos))
                       }
-                      className={`rounded-xl border px-4 py-2 text-lg ${stateCls}`}
+                      className={`rounded-xl border-2 px-4 py-2 text-xl font-bold ${stateCls}`}
                     >
                       {task.items[origIdx][locale]}
                     </button>
                   );
                 })}
               </div>
-              {/* Доступные элементы */}
               <div className="flex flex-wrap gap-2">
                 {orderShuffled
                   .filter((i) => !orderPicked.includes(i))
@@ -454,7 +468,7 @@ export function TaskPlayer({
                       key={i}
                       disabled={answered}
                       onClick={() => setOrderPicked([...orderPicked, i])}
-                      className="rounded-xl border border-black/10 px-4 py-2 text-lg transition-colors hover:border-indigo-300 dark:border-white/15"
+                      className="rounded-xl border-2 border-black/10 px-4 py-2 text-xl font-bold transition hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15"
                     >
                       {task.items[i][locale]}
                     </button>
@@ -465,7 +479,7 @@ export function TaskPlayer({
 
           {task.type === "match_pairs" && (
             <div>
-              <p className="mb-3 text-sm text-zinc-500 dark:text-zinc-400">
+              <p className="mb-3 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
                 {labels.matchHint}
               </p>
               <div className="grid grid-cols-2 gap-3">
@@ -474,18 +488,20 @@ export function TaskPlayer({
                     const matchedRight = pairs[i];
                     const isMatched = matchedRight !== undefined;
                     let cls =
-                      "w-full rounded-2xl border px-4 py-3 text-left text-lg transition-colors ";
+                      "w-full rounded-2xl border-2 px-4 py-3 text-left text-lg font-semibold transition ";
                     if (answered && isMatched) {
                       cls +=
                         matchedRight === i
                           ? "border-green-500 bg-green-50 dark:bg-green-500/10"
                           : "border-red-400 bg-red-50 dark:bg-red-500/10";
                     } else if (selectedLeft === i) {
-                      cls += "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10";
+                      cls +=
+                        "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10";
                     } else if (isMatched) {
                       cls += "border-indigo-300 dark:border-indigo-500/40";
                     } else {
-                      cls += "border-black/10 hover:border-indigo-300 dark:border-white/15";
+                      cls +=
+                        "border-black/10 hover:border-indigo-300 dark:border-white/15";
                     }
                     return (
                       <button
@@ -528,7 +544,7 @@ export function TaskPlayer({
                           }
                         }}
                         className={
-                          "w-full rounded-2xl border px-4 py-3 text-left text-lg transition-colors " +
+                          "w-full rounded-2xl border-2 px-4 py-3 text-left text-lg font-semibold transition " +
                           (used
                             ? "border-black/10 opacity-40 dark:border-white/15"
                             : "border-black/10 hover:border-indigo-300 dark:border-white/15")
@@ -544,50 +560,28 @@ export function TaskPlayer({
           )}
         </div>
 
-        {/* Реакция помощника + разбор */}
+        {/* Разбор */}
         {answered && (
           <div
             className={
-              status === "correct"
-                ? "mt-6 flex gap-3 rounded-2xl bg-green-50 p-4 dark:bg-green-500/10"
-                : "mt-6 flex gap-3 rounded-2xl bg-red-50 p-4 dark:bg-red-500/10"
+              "mt-6 rounded-2xl p-4 text-sm " +
+              (status === "correct"
+                ? "bg-green-50 text-green-800 dark:bg-green-500/10 dark:text-green-300"
+                : "bg-amber-50 text-amber-800 dark:bg-amber-500/10 dark:text-amber-200")
             }
           >
-            <span className="text-3xl">
-              {status === "correct" ? "🎉" : helper.emoji}
-            </span>
-            <div>
-              <p
-                className={
-                  status === "correct"
-                    ? "font-semibold text-green-700 dark:text-green-400"
-                    : "font-semibold text-red-600 dark:text-red-400"
-                }
-              >
-                {status === "correct" ? labels.cheerCorrect : labels.cheerWrong}
-              </p>
-              <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                {task.explanation[locale]}
-              </p>
-            </div>
+            {task.explanation[locale]}
           </div>
         )}
 
         {/* Кнопка действия */}
         <div className="mt-6">
           {!answered ? (
-            <button
-              onClick={submit}
-              disabled={!canSubmit}
-              className="w-full rounded-full bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
-            >
+            <button onClick={submit} disabled={!canSubmit} className={PRIMARY_BTN}>
               {labels.check}
             </button>
           ) : (
-            <button
-              onClick={next}
-              className="w-full rounded-full bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-500"
-            >
+            <button onClick={next} className={PRIMARY_BTN}>
               {labels.next}
             </button>
           )}

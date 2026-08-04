@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Nunito, Comfortaa } from "next/font/google";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import { locales, isLocale } from "@/i18n/config";
 import { getDictionary } from "./dictionaries";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin", "cyrillic"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const comfortaa = Comfortaa({
+  variable: "--font-comfortaa",
+  subsets: ["latin", "cyrillic"],
 });
 
 // Заранее генерируем страницы для всех локалей (статический рендер).
@@ -44,7 +44,7 @@ export default async function RootLayout({
   return (
     <html
       lang={lang}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${nunito.variable} ${comfortaa.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

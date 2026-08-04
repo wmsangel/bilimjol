@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { getHelper, type Locale } from "@izn-study/shared";
 import { loadProgress } from "@/lib/progress";
 import { loadHelperId, removeHelperId } from "@/lib/prefs";
-import { helperBg } from "@/lib/helperTheme";
+import { Mascot } from "./Mascot";
 
 export interface CabinetLabels {
   title: string;
@@ -72,34 +72,31 @@ export function Cabinet({
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="rounded-3xl border border-black/[.06] bg-white p-8 text-center shadow-sm dark:border-white/10 dark:bg-zinc-900">
-        <span
-          className={
-            "mx-auto flex h-24 w-24 items-center justify-center rounded-full text-6xl " +
-            helperBg[helper.color]
-          }
-        >
-          {helper.emoji}
-        </span>
-        <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+      <div className="mb-4 flex justify-center">
+        <Mascot helper={helper} mood="idle" size="lg" />
+      </div>
+      <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl dark:border-white/10 dark:bg-zinc-900">
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
           {labels.greeting}
         </p>
-        <h2 className="text-2xl font-bold">{helper.name[locale]}</h2>
+        <h2 className="font-display text-2xl font-extrabold">
+          {helper.name[locale]}
+        </h2>
 
         <div className="mt-6 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl bg-amber-100 p-4 dark:bg-amber-500/15">
-            <div className="text-2xl font-bold text-amber-700 dark:text-amber-300">
+          <div className="rounded-2xl bg-gradient-to-br from-amber-100 to-yellow-200 p-4 dark:from-amber-500/15 dark:to-yellow-500/10">
+            <div className="font-display text-3xl font-extrabold text-amber-700 dark:text-amber-300">
               ⭐ {stars}
             </div>
-            <div className="mt-1 text-xs font-medium text-amber-700/80 dark:text-amber-300/80">
+            <div className="mt-1 text-xs font-semibold text-amber-700/80 dark:text-amber-300/80">
               {labels.stars}
             </div>
           </div>
-          <div className="rounded-2xl bg-indigo-100 p-4 dark:bg-indigo-500/15">
-            <div className="text-2xl font-bold text-indigo-700 dark:text-indigo-300">
+          <div className="rounded-2xl bg-gradient-to-br from-indigo-100 to-violet-200 p-4 dark:from-indigo-500/15 dark:to-violet-500/10">
+            <div className="font-display text-3xl font-extrabold text-indigo-700 dark:text-indigo-300">
               {completed}
             </div>
-            <div className="mt-1 text-xs font-medium text-indigo-700/80 dark:text-indigo-300/80">
+            <div className="mt-1 text-xs font-semibold text-indigo-700/80 dark:text-indigo-300/80">
               {labels.completed}
             </div>
           </div>
@@ -107,13 +104,13 @@ export function Cabinet({
 
         <Link
           href={playHref}
-          className="mt-6 block rounded-full bg-indigo-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-indigo-500"
+          className="mt-6 block rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 text-lg font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.98]"
         >
           {labels.continue}
         </Link>
         <button
           onClick={changeHelper}
-          className="mt-3 text-sm font-medium text-zinc-500 hover:text-foreground dark:text-zinc-400"
+          className="mt-3 text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
         >
           {labels.changeHelper}
         </button>
