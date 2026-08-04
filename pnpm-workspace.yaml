@@ -1,0 +1,9 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# добавлено Next.js: эти пакеты собирают нативные бинарники —
+# pnpm по умолчанию не запускает их build-скрипты без явного разрешения
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver
