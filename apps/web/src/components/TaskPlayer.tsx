@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { checkAnswer, type Locale, type Task } from "@izn-study/shared";
+import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
 
 export interface PlayLabels {
   eyebrow: string;
@@ -40,15 +41,30 @@ export function TaskPlayer({
   lockedCount: number;
   homeHref: string;
 }) {
+  const [loaded, setLoaded] = useState(false);
+  const [results, setResults] = useState<ProgressMap>({});
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [numberValue, setNumberValue] = useState("");
   const [status, setStatus] = useState<Status>("answering");
-  const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
+
+  // При монтировании восстанавливаем прогресс и продолжаем с первого нерешённого.
+  useEffect(() => {
+    const saved = loadProgress();
+    setResults(saved);
+    const firstUndone = tasks.findIndex((t) => !(t.id in saved));
+    if (firstUndone === -1) {
+      setFinished(true);
+    } else {
+      setIndex(firstUndone);
+    }
+    setLoaded(true);
+  }, [tasks]);
 
   const task = tasks[index];
   const answered = status !== "answering";
+  const score = tasks.filter((t) => results[t.id]?.correct).length;
 
   function reset() {
     setSelected(null);
@@ -62,7 +78,9 @@ export function TaskPlayer({
     if (response === null || Number.isNaN(response)) return;
 
     const correct = checkAnswer(task, response);
-    if (correct) setScore((s) => s + 1);
+    const nextResults = { ...results, [task.id]: { correct } };
+    setResults(nextResults);
+    saveProgress(nextResults);
     setStatus(correct ? "correct" : "wrong");
   }
 
@@ -76,14 +94,26 @@ export function TaskPlayer({
   }
 
   function restart() {
+    const cleared = { ...results };
+    for (const t of tasks) delete cleared[t.id];
+    setResults(cleared);
+    saveProgress(cleared);
     setIndex(0);
-    setScore(0);
     setFinished(false);
     reset();
   }
 
   const canSubmit =
-    task?.type === "single_choice" ? selected !== null : numberValue.trim() !== "";
+    task?.type === "single_choice"
+      ? selected !== null
+      : numberValue.trim() !== "";
+
+  // До восстановления прогресса — лёгкий плейсхолдер (без мигания «задание 1»).
+  if (!loaded) {
+    return (
+      <div className="mx-auto h-64 w-full max-w-lg animate-pulse rounded-3xl border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+    );
+  }
 
   if (finished) {
     return (
@@ -129,7 +159,9 @@ export function TaskPlayer({
       <div className="mb-6">
         <div className="mb-2 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400">
           <span>{labels.eyebrow}</span>
-          <span>{tpl(labels.progress, { current: index + 1, total: tasks.length })}</span>
+          <span>
+            {tpl(labels.progress, { current: index + 1, total: tasks.length })}
+          </span>
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
           <div
