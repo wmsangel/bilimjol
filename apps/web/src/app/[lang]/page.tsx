@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -24,12 +25,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           >
             {dict.nav.signIn}
           </a>
-          <a
-            href="#"
+          <Link
+            href={`/${lang}/play`}
             className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
           >
             {dict.nav.start}
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -46,12 +47,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             {dict.hero.subtitle}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="#"
+            <Link
+              href={`/${lang}/play`}
               className="rounded-full bg-indigo-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-indigo-500"
             >
               {dict.hero.ctaPrimary}
-            </a>
+            </Link>
             <a
               href="#features"
               className="rounded-full border border-black/10 px-6 py-3 text-base font-semibold transition-colors hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
