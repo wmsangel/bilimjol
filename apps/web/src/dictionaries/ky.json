@@ -67,6 +67,7 @@
     "restart": "Кайра өтүү",
     "lockedTitle": "Дагы каалайсыңбы?",
     "lockedText": "Дагы {count} тапшырма жана бардык предметтер жазылуу менен ачылат.",
+    "subscribeCta": "Жазылууну таризде",
     "backHome": "Башкы бетке"
   },
   "game": {
@@ -92,7 +93,9 @@
     "streak": "күн катары менен",
     "daily": "Бүгүнкү максат",
     "dailyDone": "Максат аткарылды! 🎉",
-    "achievementsTitle": "Жетишкендиктер"
+    "achievementsTitle": "Жетишкендиктер",
+    "premiumActive": "Премиум активдүү, чейин:",
+    "subscribe": "Жазылууну таризде"
   },
   "achievements": {
     "firstTask": "Биринчи кадам",

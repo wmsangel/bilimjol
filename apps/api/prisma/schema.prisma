@@ -18,6 +18,23 @@ model User {
   updatedAt    DateTime       @updatedAt
   children     ChildProfile[]
   refreshTokens RefreshToken[]
+  subscriptions Subscription[]
+}
+
+/// Подписка родителя. Активная подписка = премиум-доступ всем его детям.
+model Subscription {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan             String   @default("monthly")
+  status           String   @default("active") // active | canceled | expired
+  provider         String // dev | freedompay | paybox
+  externalId       String?
+  currentPeriodEnd DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
 }
 
 /// Профиль ребёнка. Минимум ПДн: имя, класс, аватар-помощник.

@@ -177,6 +177,24 @@ export function getState(childId: string) {
   return request<ServerState>(`/children/${childId}/state`, { method: "GET" });
 }
 
+// ── Подписка ──
+export interface Entitlement {
+  premium: boolean;
+  until: string | null;
+  plan: string | null;
+}
+
+export function getEntitlement() {
+  return request<Entitlement>("/billing/entitlement", { method: "GET" });
+}
+
+export function checkout(plan = "monthly", provider = "dev") {
+  return request<{ premium: boolean; until: string | null; redirectUrl: string | null }>(
+    "/billing/checkout",
+    { method: "POST", body: JSON.stringify({ plan, provider }) },
+  );
+}
+
 export function syncState(childId: string, snapshot: ServerState) {
   return request<ServerState>(`/children/${childId}/sync`, {
     method: "POST",

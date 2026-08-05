@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   checkAnswer,
   getHelper,
@@ -14,6 +15,7 @@ import {
 import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
 import { loadHelperId, saveHelperId } from "@/lib/prefs";
 import { recordActivity } from "@/lib/stats";
+import { checkout, getEntitlement, isLoggedIn } from "@/lib/api";
 import { HelperPicker } from "./HelperPicker";
 import { Mascot } from "./Mascot";
 import { Confetti } from "./Confetti";
@@ -36,6 +38,7 @@ export interface PlayLabels {
   restart: string;
   lockedTitle: string;
   lockedText: string;
+  subscribeCta: string;
   backHome: string;
 }
 
@@ -78,13 +81,18 @@ export function TaskPlayer({
   labels,
   gameLabels,
   homeHref,
+  loginHref,
 }: {
   locale: Locale;
   allTasks: Task[];
   labels: PlayLabels;
   gameLabels: GameLabels;
   homeHref: string;
+  loginHref: string;
 }) {
+  const router = useRouter();
+  const [premium, setPremium] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [helperId, setHelperId] = useState<string | null>(null);
   const [pendingHelper, setPendingHelper] = useState<string | null>(null);
@@ -106,21 +114,29 @@ export function TaskPlayer({
     setHelperId(loadHelperId());
     setResults(loadProgress());
     setLoaded(true);
+    if (isLoggedIn()) {
+      getEntitlement()
+        .then((e) => setPremium(e.premium))
+        .catch(() => undefined);
+    }
   }, []);
 
   const helper = getHelper(helperId);
 
   const activeTasks = useMemo(
-    () => (topicId ? allTasks.filter((t) => t.topic === topicId && t.free) : []),
-    [topicId, allTasks],
+    () =>
+      topicId
+        ? allTasks.filter((t) => t.topic === topicId && (premium || t.free))
+        : [],
+    [topicId, allTasks, premium],
   );
 
   const lockedCount = useMemo(
     () =>
-      topicId
+      topicId && !premium
         ? allTasks.filter((t) => t.topic === topicId && !t.free).length
         : 0,
-    [topicId, allTasks],
+    [topicId, allTasks, premium],
   );
 
   const task = activeTasks[index];
@@ -151,13 +167,37 @@ export function TaskPlayer({
   }
 
   function chooseTopic(id: string) {
-    const list = allTasks.filter((t) => t.topic === id && t.free);
+    const list = allTasks.filter((t) => t.topic === id && (premium || t.free));
     const firstUndone = list.findIndex((t) => !(t.id in results));
     setTopicId(id);
     if (firstUndone === -1) setFinished(true);
     else {
       setIndex(firstUndone);
       setFinished(false);
+    }
+  }
+
+  async function subscribe() {
+    if (!isLoggedIn()) {
+      router.push(loginHref);
+      return;
+    }
+    setSubscribing(true);
+    try {
+      const r = await checkout();
+      if (r.premium) {
+        setPremium(true);
+        if (topicId) {
+          const list = allTasks.filter((t) => t.topic === topicId);
+          const firstUndone = list.findIndex((t) => !(t.id in results));
+          setFinished(false);
+          setIndex(firstUndone === -1 ? 0 : firstUndone);
+        }
+      }
+    } catch {
+      // no-op
+    } finally {
+      setSubscribing(false);
     }
   }
 
@@ -271,11 +311,11 @@ export function TaskPlayer({
               </h3>
               <div className="space-y-2.5">
                 {subjTopics.map((topic) => {
-                  const free = allTasks.filter(
-                    (t) => t.topic === topic.id && t.free,
+                  const avail = allTasks.filter(
+                    (t) => t.topic === topic.id && (premium || t.free),
                   );
-                  const done = free.filter((t) => t.id in results).length;
-                  const complete = free.length > 0 && done === free.length;
+                  const done = avail.filter((t) => t.id in results).length;
+                  const complete = avail.length > 0 && done === avail.length;
                   return (
                     <button
                       key={topic.id}
@@ -295,7 +335,7 @@ export function TaskPlayer({
                             {"○".repeat(3 - topic.difficulty)}
                           </span>
                           <span>
-                            {done}/{free.length}
+                            {done}/{avail.length}
                           </span>
                         </div>
                       </div>
@@ -339,6 +379,13 @@ export function TaskPlayer({
               <p className="mt-1 text-sm text-indigo-700/80 dark:text-indigo-300/80">
                 {tpl(labels.lockedText, { count: lockedCount })}
               </p>
+              <button
+                onClick={subscribe}
+                disabled={subscribing}
+                className="mt-4 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:opacity-50"
+              >
+                {labels.subscribeCta}
+              </button>
             </div>
           )}
 

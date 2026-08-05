@@ -67,6 +67,7 @@
     "restart": "Пройти заново",
     "lockedTitle": "Хочешь ещё?",
     "lockedText": "Ещё {count} заданий и все предметы открываются по подписке.",
+    "subscribeCta": "Оформить подписку",
     "backHome": "На главную"
   },
   "game": {
@@ -92,7 +93,9 @@
     "streak": "дней подряд",
     "daily": "Цель на сегодня",
     "dailyDone": "Цель выполнена! 🎉",
-    "achievementsTitle": "Достижения"
+    "achievementsTitle": "Достижения",
+    "premiumActive": "Премиум активен до",
+    "subscribe": "Оформить подписку"
   },
   "achievements": {
     "firstTask": "Первый шаг",

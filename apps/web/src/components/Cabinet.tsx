@@ -15,7 +15,14 @@ import {
   todayProgress,
   type StatsStore,
 } from "@/lib/stats";
-import { loadAuth, loadChildId, logout as apiLogout } from "@/lib/api";
+import {
+  checkout,
+  getEntitlement,
+  isLoggedIn,
+  loadAuth,
+  loadChildId,
+  logout as apiLogout,
+} from "@/lib/api";
 import { syncChild } from "@/lib/sync";
 import { Mascot } from "./Mascot";
 
@@ -39,6 +46,8 @@ export interface CabinetLabels {
   daily: string;
   dailyDone: string;
   achievementsTitle: string;
+  premiumActive: string;
+  subscribe: string;
 }
 
 const EMPTY_STATS: StatsStore = {
@@ -74,6 +83,8 @@ export function Cabinet({
   const [totalSolved, setTotalSolved] = useState(0);
   const [subjectsTried, setSubjectsTried] = useState(0);
   const [email, setEmail] = useState<string | null>(null);
+  const [premiumUntil, setPremiumUntil] = useState<string | null>(null);
+  const [subscribing, setSubscribing] = useState(false);
   const router = useRouter();
 
   function loadAll() {
@@ -93,11 +104,16 @@ export function Cabinet({
     setEmail(auth?.user.email ?? null);
     setLoaded(true);
 
-    // Если вошли — подтягиваем прогресс с сервера.
+    // Если вошли — подтягиваем прогресс и статус подписки с сервера.
     const childId = loadChildId();
     if (auth && childId) {
       syncChild(childId)
         .then(() => loadAll())
+        .catch(() => undefined);
+    }
+    if (auth) {
+      getEntitlement()
+        .then((e) => setPremiumUntil(e.premium ? e.until : null))
         .catch(() => undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,7 +129,23 @@ export function Cabinet({
   async function onLogout() {
     await apiLogout();
     setEmail(null);
+    setPremiumUntil(null);
   }
+
+  async function onSubscribe() {
+    setSubscribing(true);
+    try {
+      const r = await checkout();
+      if (r.premium) setPremiumUntil(r.until);
+    } catch {
+      // no-op
+    } finally {
+      setSubscribing(false);
+    }
+  }
+
+  const fmtDate = (iso: string | null) =>
+    iso ? new Date(iso).toLocaleDateString(locale === "ky" ? "ky-KG" : "ru-RU") : "";
 
   if (!loaded) {
     return (
@@ -272,6 +304,21 @@ export function Cabinet({
         <div className="mt-5 border-t border-black/[.06] pt-4 text-center dark:border-white/10">
           {email ? (
             <>
+              <div className="mb-3">
+                {premiumUntil ? (
+                  <span className="inline-block rounded-full bg-gradient-to-r from-amber-300 to-yellow-400 px-3 py-1 text-xs font-bold text-amber-900">
+                    ⭐ {labels.premiumActive} {fmtDate(premiumUntil)}
+                  </span>
+                ) : (
+                  <button
+                    onClick={onSubscribe}
+                    disabled={subscribing}
+                    className="rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-2 text-sm font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:opacity-50"
+                  >
+                    {labels.subscribe}
+                  </button>
+                )}
+              </div>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 {accountLabels.loggedInAs}{" "}
                 <span className="font-semibold">{email}</span>
