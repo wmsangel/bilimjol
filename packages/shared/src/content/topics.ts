@@ -1,9 +1,10 @@
-import type { Difficulty, LocalizedText, Subject } from "./types";
+import type { Difficulty, Grade, LocalizedText, Subject } from "./types";
 
-// Тема — курс из нескольких заданий внутри предмета.
+// Тема — курс из нескольких заданий внутри предмета и класса.
 export interface Topic {
   id: string;
   subject: Subject;
+  grade: Grade;
   title: LocalizedText;
   icon: string;
   difficulty: Difficulty;
@@ -11,30 +12,50 @@ export interface Topic {
 }
 
 export const topics: Topic[] = [
-  // Логика
-  { id: "log-odd", subject: "logic", icon: "🍎", difficulty: 1, order: 1,
+  // ── Подготовка к школе (класс 0) ──────────────────────
+  { id: "pre-count", subject: "math", grade: 0, icon: "🔢", difficulty: 1, order: 1,
+    title: { ru: "Счёт до 5", ky: "5ке чейин санөө" } },
+  { id: "pre-more", subject: "math", grade: 0, icon: "⚖️", difficulty: 1, order: 2,
+    title: { ru: "Где больше", ky: "Кайда көп" } },
+  { id: "pre-odd", subject: "logic", grade: 0, icon: "🍎", difficulty: 1, order: 3,
     title: { ru: "Найди лишнее", ky: "Ашыгын тап" } },
-  { id: "log-seq", subject: "logic", icon: "🔷", difficulty: 2, order: 2,
+  { id: "pre-shapes", subject: "logic", grade: 0, icon: "🔷", difficulty: 1, order: 4,
+    title: { ru: "Цвета и фигуры", ky: "Түстөр жана фигуралар" } },
+  { id: "pre-letters", subject: "reading", grade: 0, icon: "🔤", difficulty: 1, order: 5,
+    title: { ru: "Первые буквы", ky: "Биринчи тамгалар" } },
+
+  // ── 1 класс ───────────────────────────────────────────
+  { id: "log-odd", subject: "logic", grade: 1, icon: "🍎", difficulty: 1, order: 1,
+    title: { ru: "Найди лишнее", ky: "Ашыгын тап" } },
+  { id: "log-seq", subject: "logic", grade: 1, icon: "🔷", difficulty: 2, order: 2,
     title: { ru: "Закономерности", ky: "Закон ченемдер" } },
-  { id: "log-think", subject: "logic", icon: "🧠", difficulty: 3, order: 3,
-    title: { ru: "Логика и сравнение", ky: "Логика жана салыштыруу" } },
-
-  // Математика
-  { id: "math-count", subject: "math", icon: "🔢", difficulty: 1, order: 1,
+  { id: "math-count", subject: "math", grade: 1, icon: "🔢", difficulty: 1, order: 3,
     title: { ru: "Счёт", ky: "Эсептөө" } },
-  { id: "math-add", subject: "math", icon: "➕", difficulty: 2, order: 2,
+  { id: "math-add", subject: "math", grade: 1, icon: "➕", difficulty: 2, order: 4,
     title: { ru: "Сложение и вычитание", ky: "Кошуу жана кемитүү" } },
-  { id: "math-seq", subject: "math", icon: "📈", difficulty: 2, order: 3,
-    title: { ru: "Числовые ряды", ky: "Сан катарлары" } },
-
-  // Чтение
-  { id: "read-letters", subject: "reading", icon: "🔤", difficulty: 1, order: 1,
+  { id: "read-letters", subject: "reading", grade: 1, icon: "🔤", difficulty: 1, order: 5,
     title: { ru: "Буквы и звуки", ky: "Тамгалар жана тыбыштар" } },
+
+  // ── 2 класс ───────────────────────────────────────────
+  { id: "log-think", subject: "logic", grade: 2, icon: "🧠", difficulty: 3, order: 1,
+    title: { ru: "Логика и сравнение", ky: "Логика жана салыштыруу" } },
+  { id: "math-seq", subject: "math", grade: 2, icon: "📈", difficulty: 2, order: 2,
+    title: { ru: "Числовые ряды", ky: "Сан катарлары" } },
 ];
 
-export function getTopics(subject?: Subject): Topic[] {
-  const list = subject ? topics.filter((t) => t.subject === subject) : topics;
-  return [...list].sort((a, b) => a.order - b.order);
+/** Доступные классы (по имеющемуся контенту), по возрастанию. */
+export const GRADES: Grade[] = [...new Set(topics.map((t) => t.grade))].sort(
+  (a, b) => a - b,
+);
+
+export function getTopics(filter?: { subject?: Subject; grade?: Grade }): Topic[] {
+  return topics
+    .filter((t) => {
+      if (filter?.subject && t.subject !== filter.subject) return false;
+      if (filter?.grade !== undefined && t.grade !== filter.grade) return false;
+      return true;
+    })
+    .sort((a, b) => a.order - b.order);
 }
 
 export function getTopic(id: string): Topic | undefined {

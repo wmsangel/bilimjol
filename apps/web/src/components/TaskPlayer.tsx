@@ -7,6 +7,7 @@ import {
   checkAnswer,
   getHelper,
   getTopics,
+  GRADES,
   subjectLabels,
   SUBJECTS,
   type Locale,
@@ -48,6 +49,7 @@ export interface GameLabels {
   chooseCta: string;
   subjectTitle: string;
   subjectAll: string;
+  gradeTitle: string;
   topicsTitle: string;
   unlockFor: string;
   notEnoughStars: string;
@@ -80,6 +82,7 @@ export function TaskPlayer({
   allTasks,
   labels,
   gameLabels,
+  gradeLabels,
   homeHref,
   loginHref,
 }: {
@@ -87,6 +90,7 @@ export function TaskPlayer({
   allTasks: Task[];
   labels: PlayLabels;
   gameLabels: GameLabels;
+  gradeLabels: Record<string, string>;
   homeHref: string;
   loginHref: string;
 }) {
@@ -96,6 +100,7 @@ export function TaskPlayer({
   const [loaded, setLoaded] = useState(false);
   const [helperId, setHelperId] = useState<string | null>(null);
   const [pendingHelper, setPendingHelper] = useState<string | null>(null);
+  const [grade, setGrade] = useState<number | null>(null);
   const [topicId, setTopicId] = useState<string | null>(null);
   const [results, setResults] = useState<ProgressMap>({});
   const [index, setIndex] = useState(0);
@@ -164,6 +169,11 @@ export function TaskPlayer({
     if (!pendingHelper) return;
     saveHelperId(pendingHelper);
     setHelperId(pendingHelper);
+  }
+
+  function chooseGrade(g: number) {
+    setGrade(g);
+    setTopicId(null);
   }
 
   function chooseTopic(id: string) {
@@ -290,19 +300,50 @@ export function TaskPlayer({
     );
   }
 
-  // 2. Карта тем
-  if (!topicId) {
+  // 2. Выбор класса
+  if (grade === null) {
     return (
-      <div className="mx-auto w-full max-w-lg">
+      <div className="mx-auto w-full max-w-lg text-center">
         <div className="mb-5 flex justify-center">
           <Mascot helper={helper} mood="idle" />
         </div>
+        <h2 className="font-display text-3xl font-extrabold">
+          {gameLabels.gradeTitle}
+        </h2>
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          {GRADES.map((g) => (
+            <button
+              key={g}
+              onClick={() => chooseGrade(g)}
+              className="flex flex-col items-center gap-2 rounded-3xl border-2 border-black/[.06] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-indigo-300 hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+            >
+              <span className="text-4xl">{g === 0 ? "🎒" : "🏫"}</span>
+              <span className="font-display font-bold">
+                {gradeLabels[String(g)] ?? String(g)}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // 3. Карта тем
+  if (!topicId) {
+    return (
+      <div className="mx-auto w-full max-w-lg">
+        <button
+          onClick={() => setGrade(null)}
+          className="mb-2 text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+        >
+          ← {gradeLabels[String(grade)] ?? gameLabels.gradeTitle}
+        </button>
         <h2 className="text-center font-display text-3xl font-extrabold">
           {gameLabels.topicsTitle}
         </h2>
 
         {SUBJECTS.map((subj) => {
-          const subjTopics = getTopics(subj);
+          const subjTopics = getTopics({ subject: subj, grade });
           if (subjTopics.length === 0) return null;
           return (
             <div key={subj} className="mt-6">

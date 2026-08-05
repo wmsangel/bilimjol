@@ -7,8 +7,8 @@ export type Subject = "logic" | "math" | "reading";
 /** Уровень сложности: 1 — лёгкий, 2 — средний, 3 — сложный. */
 export type Difficulty = 1 | 2 | 3;
 
-/** Класс. В MVP — только 1 и 2. */
-export type Grade = 1 | 2;
+/** Класс: 0 — подготовка к школе (садик), далее 1–11. */
+export type Grade = number;
 
 /** Строка, переведённая на все поддерживаемые языки. */
 export type LocalizedText = Record<Locale, string>;

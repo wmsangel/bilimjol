@@ -38,6 +38,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             {dict.nav.cabinet}
           </Link>
           <Link
+            href={`/${lang}/login`}
+            className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
+          >
+            {dict.auth.loginCta}
+          </Link>
+          <Link
             href={`/${lang}/play`}
             className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-4 py-2 text-sm font-bold text-white shadow-md shadow-indigo-500/30 transition hover:brightness-110"
           >

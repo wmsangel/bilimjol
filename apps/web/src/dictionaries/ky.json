@@ -112,6 +112,7 @@
     "chooseCta": "Кеттик!",
     "subjectTitle": "Эмнени чечебиз?",
     "subjectAll": "Баары чогуу",
+    "gradeTitle": "Классты танда",
     "topicsTitle": "Теманы танда",
     "unlockFor": "Ач:",
     "notEnoughStars": "Жылдыз жетишсиз"
@@ -177,6 +178,11 @@
     "granted": "Премиум берилди",
     "newPasswordLabel": "Жаңы сырсөз",
     "dismiss": "Ок"
+  },
+  "grades": {
+    "0": "Мектепке даярдык",
+    "1": "1-класс",
+    "2": "2-класс"
   },
   "account": {
     "progress": "Менин прогрессим",

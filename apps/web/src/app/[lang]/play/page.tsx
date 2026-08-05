@@ -35,6 +35,7 @@ export default async function PlayPage({
           allTasks={tasks}
           labels={dict.play}
           gameLabels={dict.game}
+          gradeLabels={dict.grades}
           homeHref={`/${lang}`}
           loginHref={`/${lang}/login`}
         />
