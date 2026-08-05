@@ -2,9 +2,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "../dictionaries";
-import { Cabinet } from "@/components/Cabinet";
+import { AccountForm } from "@/components/AccountForm";
 
-export default async function MePage({
+export default async function LoginPage({
   params,
 }: {
   params: Promise<{ lang: string }>;
@@ -17,28 +17,22 @@ export default async function MePage({
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-5">
-        <Link href={`/${lang}`} className="text-lg font-bold tracking-tight">
+        <Link href={`/${lang}`} className="font-display text-xl font-extrabold">
           izn<span className="text-indigo-600 dark:text-indigo-400">.study</span>
         </Link>
         <Link
           href={`/${lang}`}
-          className="text-sm font-medium text-zinc-500 hover:text-foreground dark:text-zinc-400"
+          className="text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
         >
           {dict.play.backHome}
         </Link>
       </header>
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center px-6 py-10">
-        <h1 className="mb-8 font-display text-3xl font-extrabold tracking-tight">
-          {dict.cabinet.title}
-        </h1>
-        <Cabinet
+      <main className="mx-auto flex w-full max-w-5xl flex-1 items-start justify-center px-6 py-10">
+        <AccountForm
           locale={lang}
-          labels={dict.cabinet}
-          achievementsLabels={dict.achievements}
-          accountLabels={dict.auth}
-          loginHref={`/${lang}/login`}
-          playHref={`/${lang}/play`}
+          labels={dict.auth}
+          meHref={`/${lang}/me`}
         />
       </main>
     </div>

@@ -102,6 +102,24 @@
     "bothSubjects": "Логика жана математика",
     "unlockHero": "Жаңы каарман"
   },
+  "auth": {
+    "loginTitle": "Ата-энелер үчүн кирүү",
+    "registerTitle": "Аккаунт түзүү",
+    "email": "Email",
+    "password": "Сырсөз",
+    "loginCta": "Кирүү",
+    "registerCta": "Катталуу",
+    "toRegister": "Аккаунтуңуз жокпу? Катталыңыз",
+    "toLogin": "Аккаунтуңуз барбы? Кирүү",
+    "syncing": "Синхрондоштуруу…",
+    "errorGeneric": "Бир нерсе туура эмес болду, кайра аракет кылыңыз",
+    "errorCredentials": "Email же сырсөз туура эмес",
+    "errorEmailTaken": "Бул email мурда катталган",
+    "errorEmailInvalid": "Туура email жана сырсөз киргизиңиз (6 белгиден)",
+    "loggedInAs": "Сиз кирдиңиз:",
+    "logout": "Чыгуу",
+    "login": "Прогрессти сактоо үчүн кирүү"
+  },
   "footer": {
     "tagline": "izn.study — билимди күн сайын колдойбуз жана өнүктүрөбүз.",
     "rights": "Бардык укуктар корголгон."

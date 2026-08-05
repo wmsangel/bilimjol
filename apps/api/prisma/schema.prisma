@@ -29,8 +29,36 @@ model ChildProfile {
   avatarHelperId String  @default("fox")
   grade         Int      @default(1)
   createdAt     DateTime @default(now())
+  progress      Progress[]
+  stats         ChildStats?
 
   @@index([userId])
+}
+
+/// Результат по задаче (монотонный: правильно → остаётся правильным).
+model Progress {
+  id         String       @id @default(uuid())
+  childId    String
+  child      ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
+  taskId     String
+  correct    Boolean
+  answeredAt DateTime     @default(now())
+
+  @@unique([childId, taskId])
+  @@index([childId])
+}
+
+/// Агрегированная статистика ребёнка (серия, дневная цель, разблокировки).
+model ChildStats {
+  childId         String       @id
+  child           ChildProfile @relation(fields: [childId], references: [id], onDelete: Cascade)
+  streakCount     Int          @default(0)
+  lastActiveDate  String?
+  dailyDate       String?
+  dailySolved     Int          @default(0)
+  unlockedHelpers String[]     @default([])
+  spentStars      Int          @default(0)
+  updatedAt       DateTime     @updatedAt
 }
 
 /// Refresh-токен (хранится хэш). Для ротации и отзыва сессий.

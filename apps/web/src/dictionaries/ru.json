@@ -102,6 +102,24 @@
     "bothSubjects": "Логика и математика",
     "unlockHero": "Новый герой"
   },
+  "auth": {
+    "loginTitle": "Вход для родителей",
+    "registerTitle": "Создать аккаунт",
+    "email": "Email",
+    "password": "Пароль",
+    "loginCta": "Войти",
+    "registerCta": "Зарегистрироваться",
+    "toRegister": "Нет аккаунта? Зарегистрируйтесь",
+    "toLogin": "Уже есть аккаунт? Войти",
+    "syncing": "Синхронизация…",
+    "errorGeneric": "Что-то пошло не так, попробуйте ещё раз",
+    "errorCredentials": "Неверный email или пароль",
+    "errorEmailTaken": "Этот email уже зарегистрирован",
+    "errorEmailInvalid": "Введите корректный email и пароль (от 6 символов)",
+    "loggedInAs": "Вы вошли как",
+    "logout": "Выйти",
+    "login": "Войти, чтобы сохранять прогресс"
+  },
   "footer": {
     "tagline": "izn.study — поддерживаем и развиваем знания каждый день.",
     "rights": "Все права защищены."

@@ -15,7 +15,15 @@ import {
   todayProgress,
   type StatsStore,
 } from "@/lib/stats";
+import { loadAuth, loadChildId, logout as apiLogout } from "@/lib/api";
+import { syncChild } from "@/lib/sync";
 import { Mascot } from "./Mascot";
+
+export interface AccountLabels {
+  loggedInAs: string;
+  logout: string;
+  login: string;
+}
 
 export interface CabinetLabels {
   title: string;
@@ -48,11 +56,15 @@ export function Cabinet({
   locale,
   labels,
   achievementsLabels,
+  accountLabels,
+  loginHref,
   playHref,
 }: {
   locale: Locale;
   labels: CabinetLabels;
   achievementsLabels: Record<string, string>;
+  accountLabels: AccountLabels;
+  loginHref: string;
   playHref: string;
 }) {
   const [loaded, setLoaded] = useState(false);
@@ -61,19 +73,34 @@ export function Cabinet({
   const [earnedStars, setEarnedStars] = useState(0);
   const [totalSolved, setTotalSolved] = useState(0);
   const [subjectsTried, setSubjectsTried] = useState(0);
+  const [email, setEmail] = useState<string | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
+  function loadAll() {
     setHelperId(loadHelperId());
     setStats(loadStats());
-    const progress = loadProgress();
-    const entries = Object.entries(progress);
+    const entries = Object.entries(loadProgress());
     setTotalSolved(entries.length);
     setEarnedStars(entries.filter(([, r]) => r.correct).length);
     setSubjectsTried(
       new Set(entries.map(([id]) => subjectOf(id)).filter(Boolean)).size,
     );
+  }
+
+  useEffect(() => {
+    loadAll();
+    const auth = loadAuth();
+    setEmail(auth?.user.email ?? null);
     setLoaded(true);
+
+    // Если вошли — подтягиваем прогресс с сервера.
+    const childId = loadChildId();
+    if (auth && childId) {
+      syncChild(childId)
+        .then(() => loadAll())
+        .catch(() => undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const helper = getHelper(helperId);
@@ -81,6 +108,11 @@ export function Cabinet({
   function changeHelper() {
     removeHelperId();
     router.push(playHref);
+  }
+
+  async function onLogout() {
+    await apiLogout();
+    setEmail(null);
   }
 
   if (!loaded) {
@@ -235,6 +267,31 @@ export function Cabinet({
         >
           {labels.changeHelper}
         </button>
+
+        {/* Аккаунт */}
+        <div className="mt-5 border-t border-black/[.06] pt-4 text-center dark:border-white/10">
+          {email ? (
+            <>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                {accountLabels.loggedInAs}{" "}
+                <span className="font-semibold">{email}</span>
+              </p>
+              <button
+                onClick={onLogout}
+                className="mt-1 text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+              >
+                {accountLabels.logout}
+              </button>
+            </>
+          ) : (
+            <Link
+              href={loginHref}
+              className="text-sm font-bold text-indigo-600 hover:underline dark:text-indigo-400"
+            >
+              {accountLabels.login}
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );
