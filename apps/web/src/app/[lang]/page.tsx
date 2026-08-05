@@ -5,6 +5,11 @@ import { isLocale } from "@/i18n/config";
 import { helperGradient } from "@/lib/helperTheme";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import {
+  CharactersShowcase,
+  DashboardPreview,
+  TaskPreview,
+} from "@/components/ProductPreviews";
 import { getDictionary } from "./dictionaries";
 
 const FEATURE_EMOJI = ["🌍", "🎯", "🦊", "💡"];
@@ -121,6 +126,46 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             </div>
           </section>
 
+          {/* Витрина: занятия */}
+          <section className="py-12 sm:py-16">
+            <div className="grid items-center gap-10 md:grid-cols-2">
+              <div>
+                <h2 className="font-display text-3xl font-extrabold tracking-tight">
+                  {dict.showcase.lessonsTitle}
+                </h2>
+                <p className="mt-4 text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+                  {dict.showcase.lessonsDesc}
+                </p>
+              </div>
+              <TaskPreview locale={lang} nextLabel={dict.play.next} />
+            </div>
+          </section>
+
+          {/* Витрина: прогресс */}
+          <section className="py-12 sm:py-16">
+            <div className="grid items-center gap-10 md:grid-cols-2">
+              <div className="md:order-2">
+                <h2 className="font-display text-3xl font-extrabold tracking-tight">
+                  {dict.showcase.progressTitle}
+                </h2>
+                <p className="mt-4 text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+                  {dict.showcase.progressDesc}
+                </p>
+              </div>
+              <div className="md:order-1">
+                <DashboardPreview
+                  locale={lang}
+                  labels={{
+                    level: dict.cabinet.level,
+                    stars: dict.cabinet.stars,
+                    streak: dict.cabinet.streak,
+                    completed: dict.cabinet.completed,
+                  }}
+                />
+              </div>
+            </div>
+          </section>
+
           {/* Возможности */}
           <section id="features" className="py-12 sm:py-16">
             <h2 className="mb-10 text-center font-display text-3xl font-extrabold tracking-tight">
@@ -141,6 +186,19 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
                   </p>
                 </div>
               ))}
+            </div>
+          </section>
+
+          {/* Персонажи */}
+          <section className="py-12 text-center sm:py-16">
+            <h2 className="font-display text-3xl font-extrabold tracking-tight">
+              {dict.showcase.charactersTitle}
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-lg text-zinc-600 dark:text-zinc-400">
+              {dict.showcase.charactersDesc}
+            </p>
+            <div className="mt-8">
+              <CharactersShowcase locale={lang} />
             </div>
           </section>
 
