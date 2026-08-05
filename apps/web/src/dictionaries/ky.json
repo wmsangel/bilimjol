@@ -119,6 +119,21 @@
     "noData": "Азырынча маалымат жок — бала окуй элек",
     "correctOf": "{done} ичинен {correct} туура"
   },
+  "admin": {
+    "title": "Админ панель",
+    "loginPrompt": "Администратор катары кириңиз",
+    "login": "Кирүү",
+    "forbidden": "Уруксат жок. Администратор укугу керек.",
+    "users": "Колдонуучулар",
+    "children": "Балдар",
+    "subscriptions": "Жазылуулар",
+    "premium": "Премиум",
+    "colEmail": "Email",
+    "colCountry": "Өлкө",
+    "colChildren": "Балдар",
+    "colPremium": "Премиум",
+    "colRole": "Роль"
+  },
   "auth": {
     "loginTitle": "Ата-энелер үчүн кирүү",
     "registerTitle": "Аккаунт түзүү",

@@ -119,6 +119,21 @@
     "noData": "Пока нет данных — ребёнок ещё не занимался",
     "correctOf": "верно {correct} из {done}"
   },
+  "admin": {
+    "title": "Админка",
+    "loginPrompt": "Войдите как администратор",
+    "login": "Войти",
+    "forbidden": "Нет доступа. Нужны права администратора.",
+    "users": "Пользователи",
+    "children": "Дети",
+    "subscriptions": "Подписки",
+    "premium": "Премиум",
+    "colEmail": "Email",
+    "colCountry": "Страна",
+    "colChildren": "Дети",
+    "colPremium": "Премиум",
+    "colRole": "Роль"
+  },
   "auth": {
     "loginTitle": "Вход для родителей",
     "registerTitle": "Создать аккаунт",

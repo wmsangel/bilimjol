@@ -195,6 +195,34 @@ export function checkout(plan = "monthly", provider = "dev") {
   );
 }
 
+// ── Админка ──
+export interface AdminStats {
+  users: number;
+  children: number;
+  activeSubscriptions: number;
+  premiumUsers: number;
+}
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  country: string | null;
+  role: string;
+  createdAt: string;
+  children: number;
+  premium: boolean;
+}
+
+export function getAdminStats() {
+  return request<AdminStats>("/admin/stats", { method: "GET" });
+}
+
+export function getAdminUsers(limit = 50, offset = 0) {
+  return request<AdminUser[]>(`/admin/users?limit=${limit}&offset=${offset}`, {
+    method: "GET",
+  });
+}
+
 export function syncState(childId: string, snapshot: ServerState) {
   return request<ServerState>(`/children/${childId}/sync`, {
     method: "POST",
