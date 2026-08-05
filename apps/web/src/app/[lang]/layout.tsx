@@ -46,7 +46,15 @@ export default async function RootLayout({
       lang={lang}
       className={`${nunito.variable} ${comfortaa.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){try{var t=localStorage.getItem('izn.study:theme:v1');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();",
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

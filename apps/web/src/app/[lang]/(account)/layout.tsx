@@ -3,6 +3,7 @@ import Link from "next/link";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "../dictionaries";
 import { SideNav } from "@/components/SideNav";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default async function AccountLayout({
   children,
@@ -28,12 +29,15 @@ export default async function AccountLayout({
         <Link href={`/${lang}`} className="font-display text-xl font-extrabold">
           izn<span className="text-indigo-600 dark:text-indigo-400">.study</span>
         </Link>
-        <Link
-          href={`/${lang}`}
-          className="text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
-        >
-          {dict.account.home}
-        </Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <Link
+            href={`/${lang}`}
+            className="text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+          >
+            {dict.account.home}
+          </Link>
+        </div>
       </header>
 
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-6 pb-12 md:flex-row">
