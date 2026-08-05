@@ -39,6 +39,12 @@ export const topics: Topic[] = [
     title: { ru: "Сложение и вычитание", ky: "Кошуу жана кемитүү" } },
   { id: "read-letters", subject: "reading", grade: 1, icon: "🔤", difficulty: 1, order: 5,
     title: { ru: "Буквы и звуки", ky: "Тамгалар жана тыбыштар" } },
+  { id: "math-ten", subject: "math", grade: 1, icon: "🔟", difficulty: 2, order: 6,
+    title: { ru: "Числа до 10", ky: "10го чейинки сандар" } },
+  { id: "math-compare", subject: "math", grade: 1, icon: "⚖️", difficulty: 1, order: 7,
+    title: { ru: "Больше и меньше", ky: "Чоң жана кичине" } },
+  { id: "read-vowels", subject: "reading", grade: 1, icon: "🅰️", difficulty: 2, order: 8,
+    title: { ru: "Гласные и согласные", ky: "Үндүү жана үнсүз" } },
 
   // ── 2 класс ───────────────────────────────────────────
   { id: "log-think", subject: "logic", grade: 2, icon: "🧠", difficulty: 3, order: 1,
