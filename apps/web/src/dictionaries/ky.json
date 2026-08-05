@@ -132,7 +132,15 @@
     "colCountry": "Өлкө",
     "colChildren": "Балдар",
     "colPremium": "Премиум",
-    "colRole": "Роль"
+    "colRole": "Роль",
+    "colActions": "Аракеттер",
+    "grant": "Премиум",
+    "reset": "Сырсөздү баштоо",
+    "confirmGrant": "{email} колдонуучуга премиум берилсинби?",
+    "confirmReset": "{email} колдонуучунун сырсөзүн баштайсызбы?",
+    "granted": "Премиум берилди",
+    "newPasswordLabel": "Жаңы сырсөз",
+    "dismiss": "Ок"
   },
   "auth": {
     "loginTitle": "Ата-энелер үчүн кирүү",

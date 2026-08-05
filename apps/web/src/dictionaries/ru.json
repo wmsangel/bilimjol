@@ -132,7 +132,15 @@
     "colCountry": "Страна",
     "colChildren": "Дети",
     "colPremium": "Премиум",
-    "colRole": "Роль"
+    "colRole": "Роль",
+    "colActions": "Действия",
+    "grant": "Премиум",
+    "reset": "Сброс пароля",
+    "confirmGrant": "Выдать премиум пользователю {email}?",
+    "confirmReset": "Сбросить пароль пользователю {email}?",
+    "granted": "Премиум выдан",
+    "newPasswordLabel": "Новый пароль",
+    "dismiss": "Ок"
   },
   "auth": {
     "loginTitle": "Вход для родителей",

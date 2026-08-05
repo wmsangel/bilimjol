@@ -1,7 +1,22 @@
-import { Controller, Get, Query, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
+import { ZodValidationPipe } from "../common/zod-validation.pipe";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { AdminGuard } from "./admin.guard";
 import { AdminService } from "./admin.service";
+import {
+  grantPremiumSchema,
+  resetPasswordSchema,
+  type GrantPremiumDto,
+  type ResetPasswordDto,
+} from "./dto";
 
 @UseGuards(JwtAuthGuard, AdminGuard)
 @Controller("admin")
@@ -18,5 +33,21 @@ export class AdminController {
     const take = Math.min(Math.max(Number(limit) || 50, 1), 200);
     const skip = Math.max(Number(offset) || 0, 0);
     return this.admin.users(take, skip);
+  }
+
+  @Post("users/:id/grant-premium")
+  grantPremium(
+    @Param("id") id: string,
+    @Body(new ZodValidationPipe(grantPremiumSchema)) dto: GrantPremiumDto,
+  ) {
+    return this.admin.grantPremium(id, dto.days ?? 30);
+  }
+
+  @Post("users/:id/reset-password")
+  resetPassword(
+    @Param("id") id: string,
+    @Body(new ZodValidationPipe(resetPasswordSchema)) dto: ResetPasswordDto,
+  ) {
+    return this.admin.resetPassword(id, dto.password);
   }
 }

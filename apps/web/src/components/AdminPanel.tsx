@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  adminGrantPremium,
+  adminResetPassword,
   ApiError,
   getAdminStats,
   getAdminUsers,
@@ -24,6 +26,18 @@ export interface AdminLabels {
   colChildren: string;
   colPremium: string;
   colRole: string;
+  colActions: string;
+  grant: string;
+  reset: string;
+  confirmGrant: string;
+  confirmReset: string;
+  granted: string;
+  newPasswordLabel: string;
+  dismiss: string;
+}
+
+function tpl(str: string, vars: Record<string, string>) {
+  return str.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
 }
 
 export function AdminPanel({
@@ -40,6 +54,37 @@ export function AdminPanel({
   const [forbidden, setForbidden] = useState(false);
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  async function onGrant(u: AdminUser) {
+    if (!window.confirm(tpl(labels.confirmGrant, { email: u.email }))) return;
+    setBusyId(u.id);
+    try {
+      await adminGrantPremium(u.id);
+      setUsers((prev) =>
+        prev.map((x) => (x.id === u.id ? { ...x, premium: true } : x)),
+      );
+      setNotice(labels.granted);
+    } catch {
+      // no-op
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function onReset(u: AdminUser) {
+    if (!window.confirm(tpl(labels.confirmReset, { email: u.email }))) return;
+    setBusyId(u.id);
+    try {
+      const r = await adminResetPassword(u.id);
+      setNotice(`${labels.newPasswordLabel}: ${r.password}`);
+    } catch {
+      // no-op
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -95,6 +140,20 @@ export function AdminPanel({
 
   return (
     <div className="mx-auto w-full max-w-3xl">
+      {notice && (
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-500/40 dark:bg-amber-500/10">
+          <span className="font-mono text-sm font-bold text-amber-800 dark:text-amber-200">
+            {notice}
+          </span>
+          <button
+            onClick={() => setNotice(null)}
+            className="rounded-full bg-amber-500 px-3 py-1 text-xs font-bold text-white"
+          >
+            {labels.dismiss}
+          </button>
+        </div>
+      )}
+
       {stats && (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {tile(stats.users, labels.users)}
@@ -113,6 +172,7 @@ export function AdminPanel({
               <th className="px-4 py-3 text-center">{labels.colChildren}</th>
               <th className="px-4 py-3 text-center">{labels.colPremium}</th>
               <th className="px-4 py-3">{labels.colRole}</th>
+              <th className="px-4 py-3">{labels.colActions}</th>
             </tr>
           </thead>
           <tbody>
@@ -135,6 +195,24 @@ export function AdminPanel({
                   ) : (
                     <span className="text-zinc-400">{u.role}</span>
                   )}
+                </td>
+                <td className="px-4 py-2.5">
+                  <div className="flex gap-1.5">
+                    <button
+                      onClick={() => onGrant(u)}
+                      disabled={busyId === u.id}
+                      className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700 transition hover:bg-amber-200 disabled:opacity-40 dark:bg-amber-500/15 dark:text-amber-300"
+                    >
+                      {labels.grant}
+                    </button>
+                    <button
+                      onClick={() => onReset(u)}
+                      disabled={busyId === u.id}
+                      className="rounded-full bg-black/[.05] px-2.5 py-1 text-xs font-bold text-zinc-600 transition hover:bg-black/10 disabled:opacity-40 dark:bg-white/10 dark:text-zinc-300"
+                    >
+                      {labels.reset}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

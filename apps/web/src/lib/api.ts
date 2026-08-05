@@ -223,6 +223,20 @@ export function getAdminUsers(limit = 50, offset = 0) {
   });
 }
 
+export function adminGrantPremium(userId: string, days?: number) {
+  return request<{ premium: boolean; until: string }>(
+    `/admin/users/${userId}/grant-premium`,
+    { method: "POST", body: JSON.stringify(days ? { days } : {}) },
+  );
+}
+
+export function adminResetPassword(userId: string) {
+  return request<{ password: string }>(
+    `/admin/users/${userId}/reset-password`,
+    { method: "POST", body: JSON.stringify({}) },
+  );
+}
+
 export function syncState(childId: string, snapshot: ServerState) {
   return request<ServerState>(`/children/${childId}/sync`, {
     method: "POST",
