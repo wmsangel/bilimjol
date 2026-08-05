@@ -142,6 +142,12 @@
     "newPasswordLabel": "Жаңы сырсөз",
     "dismiss": "Ок"
   },
+  "account": {
+    "progress": "Менин прогрессим",
+    "report": "Ата-энелер отчёту",
+    "play": "Ойноо",
+    "home": "Сайтка"
+  },
   "auth": {
     "loginTitle": "Ата-энелер үчүн кирүү",
     "registerTitle": "Аккаунт түзүү",

@@ -18,10 +18,8 @@ import {
 import {
   checkout,
   getEntitlement,
-  isLoggedIn,
   loadAuth,
   loadChildId,
-  logout as apiLogout,
 } from "@/lib/api";
 import { syncChild } from "@/lib/sync";
 import { Mascot } from "./Mascot";
@@ -127,12 +125,6 @@ export function Cabinet({
   function changeHelper() {
     removeHelperId();
     router.push(playHref);
-  }
-
-  async function onLogout() {
-    await apiLogout();
-    setEmail(null);
-    setPremiumUntil(null);
   }
 
   async function onSubscribe() {
@@ -303,53 +295,24 @@ export function Cabinet({
           {labels.changeHelper}
         </button>
 
-        {/* Аккаунт */}
-        <div className="mt-5 border-t border-black/[.06] pt-4 text-center dark:border-white/10">
-          {email ? (
-            <>
-              <div className="mb-3">
-                {premiumUntil ? (
-                  <span className="inline-block rounded-full bg-gradient-to-r from-amber-300 to-yellow-400 px-3 py-1 text-xs font-bold text-amber-900">
-                    ⭐ {labels.premiumActive} {fmtDate(premiumUntil)}
-                  </span>
-                ) : (
-                  <button
-                    onClick={onSubscribe}
-                    disabled={subscribing}
-                    className="rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-4 py-2 text-sm font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:opacity-50"
-                  >
-                    {labels.subscribe}
-                  </button>
-                )}
-              </div>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {accountLabels.loggedInAs}{" "}
-                <span className="font-semibold">{email}</span>
-              </p>
+        {/* Подписка */}
+        {email && (
+          <div className="mt-5 border-t border-black/[.06] pt-4 text-center dark:border-white/10">
+            {premiumUntil ? (
+              <span className="inline-block rounded-full bg-gradient-to-r from-amber-300 to-yellow-400 px-3 py-1 text-xs font-bold text-amber-900">
+                ⭐ {labels.premiumActive} {fmtDate(premiumUntil)}
+              </span>
+            ) : (
               <button
-                onClick={onLogout}
-                className="mt-1 text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+                onClick={onSubscribe}
+                disabled={subscribing}
+                className="rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:opacity-50"
               >
-                {accountLabels.logout}
+                {labels.subscribe}
               </button>
-              <div className="mt-2">
-                <Link
-                  href={parentHref}
-                  className="text-xs font-bold text-indigo-600 hover:underline dark:text-indigo-400"
-                >
-                  {accountLabels.parentReport} →
-                </Link>
-              </div>
-            </>
-          ) : (
-            <Link
-              href={loginHref}
-              className="text-sm font-bold text-indigo-600 hover:underline dark:text-indigo-400"
-            >
-              {accountLabels.login}
-            </Link>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
