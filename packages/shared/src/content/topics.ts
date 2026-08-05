@@ -23,6 +23,10 @@ export const topics: Topic[] = [
     title: { ru: "Цвета и фигуры", ky: "Түстөр жана фигуралар" } },
   { id: "pre-letters", subject: "reading", grade: 0, icon: "🔤", difficulty: 1, order: 5,
     title: { ru: "Первые буквы", ky: "Биринчи тамгалар" } },
+  { id: "pre-seq", subject: "logic", grade: 0, icon: "➡️", difficulty: 1, order: 6,
+    title: { ru: "Что дальше?", ky: "Андан ары эмне?" } },
+  { id: "pre-big", subject: "logic", grade: 0, icon: "📏", difficulty: 1, order: 7,
+    title: { ru: "Большой и маленький", ky: "Чоң жана кичине" } },
 
   // ── 1 класс ───────────────────────────────────────────
   { id: "log-odd", subject: "logic", grade: 1, icon: "🍎", difficulty: 1, order: 1,
