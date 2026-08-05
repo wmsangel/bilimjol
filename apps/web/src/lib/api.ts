@@ -54,6 +54,24 @@ export function clearAuth() {
   window.localStorage.removeItem(CHILD_KEY);
 }
 
+/** Полностью очищает локальные данные пользователя (при выходе). */
+export function clearLocalUserData() {
+  if (typeof window === "undefined") return;
+  for (const key of [
+    AUTH_KEY,
+    CHILD_KEY,
+    "izn.study:progress:v1",
+    "izn.study:stats:v1",
+    "izn.study:helper:v1",
+  ]) {
+    try {
+      window.localStorage.removeItem(key);
+    } catch {
+      // no-op
+    }
+  }
+}
+
 export function isLoggedIn(): boolean {
   return loadAuth() !== null;
 }
@@ -145,7 +163,7 @@ export async function logout() {
       body: JSON.stringify({ refreshToken: auth.refreshToken }),
     }).catch(() => undefined);
   }
-  clearAuth();
+  clearLocalUserData();
 }
 
 // ── Children ──
