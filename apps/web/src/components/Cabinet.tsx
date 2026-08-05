@@ -30,6 +30,7 @@ export interface AccountLabels {
   loggedInAs: string;
   logout: string;
   login: string;
+  parentReport: string;
 }
 
 export interface CabinetLabels {
@@ -67,6 +68,7 @@ export function Cabinet({
   achievementsLabels,
   accountLabels,
   loginHref,
+  parentHref,
   playHref,
 }: {
   locale: Locale;
@@ -74,6 +76,7 @@ export function Cabinet({
   achievementsLabels: Record<string, string>;
   accountLabels: AccountLabels;
   loginHref: string;
+  parentHref: string;
   playHref: string;
 }) {
   const [loaded, setLoaded] = useState(false);
@@ -329,6 +332,14 @@ export function Cabinet({
               >
                 {accountLabels.logout}
               </button>
+              <div className="mt-2">
+                <Link
+                  href={parentHref}
+                  className="text-xs font-bold text-indigo-600 hover:underline dark:text-indigo-400"
+                >
+                  {accountLabels.parentReport} →
+                </Link>
+              </div>
             </>
           ) : (
             <Link
