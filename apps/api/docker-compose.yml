@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: izn-study-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: izn
+      POSTGRES_PASSWORD: izn
+      POSTGRES_DB: izn_study
+    ports:
+      - "5433:5432"
+    volumes:
+      - izn-study-db-data:/var/lib/postgresql/data
+
+volumes:
+  izn-study-db-data:
