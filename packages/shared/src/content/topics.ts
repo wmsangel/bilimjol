@@ -91,6 +91,12 @@ export const topics: Topic[] = [
     title: { ru: "Дроби", ky: "Бөлчөктөр" } },
   { id: "m5-big", subject: "math", grade: 5, icon: "🔢", difficulty: 2, order: 3,
     title: { ru: "Большие числа", ky: "Чоң сандар" } },
+  { id: "log5", subject: "logic", grade: 5, icon: "🧠", difficulty: 2, order: 4,
+    title: { ru: "Логика и ряды", ky: "Логика жана катарлар" } },
+  { id: "read5", subject: "reading", grade: 5, icon: "📖", difficulty: 2, order: 5,
+    title: { ru: "Части речи", ky: "Сөз түркүмдөрү" } },
+  { id: "world5", subject: "world", grade: 5, icon: "🌍", difficulty: 2, order: 6,
+    title: { ru: "Природа и Земля", ky: "Жаратылыш жана Жер" } },
 
   // ── 6 класс ───────────────────────────────────────────
   { id: "m6-neg", subject: "math", grade: 6, icon: "➖", difficulty: 3, order: 1,
@@ -99,12 +105,24 @@ export const topics: Topic[] = [
     title: { ru: "Уравнения", ky: "Теңдемелер" } },
   { id: "m6-percent", subject: "math", grade: 6, icon: "💯", difficulty: 3, order: 3,
     title: { ru: "Проценты", ky: "Пайыздар" } },
+  { id: "log6", subject: "logic", grade: 6, icon: "🧠", difficulty: 3, order: 4,
+    title: { ru: "Логика и закономерности", ky: "Логика жана мыйзам ченемдер" } },
+  { id: "read6", subject: "reading", grade: 6, icon: "📖", difficulty: 3, order: 5,
+    title: { ru: "Язык и слова", ky: "Тил жана сөздөр" } },
+  { id: "world6", subject: "world", grade: 6, icon: "🗺️", difficulty: 2, order: 6,
+    title: { ru: "География", ky: "География" } },
 
   // ── 7 класс ───────────────────────────────────────────
   { id: "m7-pow", subject: "math", grade: 7, icon: "🔼", difficulty: 3, order: 1,
     title: { ru: "Степени", ky: "Даражалар" } },
   { id: "m7-eq", subject: "math", grade: 7, icon: "🟰", difficulty: 3, order: 2,
     title: { ru: "Линейные уравнения", ky: "Сызыктуу теңдемелер" } },
+  { id: "log7", subject: "logic", grade: 7, icon: "🧠", difficulty: 3, order: 3,
+    title: { ru: "Логические задачи", ky: "Логикалык маселелер" } },
+  { id: "read7", subject: "reading", grade: 7, icon: "📖", difficulty: 3, order: 4,
+    title: { ru: "Грамотность", ky: "Сабаттуулук" } },
+  { id: "world7", subject: "world", grade: 7, icon: "🫀", difficulty: 3, order: 5,
+    title: { ru: "Человек и биология", ky: "Адам жана биология" } },
 
   // ── 8 класс ───────────────────────────────────────────
   { id: "m8-sqrt", subject: "math", grade: 8, icon: "📐", difficulty: 3, order: 1,
@@ -113,6 +131,12 @@ export const topics: Topic[] = [
     title: { ru: "Степени", ky: "Даражалар" } },
   { id: "m8-eq", subject: "math", grade: 8, icon: "🟰", difficulty: 3, order: 3,
     title: { ru: "Уравнения", ky: "Теңдемелер" } },
+  { id: "log8", subject: "logic", grade: 8, icon: "🧠", difficulty: 3, order: 4,
+    title: { ru: "Логика и множества", ky: "Логика жана көптүктөр" } },
+  { id: "read8", subject: "reading", grade: 8, icon: "📖", difficulty: 3, order: 5,
+    title: { ru: "Синтаксис", ky: "Синтаксис" } },
+  { id: "world8", subject: "world", grade: 8, icon: "⚗️", difficulty: 3, order: 6,
+    title: { ru: "Физика и химия", ky: "Физика жана химия" } },
 
   // ── 9 класс ───────────────────────────────────────────
   { id: "m9-prog", subject: "math", grade: 9, icon: "📈", difficulty: 3, order: 1,
@@ -123,16 +147,28 @@ export const topics: Topic[] = [
     title: { ru: "Корни", ky: "Тамырлар" } },
   { id: "m9-eq", subject: "math", grade: 9, icon: "🟰", difficulty: 3, order: 4,
     title: { ru: "Уравнения", ky: "Теңдемелер" } },
+  { id: "log9", subject: "logic", grade: 9, icon: "🧠", difficulty: 3, order: 5,
+    title: { ru: "Логика и комбинаторика", ky: "Логика жана комбинаторика" } },
+  { id: "world9", subject: "world", grade: 9, icon: "🧪", difficulty: 3, order: 6,
+    title: { ru: "Химия и физика", ky: "Химия жана физика" } },
 
   // ── 10 класс ──────────────────────────────────────────
   { id: "m10-calc", subject: "math", grade: 10, icon: "💯", difficulty: 3, order: 1,
     title: { ru: "Проценты и корни", ky: "Пайыздар жана тамырлар" } },
   { id: "m10-pow", subject: "math", grade: 10, icon: "🔼", difficulty: 3, order: 2,
     title: { ru: "Степени", ky: "Даражалар" } },
+  { id: "log10", subject: "logic", grade: 10, icon: "🧠", difficulty: 3, order: 3,
+    title: { ru: "Логика и высказывания", ky: "Логика жана пикирлер" } },
+  { id: "world10", subject: "world", grade: 10, icon: "🔬", difficulty: 3, order: 4,
+    title: { ru: "Наука о природе", ky: "Жаратылыш илими" } },
 
   // ── 11 класс ──────────────────────────────────────────
   { id: "m11-calc", subject: "math", grade: 11, icon: "🧮", difficulty: 3, order: 1,
     title: { ru: "Вычисления", ky: "Эсептөөлөр" } },
+  { id: "log11", subject: "logic", grade: 11, icon: "🧠", difficulty: 3, order: 2,
+    title: { ru: "Логика и доказательства", ky: "Логика жана далилдер" } },
+  { id: "world11", subject: "world", grade: 11, icon: "🌌", difficulty: 3, order: 3,
+    title: { ru: "Наука и космос", ky: "Илим жана космос" } },
 ];
 
 /** Доступные классы (по имеющемуся контенту), по возрастанию. */

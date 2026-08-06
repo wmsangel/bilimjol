@@ -1,4 +1,5 @@
 import type { Grade, Task } from "./types";
+import { higherTasks } from "./higher";
 
 // Генераторы математических заданий: формульные шаблоны (числа + фикс. текст),
 // поэтому корректны и одинаково валидны на ru/ky. Даёт объём заданий дёшево.
@@ -494,4 +495,5 @@ export const generatedTasks: Task[] = [
   ...LOGIC_EXTRA,
   ...READING_EXTRA,
   ...GRADE_HIGH_HL,
+  ...higherTasks,
 ];

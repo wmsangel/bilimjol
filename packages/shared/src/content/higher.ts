@@ -1,0 +1,456 @@
+import type { Task } from "./types";
+
+// Ручной контент для 5–11 классов: логика, чтение и окружающий мир.
+// Математика этих классов генерируется в generated.ts.
+// Первый проход — темы наполнены базовыми заданиями, дальше дорабатываем.
+
+// ── ЛОГИКА ─────────────────────────────────────────────
+const LOGIC: Task[] = [
+  // 5 класс
+  {
+    id: "g-log5-a", type: "number_input", subject: "logic", topic: "log5", grade: 5,
+    difficulty: 2, free: true,
+    prompt: { ru: "Продолжи ряд: 3, 6, 12, 24, ?", ky: "Катарды улант: 3, 6, 12, 24, ?" },
+    answer: 48,
+    explanation: { ru: "Каждое число в 2 раза больше: 24 × 2 = 48.", ky: "Ар бир сан 2 эсе чоң: 24 × 2 = 48." },
+  },
+  {
+    id: "g-log5-b", type: "single_choice", subject: "logic", topic: "log5", grade: 5,
+    difficulty: 2, free: true,
+    prompt: { ru: "Птица — небо, рыба — ?", ky: "Куш — асман, балык — ?" },
+    options: [{ ru: "вода", ky: "суу" }, { ru: "земля", ky: "жер" }, { ru: "огонь", ky: "от" }],
+    correctIndex: 0,
+    explanation: { ru: "Птица живёт в небе, рыба — в воде.", ky: "Куш асманда, балык сууда жашайт." },
+  },
+  {
+    id: "g-log5-c", type: "single_choice", subject: "logic", topic: "log5", grade: 5,
+    difficulty: 2, free: false,
+    prompt: { ru: "Какое число лишнее: 2, 4, 6, 9?", ky: "Кайсы сан ашык: 2, 4, 6, 9?" },
+    options: [{ ru: "2", ky: "2" }, { ru: "4", ky: "4" }, { ru: "6", ky: "6" }, { ru: "9", ky: "9" }],
+    correctIndex: 3,
+    explanation: { ru: "9 — нечётное, остальные чётные.", ky: "9 — так, калгандары жуп." },
+  },
+  // 6 класс
+  {
+    id: "g-log6-a", type: "number_input", subject: "logic", topic: "log6", grade: 6,
+    difficulty: 3, free: true,
+    prompt: { ru: "Продолжи ряд: 1, 1, 2, 3, 5, 8, ?", ky: "Катарды улант: 1, 1, 2, 3, 5, 8, ?" },
+    answer: 13,
+    explanation: { ru: "Каждое число — сумма двух предыдущих: 5 + 8 = 13.", ky: "Ар бир сан мурунку экөөнүн суммасы: 5 + 8 = 13." },
+  },
+  {
+    id: "g-log6-b", type: "number_input", subject: "logic", topic: "log6", grade: 6,
+    difficulty: 3, free: true,
+    prompt: { ru: "Продолжи ряд: 1, 3, 6, 10, ?", ky: "Катарды улант: 1, 3, 6, 10, ?" },
+    answer: 15,
+    explanation: { ru: "Прибавляем по порядку 2, 3, 4, 5: 10 + 5 = 15.", ky: "Ирети менен 2, 3, 4, 5 кошобуз: 10 + 5 = 15." },
+  },
+  {
+    id: "g-log6-c", type: "single_choice", subject: "logic", topic: "log6", grade: 6,
+    difficulty: 3, free: false,
+    prompt: { ru: "День — ночь, лето — ?", ky: "Күн — түн, жай — ?" },
+    options: [{ ru: "зима", ky: "кыш" }, { ru: "весна", ky: "жаз" }, { ru: "осень", ky: "күз" }],
+    correctIndex: 0,
+    explanation: { ru: "День и ночь — противоположности, как лето и зима.", ky: "Күн менен түн карама-каршы, жай менен кыш сыяктуу." },
+  },
+  // 7 класс
+  {
+    id: "g-log7-a", type: "single_choice", subject: "logic", topic: "log7", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Если A > B и B > C, то A … C", ky: "Эгер A > B жана B > C болсо, A … C" },
+    options: [{ ru: "больше", ky: "чоң" }, { ru: "меньше", ky: "кичине" }, { ru: "равно", ky: "барабар" }],
+    correctIndex: 0,
+    explanation: { ru: "Если A больше B, а B больше C, то A больше C.", ky: "A B'дан чоң, B C'дан чоң болсо, A C'дан чоң." },
+  },
+  {
+    id: "g-log7-b", type: "number_input", subject: "logic", topic: "log7", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Продолжи ряд: 2, 6, 18, 54, ?", ky: "Катарды улант: 2, 6, 18, 54, ?" },
+    answer: 162,
+    explanation: { ru: "Каждое число в 3 раза больше: 54 × 3 = 162.", ky: "Ар бир сан 3 эсе чоң: 54 × 3 = 162." },
+  },
+  {
+    id: "g-log7-c", type: "single_choice", subject: "logic", topic: "log7", grade: 7,
+    difficulty: 3, free: false,
+    prompt: { ru: "Что лишнее: квадрат, круг, треугольник, куб?", ky: "Эмне ашык: квадрат, тегерек, үч бурчтук, куб?" },
+    options: [{ ru: "квадрат", ky: "квадрат" }, { ru: "круг", ky: "тегерек" }, { ru: "треугольник", ky: "үч бурчтук" }, { ru: "куб", ky: "куб" }],
+    correctIndex: 3,
+    explanation: { ru: "Куб — объёмная фигура, остальные плоские.", ky: "Куб — көлөмдүү фигура, калгандары жалпак." },
+  },
+  // 8 класс
+  {
+    id: "g-log8-a", type: "number_input", subject: "logic", topic: "log8", grade: 8,
+    difficulty: 3, free: true,
+    prompt: { ru: "Продолжи ряд: 1, 2, 4, 7, 11, ?", ky: "Катарды улант: 1, 2, 4, 7, 11, ?" },
+    answer: 16,
+    explanation: { ru: "Разности растут: +1, +2, +3, +4, +5. 11 + 5 = 16.", ky: "Айырмалар өсөт: +1, +2, +3, +4, +5. 11 + 5 = 16." },
+  },
+  {
+    id: "g-log8-b", type: "number_input", subject: "logic", topic: "log8", grade: 8,
+    difficulty: 3, free: true,
+    prompt: {
+      ru: "Множества A = {1, 2, 3} и B = {2, 3, 4}. Сколько общих элементов?",
+      ky: "A = {1, 2, 3} жана B = {2, 3, 4} көптүктөрү. Канча жалпы элемент бар?",
+    },
+    answer: 2,
+    explanation: { ru: "Общие элементы — 2 и 3, их два.", ky: "Жалпы элементтер — 2 жана 3, экөө." },
+  },
+  {
+    id: "g-log8-c", type: "single_choice", subject: "logic", topic: "log8", grade: 8,
+    difficulty: 3, free: false,
+    prompt: {
+      ru: "«Неверно, что все кошки чёрные». Что из этого следует?",
+      ky: "«Бардык мышыктар кара» деген туура эмес. Мындан эмне келип чыгат?",
+    },
+    options: [
+      { ru: "Есть хотя бы одна не чёрная кошка", ky: "Жок дегенде бир кара эмес мышык бар" },
+      { ru: "Все кошки не чёрные", ky: "Бардык мышыктар кара эмес" },
+      { ru: "Чёрных кошек нет", ky: "Кара мышыктар жок" },
+    ],
+    correctIndex: 0,
+    explanation: { ru: "Отрицание «все» — это «существует хотя бы одна, для которой неверно».", ky: "«Бардык» дегендин тескериси — «жок дегенде бирөө туура келбейт»." },
+  },
+  // 9 класс
+  {
+    id: "g-log9-a", type: "number_input", subject: "logic", topic: "log9", grade: 9,
+    difficulty: 3, free: true,
+    prompt: { ru: "Сколькими способами можно расставить 3 книги на полке?", ky: "3 китепти текчеге канча жол менен коюуга болот?" },
+    answer: 6,
+    explanation: { ru: "3! = 3 × 2 × 1 = 6.", ky: "3! = 3 × 2 × 1 = 6." },
+  },
+  {
+    id: "g-log9-b", type: "number_input", subject: "logic", topic: "log9", grade: 9,
+    difficulty: 3, free: true,
+    prompt: {
+      ru: "Сколько двузначных чисел можно составить из цифр 1, 2, 3 без повторов?",
+      ky: "1, 2, 3 цифраларынан кайталанбаган канча эки орундуу сан түзүүгө болот?",
+    },
+    answer: 6,
+    explanation: { ru: "Первая цифра — 3 варианта, вторая — 2. 3 × 2 = 6.", ky: "Биринчи цифра — 3 вариант, экинчиси — 2. 3 × 2 = 6." },
+  },
+  {
+    id: "g-log9-c", type: "number_input", subject: "logic", topic: "log9", grade: 9,
+    difficulty: 3, free: false,
+    prompt: { ru: "Монету бросают дважды. Сколько всего исходов?", ky: "Тыйынды эки жолу ыргытат. Бардыгы канча жыйынтык?" },
+    answer: 4,
+    explanation: { ru: "Каждый бросок — 2 варианта: 2 × 2 = 4.", ky: "Ар бир ыргытуу — 2 вариант: 2 × 2 = 4." },
+  },
+  // 10 класс
+  {
+    id: "g-log10-a", type: "single_choice", subject: "logic", topic: "log10", grade: 10,
+    difficulty: 3, free: true,
+    prompt: {
+      ru: "«Если идёт дождь, земля мокрая». Земля сухая. Значит дождь…",
+      ky: "«Жамгыр жааса, жер нымдуу». Жер кургак. Демек жамгыр…",
+    },
+    options: [{ ru: "не идёт", ky: "жаабайт" }, { ru: "идёт", ky: "жаайт" }, { ru: "неизвестно", ky: "белгисиз" }],
+    correctIndex: 0,
+    explanation: { ru: "Если бы шёл дождь, земля была бы мокрой. Она сухая — значит дождя нет.", ky: "Жамгыр жааса, жер нымдуу болмок. Ал кургак — демек жамгыр жаабайт." },
+  },
+  {
+    id: "g-log10-b", type: "single_choice", subject: "logic", topic: "log10", grade: 10,
+    difficulty: 3, free: true,
+    prompt: { ru: "Истинно ли высказывание: «2 + 2 = 4 И 3 > 5»?", ky: "«2 + 2 = 4 ЖАНА 3 > 5» деген пикир чынбы?" },
+    options: [{ ru: "Ложь", ky: "Жалган" }, { ru: "Истина", ky: "Чын" }],
+    correctIndex: 0,
+    explanation: { ru: "«И» истинно, только если обе части верны. 3 > 5 — ложь.", ky: "«ЖАНА» эки бөлүк тең чын болгондо гана чын. 3 > 5 — жалган." },
+  },
+  {
+    id: "g-log10-c", type: "single_choice", subject: "logic", topic: "log10", grade: 10,
+    difficulty: 3, free: false,
+    prompt: { ru: "Отрицание фразы «Все студенты сдали экзамен» — это…", ky: "«Бардык студенттер экзамен тапшырды» деген сүйлөмдүн тескериси…" },
+    options: [
+      { ru: "Хотя бы один не сдал", ky: "Жок дегенде бирөө тапшырган жок" },
+      { ru: "Никто не сдал", ky: "Эч ким тапшырган жок" },
+      { ru: "Все не сдали", ky: "Баары тапшырган жок" },
+    ],
+    correctIndex: 0,
+    explanation: { ru: "Отрицание «все» — «существует хотя бы один, кто не…».", ky: "«Бардык» дегендин тескериси — «жок дегенде бирөө …кылган жок»." },
+  },
+  // 11 класс
+  {
+    id: "g-log11-a", type: "number_input", subject: "logic", topic: "log11", grade: 11,
+    difficulty: 3, free: true,
+    prompt: { ru: "Чему равна сумма углов треугольника (в градусах)?", ky: "Үч бурчтуктун бурчтарынын суммасы канчага барабар (градуста)?" },
+    answer: 180,
+    explanation: { ru: "Сумма углов любого треугольника равна 180°.", ky: "Ар кандай үч бурчтуктун бурчтарынын суммасы 180°." },
+  },
+  {
+    id: "g-log11-b", type: "single_choice", subject: "logic", topic: "log11", grade: 11,
+    difficulty: 3, free: true,
+    prompt: { ru: "Верно ли: «Если число делится на 4, то оно делится на 2»?", ky: "«Сан 4кө бөлүнсө, ал 2ге бөлүнөт» деген туурабы?" },
+    options: [{ ru: "Да", ky: "Ооба" }, { ru: "Нет", ky: "Жок" }],
+    correctIndex: 0,
+    explanation: { ru: "4 = 2 × 2, поэтому любое кратное 4 кратно и 2.", ky: "4 = 2 × 2, ошондуктан 4кө эселүү сан 2ге да эселүү." },
+  },
+  {
+    id: "g-log11-c", type: "number_input", subject: "logic", topic: "log11", grade: 11,
+    difficulty: 3, free: false,
+    prompt: { ru: "Сколько диагоналей у пятиугольника?", ky: "Беш бурчтуктун канча диагоналы бар?" },
+    answer: 5,
+    explanation: { ru: "Формула n(n−3)/2 = 5 × 2 / 2 = 5.", ky: "n(n−3)/2 = 5 × 2 / 2 = 5." },
+  },
+];
+
+// ── ЧТЕНИЕ / ЯЗЫК ──────────────────────────────────────
+const READING: Task[] = [
+  // 5 класс — части речи
+  {
+    id: "g-read5-a", type: "single_choice", subject: "reading", topic: "read5", grade: 5,
+    difficulty: 2, free: true,
+    prompt: { ru: "Найди существительное", ky: "Зат атоочту тап" },
+    options: [{ ru: "бежит", ky: "чуркайт" }, { ru: "стол", ky: "үстөл" }, { ru: "быстро", ky: "тез" }],
+    correctIndex: 1,
+    explanation: { ru: "«Стол» — предмет, отвечает на вопрос «что?».", ky: "«Үстөл» — зат, «эмне?» суроосуна жооп берет." },
+  },
+  {
+    id: "g-read5-b", type: "single_choice", subject: "reading", topic: "read5", grade: 5,
+    difficulty: 2, free: true,
+    prompt: { ru: "Найди глагол", ky: "Этишти тап" },
+    options: [{ ru: "красивый", ky: "кооз" }, { ru: "читать", ky: "окуу" }, { ru: "книга", ky: "китеп" }],
+    correctIndex: 1,
+    explanation: { ru: "«Читать» — действие, отвечает на вопрос «что делать?».", ky: "«Окуу» — иш-аракет, «эмне кылуу?» суроосуна жооп берет." },
+  },
+  {
+    id: "g-read5-c", type: "single_choice", subject: "reading", topic: "read5", grade: 5,
+    difficulty: 2, free: false,
+    prompt: { ru: "Найди прилагательное", ky: "Сын атоочту тап" },
+    options: [{ ru: "дом", ky: "үй" }, { ru: "зелёный", ky: "жашыл" }, { ru: "прыгать", ky: "секирүү" }],
+    correctIndex: 1,
+    explanation: { ru: "«Зелёный» — признак предмета, отвечает на вопрос «какой?».", ky: "«Жашыл» — заттын белгиси, «кандай?» суроосуна жооп берет." },
+  },
+  // 6 класс — синонимы/антонимы
+  {
+    id: "g-read6-a", type: "single_choice", subject: "reading", topic: "read6", grade: 6,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди синоним к слову «храбрый»", ky: "«Эр жүрөк» сөзүнө синонимди тап" },
+    options: [{ ru: "смелый", ky: "кайраттуу" }, { ru: "слабый", ky: "алсыз" }, { ru: "добрый", ky: "боорукер" }],
+    correctIndex: 0,
+    explanation: { ru: "«Смелый» — близкое по значению к «храбрый».", ky: "«Кайраттуу» — «эр жүрөк» менен маанилеш." },
+  },
+  {
+    id: "g-read6-b", type: "single_choice", subject: "reading", topic: "read6", grade: 6,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди антоним к слову «холодный»", ky: "«Суук» сөзүнө антонимди тап" },
+    options: [{ ru: "мокрый", ky: "нымдуу" }, { ru: "горячий", ky: "ысык" }, { ru: "светлый", ky: "жарык" }],
+    correctIndex: 1,
+    explanation: { ru: "«Горячий» — противоположность «холодного».", ky: "«Ысык» — «суук» дегендин карама-каршысы." },
+  },
+  {
+    id: "g-read6-c", type: "number_input", subject: "reading", topic: "read6", grade: 6,
+    difficulty: 3, free: false,
+    prompt: { ru: "Сколько слов в предложении: «Мама мыла раму»?", ky: "«Апа терезени жууду» сүйлөмүндө канча сөз?" },
+    answer: 3,
+    explanation: { ru: "Слова: три.", ky: "Сөздөр: үчөө." },
+  },
+  // 7 класс — грамотность
+  {
+    id: "g-read7-a", type: "single_choice", subject: "reading", topic: "read7", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди лишнее (не родственное) слово", ky: "Ашык (тектеш эмес) сөздү тап" },
+    options: [{ ru: "лес", ky: "токой" }, { ru: "лесной", ky: "токойлуу" }, { ru: "лестница", ky: "тепкич" }, { ru: "лесник", ky: "токойчу" }],
+    correctIndex: 2,
+    explanation: { ru: "«Лестница» не связана с «лесом» по смыслу.", ky: "«Тепкич» «токой» менен маанилеш эмес." },
+  },
+  {
+    id: "g-read7-b", type: "single_choice", subject: "reading", topic: "read7", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди синоним к слову «большой»", ky: "«Чоң» сөзүнө синонимди тап" },
+    options: [{ ru: "огромный", ky: "эбегейсиз" }, { ru: "маленький", ky: "кичине" }, { ru: "узкий", ky: "тар" }],
+    correctIndex: 0,
+    explanation: { ru: "«Огромный» — близко по значению к «большой».", ky: "«Эбегейсиз» — «чоң» менен маанилеш." },
+  },
+  {
+    id: "g-read7-c", type: "number_input", subject: "reading", topic: "read7", grade: 7,
+    difficulty: 3, free: false,
+    prompt: { ru: "Сколько слов в предложении: «Осень наступила рано»?", ky: "«Күз эрте келди» сүйлөмүндө канча сөз?" },
+    answer: 3,
+    explanation: { ru: "Слова: три.", ky: "Сөздөр: үчөө." },
+  },
+  // 8 класс — синтаксис
+  {
+    id: "g-read8-a", type: "single_choice", subject: "reading", topic: "read8", grade: 8,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди подлежащее в предложении «Дети играют»", ky: "«Балдар ойношот» сүйлөмүндө ээни тап" },
+    options: [{ ru: "дети", ky: "балдар" }, { ru: "играют", ky: "ойношот" }],
+    correctIndex: 0,
+    explanation: { ru: "«Дети» — подлежащее, отвечает на вопрос «кто?».", ky: "«Балдар» — ээ, «ким?» суроосуна жооп берет." },
+  },
+  {
+    id: "g-read8-b", type: "number_input", subject: "reading", topic: "read8", grade: 8,
+    difficulty: 3, free: true,
+    prompt: {
+      ru: "Сколько грамматических основ в предложении: «Солнце светит, птицы поют»?",
+      ky: "«Күн жаркырайт, куштар сайрайт» сүйлөмүндө канча грамматикалык негиз бар?",
+    },
+    answer: 2,
+    explanation: { ru: "Две основы: «солнце светит» и «птицы поют».", ky: "Эки негиз: «күн жаркырайт» жана «куштар сайрайт»." },
+  },
+  {
+    id: "g-read8-c", type: "single_choice", subject: "reading", topic: "read8", grade: 8,
+    difficulty: 3, free: false,
+    prompt: { ru: "Найди сказуемое в предложении «Ветер шумит»", ky: "«Шамал улуйт» сүйлөмүндө баяндоочту тап" },
+    options: [{ ru: "ветер", ky: "шамал" }, { ru: "шумит", ky: "улуйт" }],
+    correctIndex: 1,
+    explanation: { ru: "«Шумит» — сказуемое, отвечает на вопрос «что делает?».", ky: "«Улуйт» — баяндооч, «эмне кылат?» суроосуна жооп берет." },
+  },
+];
+
+// ── ОКРУЖАЮЩИЙ МИР ─────────────────────────────────────
+const WORLD: Task[] = [
+  // 5 класс — природа и Земля
+  {
+    id: "g-world5-a", type: "number_input", subject: "world", topic: "world5", grade: 5,
+    difficulty: 2, free: true,
+    prompt: { ru: "Сколько планет в Солнечной системе?", ky: "Күн системасында канча планета бар?" },
+    answer: 8,
+    explanation: { ru: "Восемь планет — от Меркурия до Нептуна.", ky: "Сегиз планета — Меркурийден Нептунга чейин." },
+  },
+  {
+    id: "g-world5-b", type: "single_choice", subject: "world", topic: "world5", grade: 5,
+    difficulty: 2, free: true,
+    prompt: { ru: "Какая планета самая большая?", ky: "Кайсы планета эң чоң?" },
+    options: [{ ru: "Земля", ky: "Жер" }, { ru: "Юпитер", ky: "Юпитер" }, { ru: "Марс", ky: "Марс" }],
+    correctIndex: 1,
+    explanation: { ru: "Юпитер — самая большая планета Солнечной системы.", ky: "Юпитер — Күн системасынын эң чоң планетасы." },
+  },
+  {
+    id: "g-world5-c", type: "single_choice", subject: "world", topic: "world5", grade: 5,
+    difficulty: 2, free: false,
+    prompt: { ru: "Какой газ выделяют растения на свету?", ky: "Өсүмдүктөр жарыкта кайсы газды бөлүп чыгарат?" },
+    options: [{ ru: "Кислород", ky: "Кычкылтек" }, { ru: "Углекислый газ", ky: "Көмүр кычкыл газы" }, { ru: "Азот", ky: "Азот" }],
+    correctIndex: 0,
+    explanation: { ru: "При фотосинтезе растения выделяют кислород.", ky: "Фотосинтезде өсүмдүктөр кычкылтек бөлүп чыгарат." },
+  },
+  // 6 класс — география
+  {
+    id: "g-world6-a", type: "number_input", subject: "world", topic: "world6", grade: 6,
+    difficulty: 2, free: true,
+    prompt: { ru: "Сколько материков на Земле?", ky: "Жерде канча материк бар?" },
+    answer: 6,
+    explanation: { ru: "Шесть материков: Евразия, Африка, Северная и Южная Америка, Австралия, Антарктида.", ky: "Алты материк: Евразия, Африка, Түндүк жана Түштүк Америка, Австралия, Антарктида." },
+  },
+  {
+    id: "g-world6-b", type: "single_choice", subject: "world", topic: "world6", grade: 6,
+    difficulty: 2, free: true,
+    prompt: { ru: "Какой океан самый большой?", ky: "Кайсы океан эң чоң?" },
+    options: [{ ru: "Тихий", ky: "Тынч" }, { ru: "Атлантический", ky: "Атлантика" }, { ru: "Индийский", ky: "Инди" }],
+    correctIndex: 0,
+    explanation: { ru: "Тихий океан — самый большой на планете.", ky: "Тынч океан — планетадагы эң чоңу." },
+  },
+  {
+    id: "g-world6-c", type: "single_choice", subject: "world", topic: "world6", grade: 6,
+    difficulty: 2, free: false,
+    prompt: { ru: "Какое озеро самое глубокое в мире?", ky: "Дүйнөдөгү эң терең көл кайсы?" },
+    options: [{ ru: "Байкал", ky: "Байкал" }, { ru: "Иссык-Куль", ky: "Ысык-Көл" }, { ru: "Балхаш", ky: "Балкаш" }],
+    correctIndex: 0,
+    explanation: { ru: "Байкал — самое глубокое озеро на Земле.", ky: "Байкал — Жердеги эң терең көл." },
+  },
+  // 7 класс — человек и биология
+  {
+    id: "g-world7-a", type: "number_input", subject: "world", topic: "world7", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Сколько костей в теле взрослого человека?", ky: "Чоң кишинин денесинде канча сөөк бар?" },
+    answer: 206,
+    explanation: { ru: "У взрослого человека 206 костей.", ky: "Чоң кишиде 206 сөөк бар." },
+  },
+  {
+    id: "g-world7-b", type: "single_choice", subject: "world", topic: "world7", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Какой орган перекачивает кровь?", ky: "Кайсы орган канды айдайт?" },
+    options: [{ ru: "Сердце", ky: "Жүрөк" }, { ru: "Лёгкие", ky: "Өпкө" }, { ru: "Печень", ky: "Боор" }],
+    correctIndex: 0,
+    explanation: { ru: "Сердце работает как насос и перекачивает кровь.", ky: "Жүрөк насос сыяктуу иштеп, канды айдайт." },
+  },
+  {
+    id: "g-world7-c", type: "number_input", subject: "world", topic: "world7", grade: 7,
+    difficulty: 3, free: false,
+    prompt: { ru: "Сколько камер у сердца человека?", ky: "Адамдын жүрөгүндө канча бөлүм бар?" },
+    answer: 4,
+    explanation: { ru: "Четыре камеры: два предсердия и два желудочка.", ky: "Төрт бөлүм: эки жүрөкчө жана эки карынча." },
+  },
+  // 8 класс — физика и химия
+  {
+    id: "g-world8-a", type: "single_choice", subject: "world", topic: "world8", grade: 8,
+    difficulty: 3, free: true,
+    prompt: { ru: "Какая химическая формула у воды?", ky: "Суунун химиялык формуласы кандай?" },
+    options: [{ ru: "H₂O", ky: "H₂O" }, { ru: "CO₂", ky: "CO₂" }, { ru: "O₂", ky: "O₂" }],
+    correctIndex: 0,
+    explanation: { ru: "Вода — H₂O: два атома водорода и один кислорода.", ky: "Суу — H₂O: эки суутек жана бир кычкылтек атому." },
+  },
+  {
+    id: "g-world8-b", type: "number_input", subject: "world", topic: "world8", grade: 8,
+    difficulty: 3, free: true,
+    prompt: { ru: "При какой температуре кипит вода (°C)?", ky: "Суу канча температурада кайнайт (°C)?" },
+    answer: 100,
+    explanation: { ru: "При нормальном давлении вода кипит при 100 °C.", ky: "Кадимки басымда суу 100 °C'та кайнайт." },
+  },
+  {
+    id: "g-world8-c", type: "single_choice", subject: "world", topic: "world8", grade: 8,
+    difficulty: 3, free: false,
+    prompt: { ru: "Какой газ нужен человеку для дыхания?", ky: "Адамга дем алуу үчүн кайсы газ керек?" },
+    options: [{ ru: "Кислород", ky: "Кычкылтек" }, { ru: "Азот", ky: "Азот" }, { ru: "Водород", ky: "Суутек" }],
+    correctIndex: 0,
+    explanation: { ru: "Для дыхания нужен кислород.", ky: "Дем алуу үчүн кычкылтек керек." },
+  },
+  // 9 класс — химия и физика
+  {
+    id: "g-world9-a", type: "single_choice", subject: "world", topic: "world9", grade: 9,
+    difficulty: 3, free: true,
+    prompt: { ru: "Каким символом обозначают кислород?", ky: "Кычкылтек кайсы символ менен белгиленет?" },
+    options: [{ ru: "O", ky: "O" }, { ru: "H", ky: "H" }, { ru: "C", ky: "C" }],
+    correctIndex: 0,
+    explanation: { ru: "Кислород обозначают символом O.", ky: "Кычкылтек O символу менен белгиленет." },
+  },
+  {
+    id: "g-world9-b", type: "single_choice", subject: "world", topic: "world9", grade: 9,
+    difficulty: 3, free: true,
+    prompt: { ru: "В каких единицах измеряют силу?", ky: "Күч кайсы бирдикте өлчөнөт?" },
+    options: [{ ru: "Ньютон", ky: "Ньютон" }, { ru: "Джоуль", ky: "Джоуль" }, { ru: "Ватт", ky: "Ватт" }],
+    correctIndex: 0,
+    explanation: { ru: "Силу измеряют в ньютонах (Н).", ky: "Күч ньютон менен өлчөнөт (Н)." },
+  },
+  {
+    id: "g-world9-c", type: "number_input", subject: "world", topic: "world9", grade: 9,
+    difficulty: 3, free: false,
+    prompt: { ru: "При какой температуре замерзает вода (°C)?", ky: "Суу канча температурада катат (°C)?" },
+    answer: 0,
+    explanation: { ru: "Вода замерзает при 0 °C.", ky: "Суу 0 °C'та катат." },
+  },
+  // 10 класс — наука о природе
+  {
+    id: "g-world10-a", type: "single_choice", subject: "world", topic: "world10", grade: 10,
+    difficulty: 3, free: true,
+    prompt: { ru: "Какая планета ближе всех к Солнцу?", ky: "Кайсы планета Күнгө эң жакын?" },
+    options: [{ ru: "Меркурий", ky: "Меркурий" }, { ru: "Венера", ky: "Венера" }, { ru: "Земля", ky: "Жер" }],
+    correctIndex: 0,
+    explanation: { ru: "Меркурий — ближайшая к Солнцу планета.", ky: "Меркурий — Күнгө эң жакын планета." },
+  },
+  {
+    id: "g-world10-b", type: "single_choice", subject: "world", topic: "world10", grade: 10,
+    difficulty: 3, free: true,
+    prompt: { ru: "В каких единицах измеряют энергию?", ky: "Энергия кайсы бирдикте өлчөнөт?" },
+    options: [{ ru: "Джоуль", ky: "Джоуль" }, { ru: "Ньютон", ky: "Ньютон" }, { ru: "Ампер", ky: "Ампер" }],
+    correctIndex: 0,
+    explanation: { ru: "Энергию измеряют в джоулях (Дж).", ky: "Энергия джоуль менен өлчөнөт (Дж)." },
+  },
+  // 11 класс — наука и космос
+  {
+    id: "g-world11-a", type: "single_choice", subject: "world", topic: "world11", grade: 11,
+    difficulty: 3, free: true,
+    prompt: { ru: "Чему примерно равна скорость света?", ky: "Жарыктын ылдамдыгы болжол менен канчага барабар?" },
+    options: [{ ru: "300 000 км/с", ky: "300 000 км/с" }, { ru: "3 000 км/с", ky: "3 000 км/с" }, { ru: "30 км/с", ky: "30 км/с" }],
+    correctIndex: 0,
+    explanation: { ru: "Скорость света — около 300 000 км/с.", ky: "Жарыктын ылдамдыгы — болжол менен 300 000 км/с." },
+  },
+  {
+    id: "g-world11-b", type: "single_choice", subject: "world", topic: "world11", grade: 11,
+    difficulty: 3, free: true,
+    prompt: { ru: "Каким символом обозначают золото?", ky: "Алтын кайсы символ менен белгиленет?" },
+    options: [{ ru: "Au", ky: "Au" }, { ru: "Ag", ky: "Ag" }, { ru: "Fe", ky: "Fe" }],
+    correctIndex: 0,
+    explanation: { ru: "Золото обозначают символом Au (от лат. aurum).", ky: "Алтын Au символу менен белгиленет (лат. aurum)." },
+  },
+];
+
+export const higherTasks: Task[] = [...LOGIC, ...READING, ...WORLD];
