@@ -211,7 +211,10 @@
     "confirmReset": "{email} колдонуучунун сырсөзүн баштайсызбы?",
     "granted": "Премиум берилди",
     "newPasswordLabel": "Жаңы сырсөз",
-    "dismiss": "Ок"
+    "dismiss": "Ок",
+    "search": "Email боюнча издөө…",
+    "filterPremium": "Премиум гана",
+    "showing": "Көрсөтүлдү: {count}"
   },
   "grades": {
     "0": "Мектепке даярдык",

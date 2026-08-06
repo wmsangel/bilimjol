@@ -45,6 +45,8 @@ export const topics: Topic[] = [
     title: { ru: "Больше и меньше", ky: "Чоң жана кичине" } },
   { id: "read-vowels", subject: "reading", grade: 1, icon: "🅰️", difficulty: 2, order: 8,
     title: { ru: "Гласные и согласные", ky: "Үндүү жана үнсүз" } },
+  { id: "world1", subject: "world", grade: 1, icon: "🐾", difficulty: 1, order: 9,
+    title: { ru: "Природа вокруг", ky: "Айланадагы жаратылыш" } },
 
   // ── 2 класс ───────────────────────────────────────────
   { id: "log-think", subject: "logic", grade: 2, icon: "🧠", difficulty: 3, order: 1,
@@ -59,6 +61,8 @@ export const topics: Topic[] = [
     title: { ru: "Задачи", ky: "Маселелер" } },
   { id: "read-words", subject: "reading", grade: 2, icon: "📖", difficulty: 2, order: 6,
     title: { ru: "Слова и предложения", ky: "Сөздөр жана сүйлөмдөр" } },
+  { id: "world2", subject: "world", grade: 2, icon: "🍂", difficulty: 1, order: 7,
+    title: { ru: "Времена года", ky: "Жыл мезгилдери" } },
 
   // ── 3 класс ───────────────────────────────────────────
   { id: "m3-mult", subject: "math", grade: 3, icon: "✖️", difficulty: 3, order: 1,
@@ -71,6 +75,8 @@ export const topics: Topic[] = [
     title: { ru: "Логические задачи", ky: "Логикалык маселелер" } },
   { id: "read3", subject: "reading", grade: 3, icon: "📖", difficulty: 2, order: 5,
     title: { ru: "Работа с текстом", ky: "Текст менен иштөө" } },
+  { id: "world3", subject: "world", grade: 3, icon: "🐝", difficulty: 2, order: 6,
+    title: { ru: "Живая природа", ky: "Тирүү жаратылыш" } },
 
   // ── 4 класс ───────────────────────────────────────────
   { id: "m4-mult", subject: "math", grade: 4, icon: "✖️", difficulty: 3, order: 1,
@@ -83,6 +89,8 @@ export const topics: Topic[] = [
     title: { ru: "Закономерности", ky: "Закон ченемдер" } },
   { id: "read4", subject: "reading", grade: 4, icon: "📖", difficulty: 3, order: 5,
     title: { ru: "Слова в тексте", ky: "Тексттеги сөздөр" } },
+  { id: "world4", subject: "world", grade: 4, icon: "🌍", difficulty: 2, order: 6,
+    title: { ru: "Планета Земля", ky: "Жер планетасы" } },
 
   // ── 5 класс ───────────────────────────────────────────
   { id: "m5-percent", subject: "math", grade: 5, icon: "💯", difficulty: 3, order: 1,

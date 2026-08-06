@@ -644,4 +644,110 @@ const WORLD: Task[] = [
   },
 ];
 
-export const higherTasks: Task[] = [...LOGIC, ...READING, ...WORLD, ...MATH];
+// Окружающий мир для младших классов (1–4) — простые факты о природе.
+const WORLD_LOWER: Task[] = [
+  // 1 класс — природа вокруг
+  {
+    id: "g-world1-a", type: "number_input", subject: "world", topic: "world1", grade: 1,
+    difficulty: 1, free: true,
+    prompt: { ru: "Сколько лап у собаки?", ky: "Иттин канча буту бар?" },
+    answer: 4,
+    explanation: { ru: "У собаки четыре лапы.", ky: "Иттин төрт буту бар." },
+  },
+  {
+    id: "g-world1-b", type: "single_choice", subject: "world", topic: "world1", grade: 1,
+    difficulty: 1, free: true,
+    prompt: { ru: "Кто из них птица?", ky: "Булардын кайсынысы куш?" },
+    options: [{ ru: "кошка", ky: "мышык" }, { ru: "воробей", ky: "таранчы" }, { ru: "рыба", ky: "балык" }],
+    correctIndex: 1,
+    explanation: { ru: "Воробей — птица, он умеет летать.", ky: "Таранчы — куш, ал уча алат." },
+  },
+  {
+    id: "g-world1-c", type: "single_choice", subject: "world", topic: "world1", grade: 1,
+    difficulty: 1, free: false,
+    prompt: { ru: "Что нужно растению, чтобы расти?", ky: "Өсүмдүккө өсүү үчүн эмне керек?" },
+    options: [{ ru: "свет", ky: "жарык" }, { ru: "темнота", ky: "караңгы" }, { ru: "шум", ky: "ызы-чуу" }],
+    correctIndex: 0,
+    explanation: { ru: "Растениям нужен свет солнца.", ky: "Өсүмдүктөргө күндүн жарыгы керек." },
+  },
+  // 2 класс — времена года
+  {
+    id: "g-world2-a", type: "number_input", subject: "world", topic: "world2", grade: 2,
+    difficulty: 1, free: true,
+    prompt: { ru: "Сколько всего времён года?", ky: "Жылда канча мезгил бар?" },
+    answer: 4,
+    explanation: { ru: "Четыре: зима, весна, лето, осень.", ky: "Төртөө: кыш, жаз, жай, күз." },
+  },
+  {
+    id: "g-world2-b", type: "single_choice", subject: "world", topic: "world2", grade: 2,
+    difficulty: 1, free: true,
+    prompt: { ru: "Когда идёт снег?", ky: "Кар качан жаайт?" },
+    options: [{ ru: "зимой", ky: "кышында" }, { ru: "летом", ky: "жайында" }],
+    correctIndex: 0,
+    explanation: { ru: "Снег идёт зимой, когда холодно.", ky: "Кар кышында, суук болгондо жаайт." },
+  },
+  {
+    id: "g-world2-c", type: "single_choice", subject: "world", topic: "world2", grade: 2,
+    difficulty: 1, free: false,
+    prompt: { ru: "Что даёт нам корова?", ky: "Уй бизге эмне берет?" },
+    options: [{ ru: "молоко", ky: "сүт" }, { ru: "мёд", ky: "бал" }, { ru: "шерсть", ky: "жүн" }],
+    correctIndex: 0,
+    explanation: { ru: "Корова даёт молоко.", ky: "Уй сүт берет." },
+  },
+  // 3 класс — живая природа
+  {
+    id: "g-world3-a", type: "number_input", subject: "world", topic: "world3", grade: 3,
+    difficulty: 2, free: true,
+    prompt: { ru: "Сколько лапок у насекомого?", ky: "Курт-кумурсканын канча буту бар?" },
+    answer: 6,
+    explanation: { ru: "У насекомых шесть лапок.", ky: "Курт-кумурсканын алты буту бар." },
+  },
+  {
+    id: "g-world3-b", type: "single_choice", subject: "world", topic: "world3", grade: 3,
+    difficulty: 2, free: true,
+    prompt: { ru: "Кто дышит под водой жабрами?", ky: "Суу астында бранхий менен ким дем алат?" },
+    options: [{ ru: "рыба", ky: "балык" }, { ru: "кошка", ky: "мышык" }, { ru: "птица", ky: "куш" }],
+    correctIndex: 0,
+    explanation: { ru: "Рыбы дышат жабрами под водой.", ky: "Балыктар суу астында бранхий менен дем алат." },
+  },
+  {
+    id: "g-world3-c", type: "single_choice", subject: "world", topic: "world3", grade: 3,
+    difficulty: 2, free: false,
+    prompt: { ru: "Что делают пчёлы?", ky: "Аарылар эмне жасайт?" },
+    options: [{ ru: "мёд", ky: "бал" }, { ru: "молоко", ky: "сүт" }, { ru: "шерсть", ky: "жүн" }],
+    correctIndex: 0,
+    explanation: { ru: "Пчёлы делают мёд.", ky: "Аарылар бал жасайт." },
+  },
+  // 4 класс — планета Земля
+  {
+    id: "g-world4-a", type: "number_input", subject: "world", topic: "world4", grade: 4,
+    difficulty: 2, free: true,
+    prompt: { ru: "Сколько дней в неделе?", ky: "Бир жумада канча күн бар?" },
+    answer: 7,
+    explanation: { ru: "В неделе семь дней.", ky: "Бир жумада жети күн бар." },
+  },
+  {
+    id: "g-world4-b", type: "single_choice", subject: "world", topic: "world4", grade: 4,
+    difficulty: 2, free: true,
+    prompt: { ru: "Что больше: Солнце или Земля?", ky: "Кайсынысы чоң: Күнбү же Жерби?" },
+    options: [{ ru: "Солнце", ky: "Күн" }, { ru: "Земля", ky: "Жер" }],
+    correctIndex: 0,
+    explanation: { ru: "Солнце намного больше Земли.", ky: "Күн Жерден кыйла чоң." },
+  },
+  {
+    id: "g-world4-c", type: "single_choice", subject: "world", topic: "world4", grade: 4,
+    difficulty: 2, free: false,
+    prompt: { ru: "Где живут пингвины?", ky: "Пингвиндер кайда жашайт?" },
+    options: [{ ru: "в холодных краях", ky: "суук жерлерде" }, { ru: "в пустыне", ky: "чөлдө" }, { ru: "в джунглях", ky: "джунглиде" }],
+    correctIndex: 0,
+    explanation: { ru: "Пингвины живут в холодных местах, например в Антарктиде.", ky: "Пингвиндер суук жерлерде, мисалы Антарктидада жашайт." },
+  },
+];
+
+export const higherTasks: Task[] = [
+  ...LOGIC,
+  ...READING,
+  ...WORLD,
+  ...WORLD_LOWER,
+  ...MATH,
+];

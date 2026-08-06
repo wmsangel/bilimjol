@@ -205,9 +205,19 @@ export function ParentReport({
               {labels.byTopic}
             </h3>
             <div className="space-y-2">
-              {getTopics().map((topic) => {
-                const topicTasks = allTasks.filter((t) => t.topic === topic.id);
-                const done = topicTasks.filter((t) => progress[t.id]).length;
+              {getTopics()
+                .map((topic) => {
+                  const topicTasks = allTasks.filter(
+                    (t) => t.topic === topic.id,
+                  );
+                  const done = topicTasks.filter((t) => progress[t.id]).length;
+                  return { topic, topicTasks, done };
+                })
+                // Показываем только начатые темы — иначе список из всех классов
+                // огромен и почти весь по нулям.
+                .filter((r) => r.done > 0)
+                .sort((a, b) => b.done - a.done)
+                .map(({ topic, topicTasks, done }) => {
                 const complete = done === topicTasks.length;
                 return (
                   <div

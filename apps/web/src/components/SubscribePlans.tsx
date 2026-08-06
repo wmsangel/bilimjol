@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { checkout, getEntitlement, isLoggedIn } from "@/lib/api";
+import { checkout, getEntitlement, isLoggedIn, loadAuth } from "@/lib/api";
+import {
+  countryForLocale,
+  formatPrice,
+  priceForCountry,
+} from "@/lib/pricing";
 
 export interface SubscribeLabels {
   benefits: string[];
   planName: string;
-  price: string;
   period: string;
   cta: string;
   ctaLogin: string;
@@ -47,8 +51,16 @@ export function SubscribePlans({
   const [until, setUntil] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
+  // Начальная цена — по языку (детерминированно для SSR); уточняем в effect.
+  const [priceText, setPriceText] = useState(() =>
+    formatPrice(priceForCountry(countryForLocale(locale))),
+  );
 
   useEffect(() => {
+    const auth = loadAuth();
+    const country = auth?.user.country ?? countryForLocale(locale);
+    setPriceText(formatPrice(priceForCountry(country)));
+
     if (!isLoggedIn()) {
       setStatus("guest");
       return;
@@ -90,7 +102,7 @@ export function SubscribePlans({
       {/* Цена / план */}
       <div className="flex items-baseline gap-2">
         <span className="font-display text-5xl font-extrabold tracking-tight">
-          {labels.price}
+          {priceText}
         </span>
         <span className="text-lg text-zinc-500 dark:text-zinc-400">
           {labels.period}

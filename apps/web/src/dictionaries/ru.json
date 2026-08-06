@@ -211,7 +211,10 @@
     "confirmReset": "Сбросить пароль пользователю {email}?",
     "granted": "Премиум выдан",
     "newPasswordLabel": "Новый пароль",
-    "dismiss": "Ок"
+    "dismiss": "Ок",
+    "search": "Поиск по email…",
+    "filterPremium": "Только премиум",
+    "showing": "Показано: {count}"
   },
   "grades": {
     "0": "Подготовка к школе",

@@ -34,6 +34,9 @@ export interface AdminLabels {
   granted: string;
   newPasswordLabel: string;
   dismiss: string;
+  search: string;
+  filterPremium: string;
+  showing: string;
 }
 
 function tpl(str: string, vars: Record<string, string>) {
@@ -56,6 +59,8 @@ export function AdminPanel({
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [onlyPremium, setOnlyPremium] = useState(false);
 
   async function onGrant(u: AdminUser) {
     if (!window.confirm(tpl(labels.confirmGrant, { email: u.email }))) return;
@@ -129,6 +134,13 @@ export function AdminPanel({
     );
   }
 
+  const filtered = users.filter((u) => {
+    if (onlyPremium && !u.premium) return false;
+    const q = query.trim().toLowerCase();
+    if (q && !u.email.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
   const tile = (value: number, label: string) => (
     <div className="rounded-2xl border border-black/[.06] bg-white p-4 text-center shadow-sm dark:border-white/10 dark:bg-zinc-900">
       <div className="font-display text-3xl font-extrabold">{value}</div>
@@ -163,7 +175,32 @@ export function AdminPanel({
         </div>
       )}
 
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-black/[.06] dark:border-white/10">
+      {/* Поиск и фильтр */}
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={labels.search}
+          className="min-w-0 flex-1 rounded-full border border-black/[.08] bg-white px-4 py-2 text-sm outline-none focus:border-indigo-400 dark:border-white/10 dark:bg-zinc-900"
+        />
+        <button
+          onClick={() => setOnlyPremium((v) => !v)}
+          className={
+            "rounded-full px-4 py-2 text-sm font-bold transition " +
+            (onlyPremium
+              ? "bg-amber-400 text-white shadow-md"
+              : "bg-black/[.05] text-zinc-600 hover:bg-black/10 dark:bg-white/10 dark:text-zinc-300")
+          }
+        >
+          ⭐ {labels.filterPremium}
+        </button>
+        <span className="text-xs font-semibold text-zinc-400">
+          {tpl(labels.showing, { count: String(filtered.length) })}
+        </span>
+      </div>
+
+      <div className="mt-3 overflow-x-auto rounded-2xl border border-black/[.06] dark:border-white/10">
         <table className="w-full text-left text-sm">
           <thead className="bg-black/[.03] text-xs uppercase text-zinc-500 dark:bg-white/5 dark:text-zinc-400">
             <tr>
@@ -176,7 +213,7 @@ export function AdminPanel({
             </tr>
           </thead>
           <tbody>
-            {users.map((u) => (
+            {filtered.map((u) => (
               <tr
                 key={u.id}
                 className="border-t border-black/[.06] dark:border-white/10"
