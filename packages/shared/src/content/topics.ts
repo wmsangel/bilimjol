@@ -51,6 +51,14 @@ export const topics: Topic[] = [
     title: { ru: "Логика и сравнение", ky: "Логика жана салыштыруу" } },
   { id: "math-seq", subject: "math", grade: 2, icon: "📈", difficulty: 2, order: 2,
     title: { ru: "Числовые ряды", ky: "Сан катарлары" } },
+  { id: "math-tens", subject: "math", grade: 2, icon: "💯", difficulty: 2, order: 3,
+    title: { ru: "Числа до 100", ky: "100гө чейинки сандар" } },
+  { id: "math-mult", subject: "math", grade: 2, icon: "✖️", difficulty: 3, order: 4,
+    title: { ru: "Умножение", ky: "Көбөйтүү" } },
+  { id: "math-word", subject: "math", grade: 2, icon: "📝", difficulty: 2, order: 5,
+    title: { ru: "Задачи", ky: "Маселелер" } },
+  { id: "read-words", subject: "reading", grade: 2, icon: "📖", difficulty: 2, order: 6,
+    title: { ru: "Слова и предложения", ky: "Сөздөр жана сүйлөмдөр" } },
 ];
 
 /** Доступные классы (по имеющемуся контенту), по возрастанию. */
