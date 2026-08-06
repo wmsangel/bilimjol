@@ -19,8 +19,9 @@ export default async function AccountLayout({
 
   const items = [
     { href: `/${lang}/me`, label: dict.account.progress, icon: "📊" },
-    { href: `/${lang}/parent`, label: dict.account.report, icon: "👨‍👩‍👧" },
     { href: `/${lang}/play`, label: dict.account.play, icon: "🎮" },
+    { href: `/${lang}/tests`, label: dict.tests.nav, icon: "🎯" },
+    { href: `/${lang}/parent`, label: dict.account.report, icon: "👨‍👩‍👧" },
   ];
 
   return (

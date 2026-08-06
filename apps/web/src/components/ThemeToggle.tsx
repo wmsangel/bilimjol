@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-const KEY = "izn.study:theme:v1";
-
 export function ThemeToggle() {
   const [dark, setDark] = useState(false);
 
@@ -15,11 +13,7 @@ export function ThemeToggle() {
     const el = document.documentElement;
     const next = !el.classList.contains("dark");
     el.classList.toggle("dark", next);
-    try {
-      localStorage.setItem(KEY, next ? "dark" : "light");
-    } catch {
-      // no-op
-    }
+    document.cookie = `izn-theme=${next ? "dark" : "light"}; path=/; max-age=31536000; samesite=lax`;
     setDark(next);
   }
 

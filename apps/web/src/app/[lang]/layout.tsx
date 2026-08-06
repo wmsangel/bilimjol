@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito, Comfortaa } from "next/font/google";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import { locales, isLocale } from "@/i18n/config";
@@ -41,21 +42,15 @@ export default async function RootLayout({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
+  // Тема из cookie — сервер сразу ставит класс, без inline-скрипта и без мигания.
+  const dark = (await cookies()).get("izn-theme")?.value === "dark";
+
   return (
     <html
       lang={lang}
-      suppressHydrationWarning
-      className={`${nunito.variable} ${comfortaa.variable} h-full antialiased`}
+      className={`${nunito.variable} ${comfortaa.variable} h-full antialiased${dark ? " dark" : ""}`}
     >
-      <body className="min-h-full flex flex-col">
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "(function(){try{var t=localStorage.getItem('izn.study:theme:v1');if(t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark');}}catch(e){}})();",
-          }}
-        />
-        {children}
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

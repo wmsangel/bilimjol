@@ -28,21 +28,31 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         <span className="font-display text-xl font-extrabold tracking-tight">
           izn<span className="text-indigo-600 dark:text-indigo-400">.study</span>
         </span>
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
-          <LanguageSwitcher current={lang} />
-          <Link
-            href={`/${lang}/me`}
-            className="hidden text-sm font-semibold text-zinc-600 hover:text-foreground sm:inline dark:text-zinc-300"
-          >
-            {dict.nav.cabinet}
-          </Link>
-          <Link
-            href={`/${lang}/login`}
-            className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
-          >
-            {dict.auth.loginCta}
-          </Link>
+        <div className="flex items-center gap-2 sm:gap-5">
+          <nav className="hidden items-center gap-5 sm:flex">
+            <Link
+              href={`/${lang}/tests`}
+              className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
+            >
+              {dict.tests.nav}
+            </Link>
+            <Link
+              href={`/${lang}/me`}
+              className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
+            >
+              {dict.nav.cabinet}
+            </Link>
+            <Link
+              href={`/${lang}/login`}
+              className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
+            >
+              {dict.auth.loginCta}
+            </Link>
+          </nav>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <LanguageSwitcher current={lang} />
+          </div>
           <Link
             href={`/${lang}/play`}
             className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-4 py-2 text-sm font-bold text-white shadow-md shadow-indigo-500/30 transition hover:brightness-110"
