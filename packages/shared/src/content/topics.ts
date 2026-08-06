@@ -59,6 +59,80 @@ export const topics: Topic[] = [
     title: { ru: "Задачи", ky: "Маселелер" } },
   { id: "read-words", subject: "reading", grade: 2, icon: "📖", difficulty: 2, order: 6,
     title: { ru: "Слова и предложения", ky: "Сөздөр жана сүйлөмдөр" } },
+
+  // ── 3 класс ───────────────────────────────────────────
+  { id: "m3-mult", subject: "math", grade: 3, icon: "✖️", difficulty: 3, order: 1,
+    title: { ru: "Таблица умножения", ky: "Көбөйтүү таблицасы" } },
+  { id: "m3-div", subject: "math", grade: 3, icon: "➗", difficulty: 3, order: 2,
+    title: { ru: "Деление", ky: "Бөлүү" } },
+  { id: "m3-big", subject: "math", grade: 3, icon: "🔢", difficulty: 2, order: 3,
+    title: { ru: "Многозначные числа", ky: "Көп орундуу сандар" } },
+  { id: "log3", subject: "logic", grade: 3, icon: "🧠", difficulty: 2, order: 4,
+    title: { ru: "Логические задачи", ky: "Логикалык маселелер" } },
+  { id: "read3", subject: "reading", grade: 3, icon: "📖", difficulty: 2, order: 5,
+    title: { ru: "Работа с текстом", ky: "Текст менен иштөө" } },
+
+  // ── 4 класс ───────────────────────────────────────────
+  { id: "m4-mult", subject: "math", grade: 4, icon: "✖️", difficulty: 3, order: 1,
+    title: { ru: "Умножение и деление", ky: "Көбөйтүү жана бөлүү" } },
+  { id: "m4-order", subject: "math", grade: 4, icon: "🧮", difficulty: 3, order: 2,
+    title: { ru: "Порядок действий", ky: "Аракеттердин тартиби" } },
+  { id: "m4-frac", subject: "math", grade: 4, icon: "🍰", difficulty: 3, order: 3,
+    title: { ru: "Доли и дроби", ky: "Үлүштөр жана бөлчөктөр" } },
+  { id: "log4", subject: "logic", grade: 4, icon: "🧠", difficulty: 3, order: 4,
+    title: { ru: "Закономерности", ky: "Закон ченемдер" } },
+  { id: "read4", subject: "reading", grade: 4, icon: "📖", difficulty: 3, order: 5,
+    title: { ru: "Слова в тексте", ky: "Тексттеги сөздөр" } },
+
+  // ── 5 класс ───────────────────────────────────────────
+  { id: "m5-percent", subject: "math", grade: 5, icon: "💯", difficulty: 3, order: 1,
+    title: { ru: "Проценты", ky: "Пайыздар" } },
+  { id: "m5-frac", subject: "math", grade: 5, icon: "🍰", difficulty: 3, order: 2,
+    title: { ru: "Дроби", ky: "Бөлчөктөр" } },
+  { id: "m5-big", subject: "math", grade: 5, icon: "🔢", difficulty: 2, order: 3,
+    title: { ru: "Большие числа", ky: "Чоң сандар" } },
+
+  // ── 6 класс ───────────────────────────────────────────
+  { id: "m6-neg", subject: "math", grade: 6, icon: "➖", difficulty: 3, order: 1,
+    title: { ru: "Отрицательные числа", ky: "Терс сандар" } },
+  { id: "m6-eq", subject: "math", grade: 6, icon: "🟰", difficulty: 3, order: 2,
+    title: { ru: "Уравнения", ky: "Теңдемелер" } },
+  { id: "m6-percent", subject: "math", grade: 6, icon: "💯", difficulty: 3, order: 3,
+    title: { ru: "Проценты", ky: "Пайыздар" } },
+
+  // ── 7 класс ───────────────────────────────────────────
+  { id: "m7-pow", subject: "math", grade: 7, icon: "🔼", difficulty: 3, order: 1,
+    title: { ru: "Степени", ky: "Даражалар" } },
+  { id: "m7-eq", subject: "math", grade: 7, icon: "🟰", difficulty: 3, order: 2,
+    title: { ru: "Линейные уравнения", ky: "Сызыктуу теңдемелер" } },
+
+  // ── 8 класс ───────────────────────────────────────────
+  { id: "m8-sqrt", subject: "math", grade: 8, icon: "📐", difficulty: 3, order: 1,
+    title: { ru: "Квадратные корни", ky: "Квадрат тамырлар" } },
+  { id: "m8-pow", subject: "math", grade: 8, icon: "🔼", difficulty: 3, order: 2,
+    title: { ru: "Степени", ky: "Даражалар" } },
+  { id: "m8-eq", subject: "math", grade: 8, icon: "🟰", difficulty: 3, order: 3,
+    title: { ru: "Уравнения", ky: "Теңдемелер" } },
+
+  // ── 9 класс ───────────────────────────────────────────
+  { id: "m9-prog", subject: "math", grade: 9, icon: "📈", difficulty: 3, order: 1,
+    title: { ru: "Прогрессии", ky: "Прогрессиялар" } },
+  { id: "m9-pow", subject: "math", grade: 9, icon: "🔼", difficulty: 3, order: 2,
+    title: { ru: "Степени", ky: "Даражалар" } },
+  { id: "m9-root", subject: "math", grade: 9, icon: "📐", difficulty: 3, order: 3,
+    title: { ru: "Корни", ky: "Тамырлар" } },
+  { id: "m9-eq", subject: "math", grade: 9, icon: "🟰", difficulty: 3, order: 4,
+    title: { ru: "Уравнения", ky: "Теңдемелер" } },
+
+  // ── 10 класс ──────────────────────────────────────────
+  { id: "m10-calc", subject: "math", grade: 10, icon: "💯", difficulty: 3, order: 1,
+    title: { ru: "Проценты и корни", ky: "Пайыздар жана тамырлар" } },
+  { id: "m10-pow", subject: "math", grade: 10, icon: "🔼", difficulty: 3, order: 2,
+    title: { ru: "Степени", ky: "Даражалар" } },
+
+  // ── 11 класс ──────────────────────────────────────────
+  { id: "m11-calc", subject: "math", grade: 11, icon: "🧮", difficulty: 3, order: 1,
+    title: { ru: "Вычисления", ky: "Эсептөөлөр" } },
 ];
 
 /** Доступные классы (по имеющемуся контенту), по возрастанию. */

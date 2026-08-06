@@ -113,6 +113,104 @@ function countTasks(topic: string, grade: Grade, items: CountItem[], freeCount =
   }));
 }
 
+function divTasks(topic: string, grade: Grade, pairs: [number, number][], freeCount = 4): Task[] {
+  return pairs.map(([a, b], i) => ({
+    id: `g-${topic}-div-${a}-${b}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 2, free: i < freeCount,
+    prompt: { ru: `${a} ÷ ${b} = ?`, ky: `${a} ÷ ${b} = ?` },
+    answer: a / b,
+    explanation: { ru: `${a} ÷ ${b} = ${a / b}.`, ky: `${a} ÷ ${b} = ${a / b}.` },
+  }));
+}
+
+function sqTasks(topic: string, grade: Grade, nums: number[], freeCount = 3): Task[] {
+  return nums.map((n, i) => ({
+    id: `g-${topic}-sq-${n}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `${n}² = ?`, ky: `${n}² = ?` },
+    answer: n * n,
+    explanation: { ru: `${n}² = ${n} × ${n} = ${n * n}.`, ky: `${n}² = ${n} × ${n} = ${n * n}.` },
+  }));
+}
+
+function sqrtTasks(topic: string, grade: Grade, nums: number[], freeCount = 3): Task[] {
+  return nums.map((n, i) => ({
+    id: `g-${topic}-sqrt-${n}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `√${n * n} = ?`, ky: `√${n * n} = ?` },
+    answer: n,
+    explanation: { ru: `√${n * n} = ${n}, потому что ${n} × ${n} = ${n * n}.`, ky: `√${n * n} = ${n}, себеби ${n} × ${n} = ${n * n}.` },
+  }));
+}
+
+function eqAddTasks(topic: string, grade: Grade, pairs: [number, number][], freeCount = 4): Task[] {
+  // pairs: [a, x] → уравнение x + a = a+x
+  return pairs.map(([a, x], i) => ({
+    id: `g-${topic}-eqa-${a}-${x}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `Реши: x + ${a} = ${a + x}`, ky: `Чеч: x + ${a} = ${a + x}` },
+    answer: x,
+    explanation: { ru: `x = ${a + x} − ${a} = ${x}.`, ky: `x = ${a + x} − ${a} = ${x}.` },
+  }));
+}
+
+function eqMulTasks(topic: string, grade: Grade, pairs: [number, number][], freeCount = 3): Task[] {
+  // pairs: [a, x] → a · x = a*x
+  return pairs.map(([a, x], i) => ({
+    id: `g-${topic}-eqm-${a}-${x}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `Реши: ${a} · x = ${a * x}`, ky: `Чеч: ${a} · x = ${a * x}` },
+    answer: x,
+    explanation: { ru: `x = ${a * x} ÷ ${a} = ${x}.`, ky: `x = ${a * x} ÷ ${a} = ${x}.` },
+  }));
+}
+
+function percentTasks(topic: string, grade: Grade, pairs: [number, number][], freeCount = 3): Task[] {
+  // pairs: [p, n] → p% от n
+  return pairs.map(([p, n], i) => ({
+    id: `g-${topic}-pct-${p}-${n}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `Сколько будет ${p}% от ${n}?`, ky: `${n} санынын ${p}% канча?` },
+    answer: (p * n) / 100,
+    explanation: { ru: `${p}% от ${n} = ${(p * n) / 100}.`, ky: `${n}дын ${p}% = ${(p * n) / 100}.` },
+  }));
+}
+
+function fracTasks(topic: string, grade: Grade, pairs: [number, number][], freeCount = 3): Task[] {
+  // pairs: [den, of] → 1/den от of
+  return pairs.map(([den, of], i) => ({
+    id: `g-${topic}-frac-${den}-${of}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `Сколько будет 1/${den} от ${of}?`, ky: `${of} санынын 1/${den} канча?` },
+    answer: of / den,
+    explanation: { ru: `${of} ÷ ${den} = ${of / den}.`, ky: `${of} ÷ ${den} = ${of / den}.` },
+  }));
+}
+
+function orderTasks(topic: string, grade: Grade, triples: [number, number, number][], freeCount = 3): Task[] {
+  return triples.map(([a, b, c], i) => ({
+    id: `g-${topic}-ord-${a}-${b}-${c}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `Сколько будет ${a} + ${b} × ${c}?`, ky: `${a} + ${b} × ${c} канчага барабар?` },
+    answer: a + b * c,
+    explanation: {
+      ru: `Сначала умножение: ${b} × ${c} = ${b * c}, затем ${a} + ${b * c} = ${a + b * c}.`,
+      ky: `Адегенде көбөйтүү: ${b} × ${c} = ${b * c}, анан ${a} + ${b * c} = ${a + b * c}.`,
+    },
+  }));
+}
+
+function negTasks(topic: string, grade: Grade, pairs: [number, number][], freeCount = 4): Task[] {
+  // pairs: [a, b] → −a + b
+  return pairs.map(([a, b], i) => ({
+    id: `g-${topic}-neg-${a}-${b}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `−${a} + ${b} = ?`, ky: `−${a} + ${b} = ?` },
+    answer: -a + b,
+    explanation: { ru: `−${a} + ${b} = ${-a + b}.`, ky: `−${a} + ${b} = ${-a + b}.` },
+  }));
+}
+
 // Дополнительные задания по логике/чтению (вручную).
 const LOGIC_EXTRA: Task[] = [
   {
@@ -248,6 +346,81 @@ const READING_EXTRA: Task[] = [
   },
 ];
 
+// Логика/чтение для 3–4 классов (вручную).
+const GRADE_HIGH_HL: Task[] = [
+  {
+    id: "g-log3-a", type: "single_choice", subject: "logic", topic: "log3", grade: 3,
+    difficulty: 2, free: true,
+    prompt: {
+      ru: "У Маши больше яблок, чем у Пети. У Пети больше, чем у Кати. У кого меньше всех?",
+      ky: "Машада Петядан көп алма бар. Петяда Катядан көп. Кимде эң аз?",
+    },
+    options: [{ ru: "У Маши", ky: "Машада" }, { ru: "У Пети", ky: "Петяда" }, { ru: "У Кати", ky: "Катяда" }],
+    correctIndex: 2,
+    explanation: { ru: "Катя меньше Пети, а Петя меньше Маши — значит у Кати меньше всех.", ky: "Катя Петядан аз, Петя Машадан аз — демек Катяда эң аз." },
+  },
+  {
+    id: "g-log3-b", type: "number_input", subject: "logic", topic: "log3", grade: 3,
+    difficulty: 2, free: true,
+    prompt: { ru: "Продолжи ряд: 2, 4, 8, 16, ?", ky: "Катарды улант: 2, 4, 8, 16, ?" },
+    answer: 32,
+    explanation: { ru: "Каждое число в 2 раза больше: 16 × 2 = 32.", ky: "Ар бир сан 2 эсе чоң: 16 × 2 = 32." },
+  },
+  {
+    id: "g-log3-c", type: "single_choice", subject: "logic", topic: "log3", grade: 3,
+    difficulty: 2, free: false,
+    prompt: { ru: "Какое число лишнее: 11, 13, 15, 16?", ky: "Кайсы сан ашык: 11, 13, 15, 16?" },
+    options: [{ ru: "11", ky: "11" }, { ru: "13", ky: "13" }, { ru: "15", ky: "15" }, { ru: "16", ky: "16" }],
+    correctIndex: 3,
+    explanation: { ru: "16 — чётное, остальные нечётные.", ky: "16 — жуп, калгандары так." },
+  },
+  {
+    id: "g-log4-a", type: "number_input", subject: "logic", topic: "log4", grade: 4,
+    difficulty: 3, free: true,
+    prompt: { ru: "Продолжи ряд: 1, 4, 9, 16, ?", ky: "Катарды улант: 1, 4, 9, 16, ?" },
+    answer: 25,
+    explanation: { ru: "Это квадраты: 1, 4, 9, 16, 25 (5×5).", ky: "Бул квадраттар: 1, 4, 9, 16, 25 (5×5)." },
+  },
+  {
+    id: "g-log4-b", type: "single_choice", subject: "logic", topic: "log4", grade: 4,
+    difficulty: 3, free: true,
+    prompt: { ru: "Какое число лишнее: 12, 15, 20, 18?", ky: "Кайсы сан ашык: 12, 15, 20, 18?" },
+    options: [{ ru: "12", ky: "12" }, { ru: "15", ky: "15" }, { ru: "20", ky: "20" }, { ru: "18", ky: "18" }],
+    correctIndex: 2,
+    explanation: { ru: "20 не делится на 3, а остальные делятся.", ky: "20 3кө бөлүнбөйт, калгандары бөлүнөт." },
+  },
+  {
+    id: "g-read3-a", type: "number_input", subject: "reading", topic: "read3", grade: 3,
+    difficulty: 2, free: true,
+    prompt: { ru: "Сколько предложений: «Кот спит. Пёс бежит.»?", ky: "Канча сүйлөм: «Мышык уктайт. Ит чуркайт.»?" },
+    answer: 2,
+    explanation: { ru: "Два предложения — каждое кончается точкой.", ky: "Эки сүйлөм — ар бири чекит менен бүтөт." },
+  },
+  {
+    id: "g-read3-b", type: "single_choice", subject: "reading", topic: "read3", grade: 3,
+    difficulty: 2, free: true,
+    prompt: { ru: "Найди слово-предмет (кто? что?)", ky: "Затты билдирген сөздү тап (ким? эмне?)" },
+    options: [{ ru: "бежит", ky: "чуркайт" }, { ru: "кот", ky: "мышык" }, { ru: "красный", ky: "кызыл" }],
+    correctIndex: 1,
+    explanation: { ru: "«кот» отвечает на вопрос «кто?» — это предмет.", ky: "«мышык» «ким?» деген суроого жооп берет — бул зат." },
+  },
+  {
+    id: "g-read4-a", type: "single_choice", subject: "reading", topic: "read4", grade: 4,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди слово-действие (что делает?)", ky: "Иш-аракетти билдирген сөздү тап" },
+    options: [{ ru: "небо", ky: "асман" }, { ru: "летит", ky: "учат" }, { ru: "синий", ky: "көк" }],
+    correctIndex: 1,
+    explanation: { ru: "«летит» отвечает на вопрос «что делает?».", ky: "«учат» «эмне кылат?» деген суроого жооп берет." },
+  },
+  {
+    id: "g-read4-b", type: "number_input", subject: "reading", topic: "read4", grade: 4,
+    difficulty: 3, free: false,
+    prompt: { ru: "Сколько гласных в слове «школа»?", ky: "«мектеп» сөзүндө канча үндүү бар?" },
+    answer: 2,
+    explanation: { ru: "Гласные о, а — их две.", ky: "Үндүүлөр е, е — экөө." },
+  },
+];
+
 export const generatedTasks: Task[] = [
   // ── Подготовишка ──
   ...countTasks("pre-count", 0, [
@@ -277,6 +450,48 @@ export const generatedTasks: Task[] = [
   ...multTasks("math-mult", 2, [[2, 2], [2, 6], [3, 5], [5, 4], [4, 3], [3, 3]]),
   ...addTasks("math-word", 2, [[6, 4], [7, 8]], 1),
   ...subTasks("math-word", 2, [[15, 6], [20, 8]], 1),
+  // ── 3 класс ──
+  ...multTasks("m3-mult", 3, [[6, 7], [8, 9], [7, 7], [6, 8], [9, 4], [7, 8]]),
+  ...divTasks("m3-div", 3, [[24, 6], [36, 4], [45, 5], [42, 7], [56, 8], [63, 9]]),
+  ...addTasks("m3-big", 3, [[120, 30], [240, 50], [315, 25], [408, 90]]),
+  ...subTasks("m3-big", 3, [[300, 120], [450, 180], [520, 60]]),
+  // ── 4 класс ──
+  ...multTasks("m4-mult", 4, [[12, 3], [11, 4], [13, 5], [14, 6], [15, 4]]),
+  ...divTasks("m4-mult", 4, [[48, 4], [60, 5], [72, 6], [96, 8]]),
+  ...orderTasks("m4-order", 4, [[2, 3, 4], [5, 2, 6], [10, 3, 3], [1, 7, 2], [8, 4, 2]]),
+  ...fracTasks("m4-frac", 4, [[2, 10], [4, 20], [5, 25], [3, 18], [2, 14]]),
+  // ── 5 класс ──
+  ...percentTasks("m5-percent", 5, [[10, 50], [20, 150], [25, 80], [50, 60], [30, 200]]),
+  ...fracTasks("m5-frac", 5, [[4, 24], [6, 36], [8, 40], [10, 90]]),
+  ...addTasks("m5-big", 5, [[1200, 300], [2500, 1500], [3400, 600]]),
+  ...subTasks("m5-big", 5, [[5000, 1200], [3200, 800]]),
+  // ── 6 класс ──
+  ...negTasks("m6-neg", 6, [[5, 8], [3, 10], [7, 2], [4, 9], [6, 6]]),
+  ...eqAddTasks("m6-eq", 6, [[5, 7], [8, 4], [3, 9], [12, 6]]),
+  ...eqMulTasks("m6-eq", 6, [[3, 4], [5, 6], [2, 9]]),
+  ...percentTasks("m6-percent", 6, [[15, 200], [40, 90], [5, 300]]),
+  // ── 7 класс ──
+  ...sqTasks("m7-pow", 7, [3, 4, 5, 6, 7, 8]),
+  ...eqAddTasks("m7-eq", 7, [[12, 5], [7, 8], [15, 9]]),
+  ...eqMulTasks("m7-eq", 7, [[4, 7], [6, 5], [8, 4]]),
+  // ── 8 класс ──
+  ...sqrtTasks("m8-sqrt", 8, [4, 5, 6, 7, 8, 9]),
+  ...sqTasks("m8-pow", 8, [8, 9, 10, 11, 12]),
+  ...eqMulTasks("m8-eq", 8, [[7, 8], [9, 6], [8, 7]]),
+  // ── 9 класс ──
+  ...seqTasks("m9-prog", 9, [[3, 7], [5, 4], [2, 9], [10, 6]]),
+  ...sqTasks("m9-pow", 9, [11, 12, 13, 14]),
+  ...sqrtTasks("m9-root", 9, [10, 11, 12, 13]),
+  ...eqAddTasks("m9-eq", 9, [[25, 17], [40, 23]]),
+  // ── 10 класс ──
+  ...percentTasks("m10-calc", 10, [[15, 240], [12, 350], [8, 125], [35, 400]]),
+  ...sqrtTasks("m10-calc", 10, [13, 14, 15, 20]),
+  ...sqTasks("m10-pow", 10, [13, 15, 20, 25]),
+  // ── 11 класс ──
+  ...sqTasks("m11-calc", 11, [15, 16, 20, 25, 30]),
+  ...percentTasks("m11-calc", 11, [[18, 150], [22, 500], [45, 80]]),
+  ...seqTasks("m11-calc", 11, [[100, 25], [7, 13]]),
   ...LOGIC_EXTRA,
   ...READING_EXTRA,
+  ...GRADE_HIGH_HL,
 ];
