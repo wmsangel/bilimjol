@@ -37,6 +37,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               {dict.tests.nav}
             </Link>
             <Link
+              href={`/${lang}/subscribe`}
+              className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
+            >
+              {dict.subscribe.nav}
+            </Link>
+            <Link
               href={`/${lang}/me`}
               className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
             >
@@ -242,6 +248,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
                 <p className="mt-3 leading-7 text-indigo-50/90">
                   {dict.pricing.pro.desc}
                 </p>
+                <Link
+                  href={`/${lang}/subscribe`}
+                  className="mt-5 inline-block rounded-full bg-white px-6 py-2.5 font-bold text-indigo-600 shadow-md transition hover:bg-indigo-50 active:scale-[.98]"
+                >
+                  {dict.subscribe.cta}
+                </Link>
               </div>
             </div>
           </section>
