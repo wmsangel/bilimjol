@@ -1,7 +1,8 @@
 import type { Task } from "./types";
+import { generatedTasks } from "./generated";
 
 // Задания сгруппированы по темам (topic). Часть бесплатна (free: true).
-export const tasks: Task[] = [
+const baseTasks: Task[] = [
   // ── Логика · Найди лишнее ──────────────────────────────
   {
     id: "log-1-1",
@@ -1624,6 +1625,8 @@ export const tasks: Task[] = [
     },
   },
 ];
+
+export const tasks: Task[] = [...baseTasks, ...generatedTasks];
 
 export function getTasks(filter?: {
   subject?: Task["subject"];
