@@ -294,6 +294,197 @@ const READING: Task[] = [
     correctIndex: 1,
     explanation: { ru: "«Шумит» — сказуемое, отвечает на вопрос «что делает?».", ky: "«Улуйт» — баяндооч, «эмне кылат?» суроосуна жооп берет." },
   },
+  // 9 класс — значение слов
+  {
+    id: "g-read9-a", type: "single_choice", subject: "reading", topic: "read9", grade: 9,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди антоним к слову «щедрый»", ky: "«Жоомарт» сөзүнө антонимди тап" },
+    options: [{ ru: "скупой", ky: "сараң" }, { ru: "добрый", ky: "боорукер" }, { ru: "богатый", ky: "бай" }],
+    correctIndex: 0,
+    explanation: { ru: "«Скупой» — противоположность «щедрого».", ky: "«Сараң» — «жоомарт» дегендин карама-каршысы." },
+  },
+  {
+    id: "g-read9-b", type: "single_choice", subject: "reading", topic: "read9", grade: 9,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди синоним к слову «умный»", ky: "«Акылдуу» сөзүнө синонимди тап" },
+    options: [{ ru: "сообразительный", ky: "тапкыч" }, { ru: "ленивый", ky: "жалкоо" }, { ru: "грустный", ky: "капалуу" }],
+    correctIndex: 0,
+    explanation: { ru: "«Сообразительный» близко по значению к «умный».", ky: "«Тапкыч» — «акылдуу» менен маанилеш." },
+  },
+  {
+    id: "g-read9-c", type: "single_choice", subject: "reading", topic: "read9", grade: 9,
+    difficulty: 3, free: false,
+    prompt: { ru: "В каком значении слово «золотые» в «золотые руки»?", ky: "«Алтын кол» дегенде «алтын» кайсы мааниде?" },
+    options: [{ ru: "переносном", ky: "өтмө" }, { ru: "прямом", ky: "түз" }],
+    correctIndex: 0,
+    explanation: { ru: "«Золотые руки» — умелые; слово в переносном значении.", ky: "«Алтын кол» — уста; сөз өтмө мааниде." },
+  },
+  // 10 класс — речь и предложение
+  {
+    id: "g-read10-a", type: "single_choice", subject: "reading", topic: "read10", grade: 10,
+    difficulty: 3, free: true,
+    prompt: { ru: "Каков тип предложения «Который час?» по цели высказывания?", ky: "«Саат канча?» сүйлөмү максаты боюнча кандай?" },
+    options: [{ ru: "вопросительное", ky: "суроолуу" }, { ru: "повествовательное", ky: "жай" }, { ru: "восклицательное", ky: "илептүү" }],
+    correctIndex: 0,
+    explanation: { ru: "Предложение содержит вопрос — оно вопросительное.", ky: "Сүйлөмдө суроо бар — ал суроолуу." },
+  },
+  {
+    id: "g-read10-b", type: "single_choice", subject: "reading", topic: "read10", grade: 10,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди местоимение", ky: "Ат атоочту тап" },
+    options: [{ ru: "он", ky: "ал" }, { ru: "дом", ky: "үй" }, { ru: "красивый", ky: "кооз" }],
+    correctIndex: 0,
+    explanation: { ru: "«Он» — местоимение, указывает на предмет, не называя его.", ky: "«Ал» — ат атооч, затты атабай көрсөтөт." },
+  },
+  {
+    id: "g-read10-c", type: "number_input", subject: "reading", topic: "read10", grade: 10,
+    difficulty: 3, free: false,
+    prompt: {
+      ru: "Сколько грамматических основ в предложении «Наступила ночь, и всё стихло»?",
+      ky: "«Түн кирди, баары тынчыды» сүйлөмүндө канча грамматикалык негиз бар?",
+    },
+    answer: 2,
+    explanation: { ru: "Две основы: «наступила ночь» и «всё стихло» — сложное предложение.", ky: "Эки негиз: «түн кирди» жана «баары тынчыды» — татаал сүйлөм." },
+  },
+  // 11 класс — язык и текст
+  {
+    id: "g-read11-a", type: "single_choice", subject: "reading", topic: "read11", grade: 11,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди синоним к слову «начать»", ky: "«Баштоо» сөзүнө синонимди тап" },
+    options: [{ ru: "приступить", ky: "киришүү" }, { ru: "закончить", ky: "бүтүрүү" }, { ru: "забыть", ky: "унутуу" }],
+    correctIndex: 0,
+    explanation: { ru: "«Приступить» близко по значению к «начать».", ky: "«Киришүү» — «баштоо» менен маанилеш." },
+  },
+  {
+    id: "g-read11-b", type: "single_choice", subject: "reading", topic: "read11", grade: 11,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди антоним к слову «древний»", ky: "«Байыркы» сөзүнө антонимди тап" },
+    options: [{ ru: "современный", ky: "азыркы" }, { ru: "старый", ky: "эски" }, { ru: "большой", ky: "чоң" }],
+    correctIndex: 0,
+    explanation: { ru: "«Современный» — противоположность «древнего».", ky: "«Азыркы» — «байыркы» дегендин карама-каршысы." },
+  },
+  {
+    id: "g-read11-c", type: "single_choice", subject: "reading", topic: "read11", grade: 11,
+    difficulty: 3, free: false,
+    prompt: { ru: "Какое слово лишнее по смыслу?", ky: "Кайсы сөз мааниси боюнча ашык?" },
+    options: [{ ru: "радость", ky: "кубаныч" }, { ru: "счастье", ky: "бакыт" }, { ru: "веселье", ky: "шаттык" }, { ru: "грусть", ky: "кайгы" }],
+    correctIndex: 3,
+    explanation: { ru: "«Грусть» противоположна остальным — они о радости.", ky: "«Кайгы» калгандарга карама-каршы — алар кубаныч жөнүндө." },
+  },
+];
+
+// ── МАТЕМАТИКА (геометрия и уравнения, вручную) ────────
+const MATH: Task[] = [
+  // 7 класс — периметр и площадь
+  {
+    id: "g-m7-geo-a", type: "number_input", subject: "math", topic: "m7-geo", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Площадь прямоугольника со сторонами 4 и 6?", ky: "Тараптары 4 жана 6 болгон тик бурчтуктун аянты?" },
+    answer: 24,
+    explanation: { ru: "Площадь = длина × ширина = 4 × 6 = 24.", ky: "Аянт = узундук × туурасы = 4 × 6 = 24." },
+  },
+  {
+    id: "g-m7-geo-b", type: "number_input", subject: "math", topic: "m7-geo", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Периметр квадрата со стороной 5?", ky: "Тарабы 5 болгон чарчынын периметри?" },
+    answer: 20,
+    explanation: { ru: "Периметр = 4 × сторона = 4 × 5 = 20.", ky: "Периметр = 4 × тарап = 4 × 5 = 20." },
+  },
+  {
+    id: "g-m7-geo-c", type: "number_input", subject: "math", topic: "m7-geo", grade: 7,
+    difficulty: 3, free: false,
+    prompt: { ru: "Площадь прямоугольного треугольника с катетами 6 и 8?", ky: "Катеттери 6 жана 8 болгон тик бурчтуу үч бурчтуктун аянты?" },
+    answer: 24,
+    explanation: { ru: "Площадь = ½ × 6 × 8 = 24.", ky: "Аянт = ½ × 6 × 8 = 24." },
+  },
+  // 8 класс — теорема Пифагора
+  {
+    id: "g-m8-geo-a", type: "number_input", subject: "math", topic: "m8-geo", grade: 8,
+    difficulty: 3, free: true,
+    prompt: { ru: "Гипотенуза прямоугольного треугольника с катетами 3 и 4?", ky: "Катеттери 3 жана 4 болгон тик бурчтуу үч бурчтуктун гипотенузасы?" },
+    answer: 5,
+    explanation: { ru: "√(3² + 4²) = √25 = 5.", ky: "√(3² + 4²) = √25 = 5." },
+  },
+  {
+    id: "g-m8-geo-b", type: "number_input", subject: "math", topic: "m8-geo", grade: 8,
+    difficulty: 3, free: true,
+    prompt: { ru: "Гипотенуза при катетах 6 и 8?", ky: "Катеттери 6 жана 8 болгондо гипотенуза?" },
+    answer: 10,
+    explanation: { ru: "√(6² + 8²) = √100 = 10.", ky: "√(6² + 8²) = √100 = 10." },
+  },
+  {
+    id: "g-m8-geo-c", type: "number_input", subject: "math", topic: "m8-geo", grade: 8,
+    difficulty: 3, free: false,
+    prompt: { ru: "Катет, если гипотенуза 13, а другой катет 5?", ky: "Гипотенуза 13, экинчи катет 5 болсо, катет канча?" },
+    answer: 12,
+    explanation: { ru: "√(13² − 5²) = √144 = 12.", ky: "√(13² − 5²) = √144 = 12." },
+  },
+  // 9 класс — площади фигур
+  {
+    id: "g-m9-geo-a", type: "number_input", subject: "math", topic: "m9-geo", grade: 9,
+    difficulty: 3, free: true,
+    prompt: { ru: "Площадь квадрата со стороной 9?", ky: "Тарабы 9 болгон чарчынын аянты?" },
+    answer: 81,
+    explanation: { ru: "Площадь = 9² = 81.", ky: "Аянт = 9² = 81." },
+  },
+  {
+    id: "g-m9-geo-b", type: "number_input", subject: "math", topic: "m9-geo", grade: 9,
+    difficulty: 3, free: true,
+    prompt: { ru: "Площадь треугольника с основанием 10 и высотой 6?", ky: "Негизи 10, бийиктиги 6 болгон үч бурчтуктун аянты?" },
+    answer: 30,
+    explanation: { ru: "Площадь = ½ × основание × высота = ½ × 10 × 6 = 30.", ky: "Аянт = ½ × негиз × бийиктик = ½ × 10 × 6 = 30." },
+  },
+  {
+    id: "g-m9-geo-c", type: "number_input", subject: "math", topic: "m9-geo", grade: 9,
+    difficulty: 3, free: false,
+    prompt: { ru: "Площадь параллелограмма с основанием 7 и высотой 4?", ky: "Негизи 7, бийиктиги 4 болгон параллелограммдын аянты?" },
+    answer: 28,
+    explanation: { ru: "Площадь = основание × высота = 7 × 4 = 28.", ky: "Аянт = негиз × бийиктик = 7 × 4 = 28." },
+  },
+  // 10 класс — квадратные уравнения
+  {
+    id: "g-m10-eq-a", type: "number_input", subject: "math", topic: "m10-eq", grade: 10,
+    difficulty: 3, free: true,
+    prompt: { ru: "x² = 49. Положительный корень?", ky: "x² = 49. Оң тамыры?" },
+    answer: 7,
+    explanation: { ru: "x = √49 = 7.", ky: "x = √49 = 7." },
+  },
+  {
+    id: "g-m10-eq-b", type: "number_input", subject: "math", topic: "m10-eq", grade: 10,
+    difficulty: 3, free: true,
+    prompt: { ru: "x² − 5x + 6 = 0. Больший корень?", ky: "x² − 5x + 6 = 0. Чоң тамыры?" },
+    answer: 3,
+    explanation: { ru: "Корни 2 и 3 (2 × 3 = 6, 2 + 3 = 5). Больший — 3.", ky: "Тамырлар 2 жана 3 (2 × 3 = 6, 2 + 3 = 5). Чоңу — 3." },
+  },
+  {
+    id: "g-m10-eq-c", type: "number_input", subject: "math", topic: "m10-eq", grade: 10,
+    difficulty: 3, free: false,
+    prompt: { ru: "x² − 7x + 12 = 0. Меньший корень?", ky: "x² − 7x + 12 = 0. Кичине тамыры?" },
+    answer: 3,
+    explanation: { ru: "Корни 3 и 4 (3 × 4 = 12, 3 + 4 = 7). Меньший — 3.", ky: "Тамырлар 3 жана 4 (3 × 4 = 12, 3 + 4 = 7). Кичинеси — 3." },
+  },
+  // 11 класс — объёмы тел
+  {
+    id: "g-m11-geo-a", type: "number_input", subject: "math", topic: "m11-geo", grade: 11,
+    difficulty: 3, free: true,
+    prompt: { ru: "Объём куба с ребром 3?", ky: "Кыры 3 болгон кубдун көлөмү?" },
+    answer: 27,
+    explanation: { ru: "Объём = 3³ = 27.", ky: "Көлөм = 3³ = 27." },
+  },
+  {
+    id: "g-m11-geo-b", type: "number_input", subject: "math", topic: "m11-geo", grade: 11,
+    difficulty: 3, free: true,
+    prompt: { ru: "Объём коробки 2 × 3 × 4?", ky: "2 × 3 × 4 кутучанын көлөмү?" },
+    answer: 24,
+    explanation: { ru: "Объём = 2 × 3 × 4 = 24.", ky: "Көлөм = 2 × 3 × 4 = 24." },
+  },
+  {
+    id: "g-m11-geo-c", type: "number_input", subject: "math", topic: "m11-geo", grade: 11,
+    difficulty: 3, free: false,
+    prompt: { ru: "Объём куба с ребром 5?", ky: "Кыры 5 болгон кубдун көлөмү?" },
+    answer: 125,
+    explanation: { ru: "Объём = 5³ = 125.", ky: "Көлөм = 5³ = 125." },
+  },
 ];
 
 // ── ОКРУЖАЮЩИЙ МИР ─────────────────────────────────────
@@ -453,4 +644,4 @@ const WORLD: Task[] = [
   },
 ];
 
-export const higherTasks: Task[] = [...LOGIC, ...READING, ...WORLD];
+export const higherTasks: Task[] = [...LOGIC, ...READING, ...WORLD, ...MATH];
