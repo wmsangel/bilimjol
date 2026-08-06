@@ -422,6 +422,180 @@ const GRADE_HIGH_HL: Task[] = [
   },
 ];
 
+// Догрузка тонких тем (подготовишка, 1, 3–4 классы) — второй проход.
+const THIN_TOPUP: Task[] = [
+  // Подготовишка — «Что дальше?»
+  {
+    id: "g-pre-seq-d", type: "number_input", subject: "logic", topic: "pre-seq", grade: 0,
+    difficulty: 1, free: true,
+    prompt: { ru: "Что дальше: 1, 2, 3, ?", ky: "Андан ары эмне: 1, 2, 3, ?" },
+    answer: 4,
+    explanation: { ru: "Считаем по порядку: 4.", ky: "Ирети менен санайбыз: 4." },
+  },
+  {
+    id: "g-pre-seq-e", type: "number_input", subject: "logic", topic: "pre-seq", grade: 0,
+    difficulty: 1, free: false,
+    prompt: { ru: "Что дальше: 2, 4, 6, ?", ky: "Андан ары эмне: 2, 4, 6, ?" },
+    answer: 8,
+    explanation: { ru: "Прибавляем по 2: 8.", ky: "2ден кошобуз: 8." },
+  },
+  // Подготовишка — «Большой и маленький»
+  {
+    id: "g-pre-big-d", type: "single_choice", subject: "logic", topic: "pre-big", grade: 0,
+    difficulty: 1, free: true,
+    prompt: { ru: "Кто больше?", ky: "Кимиси чоң?" },
+    options: [{ ru: "слон", ky: "пил" }, { ru: "муравей", ky: "кумурска" }],
+    correctIndex: 0,
+    explanation: { ru: "Слон большой, муравей маленький.", ky: "Пил чоң, кумурска кичине." },
+  },
+  {
+    id: "g-pre-big-e", type: "single_choice", subject: "logic", topic: "pre-big", grade: 0,
+    difficulty: 1, free: false,
+    prompt: { ru: "Что меньше?", ky: "Кайсынысы кичине?" },
+    options: [{ ru: "камень", ky: "таш" }, { ru: "гора", ky: "тоо" }],
+    correctIndex: 0,
+    explanation: { ru: "Камень меньше горы.", ky: "Таш тоодон кичине." },
+  },
+  // 1 класс — буквы и звуки
+  {
+    id: "g-read-letters-d", type: "single_choice", subject: "reading", topic: "read-letters", grade: 1,
+    difficulty: 1, free: true,
+    prompt: { ru: "Какая буква первая в алфавите?", ky: "Алфавиттеги биринчи тамга кайсы?" },
+    options: [{ ru: "А", ky: "А" }, { ru: "Б", ky: "Б" }, { ru: "Я", ky: "Я" }],
+    correctIndex: 0,
+    explanation: { ru: "Алфавит начинается с буквы А.", ky: "Алфавит А тамгасынан башталат." },
+  },
+  {
+    id: "g-read-letters-e", type: "single_choice", subject: "reading", topic: "read-letters", grade: 1,
+    difficulty: 1, free: false,
+    prompt: { ru: "Какая буква идёт после «Б»?", ky: "«Б» тамгасынан кийин кайсы тамга келет?" },
+    options: [{ ru: "В", ky: "В" }, { ru: "А", ky: "А" }, { ru: "Г", ky: "Г" }],
+    correctIndex: 0,
+    explanation: { ru: "После «Б» идёт «В».", ky: "«Б»дан кийин «В» келет." },
+  },
+  // 1 класс — гласные и согласные
+  {
+    id: "g-read-vowel-d", type: "single_choice", subject: "reading", topic: "read-vowels", grade: 1,
+    difficulty: 2, free: true,
+    prompt: { ru: "Найди согласную букву", ky: "Үнсүз тамганы тап" },
+    options: [{ ru: "О", ky: "О" }, { ru: "М", ky: "М" }, { ru: "А", ky: "А" }],
+    correctIndex: 1,
+    explanation: { ru: "М — согласная буква.", ky: "М — үнсүз тамга." },
+  },
+  {
+    id: "g-read-vowel-e", type: "single_choice", subject: "reading", topic: "read-vowels", grade: 1,
+    difficulty: 2, free: false,
+    prompt: { ru: "Буква «У» — какая?", ky: "«У» тамгасы кандай?" },
+    options: [{ ru: "гласная", ky: "үндүү" }, { ru: "согласная", ky: "үнсүз" }],
+    correctIndex: 0,
+    explanation: { ru: "У — гласная буква.", ky: "У — үндүү тамга." },
+  },
+  // 3 класс — логика
+  {
+    id: "g-log3-d", type: "number_input", subject: "logic", topic: "log3", grade: 3,
+    difficulty: 2, free: true,
+    prompt: { ru: "Продолжи ряд: 3, 6, 9, 12, ?", ky: "Катарды улант: 3, 6, 9, 12, ?" },
+    answer: 15,
+    explanation: { ru: "Прибавляем по 3: 12 + 3 = 15.", ky: "3төн кошобуз: 12 + 3 = 15." },
+  },
+  {
+    id: "g-log3-e", type: "single_choice", subject: "logic", topic: "log3", grade: 3,
+    difficulty: 2, free: false,
+    prompt: { ru: "Какое число лишнее: 10, 20, 25, 30?", ky: "Кайсы сан ашык: 10, 20, 25, 30?" },
+    options: [{ ru: "10", ky: "10" }, { ru: "20", ky: "20" }, { ru: "25", ky: "25" }, { ru: "30", ky: "30" }],
+    correctIndex: 2,
+    explanation: { ru: "25 не делится на 10, остальные делятся.", ky: "25 10го бөлүнбөйт, калгандары бөлүнөт." },
+  },
+  // 4 класс — логика
+  {
+    id: "g-log4-d", type: "number_input", subject: "logic", topic: "log4", grade: 4,
+    difficulty: 3, free: true,
+    prompt: { ru: "Продолжи ряд: 2, 4, 8, 16, ?", ky: "Катарды улант: 2, 4, 8, 16, ?" },
+    answer: 32,
+    explanation: { ru: "Каждое число в 2 раза больше: 16 × 2 = 32.", ky: "Ар бир сан 2 эсе чоң: 16 × 2 = 32." },
+  },
+  {
+    id: "g-log4-e", type: "single_choice", subject: "logic", topic: "log4", grade: 4,
+    difficulty: 3, free: false,
+    prompt: { ru: "Какое число лишнее: 8, 12, 16, 18?", ky: "Кайсы сан ашык: 8, 12, 16, 18?" },
+    options: [{ ru: "8", ky: "8" }, { ru: "12", ky: "12" }, { ru: "16", ky: "16" }, { ru: "18", ky: "18" }],
+    correctIndex: 3,
+    explanation: { ru: "8, 12, 16 делятся на 4, а 18 нет.", ky: "8, 12, 16 4кө бөлүнөт, 18 андай эмес." },
+  },
+  // 3 класс — чтение
+  {
+    id: "g-read3-d", type: "single_choice", subject: "reading", topic: "read3", grade: 3,
+    difficulty: 2, free: true,
+    prompt: { ru: "Найди слово-предмет (кто? что?)", ky: "Затты билдирген сөздү тап (ким? эмне?)" },
+    options: [{ ru: "бежит", ky: "чуркайт" }, { ru: "дерево", ky: "дарак" }, { ru: "быстро", ky: "тез" }],
+    correctIndex: 1,
+    explanation: { ru: "«Дерево» — предмет.", ky: "«Дарак» — зат." },
+  },
+  {
+    id: "g-read3-e", type: "number_input", subject: "reading", topic: "read3", grade: 3,
+    difficulty: 2, free: false,
+    prompt: { ru: "Сколько предложений: «Идёт дождь. Дети дома.»?", ky: "Канча сүйлөм: «Жамгыр жаайт. Балдар үйдө.»?" },
+    answer: 2,
+    explanation: { ru: "Два предложения.", ky: "Эки сүйлөм." },
+  },
+  // 4 класс — чтение
+  {
+    id: "g-read4-d", type: "single_choice", subject: "reading", topic: "read4", grade: 4,
+    difficulty: 3, free: true,
+    prompt: { ru: "Найди слово-действие (что делает?)", ky: "Иш-аракетти билдирген сөздү тап" },
+    options: [{ ru: "море", ky: "деңиз" }, { ru: "плывёт", ky: "сүзөт" }, { ru: "синий", ky: "көк" }],
+    correctIndex: 1,
+    explanation: { ru: "«Плывёт» — действие.", ky: "«Сүзөт» — иш-аракет." },
+  },
+  {
+    id: "g-read4-e", type: "single_choice", subject: "reading", topic: "read4", grade: 4,
+    difficulty: 3, free: false,
+    prompt: { ru: "Найди слово-признак (какой?)", ky: "Белгини билдирген сөздү тап (кандай?)" },
+    options: [{ ru: "дом", ky: "үй" }, { ru: "большой", ky: "чоң" }, { ru: "прыгать", ky: "секирүү" }],
+    correctIndex: 1,
+    explanation: { ru: "«Большой» — признак предмета.", ky: "«Чоң» — заттын белгиси." },
+  },
+  // Догрузка до 5 заданий в теме
+  {
+    id: "g-read3-f", type: "number_input", subject: "reading", topic: "read3", grade: 3,
+    difficulty: 2, free: false,
+    prompt: { ru: "Сколько слов в предложении: «Кот пьёт молоко»?", ky: "«Мышык сүт ичет» сүйлөмүндө канча сөз?" },
+    answer: 3,
+    explanation: { ru: "Слова: три.", ky: "Сөздөр: үчөө." },
+  },
+  {
+    id: "g-log4-f", type: "number_input", subject: "logic", topic: "log4", grade: 4,
+    difficulty: 3, free: false,
+    prompt: { ru: "Продолжи ряд: 5, 10, 15, 20, ?", ky: "Катарды улант: 5, 10, 15, 20, ?" },
+    answer: 25,
+    explanation: { ru: "Прибавляем по 5: 20 + 5 = 25.", ky: "5тен кошобуз: 20 + 5 = 25." },
+  },
+  {
+    id: "g-read4-f", type: "single_choice", subject: "reading", topic: "read4", grade: 4,
+    difficulty: 3, free: false,
+    prompt: { ru: "Найди слово-предмет (кто? что?)", ky: "Затты билдирген сөздү тап (ким? эмне?)" },
+    options: [{ ru: "красивый", ky: "кооз" }, { ru: "книга", ky: "китеп" }, { ru: "читать", ky: "окуу" }],
+    correctIndex: 1,
+    explanation: { ru: "«Книга» — предмет.", ky: "«Китеп» — зат." },
+  },
+  {
+    id: "g-world10-f", type: "single_choice", subject: "world", topic: "world10", grade: 10,
+    difficulty: 3, free: false,
+    prompt: { ru: "У какой планеты есть яркие кольца?", ky: "Кайсы планетанын жаркыраган шакектери бар?" },
+    options: [{ ru: "Сатурн", ky: "Сатурн" }, { ru: "Марс", ky: "Марс" }, { ru: "Меркурий", ky: "Меркурий" }],
+    correctIndex: 0,
+    explanation: { ru: "У Сатурна яркие кольца из льда и камней.", ky: "Сатурндун муз менен таштан турган жаркыраган шакектери бар." },
+  },
+  {
+    id: "g-world11-e", type: "single_choice", subject: "world", topic: "world11", grade: 11,
+    difficulty: 3, free: false,
+    prompt: { ru: "Какой газ преобладает в воздухе?", ky: "Абада кайсы газ басымдуулук кылат?" },
+    options: [{ ru: "азот", ky: "азот" }, { ru: "кислород", ky: "кычкылтек" }, { ru: "водород", ky: "суутек" }],
+    correctIndex: 0,
+    explanation: { ru: "Воздух примерно на 78% состоит из азота.", ky: "Аба болжол менен 78% азоттон турат." },
+  },
+];
+
 export const generatedTasks: Task[] = [
   // ── Подготовишка ──
   ...countTasks("pre-count", 0, [
@@ -463,14 +637,14 @@ export const generatedTasks: Task[] = [
   ...fracTasks("m4-frac", 4, [[2, 10], [4, 20], [5, 25], [3, 18], [2, 14]]),
   // ── 5 класс ──
   ...percentTasks("m5-percent", 5, [[10, 50], [20, 150], [25, 80], [50, 60], [30, 200]]),
-  ...fracTasks("m5-frac", 5, [[4, 24], [6, 36], [8, 40], [10, 90]]),
-  ...addTasks("m5-big", 5, [[1200, 300], [2500, 1500], [3400, 600]]),
-  ...subTasks("m5-big", 5, [[5000, 1200], [3200, 800]]),
+  ...fracTasks("m5-frac", 5, [[4, 24], [6, 36], [8, 40], [10, 90], [3, 21], [7, 49], [9, 81]]),
+  ...addTasks("m5-big", 5, [[1200, 300], [2500, 1500], [3400, 600], [4800, 1100]]),
+  ...subTasks("m5-big", 5, [[5000, 1200], [3200, 800], [7500, 2500]]),
   // ── 6 класс ──
-  ...negTasks("m6-neg", 6, [[5, 8], [3, 10], [7, 2], [4, 9], [6, 6]]),
+  ...negTasks("m6-neg", 6, [[5, 8], [3, 10], [7, 2], [4, 9], [6, 6], [2, 15], [11, 4]]),
   ...eqAddTasks("m6-eq", 6, [[5, 7], [8, 4], [3, 9], [12, 6]]),
   ...eqMulTasks("m6-eq", 6, [[3, 4], [5, 6], [2, 9]]),
-  ...percentTasks("m6-percent", 6, [[15, 200], [40, 90], [5, 300]]),
+  ...percentTasks("m6-percent", 6, [[15, 200], [40, 90], [5, 300], [25, 160], [10, 250], [50, 44]]),
   // ── 7 класс ──
   ...sqTasks("m7-pow", 7, [3, 4, 5, 6, 7, 8]),
   ...eqAddTasks("m7-eq", 7, [[12, 5], [7, 8], [15, 9]]),
@@ -479,15 +653,17 @@ export const generatedTasks: Task[] = [
   ...sqrtTasks("m8-sqrt", 8, [4, 5, 6, 7, 8, 9]),
   ...sqTasks("m8-pow", 8, [8, 9, 10, 11, 12]),
   ...eqMulTasks("m8-eq", 8, [[7, 8], [9, 6], [8, 7]]),
+  ...eqAddTasks("m8-eq", 8, [[14, 9], [23, 8], [31, 17]]),
   // ── 9 класс ──
-  ...seqTasks("m9-prog", 9, [[3, 7], [5, 4], [2, 9], [10, 6]]),
-  ...sqTasks("m9-pow", 9, [11, 12, 13, 14]),
-  ...sqrtTasks("m9-root", 9, [10, 11, 12, 13]),
-  ...eqAddTasks("m9-eq", 9, [[25, 17], [40, 23]]),
+  ...seqTasks("m9-prog", 9, [[3, 7], [5, 4], [2, 9], [10, 6], [4, 11], [7, 8]]),
+  ...sqTasks("m9-pow", 9, [11, 12, 13, 14, 15, 16]),
+  ...sqrtTasks("m9-root", 9, [10, 11, 12, 13, 14, 15]),
+  ...eqAddTasks("m9-eq", 9, [[25, 17], [40, 23], [18, 29], [50, 34]]),
+  ...eqMulTasks("m9-eq", 9, [[6, 12], [8, 9]]),
   // ── 10 класс ──
   ...percentTasks("m10-calc", 10, [[15, 240], [12, 350], [8, 125], [35, 400]]),
   ...sqrtTasks("m10-calc", 10, [13, 14, 15, 20]),
-  ...sqTasks("m10-pow", 10, [13, 15, 20, 25]),
+  ...sqTasks("m10-pow", 10, [13, 15, 20, 25, 18, 30]),
   // ── 11 класс ──
   ...sqTasks("m11-calc", 11, [15, 16, 20, 25, 30]),
   ...percentTasks("m11-calc", 11, [[18, 150], [22, 500], [45, 80]]),
@@ -495,5 +671,6 @@ export const generatedTasks: Task[] = [
   ...LOGIC_EXTRA,
   ...READING_EXTRA,
   ...GRADE_HIGH_HL,
+  ...THIN_TOPUP,
   ...higherTasks,
 ];
