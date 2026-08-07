@@ -212,6 +212,167 @@ function negTasks(topic: string, grade: Grade, pairs: [number, number][], freeCo
   }));
 }
 
+// ── Дополнительные генераторы (для догрузки тем до 10 заданий) ──
+
+function powTasks(topic: string, grade: Grade, list: [number, number][], freeCount = 3): Task[] {
+  return list.map(([b, e], i) => {
+    const val = b ** e;
+    return {
+      id: `g-${topic}-pow-${b}-${e}`,
+      type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+      prompt: { ru: `${b} в степени ${e} = ?`, ky: `${b}нын ${e}-даражасы = ?` },
+      answer: val,
+      explanation: { ru: `${b}^${e} = ${val}.`, ky: `${b}^${e} = ${val}.` },
+    };
+  });
+}
+
+function areaRectTasks(topic: string, grade: Grade, pairs: [number, number][], freeCount = 3): Task[] {
+  return pairs.map(([a, b], i) => ({
+    id: `g-${topic}-area-${a}-${b}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `Площадь прямоугольника со сторонами ${a} и ${b}?`, ky: `Тараптары ${a} жана ${b} болгон тик бурчтуктун аянты?` },
+    answer: a * b,
+    explanation: { ru: `${a} × ${b} = ${a * b}.`, ky: `${a} × ${b} = ${a * b}.` },
+  }));
+}
+
+function perimRectTasks(topic: string, grade: Grade, pairs: [number, number][], freeCount = 3): Task[] {
+  return pairs.map(([a, b], i) => ({
+    id: `g-${topic}-perim-${a}-${b}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `Периметр прямоугольника со сторонами ${a} и ${b}?`, ky: `Тараптары ${a} жана ${b} болгон тик бурчтуктун периметри?` },
+    answer: 2 * (a + b),
+    explanation: { ru: `2 × (${a} + ${b}) = ${2 * (a + b)}.`, ky: `2 × (${a} + ${b}) = ${2 * (a + b)}.` },
+  }));
+}
+
+function pythagTasks(topic: string, grade: Grade, legs: [number, number][], freeCount = 3): Task[] {
+  // Передавать только пифагоровы тройки — гипотенуза целая.
+  return legs.map(([a, b], i) => {
+    const h = Math.round(Math.sqrt(a * a + b * b));
+    return {
+      id: `g-${topic}-pyth-${a}-${b}`,
+      type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+      prompt: { ru: `Гипотенуза прямоугольного треугольника с катетами ${a} и ${b}?`, ky: `Катеттери ${a} жана ${b} болгон тик бурчтуу үч бурчтуктун гипотенузасы?` },
+      answer: h,
+      explanation: { ru: `√(${a}² + ${b}²) = √${a * a + b * b} = ${h}.`, ky: `√(${a}² + ${b}²) = √${a * a + b * b} = ${h}.` },
+    };
+  });
+}
+
+function cubeTasks(topic: string, grade: Grade, nums: number[], freeCount = 3): Task[] {
+  return nums.map((n, i) => ({
+    id: `g-${topic}-cube-${n}`,
+    type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+    prompt: { ru: `Объём куба с ребром ${n}?`, ky: `Кыры ${n} болгон кубдун көлөмү?` },
+    answer: n ** 3,
+    explanation: { ru: `${n}³ = ${n ** 3}.`, ky: `${n}³ = ${n ** 3}.` },
+  }));
+}
+
+function quadTasks(topic: string, grade: Grade, roots: [number, number][], freeCount = 3): Task[] {
+  // roots: [p, q] → x² − (p+q)x + pq = 0, спрашиваем больший корень.
+  return roots.map(([p, q], i) => {
+    const b = p + q, c = p * q, big = Math.max(p, q);
+    return {
+      id: `g-${topic}-quad-${p}-${q}`,
+      type: "number_input", subject: "math", topic, grade, difficulty: 3, free: i < freeCount,
+      prompt: { ru: `x² − ${b}x + ${c} = 0. Больший корень?`, ky: `x² − ${b}x + ${c} = 0. Чоң тамыры?` },
+      answer: big,
+      explanation: { ru: `Корни ${p} и ${q}. Больший — ${big}.`, ky: `Тамырлар ${p} жана ${q}. Чоңу — ${big}.` },
+    };
+  });
+}
+
+function logSeqTasks(topic: string, grade: Grade, series: [number, number][], freeCount = 3): Task[] {
+  // Арифметический ряд, но subject: logic.
+  return series.map(([s, d], i) => {
+    const t = [s, s + d, s + 2 * d, s + 3 * d];
+    return {
+      id: `g-${topic}-lseq-${s}-${d}`,
+      type: "number_input", subject: "logic", topic, grade, difficulty: 2, free: i < freeCount,
+      prompt: { ru: `Продолжи ряд: ${t.join(", ")}, ?`, ky: `Катарды улант: ${t.join(", ")}, ?` },
+      answer: s + 4 * d,
+      explanation: { ru: `Каждое число на ${d} больше.`, ky: `Ар бир сан ${d}ге чоң.` },
+    };
+  });
+}
+
+function geoSeqTasks(topic: string, grade: Grade, list: [number, number][], freeCount = 3): Task[] {
+  // Геометрический ряд, subject: logic.
+  return list.map(([s, r], i) => {
+    const t = [s, s * r, s * r * r, s * r * r * r];
+    const next = s * r * r * r * r;
+    return {
+      id: `g-${topic}-gseq-${s}-${r}`,
+      type: "number_input", subject: "logic", topic, grade, difficulty: 3, free: i < freeCount,
+      prompt: { ru: `Продолжи ряд: ${t.join(", ")}, ?`, ky: `Катарды улант: ${t.join(", ")}, ?` },
+      answer: next,
+      explanation: { ru: `Каждое число в ${r} раза больше: ${t[3]} × ${r} = ${next}.`, ky: `Ар бир сан ${r} эсе чоң: ${t[3]} × ${r} = ${next}.` },
+    };
+  });
+}
+
+function vowelTasks(topic: string, grade: Grade, letters: [string, boolean][], freeCount = 3): Task[] {
+  return letters.map(([L, isV], i) => ({
+    id: `g-${topic}-vw-${L}`,
+    type: "single_choice", subject: "reading", topic, grade, difficulty: 2, free: i < freeCount,
+    prompt: { ru: `Буква «${L}» — какая?`, ky: `«${L}» тамгасы кандай?` },
+    options: [{ ru: "гласная", ky: "үндүү" }, { ru: "согласная", ky: "үнсүз" }],
+    correctIndex: isV ? 0 : 1,
+    explanation: isV
+      ? { ru: `«${L}» — гласная буква.`, ky: `«${L}» — үндүү тамга.` }
+      : { ru: `«${L}» — согласная буква.`, ky: `«${L}» — үнсүз тамга.` },
+  }));
+}
+
+// Двуязычный словарик для заданий «найди часть речи».
+interface Word { ru: string; ky: string }
+const NOUNS: Word[] = [
+  { ru: "стол", ky: "үстөл" }, { ru: "дом", ky: "үй" }, { ru: "книга", ky: "китеп" },
+  { ru: "окно", ky: "терезе" }, { ru: "машина", ky: "машине" }, { ru: "дерево", ky: "дарак" },
+  { ru: "город", ky: "шаар" }, { ru: "река", ky: "дарыя" }, { ru: "гора", ky: "тоо" },
+  { ru: "цветок", ky: "гүл" },
+];
+const VERBS: Word[] = [
+  { ru: "бежать", ky: "чуркоо" }, { ru: "читать", ky: "окуу" }, { ru: "писать", ky: "жазуу" },
+  { ru: "спать", ky: "уктоо" }, { ru: "прыгать", ky: "секирүү" }, { ru: "петь", ky: "ырдоо" },
+  { ru: "плыть", ky: "сүзүү" }, { ru: "летать", ky: "учуу" },
+];
+const ADJ: Word[] = [
+  { ru: "красивый", ky: "кооз" }, { ru: "большой", ky: "чоң" }, { ru: "зелёный", ky: "жашыл" },
+  { ru: "быстрый", ky: "тез" }, { ru: "холодный", ky: "суук" }, { ru: "высокий", ky: "бийик" },
+  { ru: "новый", ky: "жаңы" }, { ru: "сильный", ky: "күчтүү" },
+];
+const POS_META = {
+  noun: { bank: NOUNS, prompt: { ru: "Найди существительное", ky: "Зат атоочту тап" }, ru: "существительное", ky: "зат атооч" },
+  verb: { bank: VERBS, prompt: { ru: "Найди глагол", ky: "Этишти тап" }, ru: "глагол", ky: "этиш" },
+  adj: { bank: ADJ, prompt: { ru: "Найди прилагательное", ky: "Сын атоочту тап" }, ru: "прилагательное", ky: "сын атооч" },
+} as const;
+type PosKind = keyof typeof POS_META;
+
+function posTasks(topic: string, grade: Grade, kinds: PosKind[], freeCount = 3): Task[] {
+  const all: PosKind[] = ["noun", "verb", "adj"];
+  return kinds.map((kind, i) => {
+    const others = all.filter((k) => k !== kind);
+    const correct = POS_META[kind].bank[i % POS_META[kind].bank.length];
+    const d1 = POS_META[others[0]].bank[i % POS_META[others[0]].bank.length];
+    const d2 = POS_META[others[1]].bank[(i + 1) % POS_META[others[1]].bank.length];
+    const pos = i % 3;
+    const opts: Word[] = [d1, d2];
+    opts.splice(pos, 0, correct);
+    return {
+      id: `g-${topic}-pos-${kind}-${i}`,
+      type: "single_choice", subject: "reading", topic, grade, difficulty: 2, free: i < freeCount,
+      prompt: POS_META[kind].prompt,
+      options: opts.map((w) => ({ ru: w.ru, ky: w.ky })),
+      correctIndex: pos,
+      explanation: { ru: `«${correct.ru}» — это ${POS_META[kind].ru}.`, ky: `«${correct.ky}» — ${POS_META[kind].ky}.` },
+    };
+  });
+}
+
 // Дополнительные задания по логике/чтению (вручную).
 const LOGIC_EXTRA: Task[] = [
   {
@@ -673,4 +834,87 @@ export const generatedTasks: Task[] = [
   ...GRADE_HIGH_HL,
   ...THIN_TOPUP,
   ...higherTasks,
+
+  // ── Догрузка до ~10 заданий в каждой теме (математика) ──
+  ...compareTasks("pre-more", 0, [[6, 2], [3, 7]]),
+  ...compareTasks("math-compare", 1, [[12, 7], [9, 15]]),
+  ...multTasks("m3-mult", 3, [[7, 9], [8, 6], [9, 9], [6, 6]]),
+  ...divTasks("m3-div", 3, [[54, 6], [72, 8], [64, 8], [49, 7]]),
+  ...addTasks("m3-big", 3, [[275, 118], [340, 260]]),
+  ...subTasks("m3-big", 3, [[610, 240]]),
+  ...orderTasks("m4-order", 4, [[3, 4, 2], [6, 2, 5], [9, 3, 2], [4, 5, 3], [7, 2, 4]]),
+  ...fracTasks("m4-frac", 4, [[3, 12], [5, 30], [7, 21], [4, 16], [6, 24]]),
+  ...percentTasks("m5-percent", 5, [[40, 80], [15, 120], [5, 240], [35, 60], [60, 50]]),
+  ...fracTasks("m5-frac", 5, [[3, 27], [7, 56], [9, 45]]),
+  ...addTasks("m5-big", 5, [[1400, 350], [2600, 1900]]),
+  ...subTasks("m5-big", 5, [[6400, 1500]]),
+  ...negTasks("m6-neg", 6, [[9, 3], [8, 12], [10, 4]]),
+  ...eqAddTasks("m6-eq", 6, [[9, 11], [14, 20]]),
+  ...eqMulTasks("m6-eq", 6, [[6, 7]]),
+  ...percentTasks("m6-percent", 6, [[30, 120], [12, 150], [45, 80]]),
+  ...powTasks("m7-pow", 7, [[2, 4], [2, 6], [3, 3], [5, 3]]),
+  ...eqAddTasks("m7-eq", 7, [[18, 9], [24, 11]]),
+  ...eqMulTasks("m7-eq", 7, [[7, 9], [9, 8]]),
+  ...areaRectTasks("m7-geo", 7, [[7, 9], [8, 11], [6, 13]]),
+  ...perimRectTasks("m7-geo", 7, [[5, 9], [8, 12]]),
+  ...sqrtTasks("m8-sqrt", 8, [10, 11, 12, 13]),
+  ...powTasks("m8-pow", 8, [[2, 5], [2, 7], [3, 3], [4, 3], [5, 3]]),
+  ...eqAddTasks("m8-eq", 8, [[19, 12], [27, 15]]),
+  ...eqMulTasks("m8-eq", 8, [[8, 9], [7, 11]]),
+  ...pythagTasks("m8-geo", 8, [[7, 24], [20, 21], [9, 40], [12, 35], [10, 24]]),
+  ...seqTasks("m9-prog", 9, [[6, 5], [8, 3], [9, 7], [12, 4]]),
+  ...powTasks("m9-pow", 9, [[2, 8], [3, 4], [2, 9], [4, 4]]),
+  ...sqrtTasks("m9-root", 9, [16, 17, 18, 19]),
+  ...eqAddTasks("m9-eq", 9, [[32, 19], [45, 28]]),
+  ...eqMulTasks("m9-eq", 9, [[9, 11], [12, 8]]),
+  ...areaRectTasks("m9-geo", 9, [[11, 6], [14, 5], [9, 12]]),
+  ...perimRectTasks("m9-geo", 9, [[7, 13], [10, 15]]),
+  ...percentTasks("m10-calc", 10, [[45, 80], [16, 250]]),
+  ...powTasks("m10-pow", 10, [[2, 10], [3, 5], [6, 3], [7, 3]]),
+  ...quadTasks("m10-eq", 10, [[2, 5], [4, 6], [3, 8], [5, 7], [6, 9]]),
+  ...cubeTasks("m11-geo", 11, [7, 8, 9, 10, 2]),
+
+  // ── Догрузка до ~10 (логика: ряды арифметические/геометрические) ──
+  ...logSeqTasks("pre-odd", 0, [[2, 2], [1, 1], [5, 5], [3, 3]], 4),
+  ...logSeqTasks("pre-shapes", 0, [[10, 10]], 1),
+  ...logSeqTasks("pre-seq", 0, [[1, 2], [4, 2], [6, 3]], 3),
+  ...logSeqTasks("pre-big", 0, [[2, 4], [5, 2], [3, 5]], 3),
+  ...logSeqTasks("log-odd", 1, [[3, 3], [2, 4], [1, 5]], 3),
+  ...geoSeqTasks("log-odd", 1, [[2, 2]], 1),
+  ...logSeqTasks("log-seq", 1, [[4, 4], [10, 5]], 2),
+  ...geoSeqTasks("log-seq", 1, [[1, 3], [3, 2]], 2),
+  ...logSeqTasks("log-think", 2, [[5, 6], [8, 7]], 2),
+  ...logSeqTasks("log3", 3, [[7, 4], [11, 6]], 2),
+  ...geoSeqTasks("log3", 3, [[2, 3], [3, 3]], 2),
+  ...logSeqTasks("log4", 4, [[9, 7], [13, 5]], 2),
+  ...geoSeqTasks("log4", 4, [[2, 4], [5, 2]], 2),
+  ...logSeqTasks("log5", 5, [[8, 9], [11, 6]], 2),
+  ...geoSeqTasks("log5", 5, [[3, 4], [4, 3]], 2),
+  ...logSeqTasks("log6", 6, [[12, 8], [15, 9]], 2),
+  ...geoSeqTasks("log6", 6, [[2, 5], [6, 2]], 2),
+  ...logSeqTasks("log7", 7, [[14, 11], [20, 13]], 2),
+  ...geoSeqTasks("log7", 7, [[3, 5], [7, 2]], 2),
+  ...logSeqTasks("log8", 8, [[16, 12], [25, 15]], 2),
+  ...geoSeqTasks("log8", 8, [[2, 6], [4, 5]], 2),
+  ...logSeqTasks("log9", 9, [[18, 14], [30, 17]], 2),
+  ...geoSeqTasks("log9", 9, [[5, 4], [8, 3]], 2),
+  ...logSeqTasks("log10", 10, [[21, 16], [40, 19]], 2),
+  ...geoSeqTasks("log10", 10, [[3, 6], [9, 2]], 2),
+  ...logSeqTasks("log11", 11, [[24, 18], [50, 21]], 2),
+  ...geoSeqTasks("log11", 11, [[4, 6], [10, 3]], 2),
+
+  // ── Догрузка до ~10 (чтение: буквы и части речи) ──
+  ...vowelTasks("pre-letters", 0, [["У", true], ["М", false]], 2),
+  ...vowelTasks("read-letters", 1, [["И", true], ["П", false], ["Э", true]], 2),
+  ...vowelTasks("read-vowels", 1, [["О", true], ["Т", false], ["Ы", true]], 2),
+  ...posTasks("read-words", 2, ["noun", "verb", "adj"], 2),
+  ...posTasks("read3", 3, ["noun", "verb", "adj", "noun"], 2),
+  ...posTasks("read4", 4, ["verb", "adj", "noun", "verb"], 2),
+  ...posTasks("read5", 5, ["adj", "noun", "verb", "adj"], 2),
+  ...posTasks("read6", 6, ["noun", "adj", "verb", "noun"], 2),
+  ...posTasks("read7", 7, ["verb", "noun", "adj", "verb"], 2),
+  ...posTasks("read8", 8, ["noun", "verb", "adj", "adj"], 2),
+  ...posTasks("read9", 9, ["adj", "verb", "noun", "verb"], 2),
+  ...posTasks("read10", 10, ["verb", "adj", "noun", "noun"], 2),
+  ...posTasks("read11", 11, ["noun", "adj", "verb", "adj"], 2),
 ];

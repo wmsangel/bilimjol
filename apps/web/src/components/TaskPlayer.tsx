@@ -52,6 +52,7 @@ export interface GameLabels {
   subjectAll: string;
   gradeTitle: string;
   topicsTitle: string;
+  starHint: string;
   unlockFor: string;
   notEnoughStars: string;
 }
@@ -342,6 +343,9 @@ export function TaskPlayer({
         <h2 className="text-center font-display text-3xl font-extrabold">
           {gameLabels.topicsTitle}
         </h2>
+        <p className="mt-2 text-center text-sm text-zinc-500 dark:text-zinc-400">
+          {gameLabels.starHint}
+        </p>
 
         {SUBJECTS.map((subj) => {
           const subjTopics = getTopics({ subject: subj, grade });
@@ -358,6 +362,7 @@ export function TaskPlayer({
                   );
                   const done = avail.filter((t) => t.id in results).length;
                   const complete = avail.length > 0 && done === avail.length;
+                  const hasStar = avail.some((t) => t.star);
                   return (
                     <button
                       key={topic.id}
@@ -379,6 +384,14 @@ export function TaskPlayer({
                           <span>
                             {done}/{avail.length}
                           </span>
+                          {hasStar && (
+                            <span
+                              className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300"
+                              title={gameLabels.starHint}
+                            >
+                              ⭐
+                            </span>
+                          )}
                         </div>
                       </div>
                       {complete && <span className="text-lg">✅</span>}
