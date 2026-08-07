@@ -6,7 +6,7 @@ import {
   tasks,
   type Locale,
 } from "@izn-study/shared";
-import { Face } from "./Face";
+import { Character } from "./Character";
 import { Mascot } from "./Mascot";
 
 /** Превью экрана занятия (как в плеере). */
@@ -70,7 +70,7 @@ export function DashboardPreview({
   locale: Locale;
   labels: { level: string; stars: string; streak: string; completed: string };
 }) {
-  const helper = getHelper("owl")!;
+  const helper = getHelper("panda")!;
   return (
     <div className="mx-auto w-full max-w-sm">
       <div className="mb-3 flex justify-center">
@@ -122,7 +122,7 @@ export function CharactersShowcase({ locale }: { locale: Locale }) {
     <div className="grid grid-cols-3 gap-4 sm:grid-cols-6">
       {helpers.map((h) => (
         <div key={h.id} className="flex flex-col items-center gap-1">
-          <Face helper={h} mood="idle" sizePx={64} track={false} />
+          <Character charId={h.id} sizePx={64} />
           <span className="font-display text-xs font-bold">{h.name[locale]}</span>
         </div>
       ))}

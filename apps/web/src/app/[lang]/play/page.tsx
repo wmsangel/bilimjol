@@ -28,6 +28,13 @@ export default async function PlayPage({
         >
           🏠
         </Link>
+        <Link
+          href={`/${lang}/wardrobe`}
+          aria-label="Гардероб"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-lg transition hover:bg-black/[.06] active:scale-95 dark:hover:bg-white/10"
+        >
+          👕
+        </Link>
         <span className="mx-0.5 h-5 w-px bg-black/10 dark:bg-white/15" />
         <ThemeToggle />
         <LanguageSwitcher current={lang} />
