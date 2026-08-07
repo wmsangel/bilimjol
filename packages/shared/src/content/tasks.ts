@@ -1113,11 +1113,11 @@ const baseTasks: Task[] = [
     grade: 1,
     difficulty: 1,
     free: true,
-    illustration: "🪑 🛏️ 🐱",
+    illustration: "🪑 🛋️ 🛏️ 🐱",
     prompt: { ru: "Что здесь лишнее?", ky: "Бул жерде эмне ашык?" },
     options: [
       { ru: "Стул", ky: "Отургуч" },
-      { ru: "Стол", ky: "Үстөл" },
+      { ru: "Диван", ky: "Диван" },
       { ru: "Кровать", ky: "Керебет" },
       { ru: "Кот", ky: "Мышык" },
     ],

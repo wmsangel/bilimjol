@@ -456,9 +456,9 @@ export function TaskPlayer({
         </div>
       </div>
 
-      {/* Большой помощник */}
-      <div className="mb-4 flex justify-center">
-        <Mascot helper={helper} mood={mood} message={mascotMessage} />
+      {/* Помощник — в нижнем левом углу, не перекрывает вопросы */}
+      <div className="pointer-events-none fixed bottom-4 left-4 z-20 hidden lg:block">
+        <Mascot helper={helper} mood={mood} message={mascotMessage} size="lg" />
       </div>
 
       {/* Карточка задания */}
