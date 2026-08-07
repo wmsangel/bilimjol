@@ -26,14 +26,19 @@ export class ProgressService {
   }
 
   async getState(userId: string, childId: string) {
-    await this.assertOwned(userId, childId);
+    const child = await this.assertOwned(userId, childId);
     const [rows, stats] = await Promise.all([
       this.prisma.progress.findMany({ where: { childId } }),
       this.prisma.childStats.findUnique({ where: { childId } }),
     ]);
     const progress: Record<string, { correct: boolean }> = {};
     for (const r of rows) progress[r.taskId] = { correct: r.correct };
-    return { progress, stats: this.toStatsDto(stats) };
+    return {
+      progress,
+      stats: this.toStatsDto(stats),
+      outfit: (child.outfit as Record<string, string> | null) ?? {},
+      helperId: child.avatarHelperId,
+    };
   }
 
   async sync(userId: string, childId: string, body: SyncDto) {
@@ -62,6 +67,14 @@ export class ProgressService {
       create: { childId, ...merged },
       update: merged,
     });
+
+    // Наряд и герой: не даём пустому клиенту (новое устройство) затереть сервер.
+    const profileUpdate: { outfit?: object; avatarHelperId?: string } = {};
+    if (body.outfit && Object.keys(body.outfit).length > 0) profileUpdate.outfit = body.outfit;
+    if (body.avatarHelperId) profileUpdate.avatarHelperId = body.avatarHelperId;
+    if (Object.keys(profileUpdate).length > 0) {
+      await this.prisma.childProfile.update({ where: { id: childId }, data: profileUpdate });
+    }
 
     return this.getState(userId, childId);
   }

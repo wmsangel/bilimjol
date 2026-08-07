@@ -13,5 +13,7 @@ export type StatsDto = z.infer<typeof statsSchema>;
 export const syncSchema = z.object({
   progress: z.record(z.object({ correct: z.boolean() })),
   stats: statsSchema,
+  outfit: z.record(z.string()).optional(),
+  avatarHelperId: z.string().max(40).optional(),
 });
 export type SyncDto = z.infer<typeof syncSchema>;

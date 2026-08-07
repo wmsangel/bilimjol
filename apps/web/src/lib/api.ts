@@ -189,7 +189,14 @@ export interface ServerState {
     unlockedHelpers: string[];
     spentStars: number;
   };
+  outfit?: Record<string, string>;
+  helperId?: string;
 }
+
+/** Что заливаем на сервер (герой шлётся как avatarHelperId). */
+export type SyncSnapshot = Omit<ServerState, "helperId"> & {
+  avatarHelperId?: string;
+};
 
 export function getState(childId: string) {
   return request<ServerState>(`/children/${childId}/state`, { method: "GET" });
@@ -255,7 +262,7 @@ export function adminResetPassword(userId: string) {
   );
 }
 
-export function syncState(childId: string, snapshot: ServerState) {
+export function syncState(childId: string, snapshot: SyncSnapshot) {
   return request<ServerState>(`/children/${childId}/sync`, {
     method: "POST",
     body: JSON.stringify(snapshot),

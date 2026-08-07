@@ -2,9 +2,11 @@
 
 import { loadProgress, saveProgress } from "./progress";
 import { loadStats, saveStats } from "./stats";
-import { syncState, type ServerState } from "./api";
+import { loadOutfit, saveOutfit } from "./wardrobe";
+import { loadHelperId, saveHelperId } from "./prefs";
+import { syncState, type ServerState, type SyncSnapshot } from "./api";
 
-export function localSnapshot(): ServerState {
+export function localSnapshot(): SyncSnapshot {
   const stats = loadStats();
   return {
     progress: loadProgress(),
@@ -16,12 +18,16 @@ export function localSnapshot(): ServerState {
       unlockedHelpers: stats.unlockedHelpers,
       spentStars: stats.spentStars,
     },
+    outfit: loadOutfit() as Record<string, string>,
+    avatarHelperId: loadHelperId() ?? undefined,
   };
 }
 
 export function applyServer(server: ServerState) {
   saveProgress(server.progress);
   saveStats({ ...loadStats(), ...server.stats });
+  if (server.outfit) saveOutfit(server.outfit);
+  if (server.helperId) saveHelperId(server.helperId);
 }
 
 /** Двусторонняя синхронизация: заливаем локальное, применяем слитое. */

@@ -45,6 +45,7 @@ model ChildProfile {
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   name          String
   avatarHelperId String  @default("fox")
+  outfit        Json?
   grade         Int      @default(1)
   createdAt     DateTime @default(now())
   progress      Progress[]
