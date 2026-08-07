@@ -1,5 +1,6 @@
 import type { Task } from "./types";
 import { generatedTasks } from "./generated";
+import { starTasks } from "./stars";
 
 // Задания сгруппированы по темам (topic). Часть бесплатна (free: true).
 const baseTasks: Task[] = [
@@ -1626,7 +1627,8 @@ const baseTasks: Task[] = [
   },
 ];
 
-export const tasks: Task[] = [...baseTasks, ...generatedTasks];
+// starTasks идут последними — «задание со звёздочкой» замыкает каждую тему.
+export const tasks: Task[] = [...baseTasks, ...generatedTasks, ...starTasks];
 
 export function getTasks(filter?: {
   subject?: Task["subject"];

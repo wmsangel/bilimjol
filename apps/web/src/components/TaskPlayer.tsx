@@ -41,6 +41,7 @@ export interface PlayLabels {
   lockedText: string;
   subscribeCta: string;
   backHome: string;
+  starBadge: string;
 }
 
 export interface GameLabels {
@@ -486,7 +487,14 @@ export function TaskPlayer({
 
       {/* Карточка задания */}
       <div className="rounded-[2rem] border border-black/[.06] bg-white p-6 shadow-xl sm:p-8 dark:border-white/10 dark:bg-zinc-900">
-        <div className="mb-4 flex items-center justify-end">
+        <div className="mb-4 flex items-center justify-between">
+          {task.star ? (
+            <span className="rounded-full border-2 border-amber-300 bg-amber-50 px-3 py-1 text-xs font-extrabold text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300">
+              ⭐ {labels.starBadge}
+            </span>
+          ) : (
+            <span />
+          )}
           <span className="rounded-full bg-gradient-to-r from-amber-300 to-yellow-400 px-4 py-1.5 text-sm font-extrabold text-amber-900 shadow-sm">
             ⭐ {stars}
           </span>
