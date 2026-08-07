@@ -76,28 +76,31 @@ function scene(band: Band, w: number, h: number): string {
     P.push(`<circle cx="${X(0.2)}" cy="${Y(0.78)}" r="30" fill="#E6E0C6"/><circle cx="${X(0.14)}" cy="${Y(0.74)}" r="6" fill="#D0C9A8"/>`);
     return P.join("");
   }
-  // земля: небо → трава, локации сверху вниз
-  P.push(`<defs><linearGradient id="skyL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFE6FF"/><stop offset="0.28" stop-color="#DBF3E4"/><stop offset="1" stop-color="#E6F6D6"/></linearGradient></defs>`);
-  P.push(`<rect width="${w}" height="${h}" fill="url(#skyL)"/>`);
-  P.push(`<circle cx="${w - 66}" cy="72" r="34" fill="#FFE07A"/><circle cx="${w - 66}" cy="72" r="48" fill="#FFE07A" opacity=".28"/>`);
-  P.push(cloud(X(0.22), 92, 1), cloud(X(0.72), 150, 0.8), cloud(X(0.4), Y(0.28), 0.7, 0.7));
-  // холмы по всей высоте
+  // земля: тонкая полоса неба сверху, дальше — сплошная трава (декор не «висит»)
+  const skyH = Math.round(h * 0.06);
+  P.push(`<defs><linearGradient id="skyL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFE6FF"/><stop offset="1" stop-color="#E7F5EE"/></linearGradient></defs>`);
+  P.push(`<rect width="${w}" height="${skyH + 34}" fill="url(#skyL)"/>`);
+  P.push(`<rect y="${skyH}" width="${w}" height="${h - skyH}" fill="#C4E79E"/>`);
+  // мягкие холмы-текстура (на траве)
   for (let k = 0; k < 6; k++) {
-    const yy = Y(0.16 + k * 0.15);
-    P.push(`<path d="M0 ${yy} Q${X(0.3)} ${yy - 46} ${X(0.62)} ${yy} T${w} ${yy - 24} L${w} ${h} L0 ${h} Z" fill="${k % 2 ? "#9ED98D" : "#B7E39D"}" opacity=".5"/>`);
+    const yy = skyH + Math.round(h * (0.09 + k * 0.15));
+    P.push(`<path d="M0 ${yy} Q${X(0.3)} ${yy - 44} ${X(0.62)} ${yy} T${w} ${yy - 22} L${w} ${h} L0 ${h} Z" fill="${k % 2 ? "#9ED98D" : "#B4E09A"}" opacity=".45"/>`);
   }
-  // дальние горы (низ)
+  // солнце и облака — в полосе неба
+  P.push(`<circle cx="${w - 66}" cy="52" r="32" fill="#FFE07A"/><circle cx="${w - 66}" cy="52" r="46" fill="#FFE07A" opacity=".28"/>`);
+  P.push(cloud(X(0.2), 38, 0.9), cloud(X(0.68), 28, 0.75));
+  // дальние горы (нижняя часть, стоят на траве)
   P.push(mountain(X(0.02), Y(0.82), X(0.4), 190, "#AEBBD6", "#F3F6FC"));
   P.push(mountain(X(0.42), Y(0.85), X(0.55), 240, "#98A8CC", "#F3F6FC"));
   // река поперёк
   P.push(`<path d="M-20 ${Y(0.55)} C${X(0.3)} ${Y(0.5)} ${X(0.62)} ${Y(0.62)} ${w + 20} ${Y(0.55)} L${w + 20} ${Y(0.63)} C${X(0.62)} ${Y(0.7)} ${X(0.3)} ${Y(0.58)} -20 ${Y(0.63)} Z" fill="#8FD0F0" opacity=".85"/>`);
-  // локация 1 — деревня (верх)
-  P.push(house(X(0.14), Y(0.11)), house(X(0.82), Y(0.15)), flower(X(0.32), Y(0.2)), flower(X(0.66), Y(0.23)), flower(X(0.5), Y(0.09)));
-  // локация 2 — лес (треть)
+  // локация 1 — деревня (на траве)
+  P.push(house(X(0.14), Y(0.12)), house(X(0.83), Y(0.16)), flower(X(0.34), Y(0.13)), flower(X(0.64), Y(0.17)), flower(X(0.5), Y(0.24)));
+  // локация 2 — лес
   P.push(tree(X(0.09), Y(0.31)), tree(X(0.88), Y(0.35), 0.9), tree(X(0.2), Y(0.44), 0.85), tree(X(0.8), Y(0.42), 1.05), bush(X(0.4), Y(0.4)));
-  // локация 3 — у реки / холмы
+  // локация 3 — у реки
   P.push(bush(X(0.16), Y(0.66)), bush(X(0.84), Y(0.64)), rock(X(0.28), Y(0.72)), flower(X(0.7), Y(0.68)));
-  // локация 4 — горы (низ)
+  // локация 4 — горы
   P.push(pine(X(0.1), Y(0.86)), pine(X(0.9), Y(0.88), 0.9), rock(X(0.78), Y(0.92), 1.2), rock(X(0.2), Y(0.94)));
   return P.join("");
 }
