@@ -296,5 +296,34 @@ export interface WardrobeItem {
   id: string;
   slot: Slot;
   name: string;
+  /** Сколько всего звёзд нужно, чтобы вещь открылась. */
+  unlockAt: number;
 }
-export const WARDROBE: WardrobeItem[] = WARD_ORDER.map((k) => ({ id: k, slot: CLOTHES[k].slot, name: CLOTHES[k].name }));
+const UNLOCK_AT: Record<string, number> = {
+  tee: 0, scarf: 0, glasses: 4, cap: 6, bow: 8, beanie: 10, tubeteika: 12, kalpak: 15, chapan: 20,
+};
+export const WARDROBE: WardrobeItem[] = WARD_ORDER.map((k) => ({
+  id: k,
+  slot: CLOTHES[k].slot,
+  name: CLOTHES[k].name,
+  unlockAt: UNLOCK_AT[k] ?? 0,
+}));
+export function wardrobeIcon(k: string): string {
+  let s = '<svg viewBox="0 0 44 40">';
+  if (k === "cap") s += '<path d="M4 26 Q22 2 40 26 Q22 16 4 26z" fill="#EF4E5B"/><path d="M34 24 Q44 22 44 30 Q38 26 32 26z" fill="#D23A47"/>';
+  else if (k === "kalpak") s += '<path d="M11 24 Q10 5 22 2 Q34 5 33 24 Q22 28 11 24z" fill="#F3F0E4"/><path d="M7 25 Q11 15 16 15 L20 22 L24 15 Q28 15 33 25 Q22 32 7 25z" fill="#26252E"/><path d="M20 22 L22 26 L24 22z" fill="#F3F0E4"/>';
+  else if (k === "beanie") s += `<path d="M9 24 Q9 7 22 5 Q35 7 35 24 Q22 28 9 24z" fill="#E86A5C"/><path d="M7 22 Q22 32 37 22 Q35 28 22 30 Q9 28 7 22z" fill="${sh("#E86A5C", -22)}"/><circle cx="22" cy="4" r="3.4" fill="#F3E9D8"/>`;
+  else if (k === "tubeteika") s += '<path d="M9 26 Q9 10 22 9 Q35 10 35 26 Q22 30 9 26z" fill="#1F2C35"/><path d="M7 25 Q22 32 37 25 Q22 29 7 26z" fill="#E4C061"/><g fill="#F3EFE0"><path d="M14 24 l2 -4 l2 4z"/><path d="M20 23 l2 -4 l2 4z"/><path d="M26 23 l2 -4 l2 4z"/></g>';
+  else if (k === "chapan") s += '<path d="M8 12 Q22 4 36 12 L33 32 Q22 36 11 32z" fill="#B9472E"/><path d="M22 8 L28 12 L26 34 Q22 36 18 34 L16 12z" fill="#EFE3C6"/><path d="M22 8 L28 12 M22 8 L16 12" stroke="#D8A838" stroke-width="2" fill="none"/><path d="M11 26 Q22 30 33 26" stroke="#D8A838" stroke-width="2.5" fill="none"/>';
+  else if (k === "bow") s += '<g transform="translate(22 20)"><path d="M0 0 L-14 -9 L-14 9z" fill="#FF5C8A"/><path d="M0 0 L14 -9 L14 9z" fill="#FF5C8A"/><circle r="5" fill="#E23A6E"/></g>';
+  else if (k === "glasses") s += '<g stroke="#2A2233" stroke-width="2.5" fill="rgba(120,150,230,.28)"><circle cx="13" cy="20" r="9"/><circle cx="31" cy="20" r="9"/></g><line x1="22" y1="20" x2="22" y2="20" stroke="#2A2233" stroke-width="2.5"/>';
+  else if (k === "tee") s += '<path d="M8 12 Q22 3 36 12 L32 30 Q22 35 12 30z" fill="#4F86F7"/>';
+  else if (k === "scarf") s += '<path d="M8 14 Q22 24 36 14 L36 22 Q22 30 8 22z" fill="#22B473"/><rect x="24" y="22" width="7" height="12" rx="2" fill="#1B9160"/>';
+  return s + "</svg>";
+}
+export const SLOT_LABELS: Record<Slot, { ru: string; ky: string }> = {
+  head: { ru: "Голова", ky: "Баш кийим" },
+  face: { ru: "На лицо", ky: "Бетке" },
+  body: { ru: "Одежда", ky: "Кийим" },
+  neck: { ru: "На шею", ky: "Мойунга" },
+};
