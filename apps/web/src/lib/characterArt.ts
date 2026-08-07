@@ -1,0 +1,300 @@
+// Полноростовые персонажи izn.study (SVG-строки). Портировано из студии-прототипа.
+// Общий «скелет» 220×232; вид отличается головой/цветом/ушами; одежда садится на всех.
+
+export type Slot = "head" | "face" | "body" | "neck";
+export type Outfit = Partial<Record<Slot, string>>;
+
+type PartFn = (f: string, b: string, d: string, hair?: string) => string;
+
+interface Spec {
+  name: string;
+  type: string;
+  fur: string;
+  belly: string;
+  darkAmt?: number;
+  bodyColor?: string;
+  headShape?: "square";
+  hair?: string;
+  noCheeks?: boolean;
+  ears?: PartFn;
+  tail?: PartFn;
+  face?: PartFn;
+  eyes: string;
+  mouth?: () => string;
+  fit?: Record<string, string>;
+  wear?: Record<string, (S: Spec) => string>;
+}
+
+interface Clothing {
+  slot: Slot;
+  name: string;
+  draw?: () => string;
+  color?: string;
+  style?: "tee" | "robe";
+  inner?: string;
+  trim?: string;
+}
+
+const PINK = "#FF9DB0";
+const EYE = "#2C2540";
+
+function sh(hex: string, a: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, Math.min(255, (n >> 16) + a));
+  const g = Math.max(0, Math.min(255, ((n >> 8) & 255) + a));
+  const b = Math.max(0, Math.min(255, (n & 255) + a));
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+function eye(cx: number, withWhite: boolean): string {
+  const cy = 100;
+  const white = withWhite ? `<ellipse cx="${cx}" cy="${cy}" rx="13" ry="16" fill="#fff"/>` : "";
+  const d = withWhite ? { rx: 8, ry: 10 } : { rx: 12, ry: 15 };
+  return `<g class="blink"><g class="pupils">${white}<ellipse cx="${cx}" cy="${cy}" rx="${d.rx}" ry="${d.ry}" fill="${EYE}"/><ellipse cx="${cx - 4}" cy="${cy - 6}" rx="4.4" ry="5.4" fill="#fff"/><circle cx="${cx + 4}" cy="${cy + 5}" r="2.2" fill="rgba(255,255,255,.6)"/></g></g>`;
+}
+function cheeks(): string {
+  return `<g fill="${PINK}" opacity=".7"><ellipse cx="72" cy="120" rx="12" ry="7.5"/><ellipse cx="148" cy="120" rx="12" ry="7.5"/></g>`;
+}
+function smile(d: string): string {
+  return `<path d="${d}" fill="none" stroke="${EYE}" stroke-width="3.2" stroke-linecap="round"/>`;
+}
+
+// уши / рога / антенны
+function foxEars(f: string, b: string): string {
+  return `<g class="earL"><path d="M78 58 Q56 8 46 44 Q46 66 82 62 Z" fill="${f}"/><path d="M74 56 Q60 28 54 48 Q54 60 74 58 Z" fill="${b}"/></g><g class="earR"><path d="M142 58 Q164 8 174 44 Q174 66 138 62 Z" fill="${f}"/><path d="M146 56 Q160 28 166 48 Q166 60 146 58 Z" fill="${b}"/></g>`;
+}
+function catEars(f: string): string {
+  return `<g class="earL"><path d="M84 56 Q64 4 50 40 Q52 60 86 60 Z" fill="${f}"/><path d="M80 54 Q68 26 60 44 Q62 56 80 55 Z" fill="${PINK}"/></g><g class="earR"><path d="M136 56 Q156 4 170 40 Q168 60 134 60 Z" fill="${f}"/><path d="M140 54 Q152 26 160 44 Q158 56 140 55 Z" fill="${PINK}"/></g>`;
+}
+function roundEars(inner: string): PartFn {
+  return (f: string) =>
+    `<g class="earL"><circle cx="64" cy="54" r="22" fill="${f}"/><circle cx="64" cy="54" r="11" fill="${inner}"/></g><g class="earR"><circle cx="156" cy="54" r="22" fill="${f}"/><circle cx="156" cy="54" r="11" fill="${inner}"/></g>`;
+}
+function pandaEars(): string {
+  const k = "#2C2C34";
+  return `<g class="earL"><circle cx="62" cy="52" r="21" fill="${k}"/></g><g class="earR"><circle cx="158" cy="52" r="21" fill="${k}"/></g>`;
+}
+function bunnyEars(f: string): string {
+  return `<g class="earL"><g transform="rotate(-9 84 46)"><ellipse cx="84" cy="34" rx="15" ry="42" fill="${f}"/><ellipse cx="84" cy="34" rx="7" ry="30" fill="${PINK}"/></g></g><g class="earR"><g transform="rotate(9 136 46)"><ellipse cx="136" cy="34" rx="15" ry="42" fill="${f}"/><ellipse cx="136" cy="34" rx="7" ry="30" fill="${PINK}"/></g></g>`;
+}
+function horns(f: string, b: string, d: string): string {
+  return `<g class="earL"><path d="M74 52 Q60 20 56 44 Q62 56 78 54 Z" fill="${d}"/></g><g class="earR"><path d="M146 52 Q160 20 164 44 Q158 56 142 54 Z" fill="${d}"/></g>`;
+}
+function antenna(f: string, b: string, d: string): string {
+  return `<g class="antenna"><rect x="107" y="20" width="6" height="24" rx="3" fill="${d}"/><circle cx="110" cy="16" r="7" fill="#FF6B6B"/><circle cx="107" cy="13" r="2.5" fill="#fff"/></g>`;
+}
+function dogEars(f: string, b: string, d: string): string {
+  return `<g class="earL"><path d="M66 60 Q40 60 42 106 Q56 118 74 100 Q64 80 72 64 Z" fill="${d}"/></g><g class="earR"><path d="M154 60 Q180 60 178 106 Q164 118 146 100 Q156 80 148 64 Z" fill="${d}"/></g>`;
+}
+
+// хвосты
+function foxTail(f: string, b: string): string {
+  return `<path d="M150 176 C206 168 210 104 172 96 C196 128 176 168 146 190 Z" fill="${f}"/><path d="M172 96 C186 100 190 122 182 138 C182 118 176 106 168 100 Z" fill="${b}"/>`;
+}
+function catTail(f: string): string {
+  return `<path d="M154 180 C210 184 208 116 186 104" fill="none" stroke="${f}" stroke-width="15" stroke-linecap="round"/>`;
+}
+function nub(col: string): PartFn {
+  return () => `<circle cx="162" cy="192" r="14" fill="${col}"/>`;
+}
+function dogTail(f: string): string {
+  return `<path d="M150 180 C190 184 198 148 184 130" fill="none" stroke="${f}" stroke-width="17" stroke-linecap="round"/>`;
+}
+
+// мордочки / лица
+function foxFace(f: string, b: string): string {
+  return `<ellipse cx="110" cy="122" rx="26" ry="19" fill="${b}"/><ellipse cx="110" cy="112" rx="6" ry="4.6" fill="${EYE}"/>`;
+}
+function bearFace(f: string, b: string): string {
+  return `<ellipse cx="110" cy="126" rx="26" ry="20" fill="${b}"/><ellipse cx="110" cy="116" rx="8" ry="6" fill="${EYE}"/>`;
+}
+function catFace(f: string, b: string): string {
+  return `<ellipse cx="110" cy="120" rx="22" ry="15" fill="${b}"/><path d="M104 114 h12 l-6 6 z" fill="${PINK}"/><path d="M110 120 v4" stroke="${EYE}" stroke-width="2" stroke-linecap="round"/><g stroke="${sh(f, -46)}" stroke-width="2" stroke-linecap="round" opacity=".8"><line x1="72" y1="118" x2="44" y2="112"/><line x1="72" y1="124" x2="46" y2="126"/><line x1="72" y1="130" x2="48" y2="138"/><line x1="148" y1="118" x2="176" y2="112"/><line x1="148" y1="124" x2="174" y2="126"/><line x1="148" y1="130" x2="172" y2="138"/></g>`;
+}
+function bunnyFace(f: string): string {
+  return `<path d="M105 116 h10 l-5 5 z" fill="${PINK}"/><path d="M110 121 v6" stroke="${sh(f, -30)}" stroke-width="2"/><rect x="104" y="127" width="5" height="7" rx="1.5" fill="#fff"/><rect x="111" y="127" width="5" height="7" rx="1.5" fill="#fff"/>`;
+}
+function pandaFace(): string {
+  const k = "#2C2C34";
+  return `<ellipse cx="84" cy="98" rx="17" ry="21" fill="${k}" transform="rotate(-12 84 98)"/><ellipse cx="136" cy="98" rx="17" ry="21" fill="${k}" transform="rotate(12 136 98)"/><ellipse cx="110" cy="120" rx="6" ry="4.6" fill="${k}"/>`;
+}
+function robotFace(f: string, b: string, d: string): string {
+  return `<rect x="70" y="78" width="20" height="14" rx="4" fill="#26E0F0"/><rect x="130" y="78" width="20" height="14" rx="4" fill="#26E0F0"/><rect x="73" y="80" width="6" height="5" rx="2" fill="#fff" opacity=".8"/><rect x="133" y="80" width="6" height="5" rx="2" fill="#fff" opacity=".8"/><rect x="90" y="112" width="40" height="10" rx="5" fill="${d}"/><g stroke="${f}" stroke-width="2"><line x1="98" y1="112" x2="98" y2="122"/><line x1="110" y1="112" x2="110" y2="122"/><line x1="122" y1="112" x2="122" y2="122"/></g><circle cx="60" cy="98" r="5" fill="${d}"/><circle cx="160" cy="98" r="5" fill="${d}"/>`;
+}
+function monsterFace(): string {
+  return `<path d="M92 126 Q110 148 128 126 Q120 138 110 132 Q100 138 92 126 Z" fill="#7A1E5A"/><path d="M100 130 l3 8 l4 -7 z" fill="#fff"/>`;
+}
+function dogFace(f: string, b: string): string {
+  return `<ellipse cx="110" cy="120" rx="26" ry="19" fill="${b}"/><ellipse cx="110" cy="110" rx="8" ry="6" fill="${EYE}"/><path d="M110 116 v7" stroke="${EYE}" stroke-width="2.5" stroke-linecap="round"/>`;
+}
+function steveFace(f: string, b: string, d: string): string {
+  const hc = "#49331F", brow = "#3A281A", ns = sh(f, -24), bd = "#8E6E4C", mth = "#7A5A3E";
+  return `<rect x="54" y="38" width="112" height="18" fill="${hc}"/><rect x="54" y="56" width="12" height="10" fill="${hc}"/><rect x="154" y="56" width="12" height="10" fill="${hc}"/><path d="M62 108 v20 q48 18 96 0 v-20 h-9 v12 h-78 v-12 z" fill="${bd}" opacity=".42"/><rect x="80" y="80" width="17" height="5" fill="${brow}"/><rect x="123" y="80" width="17" height="5" fill="${brow}"/><rect x="104" y="98" width="12" height="11" fill="${ns}"/><rect x="94" y="120" width="32" height="4" rx="1" fill="${mth}"/>`;
+}
+function blockyFace(f: string, b: string, d: string, hair?: string): string {
+  return `<path d="M54 54 Q54 40 72 40 L148 40 Q166 40 166 54 L166 64 Q110 52 54 64 Z" fill="${hair}"/>`;
+}
+function frogFace(f: string): string {
+  return `<circle cx="82" cy="60" r="22" fill="${f}"/><circle cx="138" cy="60" r="22" fill="${f}"/>`;
+}
+
+// одежда (общие координаты)
+function wCap(): string {
+  return `<g><path d="M50 86 Q110 20 170 86 Q110 100 50 86 Z" fill="#EF4E5B"/><path d="M110 88 Q152 84 192 100 Q150 98 108 96 Z" fill="#D23A47"/><path d="M50 86 Q110 100 170 86 Q110 108 50 90 Z" fill="#D23A47"/><circle cx="110" cy="46" r="5.5" fill="#D23A47"/></g>`;
+}
+function wBow(): string {
+  return `<g transform="translate(150 50)"><path d="M0 0 L-20 -12 L-20 12 Z" fill="#FF5C8A"/><path d="M0 0 L20 -12 L20 12 Z" fill="#FF5C8A"/><circle r="6" fill="#E23A6E"/></g>`;
+}
+function wGlasses(): string {
+  return `<g stroke="#2A2233" stroke-width="3" fill="rgba(120,150,230,.28)"><circle cx="84" cy="100" r="15"/><circle cx="136" cy="100" r="15"/><line x1="99" y1="100" x2="121" y2="100"/></g>`;
+}
+function wScarf(): string {
+  return `<g><path d="M82 138 Q110 156 138 138 L138 152 Q110 168 82 152 Z" fill="#22B473"/><rect x="112" y="150" width="15" height="26" rx="5" fill="#1B9160"/></g>`;
+}
+
+const CLOTHES: Record<string, Clothing> = {
+  cap: { slot: "head", name: "Кепка", draw: wCap },
+  kalpak: { slot: "head", name: "Калпак" },
+  tubeteika: { slot: "head", name: "Тюбетейка" },
+  beanie: { slot: "head", name: "Шапка" },
+  bow: { slot: "head", name: "Бантик", draw: wBow },
+  glasses: { slot: "face", name: "Очки", draw: wGlasses },
+  tee: { slot: "body", name: "Футболка", color: "#4F86F7", style: "tee" },
+  chapan: { slot: "body", name: "Чапан", color: "#B9472E", inner: "#EFE3C6", trim: "#D8A838", style: "robe" },
+  scarf: { slot: "neck", name: "Шарф", draw: wScarf },
+};
+const WARD_ORDER = ["cap", "kalpak", "tubeteika", "beanie", "bow", "glasses", "tee", "chapan", "scarf"];
+
+function bodyOf(S: Spec, outfit: Outfit): string {
+  const f = S.fur, b = S.belly, d = sh(f, S.darkAmt ?? -26);
+  const item = outfit.body ? CLOTHES[outfit.body] : null;
+  const g: string[] = [];
+  g.push(`<ellipse cx="66" cy="170" rx="13" ry="16" fill="${f}"/><ellipse cx="154" cy="170" rx="13" ry="16" fill="${f}"/>`);
+  if (item && item.style === "robe") {
+    const col = item.color!, tr = item.trim!, inr = item.inner!, cd = sh(col, -30);
+    g.push(`<ellipse cx="110" cy="162" rx="54" ry="48" fill="${col}"/>`);
+    g.push(`<ellipse cx="62" cy="158" rx="18" ry="16" fill="${col}"/><ellipse cx="158" cy="158" rx="18" ry="16" fill="${col}"/>`);
+    g.push(`<path d="M110 146 L130 156 L126 208 Q110 214 94 208 L90 156 Z" fill="${inr}"/>`);
+    g.push(`<path d="M60 184 Q110 197 160 184 L160 194 Q110 207 60 194 Z" fill="${tr}"/>`);
+    g.push(`<path d="M110 146 L130 156 L126 208 M110 146 L90 156 L94 208 M92 148 L110 158 L128 148" fill="none" stroke="${tr}" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>`);
+    g.push(`<path d="M60 180 q50 28 100 0 q-8 22 -50 22 q-42 0 -50 -22z" fill="${cd}" opacity=".2"/>`);
+  } else if (item) {
+    const shirt = item.color!, sd = sh(shirt, -34), sl = sh(shirt, 30);
+    g.push(`<ellipse cx="110" cy="162" rx="54" ry="48" fill="${shirt}"/>`);
+    g.push(`<ellipse cx="63" cy="158" rx="17" ry="15" fill="${shirt}"/><ellipse cx="157" cy="158" rx="17" ry="15" fill="${shirt}"/>`);
+    g.push(`<path d="M49 164 q7 8 16 8" fill="none" stroke="${sd}" stroke-width="2.5" opacity=".5"/><path d="M171 164 q-7 8 -16 8" fill="none" stroke="${sd}" stroke-width="2.5" opacity=".5"/>`);
+    g.push(`<ellipse cx="96" cy="150" rx="30" ry="15" fill="${sl}" opacity=".4"/>`);
+    g.push(`<path d="M60 178 q50 30 100 0 q-8 24 -50 24 q-42 0 -50 -24z" fill="${sd}" opacity=".3"/>`);
+    g.push(`<path d="M88 148 q22 20 44 0 q-8 -14 -22 -14 q-14 0 -22 14z" fill="${f}"/>`);
+    g.push(`<path d="M88 148 q22 20 44 0" fill="none" stroke="${sd}" stroke-width="2.5" opacity=".55"/>`);
+  } else {
+    g.push(`<ellipse cx="110" cy="162" rx="54" ry="48" fill="${S.bodyColor ?? f}"/><ellipse cx="110" cy="172" rx="33" ry="32" fill="${b}"/>`);
+    if (S.type === "robot") g.push(`<rect x="92" y="150" width="36" height="30" rx="7" fill="${sh(f, -18)}"/><circle cx="110" cy="165" r="7" fill="#26E0F0"/>`);
+    if (S.type === "monster") g.push(`<circle cx="92" cy="176" r="5" fill="${sh(f, -30)}"/><circle cx="128" cy="182" r="4" fill="${sh(f, -30)}"/><circle cx="118" cy="160" r="3.5" fill="${sh(f, -30)}"/>`);
+  }
+  g.push(`<ellipse cx="88" cy="202" rx="16" ry="10" fill="${d}"/><ellipse cx="132" cy="202" rx="16" ry="10" fill="${d}"/>`);
+  return g.join("");
+}
+function capOn(S: Spec): string {
+  const col = "#EF4E5B", band = sh(col, -26);
+  if (S.headShape === "square")
+    return `<g><path d="M52 66 Q52 40 82 40 L138 40 Q168 40 168 66 Q110 80 52 66 Z" fill="${col}"/><ellipse cx="86" cy="52" rx="22" ry="9" fill="#fff" opacity=".16"/><path d="M52 66 Q110 80 168 66 Q110 88 52 72 Z" fill="${band}"/><path d="M150 68 Q196 68 192 86 Q168 79 148 79 Z" fill="${band}"/><circle cx="110" cy="38" r="5" fill="${band}"/></g>`;
+  return `<g><path d="M53 74 A62 62 0 0 0 167 74 Q110 86 53 74 Z" fill="${col}"/><ellipse cx="88" cy="52" rx="22" ry="10" fill="#fff" opacity=".18"/><path d="M53 74 Q110 86 167 74 Q110 92 53 80 Z" fill="${band}"/><path d="M150 76 Q196 76 192 94 Q168 86 148 86 Z" fill="${band}"/><circle cx="110" cy="42" r="5" fill="${band}"/></g>`;
+}
+function kalpakOn(): string {
+  const wht = "#F3F0E4", wsd = "#D8D1BC", dk = "#26252E";
+  return `<g><path d="M58 72 Q56 24 110 12 Q164 24 162 72 Q110 82 58 72 Z" fill="${wht}"/><path d="M110 12 Q164 24 162 72 Q140 78 132 44 Q126 20 110 12 Z" fill="${wsd}" opacity=".55"/><path d="M98 20 Q82 34 80 64" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".55"/><g fill="none" stroke="${dk}" stroke-width="3" stroke-linecap="round"><path d="M104 52 q-8 -5 -4 -15 q2 -5 8 -3"/><path d="M116 52 q8 -5 4 -15 q-2 -5 -8 -3"/></g><path d="M46 74 Q52 57 71 55 Q93 66 105 66 L110 77 L115 66 Q127 66 149 55 Q168 57 174 74 Q110 90 46 74 Z" fill="${dk}"/><path d="M105 66 L110 77 L115 66 Z" fill="${wht}"/></g>`;
+}
+function beanieOn(): string {
+  const col = "#E86A5C", band = sh(col, -22), pom = "#F3E9D8";
+  return `<g><path d="M50 76 Q50 30 110 26 Q170 30 170 76 Q110 88 50 76 Z" fill="${col}"/><g stroke="${sh(col, -14)}" stroke-width="2.4" fill="none" opacity=".5"><path d="M72 40 Q70 60 66 78"/><path d="M110 28 V82"/><path d="M148 40 Q150 60 154 78"/></g><path d="M46 72 Q110 94 174 72 Q172 86 110 92 Q48 86 46 72 Z" fill="${band}"/><circle cx="110" cy="20" r="9" fill="${pom}"/><circle cx="107" cy="17" r="2.5" fill="#fff"/></g>`;
+}
+function tubeteikaOn(): string {
+  const dk = "#1F2C35", orn = "#E4C061", wht = "#F3EFE0";
+  return `<g><path d="M58 68 Q58 42 110 40 Q162 42 162 68 Q110 78 58 68 Z" fill="${dk}"/><path d="M56 66 Q110 80 164 66 Q110 74 56 70 Z" fill="${orn}"/><g fill="${wht}"><path d="M70 64 l4 -7 l4 7z"/><path d="M91 62 l4 -7 l4 7z"/><path d="M112 62 l4 -7 l4 7z"/><path d="M133 63 l4 -7 l4 7z"/></g><path d="M96 50 q14 -8 28 0" fill="none" stroke="${orn}" stroke-width="2.5"/><circle cx="110" cy="42" r="4" fill="${orn}"/></g>`;
+}
+const HEADWEAR: Record<string, (S: Spec) => string> = { cap: capOn, kalpak: kalpakOn, tubeteika: tubeteikaOn, beanie: beanieOn };
+
+function fitWrap(S: Spec, item: string, svg: string): string {
+  const t = (S.fit && S.fit[item]) || "";
+  return t ? `<g transform="${t}">${svg}</g>` : svg;
+}
+function wear(S: Spec, item: string): string {
+  if (!item) return "";
+  const t = (S.fit && S.fit[item]) || "";
+  const dr = CLOTHES[item]?.draw;
+  const g = dr ? dr() : "";
+  return t ? `<g transform="${t}">${g}</g>` : g;
+}
+function drawHead(S: Spec, item: string): string {
+  if (item === "bow") return wear(S, "bow");
+  const fn = HEADWEAR[item];
+  if (!fn) return "";
+  if (S.wear && S.wear[item]) return S.wear[item](S);
+  return fitWrap(S, item, fn(S));
+}
+function headOf(S: Spec): string {
+  const f = S.fur;
+  if (S.headShape === "square") return `<rect x="54" y="40" width="112" height="112" rx="30" fill="${f}"/>`;
+  return `<circle cx="110" cy="98" r="62" fill="${f}"/>`;
+}
+
+const SPECS: Record<string, Spec> = {
+  fox: { name: "Лисёнок", type: "animal", fur: "#F5943C", belly: "#FFF1DE", ears: foxEars, tail: foxTail, face: foxFace, eyes: eye(84, false) + eye(136, false), mouth: () => smile("M96 128 Q110 140 124 128") },
+  cat: { name: "Котик", type: "animal", fur: "#9AA6B8", belly: "#EDF0F5", ears: catEars, tail: catTail, face: catFace, eyes: eye(84, true) + eye(136, true), mouth: () => smile("M96 128 Q104 134 110 128 Q116 134 124 128") },
+  dog: { name: "Лабрадор", type: "animal", fur: "#E6C486", belly: "#F7EACB", darkAmt: -30, ears: dogEars, tail: dogTail, face: dogFace, eyes: eye(84, false) + eye(136, false), mouth: () => smile("M96 128 Q110 140 124 128") + '<path d="M105 134 q5 9 10 0 z" fill="#FF8FA3"/>' },
+  bear: { name: "Мишка", type: "animal", fur: "#C79668", belly: "#F0E1CB", ears: roundEars("#E8CBA6"), tail: nub("#B7875A"), face: bearFace, eyes: eye(86, false) + eye(134, false), mouth: () => smile("M100 132 Q110 140 120 132") },
+  panda: { name: "Панда", type: "animal", fur: "#F4F4F7", belly: "#FFFFFF", darkAmt: -12, ears: pandaEars, tail: nub("#2C2C34"), face: pandaFace, eyes: eye(84, true) + eye(136, true), mouth: () => smile("M100 130 Q110 138 120 130") },
+  bunny: { name: "Зайчик", type: "animal", fur: "#F1E4F5", belly: "#FFFFFF", darkAmt: -14, ears: bunnyEars, tail: nub("#FFFFFF"), face: bunnyFace, eyes: eye(84, false) + eye(136, false) },
+  frog: {
+    name: "Лягушонок", type: "animal", fur: "#78C56A", belly: "#D9F0CF",
+    fit: { glasses: "translate(-1 -40)", cap: "translate(110 32) scale(.5) translate(-110 -74)", kalpak: "translate(110 30) scale(.5) translate(-110 -60)", beanie: "translate(110 30) scale(.52) translate(-110 -64)", tubeteika: "translate(110 30) scale(.52) translate(-110 -60)", scarf: "translate(0 -4)" },
+    face: frogFace, eyes: `<g class="blink"><g class="pupils"><circle cx="82" cy="60" r="10" fill="${EYE}"/><circle cx="79" cy="56" r="3.6" fill="#fff"/><circle cx="138" cy="60" r="10" fill="${EYE}"/><circle cx="135" cy="56" r="3.6" fill="#fff"/></g></g>`, mouth: () => smile("M80 122 Q110 150 140 122"),
+  },
+  blocky: {
+    name: "Кубик", type: "human", fur: "#F1C79A", belly: "#F3D2AC", darkAmt: -22, headShape: "square", hair: "#5B3B22",
+    face: blockyFace, eyes: `<g class="blink"><g class="pupils"><rect x="83" y="82" width="10" height="20" rx="5" fill="${EYE}"/><rect x="127" y="82" width="10" height="20" rx="5" fill="${EYE}"/></g></g>`, mouth: () => `<path d="M84 110 Q110 138 136 110" fill="none" stroke="${EYE}" stroke-width="4.5" stroke-linecap="round"/>`,
+  },
+  steve: {
+    name: "Стив", type: "game", noCheeks: true, fur: "#C89B6E", belly: "#2FBABA", bodyColor: "#26A9A9", darkAmt: -26, headShape: "square", hair: "#49331F",
+    face: steveFace, eyes: `<g class="blink"><g class="pupils"><rect x="80" y="86" width="18" height="13" fill="#D8D8EA"/><rect x="90" y="86" width="8" height="13" fill="#4A3AA0"/><rect x="122" y="86" width="18" height="13" fill="#D8D8EA"/><rect x="122" y="86" width="8" height="13" fill="#4A3AA0"/></g></g>`,
+  },
+  robot: { name: "Робот", type: "robot", fur: "#AEB6C2", belly: "#D2D8E0", darkAmt: -30, headShape: "square", fit: { glasses: "translate(0 -15)" }, ears: antenna, face: robotFace, eyes: "" },
+  monster: { name: "Монстрик", type: "monster", fur: "#A855F7", belly: "#E7CCFB", darkAmt: -24, ears: horns, tail: nub("#8B3ED6"), face: monsterFace, eyes: eye(84, true) + eye(136, true) },
+};
+
+const ORDER = ["fox", "cat", "dog", "bear", "panda", "bunny", "frog", "blocky", "steve", "robot", "monster"];
+
+function build(id: string, outfit: Outfit): string {
+  const S = SPECS[id] || SPECS.fox;
+  const f = S.fur, b = S.belly, d = sh(f, S.darkAmt ?? -26);
+  const P: string[] = [];
+  P.push('<ellipse cx="110" cy="216" rx="54" ry="9" fill="rgba(40,24,80,.13)"/>');
+  if (S.tail) P.push(`<g class="tail">${S.tail(f, b, d)}</g>`);
+  if (S.ears) P.push(S.ears(f, b, d));
+  P.push(bodyOf(S, outfit));
+  P.push(headOf(S));
+  if (S.face) P.push(S.face(f, b, d, S.hair));
+  P.push(S.eyes);
+  if (S.type !== "robot" && !S.noCheeks) P.push(cheeks());
+  if (S.mouth) P.push(S.mouth());
+  if (outfit.neck) P.push(wear(S, outfit.neck));
+  if (outfit.face) P.push(wear(S, outfit.face));
+  if (outfit.head) P.push(drawHead(S, outfit.head));
+  return `<svg class="char-svg" viewBox="0 0 220 232" role="img" aria-label="${S.name}"><g class="breathe">${P.join("")}</g></svg>`;
+}
+
+// ── публичный API ──
+export function buildCharacter(id: string, outfit: Outfit = {}): string {
+  return build(id, outfit);
+}
+export const CHARACTER_IDS = ORDER;
+export function characterName(id: string): string {
+  return SPECS[id]?.name ?? id;
+}
+export interface WardrobeItem {
+  id: string;
+  slot: Slot;
+  name: string;
+}
+export const WARDROBE: WardrobeItem[] = WARD_ORDER.map((k) => ({ id: k, slot: CLOTHES[k].slot, name: CLOTHES[k].name }));

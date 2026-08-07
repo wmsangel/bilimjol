@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { helpers, type Locale } from "@izn-study/shared";
 import type { Helper } from "@izn-study/shared";
-import { Face } from "./Face";
+import { Character } from "./Character";
 import {
   isHelperUnlocked,
   loadStats,
@@ -77,12 +77,7 @@ export function HelperPicker({
             }
           >
             <div className={unlocked ? "" : "opacity-40 grayscale"}>
-              <Face
-                helper={helper}
-                mood={active ? "happy" : "idle"}
-                sizePx={60}
-                track={false}
-              />
+              <Character charId={helper.id} sizePx={64} />
             </div>
             {unlocked ? (
               <span className="font-display text-sm font-bold">

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import type { Helper } from "@izn-study/shared";
-import { Face, type Mood } from "./Face";
+import { type Mood } from "./Face";
+import { Character } from "./Character";
 
 const SIZE_PX = { md: 96, lg: 132 };
 
@@ -59,7 +60,7 @@ export function Mascot({
     <div className="flex items-center gap-3">
       <div ref={trackRef} className="transition-transform duration-100 ease-out">
         <div className={anim}>
-          <Face helper={helper} mood={mood} sizePx={SIZE_PX[size]} />
+          <Character charId={helper.id} sizePx={SIZE_PX[size]} />
         </div>
       </div>
 
