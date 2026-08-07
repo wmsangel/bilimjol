@@ -336,19 +336,21 @@ export function TaskPlayer({
       getTopics({ subject: subj, grade }),
     );
     return (
-      <div className="mx-auto w-full max-w-md">
-        <button
-          onClick={() => setGrade(null)}
-          className="mb-2 text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
-        >
-          ← {gradeLabels[String(grade)] ?? gameLabels.gradeTitle}
-        </button>
-        <h2 className="text-center font-display text-3xl font-extrabold">
-          {gameLabels.topicsTitle}
-        </h2>
-        <p className="mt-2 mb-4 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          {gameLabels.starHint}
-        </p>
+      <div className="mx-auto w-full max-w-[1480px]">
+        <div className="mb-3 flex flex-col items-center gap-1">
+          <button
+            onClick={() => setGrade(null)}
+            className="self-start text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+          >
+            ← {gradeLabels[String(grade)] ?? gameLabels.gradeTitle}
+          </button>
+          <h2 className="font-display text-3xl font-extrabold">
+            {gameLabels.topicsTitle}
+          </h2>
+          <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+            {gameLabels.starHint}
+          </p>
+        </div>
 
         {helper && (
           <LearningPath

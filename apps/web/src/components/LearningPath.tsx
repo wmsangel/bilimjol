@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Helper, Locale, Task, Topic } from "@izn-study/shared";
 import type { ProgressMap } from "@/lib/progress";
 import { Mascot } from "./Mascot";
 
 // Тропа занятий: тема открывается, когда пройдена предыдущая.
-// Чем старше класс — тем «взрослее» оформление карты.
+// Змейка-бродилка на всю ширину; оформление зависит от класса.
 
 interface Theme {
   wrap: string;
@@ -16,85 +16,76 @@ interface Theme {
   nodeLocked: string;
   title: string;
   sub: string;
+  labelBg: string;
   deco: { emoji: string; className: string }[];
 }
 
 function themeFor(grade: number): Theme {
-  if (grade <= 2) {
+  if (grade <= 2)
     return {
-      wrap: "from-lime-100 via-emerald-50 to-sky-100",
-      trail: "bg-emerald-300",
-      nodeUnlocked: "from-emerald-400 to-green-500 shadow-emerald-500/40",
-      nodeMastered: "from-amber-300 to-yellow-400",
-      nodeLocked: "bg-emerald-900/10 dark:bg-white/5",
-      title: "text-emerald-900 dark:text-emerald-200",
-      sub: "text-emerald-700/70 dark:text-emerald-300/60",
+      wrap: "from-lime-100 via-emerald-50 to-sky-100 dark:from-emerald-950 dark:via-emerald-950/50 dark:to-sky-950",
+      trail: "bg-emerald-300", nodeUnlocked: "from-emerald-400 to-green-500 shadow-emerald-500/40",
+      nodeMastered: "from-amber-300 to-yellow-400", nodeLocked: "bg-black/[.06] dark:bg-white/[.06]",
+      title: "text-emerald-900 dark:text-emerald-100", sub: "text-emerald-700/70 dark:text-emerald-300/60",
+      labelBg: "bg-white/75 dark:bg-black/35",
       deco: [
-        { emoji: "☀️", className: "left-4 top-4 text-3xl" },
-        { emoji: "🌳", className: "right-5 top-16 text-3xl" },
-        { emoji: "🌸", className: "left-6 bottom-10 text-2xl" },
-        { emoji: "🦋", className: "right-8 bottom-24 text-2xl" },
+        { emoji: "☀️", className: "left-5 top-5 text-4xl" },
+        { emoji: "🌳", className: "right-6 top-10 text-4xl" },
+        { emoji: "🌸", className: "left-10 bottom-8 text-3xl" },
+        { emoji: "🦋", className: "right-12 bottom-16 text-3xl" },
+        { emoji: "🍄", className: "left-1/3 bottom-6 text-2xl" },
       ],
     };
-  }
-  if (grade <= 5) {
+  if (grade <= 5)
     return {
-      wrap: "from-teal-100 via-cyan-50 to-emerald-100",
-      trail: "bg-teal-300",
-      nodeUnlocked: "from-teal-400 to-cyan-500 shadow-teal-500/40",
-      nodeMastered: "from-amber-300 to-yellow-400",
-      nodeLocked: "bg-teal-900/10 dark:bg-white/5",
-      title: "text-teal-900 dark:text-teal-200",
-      sub: "text-teal-700/70 dark:text-teal-300/60",
+      wrap: "from-teal-100 via-cyan-50 to-emerald-100 dark:from-teal-950 dark:via-cyan-950/50 dark:to-emerald-950",
+      trail: "bg-teal-300", nodeUnlocked: "from-teal-400 to-cyan-500 shadow-teal-500/40",
+      nodeMastered: "from-amber-300 to-yellow-400", nodeLocked: "bg-black/[.06] dark:bg-white/[.06]",
+      title: "text-teal-900 dark:text-teal-100", sub: "text-teal-700/70 dark:text-teal-300/60",
+      labelBg: "bg-white/75 dark:bg-black/35",
       deco: [
-        { emoji: "🏕️", className: "left-4 top-5 text-3xl" },
-        { emoji: "🌲", className: "right-5 top-20 text-3xl" },
-        { emoji: "🪵", className: "left-7 bottom-12 text-2xl" },
-        { emoji: "🍄", className: "right-8 bottom-28 text-2xl" },
+        { emoji: "🏕️", className: "left-5 top-6 text-4xl" },
+        { emoji: "🌲", className: "right-7 top-10 text-4xl" },
+        { emoji: "🪵", className: "left-12 bottom-8 text-3xl" },
+        { emoji: "🧭", className: "right-10 bottom-14 text-3xl" },
       ],
     };
-  }
-  if (grade <= 8) {
+  if (grade <= 8)
     return {
       wrap: "from-indigo-100 via-violet-50 to-fuchsia-100 dark:from-indigo-950 dark:via-violet-950/60 dark:to-slate-900",
-      trail: "bg-violet-400/70",
-      nodeUnlocked: "from-violet-500 to-fuchsia-500 shadow-violet-500/40",
-      nodeMastered: "from-amber-300 to-yellow-400",
-      nodeLocked: "bg-violet-900/10 dark:bg-white/5",
-      title: "text-violet-900 dark:text-violet-200",
-      sub: "text-violet-700/70 dark:text-violet-300/60",
+      trail: "bg-violet-400/70", nodeUnlocked: "from-violet-500 to-fuchsia-500 shadow-violet-500/40",
+      nodeMastered: "from-amber-300 to-yellow-400", nodeLocked: "bg-black/[.06] dark:bg-white/[.07]",
+      title: "text-violet-900 dark:text-violet-100", sub: "text-violet-700/70 dark:text-violet-300/60",
+      labelBg: "bg-white/75 dark:bg-black/35",
       deco: [
-        { emoji: "🏔️", className: "left-4 top-5 text-3xl" },
-        { emoji: "✨", className: "right-6 top-16 text-2xl" },
-        { emoji: "🧭", className: "left-7 bottom-14 text-2xl" },
+        { emoji: "🏔️", className: "left-6 top-6 text-4xl" },
+        { emoji: "✨", className: "right-10 top-12 text-3xl" },
+        { emoji: "🛰️", className: "right-7 bottom-12 text-3xl" },
       ],
     };
-  }
   return {
     wrap: "from-slate-800 via-slate-900 to-indigo-950",
-    trail: "bg-cyan-400/50",
-    nodeUnlocked: "from-cyan-500 to-blue-600 shadow-cyan-500/40",
-    nodeMastered: "from-amber-300 to-yellow-400",
-    nodeLocked: "bg-white/[.06]",
-    title: "text-cyan-100",
-    sub: "text-cyan-200/50",
+    trail: "bg-cyan-400/50", nodeUnlocked: "from-cyan-500 to-blue-600 shadow-cyan-500/40",
+    nodeMastered: "from-amber-300 to-yellow-400", nodeLocked: "bg-white/[.06]",
+    title: "text-cyan-100", sub: "text-cyan-200/50", labelBg: "bg-black/40",
     deco: [
-      { emoji: "🛰️", className: "left-4 top-5 text-3xl" },
-      { emoji: "✦", className: "right-8 top-14 text-xl text-cyan-200/70" },
-      { emoji: "✦", className: "left-10 bottom-24 text-sm text-cyan-200/50" },
-      { emoji: "🌌", className: "right-5 bottom-12 text-3xl" },
+      { emoji: "🛰️", className: "left-6 top-6 text-4xl" },
+      { emoji: "✦", className: "right-14 top-12 text-2xl text-cyan-200/70" },
+      { emoji: "✦", className: "left-1/4 bottom-16 text-base text-cyan-200/50" },
+      { emoji: "🌌", className: "right-8 bottom-10 text-4xl" },
     ],
   };
 }
 
-const SP = 124; // вертикальный шаг между узлами
-const TOP = 96; // отступ сверху (место для персонажа)
-const AMP = 30; // амплитуда змейки, %
+const NODE = 62;
+const ROWH = 158;
+const TOP = 84;
+const PADX = 44;
 
 interface Stop {
   topic: Topic;
-  cx: number; // % от ширины
-  cy: number; // px
+  x: number;
+  y: number;
   done: number;
   total: number;
   unlocked: boolean;
@@ -124,9 +115,25 @@ export function LearningPath({
 }) {
   const theme = themeFor(grade);
   const dark = grade >= 9;
+  const ref = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setWidth(el.clientWidth);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const cols = Math.max(2, Math.min(6, Math.floor(width / 210) || 2));
 
   const stops = useMemo<Stop[]>(() => {
-    let prevPassed = true; // первая тема всегда открыта
+    if (width === 0) return [];
+    const usable = width - 2 * PADX;
+    let prevPassed = true;
     return topics.map((topic, i) => {
       const avail = allTasks.filter(
         (t) => t.topic === topic.id && (premium || t.free),
@@ -137,35 +144,38 @@ export function LearningPath({
       const mastered = total > 0 && done === total;
       const unlocked = prevPassed;
       prevPassed = passed;
+      const row = Math.floor(i / cols);
+      const k = i % cols;
+      const col = row % 2 === 0 ? k : cols - 1 - k;
       return {
         topic,
-        cx: 50 + AMP * Math.sin(i * 0.9),
-        cy: TOP + i * SP,
+        x: PADX + (col + 0.5) * (usable / cols),
+        y: TOP + row * ROWH,
         done,
         total,
         unlocked,
         mastered,
       };
     });
-  }, [topics, allTasks, results, premium]);
+  }, [topics, allTasks, results, premium, width, cols]);
 
-  // Текущая остановка — первая открытая, но ещё не освоенная.
   const currentIdx = useMemo(() => {
     const idx = stops.findIndex((s) => s.unlocked && !s.mastered);
-    return idx === -1 ? stops.length - 1 : idx;
+    return idx === -1 ? Math.max(0, stops.length - 1) : idx;
   }, [stops]);
 
-  const height = TOP + (stops.length - 1) * SP + 140;
+  const rows = Math.max(1, Math.ceil(topics.length / cols));
+  const height = TOP + (rows - 1) * ROWH + 150;
 
   // Точки-«следы» между узлами.
   const dots: { x: number; y: number; on: boolean }[] = [];
   for (let i = 0; i < stops.length - 1; i++) {
     const a = stops[i];
     const b = stops[i + 1];
-    for (const t of [0.3, 0.5, 0.7]) {
+    for (const t of [0.28, 0.5, 0.72]) {
       dots.push({
-        x: a.cx + (b.cx - a.cx) * t,
-        y: a.cy + (b.cy - a.cy) * t,
+        x: a.x + (b.x - a.x) * t,
+        y: a.y + (b.y - a.y) * t,
         on: b.unlocked,
       });
     }
@@ -173,73 +183,70 @@ export function LearningPath({
 
   return (
     <div
-      className={`relative mx-auto w-full max-w-md overflow-hidden rounded-[2rem] bg-gradient-to-b ${theme.wrap} p-2 shadow-inner`}
-      style={{ height }}
+      ref={ref}
+      className={`relative w-full overflow-hidden rounded-[2rem] bg-gradient-to-br ${theme.wrap} shadow-inner`}
+      style={{ height: width === 0 ? 420 : height }}
     >
-      {/* Декор */}
       {theme.deco.map((d, i) => (
         <span key={i} className={`pointer-events-none absolute opacity-70 ${d.className}`}>
           {d.emoji}
         </span>
       ))}
 
-      {/* Следы тропы */}
       {dots.map((d, i) => (
         <span
           key={i}
-          className={`absolute h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full ${
+          className={`absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full ${
             d.on ? theme.trail : "bg-black/10 dark:bg-white/10"
           }`}
-          style={{ left: `${d.x}%`, top: d.y }}
+          style={{ left: d.x, top: d.y }}
         />
       ))}
 
-      {/* Узлы-остановки */}
       {stops.map((s, i) => {
-        const state = !s.unlocked ? "locked" : s.mastered ? "mastered" : "open";
+        const stateName = !s.unlocked ? "locked" : s.mastered ? "mastered" : "open";
         const isCurrent = i === currentIdx;
         return (
           <div
             key={s.topic.id}
             className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
-            style={{ left: `${s.cx}%`, top: s.cy, width: 132 }}
+            style={{ left: s.x, top: s.y, width: 140 }}
           >
-            {/* Персонаж над текущей остановкой */}
             {isCurrent && (
-              <div className="pointer-events-none absolute -top-[76px] left-1/2 -translate-x-1/2 scale-[.62]">
+              <div className="pointer-events-none absolute -top-[70px] left-1/2 -translate-x-1/2 scale-[.58]">
                 <Mascot helper={helper} mood="happy" size="md" />
               </div>
             )}
 
             <button
               type="button"
-              disabled={state === "locked"}
+              disabled={stateName === "locked"}
               onClick={() => onPick(s.topic.id)}
               aria-label={s.topic.title[locale]}
+              style={{ height: NODE, width: NODE }}
               className={
-                "relative flex h-16 w-16 items-center justify-center rounded-full border-4 text-2xl transition " +
-                (state === "locked"
+                "relative flex items-center justify-center rounded-full border-4 text-2xl transition " +
+                (stateName === "locked"
                   ? `${theme.nodeLocked} cursor-not-allowed border-white/40 text-black/25 dark:border-white/10 dark:text-white/25`
-                  : state === "mastered"
+                  : stateName === "mastered"
                     ? `bg-gradient-to-br ${theme.nodeMastered} border-white text-amber-900 shadow-lg`
                     : `bg-gradient-to-br ${theme.nodeUnlocked} border-white text-white shadow-lg hover:scale-110 ${
                         isCurrent ? "ring-4 ring-white/70 animate-pulse" : ""
                       }`)
               }
             >
-              {state === "locked" ? "🔒" : s.topic.icon}
-              {state === "mastered" && (
+              {stateName === "locked" ? "🔒" : s.topic.icon}
+              {stateName === "mastered" && (
                 <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs shadow">
                   ⭐
                 </span>
               )}
             </button>
 
-            {/* Подпись */}
             <div
-              className={`mt-1.5 max-w-[128px] truncate rounded-full px-2 py-0.5 text-center text-xs font-bold ${
-                dark ? "bg-black/30" : "bg-white/70"
-              } ${state === "locked" ? theme.sub : theme.title}`}
+              className={`mt-1.5 max-w-[136px] truncate rounded-full px-2 py-0.5 text-center text-xs font-bold ${theme.labelBg} ${
+                stateName === "locked" ? theme.sub : theme.title
+              }`}
             >
               {s.topic.title[locale]}
             </div>
