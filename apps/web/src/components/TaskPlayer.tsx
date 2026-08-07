@@ -8,7 +8,6 @@ import {
   getHelper,
   getTopics,
   GRADES,
-  subjectLabels,
   SUBJECTS,
   type Locale,
   type Task,
@@ -20,6 +19,7 @@ import { checkout, getEntitlement, isLoggedIn } from "@/lib/api";
 import { HelperPicker } from "./HelperPicker";
 import { Mascot } from "./Mascot";
 import { Confetti } from "./Confetti";
+import { LearningPath } from "./LearningPath";
 
 export interface PlayLabels {
   eyebrow: string;
@@ -330,10 +330,13 @@ export function TaskPlayer({
     );
   }
 
-  // 3. Карта тем
+  // 3. Карта тем — тропа занятий
   if (!topicId) {
+    const pathTopics = SUBJECTS.flatMap((subj) =>
+      getTopics({ subject: subj, grade }),
+    );
     return (
-      <div className="mx-auto w-full max-w-lg">
+      <div className="mx-auto w-full max-w-md">
         <button
           onClick={() => setGrade(null)}
           className="mb-2 text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
@@ -343,65 +346,23 @@ export function TaskPlayer({
         <h2 className="text-center font-display text-3xl font-extrabold">
           {gameLabels.topicsTitle}
         </h2>
-        <p className="mt-2 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-2 mb-4 text-center text-sm text-zinc-500 dark:text-zinc-400">
           {gameLabels.starHint}
         </p>
 
-        {SUBJECTS.map((subj) => {
-          const subjTopics = getTopics({ subject: subj, grade });
-          if (subjTopics.length === 0) return null;
-          return (
-            <div key={subj} className="mt-6">
-              <h3 className="mb-2 font-display text-sm font-bold uppercase tracking-wide text-zinc-400">
-                {subjectLabels[subj][locale]}
-              </h3>
-              <div className="space-y-2.5">
-                {subjTopics.map((topic) => {
-                  const avail = allTasks.filter(
-                    (t) => t.topic === topic.id && (premium || t.free),
-                  );
-                  const done = avail.filter((t) => t.id in results).length;
-                  const complete = avail.length > 0 && done === avail.length;
-                  const hasStar = avail.some((t) => t.star);
-                  return (
-                    <button
-                      key={topic.id}
-                      onClick={() => chooseTopic(topic.id)}
-                      className="flex w-full items-center gap-3 rounded-2xl border-2 border-black/[.06] bg-white p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/10 dark:bg-zinc-900"
-                    >
-                      <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-100 to-violet-100 text-2xl dark:from-indigo-500/15 dark:to-violet-500/15">
-                        {topic.icon}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="font-display font-bold">
-                          {topic.title[locale]}
-                        </div>
-                        <div className="mt-0.5 flex items-center gap-2 text-xs text-zinc-400">
-                          <span className="text-amber-500">
-                            {"●".repeat(topic.difficulty)}
-                            {"○".repeat(3 - topic.difficulty)}
-                          </span>
-                          <span>
-                            {done}/{avail.length}
-                          </span>
-                          {hasStar && (
-                            <span
-                              className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300"
-                              title={gameLabels.starHint}
-                            >
-                              ⭐
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      {complete && <span className="text-lg">✅</span>}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
+        {helper && (
+          <LearningPath
+            grade={grade}
+            topics={pathTopics}
+            allTasks={allTasks}
+            results={results}
+            premium={premium}
+            locale={locale}
+            helper={helper}
+            onPick={chooseTopic}
+            masteredLabel={locale === "ky" ? "Өтүлдү" : "Пройдено"}
+          />
+        )}
       </div>
     );
   }
