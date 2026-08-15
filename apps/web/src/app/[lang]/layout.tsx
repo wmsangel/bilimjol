@@ -2,9 +2,13 @@ import type { Metadata } from "next";
 import { Nunito, Comfortaa } from "next/font/google";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import "../globals.css";
 import { locales, isLocale } from "@/i18n/config";
 import { getDictionary } from "./dictionaries";
+
+// Google Analytics (gtag). ID можно переопределить через NEXT_PUBLIC_GA_ID.
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "G-DMSQV35M09";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -32,6 +36,9 @@ export async function generateMetadata({
   return {
     title: dict.meta.title,
     description: dict.meta.description,
+    verification: {
+      google: "1_chDy09cV4--r2aq31gDHSLHTx5nEOc1yntu3lKXJo",
+    },
   };
 }
 
@@ -50,7 +57,19 @@ export default async function RootLayout({
       lang={lang}
       className={`${nunito.variable} ${comfortaa.variable} h-full antialiased${dark ? " dark" : ""}`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`}
+        </Script>
+      </body>
     </html>
   );
 }
