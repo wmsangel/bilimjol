@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { SiteHeader } from "@/components/SiteHeader";
 import { SubscribePlans } from "@/components/SubscribePlans";
 import { getDictionary } from "../dictionaries";
 
@@ -33,15 +32,7 @@ export default async function SubscribePage({
 
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
-      <header className="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-5">
-        <Link href={`/${lang}`} className="font-display text-xl font-extrabold">
-          izn<span className="text-indigo-600 dark:text-indigo-400">.study</span>
-        </Link>
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
-          <LanguageSwitcher current={lang} />
-        </div>
-      </header>
+      <SiteHeader lang={lang} dict={dict} />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
         <div className="text-center">

@@ -8,7 +8,6 @@ import {
   getHelper,
   getTopics,
   GRADES,
-  SUBJECTS,
   type Locale,
   type Task,
 } from "@izn-study/shared";
@@ -16,10 +15,13 @@ import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
 import { loadHelperId, saveHelperId } from "@/lib/prefs";
 import { recordActivity } from "@/lib/stats";
 import { checkout, getEntitlement, isLoggedIn } from "@/lib/api";
+import { WARDROBE, type WardrobeItem } from "@/lib/characterArt";
+import { playSound } from "@/lib/sound";
 import { HelperPicker } from "./HelperPicker";
 import { Mascot } from "./Mascot";
 import { Confetti } from "./Confetti";
 import { LearningPath } from "./LearningPath";
+import { RewardModal } from "./RewardModal";
 
 export interface PlayLabels {
   eyebrow: string;
@@ -108,8 +110,10 @@ export function TaskPlayer({
   const [index, setIndex] = useState(0);
   const [finished, setFinished] = useState(false);
   const [status, setStatus] = useState<Status>("answering");
+  const [reward, setReward] = useState<WardrobeItem | null>(null);
 
   const [selected, setSelected] = useState<number | null>(null);
+  const [multiSelected, setMultiSelected] = useState<number[]>([]);
   const [numberValue, setNumberValue] = useState("");
   const [orderShuffled, setOrderShuffled] = useState<number[]>([]);
   const [orderPicked, setOrderPicked] = useState<number[]>([]);
@@ -155,6 +159,7 @@ export function TaskPlayer({
     if (!task) return;
     setStatus("answering");
     setSelected(null);
+    setMultiSelected([]);
     setNumberValue("");
     setOrderPicked([]);
     setPairs({});
@@ -189,6 +194,12 @@ export function TaskPlayer({
     }
   }
 
+  function closeLesson() {
+    setTopicId(null);
+    setFinished(false);
+    setStatus("answering");
+  }
+
   async function subscribe() {
     if (!isLoggedIn()) {
       router.push(loginHref);
@@ -217,6 +228,8 @@ export function TaskPlayer({
     switch (task.type) {
       case "single_choice":
         return selected;
+      case "multi_select":
+        return multiSelected;
       case "number_input":
         return numberValue.trim() === "" ? null : Number(numberValue);
       case "ordering":
@@ -231,6 +244,8 @@ export function TaskPlayer({
     switch (task.type) {
       case "single_choice":
         return selected !== null;
+      case "multi_select":
+        return multiSelected.length > 0;
       case "number_input":
         return numberValue.trim() !== "";
       case "ordering":
@@ -248,14 +263,33 @@ export function TaskPlayer({
     )
       return;
     const correct = checkAnswer(task, response);
+    const alreadyCorrect = results[task.id]?.correct === true;
     const nextResults = { ...results, [task.id]: { correct } };
     setResults(nextResults);
     saveProgress(nextResults);
     recordActivity();
     setStatus(correct ? "correct" : "wrong");
+
+    if (correct) {
+      playSound("correct");
+      // Новая звезда → проверяем, не открылась ли вещь гардероба.
+      if (!alreadyCorrect) {
+        const newEarned = earnedStars + 1;
+        const unlocked = WARDROBE.find(
+          (w) => w.unlockAt > 0 && w.unlockAt === newEarned,
+        );
+        if (unlocked) {
+          setReward(unlocked);
+          playSound("unlock");
+        }
+      }
+    } else {
+      playSound("wrong");
+    }
   }
 
   function next() {
+    playSound("click");
     if (index < activeTasks.length - 1) setIndex((i) => i + 1);
     else setFinished(true);
   }
@@ -330,13 +364,27 @@ export function TaskPlayer({
     );
   }
 
-  // 3. Карта тем — тропа занятий
-  if (!topicId) {
-    const pathTopics = SUBJECTS.flatMap((subj) =>
-      getTopics({ subject: subj, grade }),
-    );
-    return (
-      <div className="mx-auto w-full max-w-[1480px]">
+  // 3. Карта класса + (при выборе темы) вопрос поверх размытой карты
+  // Все темы класса по порядку (олимпиада — последней, order 90).
+  const pathTopics = getTopics({ grade });
+  const inLesson = topicId !== null;
+  const closeLabel = locale === "ky" ? "Картага" : "К карте";
+
+  const mood: "idle" | "happy" | "sad" =
+    status === "correct" ? "happy" : status === "wrong" ? "sad" : "idle";
+  const mascotMessage = answered
+    ? status === "correct"
+      ? labels.cheerCorrect
+      : labels.cheerWrong
+    : undefined;
+
+  return (
+    <div className="mx-auto w-full max-w-[1480px]">
+      {/* Карта класса. Во время занятия — размывается фоном. */}
+      <div
+        className={inLesson ? "pointer-events-none select-none blur-[7px] brightness-95" : ""}
+        aria-hidden={inLesson}
+      >
         <div className="mb-3 flex flex-col items-center gap-1">
           <button
             onClick={() => setGrade(null)}
@@ -366,103 +414,108 @@ export function TaskPlayer({
           />
         )}
       </div>
-    );
-  }
 
-  // 3. Финальный экран
-  if (finished) {
-    return (
-      <div className="relative mx-auto w-full max-w-lg text-center">
-        <Confetti />
-        <div className="mb-5 flex justify-center">
-          <Mascot helper={helper} mood="happy" size="lg" />
-        </div>
-        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-xl dark:border-white/10 dark:bg-zinc-900">
-          <h2 className="font-display text-3xl font-extrabold">
-            {labels.finishTitle}
-          </h2>
-          <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
-            {tpl(labels.finishScore, {
-              score: stars,
-              total: activeTasks.length,
-            })}
-          </p>
-          <p className="mt-3 text-3xl">{"⭐".repeat(Math.max(stars, 0)) || "—"}</p>
-
-          {lockedCount > 0 && (
-            <div className="mt-6 rounded-2xl border-2 border-indigo-200 bg-indigo-50 p-5 dark:border-indigo-500/30 dark:bg-indigo-500/10">
-              <p className="font-display font-bold text-indigo-700 dark:text-indigo-300">
-                {labels.lockedTitle}
-              </p>
-              <p className="mt-1 text-sm text-indigo-700/80 dark:text-indigo-300/80">
-                {tpl(labels.lockedText, { count: lockedCount })}
-              </p>
-              <button
-                onClick={subscribe}
-                disabled={subscribing}
-                className="mt-4 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:opacity-50"
-              >
-                {labels.subscribeCta}
-              </button>
-            </div>
-          )}
-
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <button onClick={restart} className={PRIMARY_BTN + " sm:w-auto sm:px-8"}>
-              {labels.restart}
-            </button>
-            <Link
-              href={homeHref}
-              className="rounded-full border-2 border-black/10 px-8 py-3.5 text-lg font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
-            >
-              {labels.backHome}
-            </Link>
+      {/* Оверлей поверх размытой карты: вопрос по центру или финал */}
+      {inLesson && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/45 backdrop-blur-[2px]">
+          {/* Помощник поверх размытия */}
+          <div className="pointer-events-none fixed bottom-4 left-4 z-10 hidden lg:block">
+            <Mascot helper={helper} mood={mood} message={mascotMessage} size="lg" />
           </div>
-        </div>
-      </div>
-    );
-  }
 
-  if (!task) return null;
+          <div className="flex min-h-full items-start justify-center p-4 sm:items-center">
+            <div className="w-full max-w-lg">
+              <div className="mb-3 flex justify-end">
+                <button
+                  onClick={closeLesson}
+                  className="rounded-full bg-white/90 px-4 py-1.5 text-sm font-bold text-zinc-700 shadow-md transition hover:bg-white dark:bg-zinc-800/90 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                >
+                  ✕ {closeLabel}
+                </button>
+              </div>
 
-  const mood: "idle" | "happy" | "sad" =
-    status === "correct" ? "happy" : status === "wrong" ? "sad" : "idle";
-  const mascotMessage = answered
-    ? status === "correct"
-      ? labels.cheerCorrect
-      : labels.cheerWrong
-    : undefined;
+              {finished ? (
+                <div className="relative text-center">
+                  <Confetti />
+                  <div className="mb-5 flex justify-center">
+                    <Mascot helper={helper} mood="happy" size="lg" />
+                  </div>
+                  <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-xl dark:border-white/10 dark:bg-zinc-900">
+                    <h2 className="font-display text-3xl font-extrabold">
+                      {labels.finishTitle}
+                    </h2>
+                    <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
+                      {tpl(labels.finishScore, {
+                        score: stars,
+                        total: activeTasks.length,
+                      })}
+                    </p>
+                    <p className="mt-3 text-3xl">
+                      {"⭐".repeat(Math.max(stars, 0)) || "—"}
+                    </p>
 
-  return (
-    <div className="relative mx-auto w-full max-w-lg">
-      {status === "correct" && <Confetti />}
+                    {lockedCount > 0 && (
+                      <div className="mt-6 rounded-2xl border-2 border-indigo-200 bg-indigo-50 p-5 dark:border-indigo-500/30 dark:bg-indigo-500/10">
+                        <p className="font-display font-bold text-indigo-700 dark:text-indigo-300">
+                          {labels.lockedTitle}
+                        </p>
+                        <p className="mt-1 text-sm text-indigo-700/80 dark:text-indigo-300/80">
+                          {tpl(labels.lockedText, { count: lockedCount })}
+                        </p>
+                        <button
+                          onClick={subscribe}
+                          disabled={subscribing}
+                          className="mt-4 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:opacity-50"
+                        >
+                          {labels.subscribeCta}
+                        </button>
+                      </div>
+                    )}
 
-      {/* Прогресс */}
-      <div className="mb-5">
-        <div className="mb-2 flex items-center justify-between text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-          <span>{labels.eyebrow}</span>
-          <span>
-            {tpl(labels.progress, {
-              current: index + 1,
-              total: activeTasks.length,
-            })}
-          </span>
-        </div>
-        <div className="h-3 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500"
-            style={{ width: `${((index + 1) / activeTasks.length) * 100}%` }}
-          />
-        </div>
-      </div>
+                    <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                      <button onClick={restart} className={PRIMARY_BTN + " sm:w-auto sm:px-8"}>
+                        {labels.restart}
+                      </button>
+                      <button
+                        onClick={closeLesson}
+                        className="rounded-full border-2 border-black/10 px-8 py-3.5 text-lg font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+                      >
+                        {closeLabel}
+                      </button>
+                      <Link
+                        href={homeHref}
+                        className="rounded-full px-6 py-3.5 text-lg font-bold text-zinc-500 transition hover:text-foreground dark:text-zinc-400"
+                      >
+                        {labels.backHome}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ) : task ? (
+                <div className="relative">
+                  {status === "correct" && <Confetti />}
 
-      {/* Помощник — в нижнем левом углу, не перекрывает вопросы */}
-      <div className="pointer-events-none fixed bottom-4 left-4 z-20 hidden lg:block">
-        <Mascot helper={helper} mood={mood} message={mascotMessage} size="lg" />
-      </div>
+                  {/* Прогресс */}
+                  <div className="mb-5">
+                    <div className="mb-2 flex items-center justify-between text-sm font-semibold text-white/80">
+                      <span>{labels.eyebrow}</span>
+                      <span>
+                        {tpl(labels.progress, {
+                          current: index + 1,
+                          total: activeTasks.length,
+                        })}
+                      </span>
+                    </div>
+                    <div className="h-3 overflow-hidden rounded-full bg-white/25">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-violet-400 transition-all duration-500"
+                        style={{ width: `${((index + 1) / activeTasks.length) * 100}%` }}
+                      />
+                    </div>
+                  </div>
 
-      {/* Карточка задания */}
-      <div className="rounded-[2rem] border border-black/[.06] bg-white p-6 shadow-xl sm:p-8 dark:border-white/10 dark:bg-zinc-900">
+                  {/* Карточка задания */}
+                  <div className="rounded-[2rem] border border-black/[.06] bg-white p-6 shadow-2xl sm:p-8 dark:border-white/10 dark:bg-zinc-900">
         <div className="mb-4 flex items-center justify-between">
           {task.star ? (
             <span className="rounded-full border-2 border-amber-300 bg-amber-50 px-3 py-1 text-xs font-extrabold text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300">
@@ -514,6 +567,59 @@ export function TaskPlayer({
                     className={cls}
                   >
                     {opt[locale]}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {task.type === "multi_select" && (
+            <div className="space-y-3">
+              <p className="mb-1 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+                {locale === "ky"
+                  ? "Бардык туура жоопторду белгиле"
+                  : "Отметь все верные ответы"}
+              </p>
+              {task.options.map((opt, i) => {
+                const isChecked = multiSelected.includes(i);
+                const isCorrect = task.correctIndexes.includes(i);
+                let cls =
+                  "flex w-full items-center gap-3 rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
+                if (!answered) {
+                  cls += isChecked
+                    ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                    : "border-black/10 hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15";
+                } else if (isCorrect) {
+                  cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
+                } else if (isChecked) {
+                  cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
+                } else {
+                  cls += "border-black/10 opacity-60 dark:border-white/15";
+                }
+                const box = answered
+                  ? isCorrect
+                    ? "✅"
+                    : isChecked
+                      ? "❌"
+                      : "⬜"
+                  : isChecked
+                    ? "☑️"
+                    : "⬜";
+                return (
+                  <button
+                    key={i}
+                    disabled={answered}
+                    onClick={() =>
+                      setMultiSelected((prev) =>
+                        prev.includes(i)
+                          ? prev.filter((x) => x !== i)
+                          : [...prev, i],
+                      )
+                    }
+                    className={cls}
+                  >
+                    <span className="text-xl">{box}</span>
+                    <span>{opt[locale]}</span>
                   </button>
                 );
               })}
@@ -687,7 +793,21 @@ export function TaskPlayer({
             </button>
           )}
         </div>
-      </div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {reward && (
+        <RewardModal
+          item={reward}
+          locale={locale}
+          onClose={() => setReward(null)}
+        />
+      )}
     </div>
   );
 }

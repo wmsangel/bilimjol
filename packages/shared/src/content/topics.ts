@@ -1,4 +1,5 @@
 import type { Difficulty, Grade, LocalizedText, Subject } from "./types";
+import { olympiadTopics } from "./olympiad";
 
 // Тема — курс из нескольких заданий внутри предмета и класса.
 export interface Topic {
@@ -27,6 +28,8 @@ export const topics: Topic[] = [
     title: { ru: "Что дальше?", ky: "Андан ары эмне?" } },
   { id: "pre-big", subject: "logic", grade: 0, icon: "📏", difficulty: 1, order: 7,
     title: { ru: "Большой и маленький", ky: "Чоң жана кичине" } },
+  { id: "pre-world", subject: "world", grade: 0, icon: "🌍", difficulty: 1, order: 8,
+    title: { ru: "Мир вокруг", ky: "Айлана дүйнө" } },
 
   // ── 1 класс ───────────────────────────────────────────
   { id: "log-odd", subject: "logic", grade: 1, icon: "🍎", difficulty: 1, order: 1,
@@ -193,6 +196,9 @@ export const topics: Topic[] = [
     title: { ru: "Объёмы тел", ky: "Телолордун көлөмү" } },
   { id: "read11", subject: "reading", grade: 11, icon: "📖", difficulty: 3, order: 5,
     title: { ru: "Язык и текст", ky: "Тил жана текст" } },
+
+  // ── Олимпиада (для каждого класса, последней на карте) ──
+  ...olympiadTopics,
 ];
 
 /** Доступные классы (по имеющемуся контенту), по возрастанию. */

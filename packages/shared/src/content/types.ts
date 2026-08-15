@@ -2,7 +2,7 @@
 
 export type Locale = "ru" | "ky";
 
-export type Subject = "logic" | "math" | "reading" | "world";
+export type Subject = "logic" | "math" | "reading" | "world" | "olympiad";
 
 /** Уровень сложности: 1 — лёгкий, 2 — средний, 3 — сложный. */
 export type Difficulty = 1 | 2 | 3;
@@ -39,6 +39,14 @@ export interface SingleChoiceTask extends TaskBase {
   correctIndex: number;
 }
 
+/** Выбор нескольких верных вариантов («отметь все подходящие»). */
+export interface MultiSelectTask extends TaskBase {
+  type: "multi_select";
+  options: LocalizedText[];
+  /** Индексы всех правильных вариантов. */
+  correctIndexes: number[];
+}
+
 /** Ввод числового ответа. */
 export interface NumberInputTask extends TaskBase {
   type: "number_input";
@@ -60,6 +68,7 @@ export interface MatchPairsTask extends TaskBase {
 
 export type Task =
   | SingleChoiceTask
+  | MultiSelectTask
   | NumberInputTask
   | OrderingTask
   | MatchPairsTask;
@@ -73,6 +82,7 @@ export const subjectLabels: Record<Subject, LocalizedText> = {
   math: { ru: "Математика", ky: "Математика" },
   reading: { ru: "Чтение", ky: "Окуу" },
   world: { ru: "Окружающий мир", ky: "Айлана-чөйрө" },
+  olympiad: { ru: "Олимпиада", ky: "Олимпиада" },
 };
 
 /**
@@ -88,6 +98,12 @@ export function checkAnswer(task: Task, response: number | number[]): boolean {
   switch (task.type) {
     case "single_choice":
       return response === task.correctIndex;
+    case "multi_select":
+      return (
+        Array.isArray(response) &&
+        response.length === task.correctIndexes.length &&
+        task.correctIndexes.every((i) => response.includes(i))
+      );
     case "number_input":
       return response === task.answer;
     case "ordering":

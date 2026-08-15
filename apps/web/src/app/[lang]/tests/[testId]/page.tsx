@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTest, tests } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { SiteHeader } from "@/components/SiteHeader";
 import { TestPlayer } from "@/components/TestPlayer";
 import { getDictionary } from "../../dictionaries";
 
@@ -35,20 +34,7 @@ export default async function TestPage({
 
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
-      <header className="mx-auto flex w-full max-w-4xl items-center justify-between px-6 py-5">
-        <Link href={`/${lang}`} className="font-display text-xl font-extrabold">
-          izn<span className="text-indigo-600 dark:text-indigo-400">.study</span>
-        </Link>
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
-          <Link
-            href={`/${lang}/tests`}
-            className="text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
-          >
-            {dict.tests.back}
-          </Link>
-        </div>
-      </header>
+      <SiteHeader lang={lang} dict={dict} />
 
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center px-6 py-8">
         <h1 className="mb-6 font-display text-2xl font-extrabold tracking-tight">

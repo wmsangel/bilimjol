@@ -3,8 +3,7 @@ import { notFound } from "next/navigation";
 import { helpers } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
 import { helperGradient } from "@/lib/helperTheme";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { SiteHeader } from "@/components/SiteHeader";
 import {
   CharactersShowcase,
   DashboardPreview,
@@ -23,50 +22,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
-      {/* Шапка */}
-      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-5">
-        <span className="font-display text-xl font-extrabold tracking-tight">
-          izn<span className="text-indigo-600 dark:text-indigo-400">.study</span>
-        </span>
-        <div className="flex items-center gap-2 sm:gap-5">
-          <nav className="hidden items-center gap-5 sm:flex">
-            <Link
-              href={`/${lang}/tests`}
-              className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
-            >
-              {dict.tests.nav}
-            </Link>
-            <Link
-              href={`/${lang}/subscribe`}
-              className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
-            >
-              {dict.subscribe.nav}
-            </Link>
-            <Link
-              href={`/${lang}/me`}
-              className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
-            >
-              {dict.nav.cabinet}
-            </Link>
-            <Link
-              href={`/${lang}/login`}
-              className="text-sm font-semibold text-zinc-600 hover:text-foreground dark:text-zinc-300"
-            >
-              {dict.auth.loginCta}
-            </Link>
-          </nav>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <LanguageSwitcher current={lang} />
-          </div>
-          <Link
-            href={`/${lang}/play`}
-            className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-4 py-2 text-sm font-bold text-white shadow-md shadow-indigo-500/30 transition hover:brightness-110"
-          >
-            {dict.nav.start}
-          </Link>
-        </div>
-      </header>
+      <SiteHeader lang={lang} dict={dict} />
 
       <main className="w-full flex-1">
         {/* Герой с декоративными пятнами */}
