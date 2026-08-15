@@ -27,6 +27,7 @@ export interface Helper {
 export const helpers: Helper[] = [
   { id: "fox", emoji: "🦊", name: { ru: "Лисёнок", ky: "Түлкү" }, color: "orange", ear: "pointy" },
   { id: "cat", emoji: "🐱", name: { ru: "Котик", ky: "Мышык" }, color: "pink", ear: "pointy" },
+  { id: "snowleopard", emoji: "🐆", name: { ru: "Ирбис", ky: "Илбирс" }, color: "slate", ear: "round" },
   { id: "dog", emoji: "🐕", name: { ru: "Лабрадор", ky: "Лабрадор" }, color: "yellow", ear: "round" },
   { id: "bear", emoji: "🐻", name: { ru: "Мишка", ky: "Аюу" }, color: "amber", ear: "round" },
   { id: "panda", emoji: "🐼", name: { ru: "Панда", ky: "Панда" }, color: "slate", ear: "round" },

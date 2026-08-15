@@ -19,6 +19,8 @@ interface Spec {
   ears?: PartFn;
   tail?: PartFn;
   face?: PartFn;
+  /** Пятна/розетки на открытом торсе (прячутся под одеждой). */
+  bodyMarks?: () => string;
   eyes: string;
   mouth?: () => string;
   fit?: Record<string, string>;
@@ -189,6 +191,7 @@ function bodyOf(S: Spec, outfit: Outfit): string {
     g.push(`<path d="M88 148 q22 20 44 0" fill="none" stroke="${sd}" stroke-width="2.5" opacity=".55"/>`);
   } else {
     g.push(`<ellipse cx="110" cy="162" rx="54" ry="48" fill="${S.bodyColor ?? f}"/><ellipse cx="110" cy="172" rx="33" ry="32" fill="${b}"/>`);
+    if (S.bodyMarks) g.push(S.bodyMarks());
     if (S.type === "robot") g.push(`<rect x="92" y="150" width="36" height="30" rx="7" fill="${sh(f, -18)}"/><circle cx="110" cy="165" r="7" fill="#26E0F0"/>`);
     if (S.type === "monster") g.push(`<circle cx="92" cy="176" r="5" fill="${sh(f, -30)}"/><circle cx="128" cy="182" r="4" fill="${sh(f, -30)}"/><circle cx="118" cy="160" r="3.5" fill="${sh(f, -30)}"/>`);
   }
@@ -239,9 +242,47 @@ function headOf(S: Spec): string {
   return `<circle cx="110" cy="98" r="62" fill="${f}"/>`;
 }
 
+// ── Ирбис (снежный барс) — символ Кыргызстана ──
+const IRBIS_DARK = "#3C4250";
+function irbisRing(x: number, y: number, r: number): string {
+  return `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${IRBIS_DARK}" stroke-width="2.5"/>`;
+}
+function irbisEars(f: string): string {
+  return `<g class="earL"><path d="M84 56 Q66 12 54 44 Q56 62 86 60 Z" fill="${f}"/><path d="M82 54 Q70 30 62 48 Q64 58 80 56 Z" fill="${IRBIS_DARK}"/></g><g class="earR"><path d="M136 56 Q154 12 166 44 Q164 62 134 60 Z" fill="${f}"/><path d="M138 54 Q150 30 158 48 Q156 58 140 56 Z" fill="${IRBIS_DARK}"/></g>`;
+}
+function irbisTail(f: string): string {
+  return (
+    `<path d="M152 184 C216 192 228 114 192 98" fill="none" stroke="${f}" stroke-width="22" stroke-linecap="round"/>` +
+    `<g fill="none" stroke="${IRBIS_DARK}" stroke-width="2.8" opacity=".75"><circle cx="178" cy="182" r="6"/><circle cx="208" cy="150" r="6"/><circle cx="206" cy="120" r="5.5"/></g>` +
+    `<circle cx="192" cy="98" r="12" fill="${IRBIS_DARK}"/><circle cx="188" cy="94" r="3" fill="rgba(255,255,255,.28)"/>`
+  );
+}
+function irbisFace(f: string, b: string): string {
+  const ns = "#8A93A6";
+  const spots =
+    irbisRing(95, 64, 5) + irbisRing(112, 57, 5) + irbisRing(128, 64, 5) +
+    irbisRing(110, 78, 4.5) + irbisRing(70, 84, 4.5) + irbisRing(150, 84, 4.5) +
+    irbisRing(58, 106, 4.5) + irbisRing(162, 106, 4.5);
+  const muzzle =
+    `<ellipse cx="110" cy="122" rx="22" ry="15" fill="${b}"/>` +
+    `<path d="M103 116 h14 l-7 7 z" fill="${ns}"/><path d="M110 123 v4" stroke="${EYE}" stroke-width="2" stroke-linecap="round"/>` +
+    `<g stroke="${sh(f, -46)}" stroke-width="2" stroke-linecap="round" opacity=".75"><line x1="72" y1="120" x2="44" y2="114"/><line x1="72" y1="126" x2="46" y2="128"/><line x1="148" y1="120" x2="176" y2="114"/><line x1="148" y1="126" x2="174" y2="128"/></g>`;
+  return spots + muzzle;
+}
+function irbisBodyMarks(): string {
+  return (
+    `<g opacity=".85">` +
+    irbisRing(66, 160, 5) + irbisRing(154, 160, 5) +
+    irbisRing(72, 184, 4.5) + irbisRing(148, 184, 4.5) +
+    irbisRing(94, 136, 4.5) + irbisRing(126, 136, 4.5) +
+    `</g>`
+  );
+}
+
 const SPECS: Record<string, Spec> = {
   fox: { name: "Лисёнок", type: "animal", fur: "#F5943C", belly: "#FFF1DE", ears: foxEars, tail: foxTail, face: foxFace, eyes: eye(84, false) + eye(136, false), mouth: () => smile("M96 128 Q110 140 124 128") },
   cat: { name: "Котик", type: "animal", fur: "#9AA6B8", belly: "#EDF0F5", ears: catEars, tail: catTail, face: catFace, eyes: eye(84, true) + eye(136, true), mouth: () => smile("M96 128 Q104 134 110 128 Q116 134 124 128") },
+  snowleopard: { name: "Ирбис", type: "animal", fur: "#CBD4E2", belly: "#F4F7FC", darkAmt: -30, ears: irbisEars, tail: irbisTail, face: irbisFace, bodyMarks: irbisBodyMarks, eyes: eye(84, true) + eye(136, true), mouth: () => smile("M96 130 Q104 136 110 130 Q116 136 124 130") },
   dog: { name: "Лабрадор", type: "animal", fur: "#E6C486", belly: "#F7EACB", darkAmt: -30, ears: dogEars, tail: dogTail, face: dogFace, eyes: eye(84, false) + eye(136, false), mouth: () => smile("M96 128 Q110 140 124 128") + '<path d="M105 134 q5 9 10 0 z" fill="#FF8FA3"/>' },
   bear: { name: "Мишка", type: "animal", fur: "#C79668", belly: "#F0E1CB", ears: roundEars("#E8CBA6"), tail: nub("#B7875A"), face: bearFace, eyes: eye(86, false) + eye(134, false), mouth: () => smile("M100 132 Q110 140 120 132") },
   panda: { name: "Панда", type: "animal", fur: "#F4F4F7", belly: "#FFFFFF", darkAmt: -12, ears: pandaEars, tail: nub("#2C2C34"), face: pandaFace, eyes: eye(84, true) + eye(136, true), mouth: () => smile("M100 130 Q110 138 120 130") },
@@ -263,7 +304,7 @@ const SPECS: Record<string, Spec> = {
   monster: { name: "Монстрик", type: "monster", fur: "#A855F7", belly: "#E7CCFB", darkAmt: -24, ears: horns, tail: nub("#8B3ED6"), face: monsterFace, eyes: eye(84, true) + eye(136, true) },
 };
 
-const ORDER = ["fox", "cat", "dog", "bear", "panda", "bunny", "frog", "blocky", "steve", "robot", "monster"];
+const ORDER = ["fox", "cat", "snowleopard", "dog", "bear", "panda", "bunny", "frog", "blocky", "steve", "robot", "monster"];
 
 function build(id: string, outfit: Outfit): string {
   const S = SPECS[id] || SPECS.fox;
