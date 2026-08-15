@@ -9,7 +9,8 @@
     "prisma:migrate": "prisma migrate dev",
     "make-admin": "node scripts/make-admin.js",
     "dev": "nest start --watch",
-    "build": "nest build",
+    "postinstall": "prisma generate",
+    "build": "prisma generate && nest build",
     "start": "node dist/main.js",
     "typecheck": "tsc --noEmit"
   },
