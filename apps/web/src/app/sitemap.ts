@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { articles } from "@izn-study/shared";
 import { locales } from "@/i18n/config";
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://izn.study";
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const publicRoutes = ["", "/play", "/articles"];

@@ -14,7 +14,7 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const dict = await getDictionary(lang);
-  return { title: `${dict.tests.title} — izn.study`, description: dict.tests.subtitle };
+  return { title: `${dict.tests.title} — Bilimjol`, description: dict.tests.subtitle };
 }
 
 export default async function TestsPage({
@@ -60,7 +60,7 @@ export default async function TestsPage({
       </main>
 
       <footer className="mx-auto w-full max-w-4xl px-6 py-10 text-sm text-zinc-500">
-        © {new Date().getFullYear()} izn.study
+        © {new Date().getFullYear()} Bilimjol
       </footer>
     </div>
   );

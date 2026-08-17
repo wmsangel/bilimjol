@@ -15,7 +15,7 @@ export async function generateMetadata({
   if (!isLocale(lang)) return {};
   const dict = await getDictionary(lang);
   return {
-    title: `${dict.subscribe.title} — izn.study`,
+    title: `${dict.subscribe.title} — Bilimjol`,
     description: dict.subscribe.subtitle,
   };
 }
@@ -65,7 +65,7 @@ export default async function SubscribePage({
       </main>
 
       <footer className="mx-auto w-full max-w-3xl px-6 py-10 text-sm text-zinc-500">
-        © {new Date().getFullYear()} izn.study
+        © {new Date().getFullYear()} Bilimjol
       </footer>
     </div>
   );

@@ -34,7 +34,7 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
             href={`/${lang}`}
             className="font-display text-xl font-extrabold tracking-tight"
           >
-            izn<span className="text-indigo-600 dark:text-indigo-400">.study</span>
+            Bilim<span className="text-indigo-600 dark:text-indigo-400">jol</span>
           </Link>
         </div>
 

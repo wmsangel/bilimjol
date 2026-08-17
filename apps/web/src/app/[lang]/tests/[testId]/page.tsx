@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { lang, testId } = await params;
   const test = getTest(testId);
   if (!isLocale(lang) || !test) return {};
-  return { title: `${test.title[lang]} — izn.study` };
+  return { title: `${test.title[lang]} — Bilimjol` };
 }
 
 export default async function TestPage({

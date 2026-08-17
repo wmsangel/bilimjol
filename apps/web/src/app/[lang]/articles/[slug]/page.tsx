@@ -19,7 +19,7 @@ export async function generateMetadata({
   const article = getArticle(slug);
   if (!isLocale(lang) || !article) return {};
   return {
-    title: `${article.title[lang]} — izn.study`,
+    title: `${article.title[lang]} — Bilimjol`,
     description: article.excerpt[lang],
   };
 }
@@ -87,7 +87,7 @@ export default async function ArticlePage({
       </main>
 
       <footer className="mx-auto w-full max-w-2xl px-6 py-10 text-sm text-zinc-500">
-        © {new Date().getFullYear()} izn.study
+        © {new Date().getFullYear()} Bilimjol
       </footer>
     </div>
   );

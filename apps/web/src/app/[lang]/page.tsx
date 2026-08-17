@@ -274,7 +274,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         </Link>
         <p className="mt-3">{dict.footer.tagline}</p>
         <p className="mt-1">
-          © {new Date().getFullYear()} izn.study — {dict.footer.rights}
+          © {new Date().getFullYear()} Bilimjol — {dict.footer.rights}
         </p>
       </footer>
     </div>
