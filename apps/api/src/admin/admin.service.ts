@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import * as bcrypt from "bcryptjs";
 import { randomBytes } from "node:crypto";
 import { PrismaService } from "../prisma/prisma.service";
@@ -83,6 +87,16 @@ export class AdminService {
       },
     });
     return { premium: true, until };
+  }
+
+  /** Удалить пользователя (каскадно: дети, прогресс, статистика, подписки, токены). */
+  async deleteUser(userId: string, actingUserId: string) {
+    await this.assertUser(userId);
+    if (userId === actingUserId) {
+      throw new BadRequestException("Нельзя удалить собственный аккаунт");
+    }
+    await this.prisma.user.delete({ where: { id: userId } });
+    return { deleted: true };
   }
 
   /** Сбросить пароль: задать новый (или сгенерировать) и отозвать сессии. */

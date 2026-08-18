@@ -262,6 +262,12 @@ export function adminResetPassword(userId: string) {
   );
 }
 
+export function adminDeleteUser(userId: string) {
+  return request<{ deleted: boolean }>(`/admin/users/${userId}`, {
+    method: "DELETE",
+  });
+}
+
 export function syncState(childId: string, snapshot: SyncSnapshot) {
   return request<ServerState>(`/children/${childId}/sync`, {
     method: "POST",

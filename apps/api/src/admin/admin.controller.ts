@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -8,6 +9,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ZodValidationPipe } from "../common/zod-validation.pipe";
+import { CurrentUser } from "../auth/current-user.decorator";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { AdminGuard } from "./admin.guard";
 import { AdminService } from "./admin.service";
@@ -49,5 +51,10 @@ export class AdminController {
     @Body(new ZodValidationPipe(resetPasswordSchema)) dto: ResetPasswordDto,
   ) {
     return this.admin.resetPassword(id, dto.password);
+  }
+
+  @Delete("users/:id")
+  deleteUser(@Param("id") id: string, @CurrentUser() actingUserId: string) {
+    return this.admin.deleteUser(id, actingUserId);
   }
 }

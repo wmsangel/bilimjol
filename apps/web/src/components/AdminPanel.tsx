@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  adminDeleteUser,
   adminGrantPremium,
   adminResetPassword,
   ApiError,
@@ -29,8 +30,11 @@ export interface AdminLabels {
   colActions: string;
   grant: string;
   reset: string;
+  delete: string;
   confirmGrant: string;
   confirmReset: string;
+  confirmDelete: string;
+  deleteError: string;
   granted: string;
   newPasswordLabel: string;
   dismiss: string;
@@ -73,6 +77,19 @@ export function AdminPanel({
       setNotice(labels.granted);
     } catch {
       // no-op
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function onDelete(u: AdminUser) {
+    if (!window.confirm(tpl(labels.confirmDelete, { email: u.email }))) return;
+    setBusyId(u.id);
+    try {
+      await adminDeleteUser(u.id);
+      setUsers((prev) => prev.filter((x) => x.id !== u.id));
+    } catch {
+      setNotice(labels.deleteError);
     } finally {
       setBusyId(null);
     }
@@ -248,6 +265,13 @@ export function AdminPanel({
                       className="rounded-full bg-black/[.05] px-2.5 py-1 text-xs font-bold text-zinc-600 transition hover:bg-black/10 disabled:opacity-40 dark:bg-white/10 dark:text-zinc-300"
                     >
                       {labels.reset}
+                    </button>
+                    <button
+                      onClick={() => onDelete(u)}
+                      disabled={busyId === u.id}
+                      className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-bold text-red-700 transition hover:bg-red-200 disabled:opacity-40 dark:bg-red-500/15 dark:text-red-300"
+                    >
+                      {labels.delete}
                     </button>
                   </div>
                 </td>
