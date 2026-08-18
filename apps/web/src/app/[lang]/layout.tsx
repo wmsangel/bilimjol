@@ -9,6 +9,8 @@ import { getDictionary } from "./dictionaries";
 
 // Google Analytics (gtag). ID можно переопределить через NEXT_PUBLIC_GA_ID.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "G-DMSQV35M09";
+// Яндекс.Метрика. ID можно переопределить через NEXT_PUBLIC_YM_ID.
+const YM_ID = process.env.NEXT_PUBLIC_YM_ID ?? "111711927";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -38,6 +40,7 @@ export async function generateMetadata({
     description: dict.meta.description,
     verification: {
       google: "1_chDy09cV4--r2aq31gDHSLHTx5nEOc1yntu3lKXJo",
+      yandex: "081d5db07ae6a1f2",
     },
   };
 }
@@ -69,6 +72,19 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', '${GA_ID}');`}
         </Script>
+        {/* Яндекс.Метрика */}
+        <Script id="yandex-metrika" strategy="afterInteractive">
+          {`(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<e.scripts.length;j++){if(e.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}','ym');ym(${YM_ID},'init',{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",accurateTrackBounce:true,trackLinks:true});`}
+        </Script>
+        <noscript>
+          <div>
+            <img
+              src={`https://mc.yandex.ru/watch/${YM_ID}`}
+              style={{ position: "absolute", left: "-9999px" }}
+              alt=""
+            />
+          </div>
+        </noscript>
       </body>
     </html>
   );
