@@ -1,8 +1,20 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { tasks } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
+import { localizedAlternates } from "@/lib/seo";
 import { getDictionary } from "../dictionaries";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLocale(lang)) return {};
+  return { alternates: localizedAlternates(lang, "/play") };
+}
 import { TaskPlayer } from "@/components/TaskPlayer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SoundToggle } from "@/components/SoundToggle";

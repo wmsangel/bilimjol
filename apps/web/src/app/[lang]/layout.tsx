@@ -36,6 +36,9 @@ export async function generateMetadata({
   if (!isLocale(lang)) return {};
   const dict = await getDictionary(lang);
   return {
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com",
+    ),
     title: dict.meta.title,
     description: dict.meta.description,
     verification: {

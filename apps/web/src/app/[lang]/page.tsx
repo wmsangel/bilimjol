@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { helpers } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
 import { helperGradient } from "@/lib/helperTheme";
+import { localizedAlternates } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
   CharactersShowcase,
@@ -13,6 +15,14 @@ import { getDictionary } from "./dictionaries";
 
 const FEATURE_EMOJI = ["🌍", "🎯", "🦊", "💡"];
 const STEP_EMOJI = ["🎨", "✏️", "🏆"];
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[lang]">): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLocale(lang)) return {};
+  return { alternates: localizedAlternates(lang, "") };
+}
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
