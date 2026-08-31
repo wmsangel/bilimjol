@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 import { articles, getArticle } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { JsonLd } from "@/components/JsonLd";
 import { getDictionary } from "../../dictionaries";
+
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com";
 
 export function generateStaticParams() {
   return articles.map((a) => ({ slug: a.slug }));
@@ -34,9 +38,25 @@ export default async function ArticlePage({
   const article = getArticle(slug);
   if (!article) notFound();
   const dict = await getDictionary(lang);
+  const related = articles.filter((a) => a.slug !== slug).slice(0, 3);
+  const url = `${SITE}/${lang}/articles/${slug}`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title[lang],
+    description: article.excerpt[lang],
+    inLanguage: lang,
+    datePublished: article.date,
+    dateModified: article.date,
+    mainEntityOfPage: url,
+    author: { "@type": "Organization", name: "Bilimjol", url: SITE },
+    publisher: { "@type": "Organization", name: "Bilimjol", url: SITE },
+  };
 
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
+      <JsonLd data={jsonLd} />
       <SiteHeader lang={lang} dict={dict} />
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
@@ -84,11 +104,32 @@ export default async function ArticlePage({
             {dict.cta.button}
           </Link>
         </div>
+
+        {related.length > 0 && (
+          <section className="mt-12">
+            <h2 className="font-display text-lg font-bold text-zinc-500 dark:text-zinc-400">
+              {lang === "ky" ? "Дагы окуңуз" : "Читайте также"}
+            </h2>
+            <ul className="mt-4 space-y-3">
+              {related.map((a) => (
+                <li key={a.slug}>
+                  <Link
+                    href={`/${lang}/articles/${a.slug}`}
+                    className="group flex items-center gap-3 rounded-2xl border border-black/[.06] bg-white p-4 transition hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/10 dark:bg-zinc-900"
+                  >
+                    <span className="text-2xl">{a.emoji}</span>
+                    <span className="font-display font-bold transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                      {a.title[lang]}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </main>
 
-      <footer className="mx-auto w-full max-w-2xl px-6 py-10 text-sm text-zinc-500">
-        © {new Date().getFullYear()} Bilimjol
-      </footer>
+      <SiteFooter lang={lang} />
     </div>
   );
 }

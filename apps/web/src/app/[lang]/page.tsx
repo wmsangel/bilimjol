@@ -7,6 +7,9 @@ import { helperGradient } from "@/lib/helperTheme";
 import { localizedAlternates } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { JsonLd } from "@/components/JsonLd";
+
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com";
 import {
   CharactersShowcase,
   DashboardPreview,
@@ -31,8 +34,19 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
   const dict = await getDictionary(lang);
 
+  const orgLd = {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    name: "Bilimjol",
+    url: SITE,
+    description: dict.meta.description,
+    inLanguage: ["ru", "ky"],
+    areaServed: "KG",
+  };
+
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
+      <JsonLd data={orgLd} />
       <SiteHeader lang={lang} dict={dict} />
 
       <main className="w-full flex-1">
