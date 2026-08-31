@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { legalDocs, type Locale } from "@izn-study/shared";
 
-const CONTACT = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@bilimjol.com";
+const CONTACT = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "wmsangel@gmail.com";
 
 /** Подставляет реальный контактный email вместо токена EMAIL в тексте. */
 function withEmail(text: string): ReactNode {

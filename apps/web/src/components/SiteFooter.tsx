@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Locale } from "@izn-study/shared";
 
-const CONTACT = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@bilimjol.com";
+const CONTACT = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "wmsangel@gmail.com";
 
 const T = {
   ru: {
