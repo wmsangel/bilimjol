@@ -6,6 +6,7 @@ import { isLocale } from "@/i18n/config";
 import { helperGradient } from "@/lib/helperTheme";
 import { localizedAlternates } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import {
   CharactersShowcase,
   DashboardPreview,
@@ -275,18 +276,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       </main>
 
       {/* Подвал */}
-      <footer className="mx-auto w-full max-w-5xl px-6 py-10 text-sm text-zinc-500 dark:text-zinc-500">
-        <Link
-          href={`/${lang}/articles`}
-          className="font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
-        >
-          {dict.articles.nav}
-        </Link>
-        <p className="mt-3">{dict.footer.tagline}</p>
-        <p className="mt-1">
-          © {new Date().getFullYear()} Bilimjol — {dict.footer.rights}
-        </p>
-      </footer>
+      <SiteFooter lang={lang} />
     </div>
   );
 }
