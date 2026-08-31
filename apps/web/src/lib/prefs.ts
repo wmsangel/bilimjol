@@ -28,3 +28,25 @@ export function removeHelperId(): void {
     // игнорируем
   }
 }
+
+// Последний выбранный класс — для быстрого «Продолжить».
+const GRADE_KEY = "izn.study:grade:v1";
+
+export function loadLastGrade(): number | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const v = window.localStorage.getItem(GRADE_KEY);
+    return v === null || v === "" ? null : Number(v);
+  } catch {
+    return null;
+  }
+}
+
+export function saveLastGrade(g: number): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(GRADE_KEY, String(g));
+  } catch {
+    // игнорируем
+  }
+}

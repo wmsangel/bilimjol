@@ -12,7 +12,12 @@ import {
   type Task,
 } from "@izn-study/shared";
 import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
-import { loadHelperId, saveHelperId } from "@/lib/prefs";
+import {
+  loadHelperId,
+  saveHelperId,
+  loadLastGrade,
+  saveLastGrade,
+} from "@/lib/prefs";
 import { recordActivity } from "@/lib/stats";
 import { checkout, getEntitlement, isLoggedIn } from "@/lib/api";
 import { WARDROBE, type WardrobeItem } from "@/lib/characterArt";
@@ -105,6 +110,7 @@ export function TaskPlayer({
   const [helperId, setHelperId] = useState<string | null>(null);
   const [pendingHelper, setPendingHelper] = useState<string | null>(null);
   const [grade, setGrade] = useState<number | null>(null);
+  const [lastGrade, setLastGrade] = useState<number | null>(null);
   const [topicId, setTopicId] = useState<string | null>(null);
   const [results, setResults] = useState<ProgressMap>({});
   const [index, setIndex] = useState(0);
@@ -124,6 +130,7 @@ export function TaskPlayer({
   useEffect(() => {
     setHelperId(loadHelperId());
     setResults(loadProgress());
+    setLastGrade(loadLastGrade());
     setLoaded(true);
     if (isLoggedIn()) {
       getEntitlement()
@@ -179,6 +186,8 @@ export function TaskPlayer({
   }
 
   function chooseGrade(g: number) {
+    saveLastGrade(g);
+    setLastGrade(g);
     setGrade(g);
     setTopicId(null);
   }
@@ -346,6 +355,15 @@ export function TaskPlayer({
         <h2 className="font-display text-3xl font-extrabold">
           {gameLabels.gradeTitle}
         </h2>
+        {lastGrade !== null && GRADES.includes(lastGrade) && (
+          <button
+            onClick={() => chooseGrade(lastGrade)}
+            className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.98]"
+          >
+            ▶ {locale === "ky" ? "Улантуу" : "Продолжить"} —{" "}
+            {gradeLabels[String(lastGrade)] ?? lastGrade}
+          </button>
+        )}
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           {GRADES.map((g) => (
             <button
