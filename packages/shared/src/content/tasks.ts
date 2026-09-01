@@ -3,6 +3,7 @@ import { generatedTasks } from "./generated";
 import { starTasks } from "./stars";
 import { olympiadTasks } from "./olympiad";
 import { varietyTasks, preWorldTasks } from "./variety";
+import { rampTasks } from "./ramp";
 
 // Задания сгруппированы по темам (topic). Часть бесплатна (free: true).
 const baseTasks: Task[] = [
@@ -1637,6 +1638,7 @@ export const tasks: Task[] = [
   ...olympiadTasks,
   ...preWorldTasks,
   ...varietyTasks,
+  ...rampTasks,
 ];
 
 export function getTasks(filter?: {
