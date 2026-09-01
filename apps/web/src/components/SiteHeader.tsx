@@ -3,6 +3,7 @@ import type { Locale } from "@/i18n/config";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { HeaderNav, type NavItem } from "./HeaderNav";
+import { HeaderAuth } from "./HeaderAuth";
 
 /** Только те поля словаря, что нужны шапке (структурно совместимо с Dictionary). */
 interface HeaderDict {
@@ -46,12 +47,11 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
         <div className="flex items-center justify-end gap-2">
           <ThemeToggle />
           <LanguageSwitcher current={lang} />
-          <Link
-            href={`/${lang}/login`}
-            className="hidden rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-4 py-2 text-sm font-bold text-white shadow-md shadow-indigo-500/30 transition hover:brightness-110 sm:inline-block"
-          >
-            {dict.nav.signIn}
-          </Link>
+          <HeaderAuth
+            lang={lang}
+            signIn={dict.nav.signIn}
+            cabinet={dict.nav.cabinet}
+          />
         </div>
       </div>
 
