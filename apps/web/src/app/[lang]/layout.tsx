@@ -12,6 +12,7 @@ import { getDictionary } from "./dictionaries";
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "G-DMSQV35M09";
 // Яндекс.Метрика. ID можно переопределить через NEXT_PUBLIC_YM_ID.
 const YM_ID = process.env.NEXT_PUBLIC_YM_ID ?? "111711927";
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -37,11 +38,22 @@ export async function generateMetadata({
   if (!isLocale(lang)) return {};
   const dict = await getDictionary(lang);
   return {
-    metadataBase: new URL(
-      process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com",
-    ),
+    metadataBase: new URL(SITE),
     title: dict.meta.title,
     description: dict.meta.description,
+    openGraph: {
+      title: dict.meta.title,
+      description: dict.meta.description,
+      siteName: "Bilimjol",
+      url: `${SITE}/${lang}`,
+      locale: lang === "ky" ? "ky_KG" : "ru_RU",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: dict.meta.title,
+      description: dict.meta.description,
+    },
     verification: {
       google: "1_chDy09cV4--r2aq31gDHSLHTx5nEOc1yntu3lKXJo",
       yandex: "081d5db07ae6a1f2",
