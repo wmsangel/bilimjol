@@ -7,6 +7,8 @@ import { ImageResponse } from "next/og";
 export const alt = "Bilimjol — развивающие занятия для детей на кыргызском и русском";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+// Контент не зависит от запроса — генерируем на билде и отдаём как статический ассет.
+export const dynamic = "force-static";
 
 const CHARS = ["#F5943C", "#9AA6B8", "#CBD4E2", "#F1E4F5", "#78C56A"];
 

@@ -30,6 +30,11 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Пропускаем внутренние пути Next, API, метадата-иконки и файлы с расширением.
-  matcher: ["/((?!_next|api|icon|apple-icon|opengraph-image|sitemap|robots|.*\\.).*)"],
+  // Пропускаем внутренние пути Next, API, метадата-иконки, файлы с расширением
+  // И уже-локализованные пути (ru/ky) — им редирект не нужен, middleware не
+  // вызывается (экономия Edge Requests). Срабатывает лишь на корне «/» и путях
+  // без локали, где нужен редирект. При добавлении локали — обновить список ниже.
+  matcher: [
+    "/((?!_next|api|icon|apple-icon|opengraph-image|sitemap|robots|ru(?:/|$)|ky(?:/|$)|.*\\.).*)",
+  ],
 };

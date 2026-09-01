@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Nunito, Comfortaa } from "next/font/google";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
@@ -68,15 +67,19 @@ export default async function RootLayout({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
-  // Тема из cookie — сервер сразу ставит класс, без inline-скрипта и без мигания.
-  const dark = (await cookies()).get("izn-theme")?.value === "dark";
-
   return (
     <html
       lang={lang}
-      className={`${nunito.variable} ${comfortaa.variable} h-full antialiased${dark ? " dark" : ""}`}
+      className={`${nunito.variable} ${comfortaa.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
+        {/* Тема ставится до отрисовки из cookie — без SSR-на-каждый-визит и без мигания. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(document.cookie.split('; ').indexOf('izn-theme=dark')>-1)document.documentElement.classList.add('dark')}catch(e){}`,
+          }}
+        />
         {children}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
