@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   checkAnswer,
   getHelper,
@@ -19,7 +18,11 @@ import {
   saveLastGrade,
 } from "@/lib/prefs";
 import { recordActivity } from "@/lib/stats";
-import { checkout, getEntitlement, isLoggedIn } from "@/lib/api";
+import { getEntitlement, isLoggedIn } from "@/lib/api";
+
+// Контакт администратора (пока оплата картой не подключена). Переопределяется env.
+const ADMIN_TG =
+  process.env.NEXT_PUBLIC_ADMIN_TELEGRAM ?? "https://t.me/izagorodnyi";
 import { WARDROBE, type WardrobeItem } from "@/lib/characterArt";
 import { playSound } from "@/lib/sound";
 import { HelperPicker } from "./HelperPicker";
@@ -93,7 +96,6 @@ export function TaskPlayer({
   gameLabels,
   gradeLabels,
   homeHref,
-  loginHref,
 }: {
   locale: Locale;
   allTasks: Task[];
@@ -101,11 +103,8 @@ export function TaskPlayer({
   gameLabels: GameLabels;
   gradeLabels: Record<string, string>;
   homeHref: string;
-  loginHref: string;
 }) {
-  const router = useRouter();
   const [premium, setPremium] = useState(false);
-  const [subscribing, setSubscribing] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [helperId, setHelperId] = useState<string | null>(null);
   const [pendingHelper, setPendingHelper] = useState<string | null>(null);
@@ -207,30 +206,6 @@ export function TaskPlayer({
     setTopicId(null);
     setFinished(false);
     setStatus("answering");
-  }
-
-  async function subscribe() {
-    if (!isLoggedIn()) {
-      router.push(loginHref);
-      return;
-    }
-    setSubscribing(true);
-    try {
-      const r = await checkout();
-      if (r.premium) {
-        setPremium(true);
-        if (topicId) {
-          const list = allTasks.filter((t) => t.topic === topicId);
-          const firstUndone = list.findIndex((t) => !(t.id in results));
-          setFinished(false);
-          setIndex(firstUndone === -1 ? 0 : firstUndone);
-        }
-      }
-    } catch {
-      // no-op
-    } finally {
-      setSubscribing(false);
-    }
   }
 
   function currentResponse(): number | number[] | null {
@@ -480,13 +455,14 @@ export function TaskPlayer({
                         <p className="mt-1 text-sm text-indigo-700/80 dark:text-indigo-300/80">
                           {tpl(labels.lockedText, { count: lockedCount })}
                         </p>
-                        <button
-                          onClick={subscribe}
-                          disabled={subscribing}
-                          className="mt-4 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:opacity-50"
+                        <a
+                          href={ADMIN_TG}
+                          target="_blank"
+                          rel="noopener"
+                          className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-400 to-indigo-500 px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98]"
                         >
-                          {labels.subscribeCta}
-                        </button>
+                          ✈️ {labels.subscribeCta}
+                        </a>
                       </div>
                     )}
 

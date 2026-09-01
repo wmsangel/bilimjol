@@ -53,7 +53,6 @@ export default async function PlayPage({
           gameLabels={dict.game}
           gradeLabels={dict.grades}
           homeHref={`/${lang}`}
-          loginHref={`/${lang}/login`}
         />
       </main>
     </div>

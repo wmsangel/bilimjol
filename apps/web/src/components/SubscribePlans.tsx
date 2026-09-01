@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { checkout, getEntitlement, isLoggedIn, loadAuth } from "@/lib/api";
+import { getEntitlement, isLoggedIn, loadAuth } from "@/lib/api";
 import {
   countryForLocale,
   formatPrice,
   priceForCountry,
 } from "@/lib/pricing";
+
+// Контакт администратора (пока оплата картой не подключена). Переопределяется env.
+const ADMIN_TG =
+  process.env.NEXT_PUBLIC_ADMIN_TELEGRAM ?? "https://t.me/izagorodnyi";
 
 export interface SubscribeLabels {
   benefits: string[];
@@ -15,17 +19,13 @@ export interface SubscribeLabels {
   period: string;
   cta: string;
   ctaLogin: string;
-  processing: string;
+  emailHint: string;
   activeTitle: string;
   activeUntil: string;
-  successTitle: string;
-  successText: string;
-  goPlay: string;
   note: string;
-  error: string;
 }
 
-type Status = "loading" | "guest" | "available" | "active" | "success";
+type Status = "loading" | "guest" | "available" | "active";
 
 function fmtDate(iso: string | null, locale: string): string {
   if (!iso) return "";
@@ -40,7 +40,6 @@ export function SubscribePlans({
   labels,
   locale,
   loginHref,
-  playHref,
 }: {
   labels: SubscribeLabels;
   locale: string;
@@ -49,15 +48,14 @@ export function SubscribePlans({
 }) {
   const [status, setStatus] = useState<Status>("loading");
   const [until, setUntil] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(false);
-  // Начальная цена — по языку (детерминированно для SSR); уточняем в effect.
+  const [email, setEmail] = useState<string | null>(null);
   const [priceText, setPriceText] = useState(() =>
     formatPrice(priceForCountry(countryForLocale(locale))),
   );
 
   useEffect(() => {
     const auth = loadAuth();
+    setEmail(auth?.user.email ?? null);
     const country = auth?.user.country ?? countryForLocale(locale);
     setPriceText(formatPrice(priceForCountry(country)));
 
@@ -77,25 +75,8 @@ export function SubscribePlans({
       .catch(() => setStatus("available"));
   }, []);
 
-  async function onSubscribe() {
-    setBusy(true);
-    setError(false);
-    try {
-      const r = await checkout();
-      if (r.premium) {
-        setUntil(r.until);
-        setStatus("success");
-      } else if (r.redirectUrl) {
-        window.location.href = r.redirectUrl;
-      } else {
-        setError(true);
-      }
-    } catch {
-      setError(true);
-    } finally {
-      setBusy(false);
-    }
-  }
+  const primaryBtn =
+    "flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-center text-lg font-bold text-white shadow-lg transition hover:brightness-110 active:scale-[.99]";
 
   return (
     <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-xl dark:border-white/10 dark:bg-zinc-900">
@@ -133,20 +114,28 @@ export function SubscribePlans({
         {status === "guest" && (
           <Link
             href={loginHref}
-            className="block w-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-4 text-center text-lg font-bold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-110 active:scale-[.99]"
+            className={primaryBtn + " bg-gradient-to-r from-amber-400 to-orange-500 shadow-orange-500/30"}
           >
             {labels.ctaLogin}
           </Link>
         )}
 
         {status === "available" && (
-          <button
-            onClick={onSubscribe}
-            disabled={busy}
-            className="block w-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-6 py-4 text-center text-lg font-bold text-white shadow-lg shadow-orange-500/30 transition hover:brightness-110 active:scale-[.99] disabled:opacity-50"
-          >
-            {busy ? labels.processing : labels.cta}
-          </button>
+          <>
+            <a
+              href={ADMIN_TG}
+              target="_blank"
+              rel="noopener"
+              className={primaryBtn + " bg-gradient-to-r from-sky-400 to-indigo-500 shadow-indigo-500/30"}
+            >
+              ✈️ {labels.cta}
+            </a>
+            {email && (
+              <p className="mt-3 text-center text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+                {labels.emailHint.replace("{email}", email)}
+              </p>
+            )}
+          </>
         )}
 
         {status === "active" && (
@@ -156,29 +145,6 @@ export function SubscribePlans({
               {labels.activeUntil.replace("{date}", fmtDate(until, locale))}
             </div>
           </div>
-        )}
-
-        {status === "success" && (
-          <div className="rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-5 text-center dark:border-emerald-500/30 dark:bg-emerald-500/10">
-            <p className="font-display text-xl font-bold text-emerald-700 dark:text-emerald-300">
-              {labels.successTitle}
-            </p>
-            <p className="mt-1 text-sm text-emerald-700/80 dark:text-emerald-300/80">
-              {labels.successText}
-            </p>
-            <Link
-              href={playHref}
-              className="mt-4 inline-block rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
-            >
-              {labels.goPlay}
-            </Link>
-          </div>
-        )}
-
-        {error && (
-          <p className="mt-3 text-center text-sm font-semibold text-red-600 dark:text-red-400">
-            {labels.error}
-          </p>
         )}
       </div>
 
