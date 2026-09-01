@@ -19,6 +19,8 @@ import { getDictionary } from "./dictionaries";
 
 const FEATURE_EMOJI = ["🌍", "🎯", "🦊", "💡"];
 const STEP_EMOJI = ["🎨", "✏️", "🏆"];
+const AUDIENCE_EMOJI = ["👨‍👩‍👧", "👩‍🏫", "🧒"];
+const SUBJECT_EMOJI = ["🧩", "🔢", "📖", "🌍", "🏆"];
 
 export async function generateMetadata({
   params,
@@ -103,6 +105,22 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         </section>
 
         <div className="mx-auto max-w-5xl px-6">
+          {/* Числа */}
+          <section className="pt-6">
+            <div className="grid grid-cols-2 gap-3 rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm sm:grid-cols-4 dark:border-white/10 dark:bg-zinc-900">
+              {dict.stats.items.map((s, i) => (
+                <div key={i} className="text-center">
+                  <div className="font-display text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
+                    {s.value}
+                  </div>
+                  <div className="mt-1 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
           {/* Как это работает */}
           <section id="how" className="py-12 sm:py-16">
             <h2 className="mb-10 text-center font-display text-3xl font-extrabold tracking-tight">
@@ -124,6 +142,50 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
                   <p className="mt-2 leading-7 text-zinc-600 dark:text-zinc-400">
                     {step.desc}
                   </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Кому это полезно */}
+          <section className="py-12 sm:py-16">
+            <h2 className="mb-10 text-center font-display text-3xl font-extrabold tracking-tight">
+              {dict.audience.title}
+            </h2>
+            <div className="grid gap-5 sm:grid-cols-3">
+              {dict.audience.items.map((a, i) => (
+                <div
+                  key={i}
+                  className="rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+                >
+                  <div className="text-4xl">{AUDIENCE_EMOJI[i]}</div>
+                  <h3 className="mt-3 font-display text-lg font-bold">{a.role}</h3>
+                  <p className="mt-2 leading-7 text-zinc-600 dark:text-zinc-400">
+                    {a.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Что внутри */}
+          <section className="py-12 sm:py-16">
+            <div className="text-center">
+              <h2 className="font-display text-3xl font-extrabold tracking-tight">
+                {dict.subjects.title}
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-lg text-zinc-600 dark:text-zinc-400">
+                {dict.subjects.subtitle}
+              </p>
+            </div>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              {dict.subjects.items.map((s, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 rounded-full border border-black/[.06] bg-white px-5 py-3 font-display font-bold shadow-sm dark:border-white/10 dark:bg-zinc-900"
+                >
+                  <span className="text-2xl">{SUBJECT_EMOJI[i]}</span>
+                  {s.name}
                 </div>
               ))}
             </div>
