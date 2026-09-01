@@ -30,6 +30,6 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Пропускаем внутренние пути Next, API и файлы с расширением (статика).
-  matcher: ["/((?!_next|api|.*\\.).*)"],
+  // Пропускаем внутренние пути Next, API, метадата-иконки и файлы с расширением.
+  matcher: ["/((?!_next|api|icon|apple-icon|opengraph-image|sitemap|robots|.*\\.).*)"],
 };
