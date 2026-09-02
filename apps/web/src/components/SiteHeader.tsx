@@ -3,15 +3,17 @@ import type { Locale } from "@/i18n/config";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { HeaderNav, type NavItem } from "./HeaderNav";
-import { HeaderAuth } from "./HeaderAuth";
+import { AccountMenu } from "./AccountMenu";
+import { MobileMenu } from "./MobileMenu";
 
 /** Только те поля словаря, что нужны шапке (структурно совместимо с Dictionary). */
 interface HeaderDict {
-  account: { play: string };
+  account: { play: string; progress: string; report: string };
   tests: { nav: string };
   articles: { nav: string };
   subscribe: { nav: string };
-  nav: { cabinet: string; signIn: string };
+  nav: { cabinet: string; signIn: string; menu: string };
+  auth: { logout: string };
 }
 
 /**
@@ -19,13 +21,21 @@ interface HeaderDict {
  * Одинакова на всех обычных страницах (игровой экран /play — свой полноэкранный режим).
  */
 export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
+  // Разделы сайта (без «Кабинета» — он живёт в меню аккаунта справа).
   const items: NavItem[] = [
     { href: `/${lang}/play`, label: dict.account.play },
     { href: `/${lang}/tests`, label: dict.tests.nav },
     { href: `/${lang}/articles`, label: dict.articles.nav },
     { href: `/${lang}/subscribe`, label: dict.subscribe.nav },
-    { href: `/${lang}/me`, label: dict.nav.cabinet },
   ];
+
+  const accountLabels = {
+    signIn: dict.nav.signIn,
+    cabinet: dict.nav.cabinet,
+    progress: dict.account.progress,
+    report: dict.account.report,
+    logout: dict.auth.logout,
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-black/[.06] bg-white/80 backdrop-blur-md dark:border-white/10 dark:bg-zinc-950/80">
@@ -47,19 +57,14 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
         <div className="flex items-center justify-end gap-2">
           <ThemeToggle />
           <LanguageSwitcher current={lang} />
-          <HeaderAuth
+          <AccountMenu lang={lang} labels={accountLabels} />
+          <MobileMenu
             lang={lang}
-            signIn={dict.nav.signIn}
-            cabinet={dict.nav.cabinet}
+            items={items}
+            labels={{ ...accountLabels, menu: dict.nav.menu }}
           />
         </div>
       </div>
-
-      {/* Мобильная строка меню — прокручиваемая, тоже по центру */}
-      <HeaderNav
-        items={items}
-        className="flex items-center justify-start gap-1 overflow-x-auto px-4 pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      />
     </header>
   );
 }
