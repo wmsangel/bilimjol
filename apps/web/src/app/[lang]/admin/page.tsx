@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "../dictionaries";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AdminPanel } from "@/components/AdminPanel";
 import { ContentStats } from "@/components/ContentStats";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function AdminPage({
   params,

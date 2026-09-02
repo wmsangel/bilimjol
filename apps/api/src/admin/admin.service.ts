@@ -132,9 +132,16 @@ export class AdminService {
 
   /** Удалить пользователя (каскадно: дети, прогресс, статистика, подписки, токены). */
   async deleteUser(userId: string, actingUserId: string) {
-    await this.assertUser(userId);
+    const target = await this.assertUser(userId);
     if (userId === actingUserId) {
       throw new BadRequestException("Нельзя удалить собственный аккаунт");
+    }
+    // Нельзя снести последнего админа — иначе управление платформой потеряно.
+    if (target.role === "admin") {
+      const admins = await this.prisma.user.count({ where: { role: "admin" } });
+      if (admins <= 1) {
+        throw new BadRequestException("Нельзя удалить последнего администратора");
+      }
     }
     await this.prisma.user.delete({ where: { id: userId } });
     return { deleted: true };

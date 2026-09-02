@@ -1,8 +1,12 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "../dictionaries";
 import { SideNav } from "@/components/SideNav";
 import { SiteHeader } from "@/components/SiteHeader";
+
+// Личный кабинет/отчёт/гардероб — не индексировать.
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function AccountLayout({
   children,

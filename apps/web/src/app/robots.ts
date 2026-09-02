@@ -13,6 +13,8 @@ export default function robots(): MetadataRoute.Robots {
         "/ky/me",
         "/ru/parent",
         "/ky/parent",
+        "/ru/wardrobe",
+        "/ky/wardrobe",
         "/ru/admin",
         "/ky/admin",
         "/ru/login",
