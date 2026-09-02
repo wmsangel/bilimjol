@@ -1,8 +1,16 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { providers } from "./providers";
 
 const PLAN_DAYS: Record<string, number> = { monthly: 30 };
+
+// Dev-провайдер выдаёт премиум мгновенно — в проде это дыра (любой залогиненный
+// мог бы дёрнуть /billing/checkout напрямую). Разрешаем только с явным флагом.
+const DEV_CHECKOUT_ALLOWED = process.env.ALLOW_DEV_CHECKOUT === "1";
 
 @Injectable()
 export class BillingService {
@@ -27,6 +35,12 @@ export class BillingService {
   async checkout(userId: string, plan: string, providerId: string) {
     const provider = providers[providerId];
     if (!provider) throw new BadRequestException("Неизвестный провайдер");
+    // В проде самоактивация через dev запрещена — доступ выдаёт админ вручную.
+    if (providerId === "dev" && !DEV_CHECKOUT_ALLOWED) {
+      throw new ForbiddenException(
+        "Самостоятельная оплата пока недоступна — обратитесь к администратору",
+      );
+    }
 
     const result = await provider.createCheckout({ userId, plan });
 

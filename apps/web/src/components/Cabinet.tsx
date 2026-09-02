@@ -17,12 +17,7 @@ import {
   todayProgress,
   type StatsStore,
 } from "@/lib/stats";
-import {
-  checkout,
-  getEntitlement,
-  loadAuth,
-  loadChildId,
-} from "@/lib/api";
+import { getEntitlement, loadAuth, loadChildId } from "@/lib/api";
 import { syncChild } from "@/lib/sync";
 import { Mascot } from "./Mascot";
 
@@ -96,7 +91,6 @@ export function Cabinet({
   const [subjectsTried, setSubjectsTried] = useState(0);
   const [email, setEmail] = useState<string | null>(null);
   const [premiumUntil, setPremiumUntil] = useState<string | null>(null);
-  const [subscribing, setSubscribing] = useState(false);
   const router = useRouter();
 
   function loadAll() {
@@ -136,18 +130,6 @@ export function Cabinet({
   function changeHelper() {
     removeHelperId();
     router.push(playHref);
-  }
-
-  async function onSubscribe() {
-    setSubscribing(true);
-    try {
-      const r = await checkout();
-      if (r.premium) setPremiumUntil(r.until);
-    } catch {
-      // no-op
-    } finally {
-      setSubscribing(false);
-    }
   }
 
   const fmtDate = (iso: string | null) =>
@@ -342,13 +324,12 @@ export function Cabinet({
                 ⭐ {labels.premiumActive} {fmtDate(premiumUntil)}
               </span>
             ) : (
-              <button
-                onClick={onSubscribe}
-                disabled={subscribing}
-                className="rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98] disabled:opacity-50"
+              <Link
+                href={`/${locale}/subscribe`}
+                className="inline-block rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98]"
               >
                 {labels.subscribe}
-              </button>
+              </Link>
             )}
           </div>
         )}
