@@ -23,8 +23,9 @@ export default async function AdminPage({
         <h1 className="mb-8 text-center font-display text-3xl font-extrabold tracking-tight">
           {dict.admin.title}
         </h1>
-        <AdminPanel locale={lang} labels={dict.admin} loginHref={`/${lang}/login`} />
-        <ContentStats locale={lang} />
+        <AdminPanel locale={lang} labels={dict.admin} loginHref={`/${lang}/login`}>
+          <ContentStats locale={lang} />
+        </AdminPanel>
       </main>
     </div>
   );

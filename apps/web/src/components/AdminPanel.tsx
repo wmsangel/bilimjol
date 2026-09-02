@@ -55,10 +55,12 @@ export function AdminPanel({
   locale,
   labels,
   loginHref,
+  children,
 }: {
   locale: string;
   labels: AdminLabels;
   loginHref: string;
+  children?: React.ReactNode;
 }) {
   const [loaded, setLoaded] = useState(false);
   const [logged, setLogged] = useState(false);
@@ -296,6 +298,9 @@ export function AdminPanel({
       <p className="mt-3 text-center text-xs text-zinc-400">
         {new Date().toLocaleString(locale === "ky" ? "ky-KG" : "ru-RU")}
       </p>
+
+      {/* Доп. содержимое (напр. статистика контента) — только для админа. */}
+      {children}
     </div>
   );
 }
