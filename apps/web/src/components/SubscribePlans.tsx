@@ -8,6 +8,8 @@ import {
   formatPrice,
   priceForCountry,
 } from "@/lib/pricing";
+import { pushEvent, currencyIso } from "@/lib/gtm";
+import { loadLastGrade } from "@/lib/prefs";
 
 // Контакт администратора (пока оплата картой не подключена). Переопределяется env.
 const ADMIN_TG =
@@ -52,12 +54,18 @@ export function SubscribePlans({
   const [priceText, setPriceText] = useState(() =>
     formatPrice(priceForCountry(countryForLocale(locale))),
   );
+  // Страна для события клика (цена/валюта) — уточняется в useEffect по профилю.
+  const [country, setCountry] = useState(() => countryForLocale(locale));
 
   useEffect(() => {
     const auth = loadAuth();
     setEmail(auth?.user.email ?? null);
-    const country = auth?.user.country ?? countryForLocale(locale);
-    setPriceText(formatPrice(priceForCountry(country)));
+    const c = auth?.user.country ?? countryForLocale(locale);
+    setCountry(c);
+    setPriceText(formatPrice(priceForCountry(c)));
+
+    // Событие просмотра страницы подписки (SPA — шлём вручную).
+    pushEvent("view_subscribe", { grade: loadLastGrade(), lang: locale });
 
     if (!isLoggedIn()) {
       setStatus("guest");
@@ -126,6 +134,15 @@ export function SubscribePlans({
               href={ADMIN_TG}
               target="_blank"
               rel="noopener"
+              onClick={() =>
+                pushEvent("subscribe_click", {
+                  grade: loadLastGrade(),
+                  plan: "premium",
+                  price: priceForCountry(country).amount,
+                  currency: currencyIso(country),
+                  source: "subscribe_page",
+                })
+              }
               className={primaryBtn + " bg-gradient-to-r from-sky-400 to-indigo-500 shadow-indigo-500/30"}
             >
               ✈️ {labels.cta}

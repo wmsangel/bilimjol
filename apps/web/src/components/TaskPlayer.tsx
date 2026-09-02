@@ -19,6 +19,8 @@ import {
 } from "@/lib/prefs";
 import { recordActivity } from "@/lib/stats";
 import { getEntitlement, isLoggedIn } from "@/lib/api";
+import { pushEvent, currencyIso } from "@/lib/gtm";
+import { countryForLocale, priceForCountry } from "@/lib/pricing";
 
 // Контакт администратора (пока оплата картой не подключена). Переопределяется env.
 const ADMIN_TG =
@@ -459,6 +461,15 @@ export function TaskPlayer({
                           href={ADMIN_TG}
                           target="_blank"
                           rel="noopener"
+                          onClick={() =>
+                            pushEvent("subscribe_click", {
+                              grade,
+                              plan: "premium",
+                              price: priceForCountry(countryForLocale(locale)).amount,
+                              currency: currencyIso(countryForLocale(locale)),
+                              source: "play_paywall",
+                            })
+                          }
                           className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-400 to-indigo-500 px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98]"
                         >
                           ✈️ {labels.subscribeCta}
