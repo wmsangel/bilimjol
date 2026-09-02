@@ -135,7 +135,7 @@ export function AdminPanel({
 
   if (!loaded) {
     return (
-      <div className="mx-auto h-64 w-full max-w-3xl animate-pulse rounded-[2rem] border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+      <div className="mx-auto h-64 w-full max-w-5xl animate-pulse rounded-[2rem] border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
     );
   }
 
@@ -174,7 +174,7 @@ export function AdminPanel({
   );
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="mx-auto w-full max-w-5xl">
       {notice && (
         <div className="mb-4 flex items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-500/40 dark:bg-amber-500/10">
           <span className="font-mono text-sm font-bold text-amber-800 dark:text-amber-200">
@@ -265,25 +265,25 @@ export function AdminPanel({
                   )}
                 </td>
                 <td className="px-4 py-2.5">
-                  <div className="flex gap-1.5">
+                  <div className="flex justify-end gap-1.5">
                     <button
                       onClick={() => onGrant(u)}
                       disabled={busyId === u.id}
-                      className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700 transition hover:bg-amber-200 disabled:opacity-40 dark:bg-amber-500/15 dark:text-amber-300"
+                      className="whitespace-nowrap rounded-lg bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-700 transition hover:bg-amber-200 disabled:opacity-40 dark:bg-amber-500/15 dark:text-amber-300"
                     >
                       {labels.grant}
                     </button>
                     <button
                       onClick={() => onReset(u)}
                       disabled={busyId === u.id}
-                      className="rounded-full bg-black/[.05] px-2.5 py-1 text-xs font-bold text-zinc-600 transition hover:bg-black/10 disabled:opacity-40 dark:bg-white/10 dark:text-zinc-300"
+                      className="whitespace-nowrap rounded-lg bg-black/[.05] px-3 py-1.5 text-xs font-bold text-zinc-600 transition hover:bg-black/10 disabled:opacity-40 dark:bg-white/10 dark:text-zinc-300"
                     >
                       {labels.reset}
                     </button>
                     <button
                       onClick={() => onDelete(u)}
                       disabled={busyId === u.id}
-                      className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-bold text-red-700 transition hover:bg-red-200 disabled:opacity-40 dark:bg-red-500/15 dark:text-red-300"
+                      className="whitespace-nowrap rounded-lg bg-red-100 px-3 py-1.5 text-xs font-bold text-red-700 transition hover:bg-red-200 disabled:opacity-40 dark:bg-red-500/15 dark:text-red-300"
                     >
                       {labels.delete}
                     </button>

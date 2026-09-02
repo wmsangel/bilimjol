@@ -11,6 +11,8 @@ import {
 } from "@izn-study/shared";
 import { loadHelperId } from "@/lib/prefs";
 import { recordActivity } from "@/lib/stats";
+import { isLoggedIn, loadChildId } from "@/lib/api";
+import { syncChild } from "@/lib/sync";
 import { Mascot } from "./Mascot";
 import { Confetti } from "./Confetti";
 
@@ -60,6 +62,13 @@ export function TestPlayer({
   useEffect(() => {
     questionStart.current = Date.now();
   }, [index]);
+
+  // По завершении теста синхронизируем статистику с сервером.
+  useEffect(() => {
+    if (!finished) return;
+    const childId = loadChildId();
+    if (isLoggedIn() && childId) syncChild(childId).catch(() => undefined);
+  }, [finished]);
 
   useEffect(() => {
     setQuestions(test?.generate() ?? []);

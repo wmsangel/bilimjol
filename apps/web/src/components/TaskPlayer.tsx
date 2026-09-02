@@ -18,7 +18,8 @@ import {
   saveLastGrade,
 } from "@/lib/prefs";
 import { recordActivity } from "@/lib/stats";
-import { getEntitlement, isLoggedIn } from "@/lib/api";
+import { getEntitlement, isLoggedIn, loadChildId } from "@/lib/api";
+import { syncChild } from "@/lib/sync";
 import { pushEvent, currencyIso } from "@/lib/gtm";
 import { countryForLocale, priceForCountry } from "@/lib/pricing";
 
@@ -122,6 +123,14 @@ export function TaskPlayer({
   useEffect(() => {
     questionStart.current = Date.now();
   }, [index, topicId]);
+
+  // По завершении занятия отправляем прогресс и статистику на сервер
+  // (иначе счётчики видны только локально до открытия кабинета).
+  useEffect(() => {
+    if (!finished) return;
+    const childId = loadChildId();
+    if (isLoggedIn() && childId) syncChild(childId).catch(() => undefined);
+  }, [finished]);
   const [reward, setReward] = useState<WardrobeItem | null>(null);
 
   const [selected, setSelected] = useState<number | null>(null);
