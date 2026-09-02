@@ -13,6 +13,7 @@ import {
   type AdminStats,
   type AdminUser,
 } from "@/lib/api";
+import { formatDuration } from "@/lib/stats";
 
 export interface AdminLabels {
   loginPrompt: string;
@@ -22,9 +23,12 @@ export interface AdminLabels {
   children: string;
   subscriptions: string;
   premium: string;
+  totalAnswers: string;
+  totalTime: string;
   colEmail: string;
   colCountry: string;
   colChildren: string;
+  colActivity: string;
   colPremium: string;
   colRole: string;
   colActions: string;
@@ -158,7 +162,7 @@ export function AdminPanel({
     return true;
   });
 
-  const tile = (value: number, label: string) => (
+  const tile = (value: number | string, label: string) => (
     <div className="rounded-2xl border border-black/[.06] bg-white p-4 text-center shadow-sm dark:border-white/10 dark:bg-zinc-900">
       <div className="font-display text-3xl font-extrabold">{value}</div>
       <div className="mt-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
@@ -184,11 +188,13 @@ export function AdminPanel({
       )}
 
       {stats && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {tile(stats.users, labels.users)}
           {tile(stats.children, labels.children)}
           {tile(stats.activeSubscriptions, labels.subscriptions)}
           {tile(stats.premiumUsers, labels.premium)}
+          {tile(stats.totalAnswered, labels.totalAnswers)}
+          {tile(formatDuration(stats.timeSpentSec), labels.totalTime)}
         </div>
       )}
 
@@ -224,6 +230,7 @@ export function AdminPanel({
               <th className="px-4 py-3">{labels.colEmail}</th>
               <th className="px-4 py-3">{labels.colCountry}</th>
               <th className="px-4 py-3 text-center">{labels.colChildren}</th>
+              <th className="px-4 py-3 text-center">{labels.colActivity}</th>
               <th className="px-4 py-3 text-center">{labels.colPremium}</th>
               <th className="px-4 py-3">{labels.colRole}</th>
               <th className="px-4 py-3">{labels.colActions}</th>
@@ -238,6 +245,11 @@ export function AdminPanel({
                 <td className="px-4 py-2.5 font-medium">{u.email}</td>
                 <td className="px-4 py-2.5 text-zinc-500">{u.country ?? "—"}</td>
                 <td className="px-4 py-2.5 text-center">{u.children}</td>
+                <td className="px-4 py-2.5 text-center text-xs text-zinc-500 dark:text-zinc-400">
+                  {u.totalAnswered > 0
+                    ? `${u.totalAnswered} · ${formatDuration(u.timeSpentSec)}`
+                    : "—"}
+                </td>
                 <td className="px-4 py-2.5 text-center">
                   {u.premium ? "⭐" : "—"}
                 </td>

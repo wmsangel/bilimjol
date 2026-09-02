@@ -188,6 +188,9 @@ export interface ServerState {
     dailySolved: number;
     unlockedHelpers: string[];
     spentStars: number;
+    totalAnswered: number;
+    totalCorrect: number;
+    timeSpentSec: number;
   };
   outfit?: Record<string, string>;
   helperId?: string;
@@ -226,6 +229,9 @@ export interface AdminStats {
   children: number;
   activeSubscriptions: number;
   premiumUsers: number;
+  totalAnswered: number;
+  totalCorrect: number;
+  timeSpentSec: number;
 }
 
 export interface AdminUser {
@@ -236,6 +242,9 @@ export interface AdminUser {
   createdAt: string;
   children: number;
   premium: boolean;
+  totalAnswered: number;
+  totalCorrect: number;
+  timeSpentSec: number;
 }
 
 export function getAdminStats() {

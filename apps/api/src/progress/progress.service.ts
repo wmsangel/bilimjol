@@ -9,6 +9,9 @@ const DEFAULT_STATS: StatsDto = {
   dailySolved: 0,
   unlockedHelpers: [],
   spentStars: 0,
+  totalAnswered: 0,
+  totalCorrect: 0,
+  timeSpentSec: 0,
 };
 
 @Injectable()
@@ -87,6 +90,9 @@ export class ProgressService {
       dailySolved: number;
       unlockedHelpers: string[];
       spentStars: number;
+      totalAnswered: number;
+      totalCorrect: number;
+      timeSpentSec: number;
     } | null,
   ): StatsDto {
     if (!s) return { ...DEFAULT_STATS };
@@ -97,6 +103,9 @@ export class ProgressService {
       dailySolved: s.dailySolved,
       unlockedHelpers: s.unlockedHelpers,
       spentStars: s.spentStars,
+      totalAnswered: s.totalAnswered,
+      totalCorrect: s.totalCorrect,
+      timeSpentSec: s.timeSpentSec,
     };
   }
 
@@ -123,6 +132,10 @@ export class ProgressService {
         ...new Set([...s.unlockedHelpers, ...c.unlockedHelpers]),
       ],
       spentStars: Math.max(s.spentStars, c.spentStars),
+      // Счётчики монотонно растут — берём максимум (защита от отставшего клиента).
+      totalAnswered: Math.max(s.totalAnswered, c.totalAnswered),
+      totalCorrect: Math.max(s.totalCorrect, c.totalCorrect),
+      timeSpentSec: Math.max(s.timeSpentSec, c.timeSpentSec),
     };
   }
 }

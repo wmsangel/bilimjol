@@ -20,6 +20,9 @@ const EMPTY_STATS: StatsStore = {
   dailySolved: 0,
   unlockedHelpers: [],
   spentStars: 0,
+  totalAnswered: 0,
+  totalCorrect: 0,
+  timeSpentSec: 0,
 };
 
 export function HelperPicker({

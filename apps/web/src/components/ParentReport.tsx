@@ -18,7 +18,7 @@ import {
   type Child,
   type ServerState,
 } from "@/lib/api";
-import { levelInfo } from "@/lib/stats";
+import { formatDuration, levelInfo } from "@/lib/stats";
 import { Face } from "./Face";
 
 export interface ParentLabels {
@@ -30,6 +30,9 @@ export interface ParentLabels {
   streak: string;
   solved: string;
   accuracy: string;
+  attempts: string;
+  incorrect: string;
+  timeSpent: string;
   bySubject: string;
   byTopic: string;
   noData: string;
@@ -163,6 +166,21 @@ export function ParentReport({
             <div className="mt-3 grid grid-cols-2 gap-3">
               {tile(answered, labels.solved)}
               {tile(`${accuracy}%`, labels.accuracy)}
+            </div>
+            <div className="mt-3 grid grid-cols-3 gap-3">
+              {tile(state?.stats.totalAnswered ?? 0, labels.attempts)}
+              {tile(
+                Math.max(
+                  0,
+                  (state?.stats.totalAnswered ?? 0) -
+                    (state?.stats.totalCorrect ?? 0),
+                ),
+                labels.incorrect,
+              )}
+              {tile(
+                formatDuration(state?.stats.timeSpentSec ?? 0),
+                labels.timeSpent,
+              )}
             </div>
 
             {/* По предметам */}

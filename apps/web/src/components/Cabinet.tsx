@@ -7,8 +7,10 @@ import { getHelper, tasks as allTasks, type Locale } from "@izn-study/shared";
 import { loadProgress } from "@/lib/progress";
 import { loadHelperId, removeHelperId } from "@/lib/prefs";
 import {
+  accuracyPct,
   computeAchievements,
   DAILY_GOAL,
+  formatDuration,
   levelInfo,
   loadStats,
   spendableStars,
@@ -44,6 +46,12 @@ export interface CabinetLabels {
   streak: string;
   daily: string;
   dailyDone: string;
+  statsTitle: string;
+  answers: string;
+  correct: string;
+  incorrect: string;
+  accuracy: string;
+  timeSpent: string;
   achievementsTitle: string;
   premiumActive: string;
   subscribe: string;
@@ -56,6 +64,9 @@ const EMPTY_STATS: StatsStore = {
   dailySolved: 0,
   unlockedHelpers: [],
   spentStars: 0,
+  totalAnswered: 0,
+  totalCorrect: 0,
+  timeSpentSec: 0,
 };
 
 const subjectOf = (id: string) => allTasks.find((t) => t.id === id)?.subject;
@@ -255,6 +266,34 @@ export function Cabinet({
               {labels.dailyDone}
             </p>
           )}
+        </div>
+
+        {/* Статистика */}
+        <div className="mt-6">
+          <p className="mb-2 text-sm font-bold">{labels.statsTitle}</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="rounded-2xl bg-black/[.03] p-3 text-center dark:bg-white/[.04]">
+              <div className="font-display text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
+                {accuracyPct(stats.totalAnswered, stats.totalCorrect)}%
+              </div>
+              <div className="mt-0.5 text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
+                🎯 {labels.accuracy}
+              </div>
+            </div>
+            <div className="rounded-2xl bg-black/[.03] p-3 text-center dark:bg-white/[.04]">
+              <div className="font-display text-2xl font-extrabold text-sky-600 dark:text-sky-400">
+                {formatDuration(stats.timeSpentSec)}
+              </div>
+              <div className="mt-0.5 text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
+                ⏱️ {labels.timeSpent}
+              </div>
+            </div>
+          </div>
+          <p className="mt-2 text-center text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+            {labels.answers}: {stats.totalAnswered} · {labels.correct}:{" "}
+            {stats.totalCorrect} · {labels.incorrect}:{" "}
+            {Math.max(0, stats.totalAnswered - stats.totalCorrect)}
+          </p>
         </div>
 
         {/* Достижения */}

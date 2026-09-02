@@ -77,6 +77,9 @@ model ChildStats {
   dailySolved     Int          @default(0)
   unlockedHelpers String[]     @default([])
   spentStars      Int          @default(0)
+  totalAnswered   Int          @default(0) // всего ответов (с повторами)
+  totalCorrect    Int          @default(0) // из них верных
+  timeSpentSec    Int          @default(0) // суммарное время занятий, сек
   updatedAt       DateTime     @updatedAt
 }
 

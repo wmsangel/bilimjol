@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   checkAnswer,
@@ -56,6 +56,10 @@ export function TestPlayer({
   const [status, setStatus] = useState<Status>("answering");
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
+  const questionStart = useRef<number>(Date.now());
+  useEffect(() => {
+    questionStart.current = Date.now();
+  }, [index]);
 
   useEffect(() => {
     setQuestions(test?.generate() ?? []);
@@ -84,7 +88,7 @@ export function TestPlayer({
     if (response === null || Number.isNaN(response)) return;
     const correct = checkAnswer(question, response);
     if (correct) setScore((s) => s + 1);
-    recordActivity();
+    recordActivity({ correct, durationSec: (Date.now() - questionStart.current) / 1000 });
     setStatus(correct ? "correct" : "wrong");
   }
 

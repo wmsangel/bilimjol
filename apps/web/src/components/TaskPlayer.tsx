@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   checkAnswer,
@@ -117,6 +117,11 @@ export function TaskPlayer({
   const [index, setIndex] = useState(0);
   const [finished, setFinished] = useState(false);
   const [status, setStatus] = useState<Status>("answering");
+  // Момент показа текущего вопроса — для учёта времени на ответ.
+  const questionStart = useRef<number>(Date.now());
+  useEffect(() => {
+    questionStart.current = Date.now();
+  }, [index, topicId]);
   const [reward, setReward] = useState<WardrobeItem | null>(null);
 
   const [selected, setSelected] = useState<number | null>(null);
@@ -253,7 +258,8 @@ export function TaskPlayer({
     const nextResults = { ...results, [task.id]: { correct } };
     setResults(nextResults);
     saveProgress(nextResults);
-    recordActivity();
+    const durationSec = (Date.now() - questionStart.current) / 1000;
+    recordActivity({ correct, durationSec });
     setStatus(correct ? "correct" : "wrong");
 
     if (correct) {

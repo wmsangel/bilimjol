@@ -7,6 +7,10 @@ export const statsSchema = z.object({
   dailySolved: z.number().int().min(0),
   unlockedHelpers: z.array(z.string()),
   spentStars: z.number().int().min(0),
+  // Счётчики-итоги (optional + default — старые клиенты их не шлют).
+  totalAnswered: z.number().int().min(0).default(0),
+  totalCorrect: z.number().int().min(0).default(0),
+  timeSpentSec: z.number().int().min(0).default(0),
 });
 export type StatsDto = z.infer<typeof statsSchema>;
 

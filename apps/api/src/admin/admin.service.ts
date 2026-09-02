@@ -22,17 +22,33 @@ export class AdminService {
   }
 
   async stats() {
-    const [users, children, activeSubscriptions, premium] = await Promise.all([
-      this.prisma.user.count(),
-      this.prisma.childProfile.count(),
-      this.prisma.subscription.count({ where: this.activeWhere() }),
-      this.prisma.subscription.findMany({
-        where: this.activeWhere(),
-        select: { userId: true },
-        distinct: ["userId"],
-      }),
-    ]);
-    return { users, children, activeSubscriptions, premiumUsers: premium.length };
+    const [users, children, activeSubscriptions, premium, totals] =
+      await Promise.all([
+        this.prisma.user.count(),
+        this.prisma.childProfile.count(),
+        this.prisma.subscription.count({ where: this.activeWhere() }),
+        this.prisma.subscription.findMany({
+          where: this.activeWhere(),
+          select: { userId: true },
+          distinct: ["userId"],
+        }),
+        this.prisma.childStats.aggregate({
+          _sum: {
+            totalAnswered: true,
+            totalCorrect: true,
+            timeSpentSec: true,
+          },
+        }),
+      ]);
+    return {
+      users,
+      children,
+      activeSubscriptions,
+      premiumUsers: premium.length,
+      totalAnswered: totals._sum.totalAnswered ?? 0,
+      totalCorrect: totals._sum.totalCorrect ?? 0,
+      timeSpentSec: totals._sum.timeSpentSec ?? 0,
+    };
   }
 
   async users(limit: number, offset: number) {
@@ -47,6 +63,17 @@ export class AdminService {
         role: true,
         createdAt: true,
         _count: { select: { children: true } },
+        children: {
+          select: {
+            stats: {
+              select: {
+                totalAnswered: true,
+                totalCorrect: true,
+                timeSpentSec: true,
+              },
+            },
+          },
+        },
         subscriptions: {
           where: this.activeWhere(),
           select: { id: true },
@@ -54,15 +81,29 @@ export class AdminService {
         },
       },
     });
-    return rows.map((u) => ({
-      id: u.id,
-      email: u.email,
-      country: u.country,
-      role: u.role,
-      createdAt: u.createdAt,
-      children: u._count.children,
-      premium: u.subscriptions.length > 0,
-    }));
+    return rows.map((u) => {
+      const agg = u.children.reduce(
+        (a, c) => {
+          a.answered += c.stats?.totalAnswered ?? 0;
+          a.correct += c.stats?.totalCorrect ?? 0;
+          a.time += c.stats?.timeSpentSec ?? 0;
+          return a;
+        },
+        { answered: 0, correct: 0, time: 0 },
+      );
+      return {
+        id: u.id,
+        email: u.email,
+        country: u.country,
+        role: u.role,
+        createdAt: u.createdAt,
+        children: u._count.children,
+        premium: u.subscriptions.length > 0,
+        totalAnswered: agg.answered,
+        totalCorrect: agg.correct,
+        timeSpentSec: agg.time,
+      };
+    });
   }
 
   /** Выдать/продлить премиум вручную (провайдер "admin"). */

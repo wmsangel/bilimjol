@@ -14,6 +14,9 @@ export interface StatsStore {
   dailySolved: number;
   unlockedHelpers: string[];
   spentStars: number;
+  totalAnswered: number; // всего ответов (с повторами)
+  totalCorrect: number; // из них верных
+  timeSpentSec: number; // суммарное время занятий, сек
 }
 
 const DEFAULT: StatsStore = {
@@ -23,7 +26,14 @@ const DEFAULT: StatsStore = {
   dailySolved: 0,
   unlockedHelpers: [],
   spentStars: 0,
+  totalAnswered: 0,
+  totalCorrect: 0,
+  timeSpentSec: 0,
 };
+
+// Максимум секунд, который засчитываем за один ответ — чтобы вкладка,
+// оставленная открытой, не раздувала «время занятий».
+const MAX_ANSWER_SEC = 180;
 
 export function loadStats(): StatsStore {
   if (typeof window === "undefined") return { ...DEFAULT };
@@ -52,8 +62,15 @@ function daysBetween(a: string, b: string): number {
   return Math.round((Date.parse(b) - Date.parse(a)) / 86_400_000);
 }
 
-/** Отмечает активность: обновляет серию дней и дневной счётчик. */
-export function recordActivity(): StatsStore {
+/**
+ * Отмечает ответ: серия дней, дневной счётчик и итоговые счётчики
+ * (всего/верных/время). `correct`/`durationSec` необязательны для обратной
+ * совместимости, но плееры их передают.
+ */
+export function recordActivity(opts?: {
+  correct?: boolean;
+  durationSec?: number;
+}): StatsStore {
   const s = loadStats();
   const today = todayStr();
 
@@ -74,8 +91,29 @@ export function recordActivity(): StatsStore {
   }
   s.dailySolved += 1;
 
+  // Итоговые счётчики.
+  s.totalAnswered += 1;
+  if (opts?.correct) s.totalCorrect += 1;
+  if (opts?.durationSec && opts.durationSec > 0) {
+    s.timeSpentSec += Math.min(MAX_ANSWER_SEC, Math.round(opts.durationSec));
+  }
+
   saveStats(s);
   return s;
+}
+
+/** «45 мин» / «2 ч 15 мин» — человекочитаемое время из секунд. */
+export function formatDuration(sec: number): string {
+  const m = Math.round(sec / 60);
+  if (m < 60) return `${m} мин`;
+  const h = Math.floor(m / 60);
+  const rem = m % 60;
+  return rem ? `${h} ч ${rem} мин` : `${h} ч`;
+}
+
+/** Точность в % (0–100), 0 при отсутствии ответов. */
+export function accuracyPct(answered: number, correct: number): number {
+  return answered > 0 ? Math.round((correct / answered) * 100) : 0;
 }
 
 /** Сегодняшний прогресс к дневной цели (с учётом смены суток). */
