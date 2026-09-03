@@ -8,7 +8,11 @@ import type { NavItem } from "./HeaderNav";
 
 export interface MobileMenuLabels {
   signIn: string;
+  cabinet: string;
   progress: string;
+  play: string;
+  wardrobe: string;
+  tests: string;
   report: string;
   admin: string;
   logout: string;
@@ -133,6 +137,12 @@ export function MobileMenu({
                 className={rowBase + " text-zinc-700 hover:bg-black/[.04] dark:text-zinc-200 dark:hover:bg-white/5"}
               >
                 📊 {labels.progress}
+              </Link>
+              <Link
+                href={`/${lang}/wardrobe`}
+                className={rowBase + " text-zinc-700 hover:bg-black/[.04] dark:text-zinc-200 dark:hover:bg-white/5"}
+              >
+                👕 {labels.wardrobe}
               </Link>
               <Link
                 href={`/${lang}/parent`}

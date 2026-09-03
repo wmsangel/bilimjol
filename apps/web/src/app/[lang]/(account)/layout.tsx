@@ -26,6 +26,7 @@ export default async function AccountLayout({
     { href: `/${lang}/wardrobe`, label: lang === "ky" ? "Гардероб" : "Гардероб", icon: "👕" },
     { href: `/${lang}/tests`, label: dict.tests.nav, icon: "🎯" },
     { href: `/${lang}/parent`, label: dict.account.report, icon: "👨‍👩‍👧" },
+    { href: `/${lang}/admin`, label: dict.admin.title, icon: "🛠️", adminOnly: true },
   ];
 
   return (

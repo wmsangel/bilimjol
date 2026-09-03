@@ -9,6 +9,7 @@ export interface NavItem {
   href: string;
   label: string;
   icon: string;
+  adminOnly?: boolean;
 }
 
 export function SideNav({
@@ -25,8 +26,15 @@ export function SideNav({
 }) {
   const pathname = usePathname();
   const [email, setEmail] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => setEmail(loadAuth()?.user.email ?? null), []);
+  useEffect(() => {
+    const auth = loadAuth();
+    setEmail(auth?.user.email ?? null);
+    setIsAdmin(auth?.user.role === "admin");
+  }, []);
+
+  const visible = items.filter((it) => !it.adminOnly || isAdmin);
 
   async function onLogout() {
     await apiLogout();
@@ -37,7 +45,7 @@ export function SideNav({
   return (
     <div className="md:sticky md:top-6">
       <nav className="flex flex-wrap gap-1.5 md:flex-col md:flex-nowrap">
-        {items.map((item) => {
+        {visible.map((item) => {
           const active = pathname === item.href;
           return (
             <Link

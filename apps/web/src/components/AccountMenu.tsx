@@ -9,6 +9,9 @@ export interface AccountMenuLabels {
   signIn: string;
   cabinet: string;
   progress: string;
+  play: string;
+  wardrobe: string;
+  tests: string;
   report: string;
   admin: string;
   logout: string;
@@ -118,6 +121,15 @@ export function AccountMenu({
           )}
           <Link href={`/${lang}/me`} className={item} onClick={() => setOpen(false)}>
             📊 {labels.progress}
+          </Link>
+          <Link href={`/${lang}/play`} className={item} onClick={() => setOpen(false)}>
+            🎮 {labels.play}
+          </Link>
+          <Link href={`/${lang}/wardrobe`} className={item} onClick={() => setOpen(false)}>
+            👕 {labels.wardrobe}
+          </Link>
+          <Link href={`/${lang}/tests`} className={item} onClick={() => setOpen(false)}>
+            🎯 {labels.tests}
           </Link>
           <Link
             href={`/${lang}/parent`}
