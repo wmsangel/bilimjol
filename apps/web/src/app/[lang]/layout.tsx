@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "../globals.css";
 import { locales, isLocale } from "@/i18n/config";
 import { getDictionary } from "./dictionaries";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
 
 // Google Analytics (gtag). ID можно переопределить через NEXT_PUBLIC_GA_ID.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "G-DMSQV35M09";
@@ -70,6 +71,7 @@ export default async function RootLayout({
 }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
+  const dict = await getDictionary(lang);
 
   return (
     <html
@@ -116,6 +118,15 @@ export default async function RootLayout({
           </noscript>
         ) : null}
         {children}
+        <MobileBottomNav
+          lang={lang}
+          labels={{
+            play: dict.account.play,
+            games: dict.games.nav,
+            tests: dict.tests.nav,
+            cabinet: dict.nav.cabinet,
+          }}
+        />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           strategy="afterInteractive"
