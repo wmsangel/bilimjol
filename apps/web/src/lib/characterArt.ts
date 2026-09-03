@@ -153,6 +153,12 @@ function wGlasses(): string {
 function wScarf(): string {
   return `<g><path d="M82 138 Q110 156 138 138 L138 152 Q110 168 82 152 Z" fill="#22B473"/><rect x="112" y="150" width="15" height="26" rx="5" fill="#1B9160"/></g>`;
 }
+function wCrown(): string {
+  return `<g><path d="M62 80 L72 46 L92 68 L110 40 L128 68 L148 46 L158 80 Q110 94 62 80 Z" fill="#F7C948" stroke="#D8A838" stroke-width="2.5" stroke-linejoin="round"/><path d="M62 80 Q110 94 158 80 L158 88 Q110 102 62 88 Z" fill="#E0A82E"/><circle cx="72" cy="46" r="4.5" fill="#FF5C8A"/><circle cx="110" cy="40" r="5" fill="#4F86F7"/><circle cx="148" cy="46" r="4.5" fill="#22B473"/></g>`;
+}
+function wMedal(): string {
+  return `<g><path d="M98 130 L106 166" stroke="#4F86F7" stroke-width="7" stroke-linecap="round"/><path d="M122 130 L114 166" stroke="#E23A6E" stroke-width="7" stroke-linecap="round"/><circle cx="110" cy="178" r="17" fill="#F7C948" stroke="#D8A838" stroke-width="2.5"/><path d="M110 168 l3.4 6.9 7.6 1.1 -5.5 5.4 1.3 7.6 -6.8 -3.6 -6.8 3.6 1.3 -7.6 -5.5 -5.4 7.6 -1.1 z" fill="#E0A82E"/></g>`;
+}
 
 const CLOTHES: Record<string, Clothing> = {
   cap: { slot: "head", name: "Кепка", draw: wCap },
@@ -164,8 +170,10 @@ const CLOTHES: Record<string, Clothing> = {
   tee: { slot: "body", name: "Футболка", color: "#4F86F7", style: "tee" },
   chapan: { slot: "body", name: "Чапан", color: "#B9472E", inner: "#EFE3C6", trim: "#D8A838", style: "robe" },
   scarf: { slot: "neck", name: "Шарф", draw: wScarf },
+  crown: { slot: "head", name: "Корона", draw: wCrown },
+  medal: { slot: "neck", name: "Медаль", draw: wMedal },
 };
-const WARD_ORDER = ["cap", "kalpak", "tubeteika", "beanie", "bow", "glasses", "tee", "chapan", "scarf"];
+const WARD_ORDER = ["cap", "kalpak", "tubeteika", "beanie", "bow", "crown", "glasses", "tee", "chapan", "scarf", "medal"];
 
 function bodyOf(S: Spec, outfit: Outfit): string {
   const f = S.fur, b = S.belly, d = sh(f, S.darkAmt ?? -26);
@@ -230,7 +238,7 @@ function wear(S: Spec, item: string): string {
   return t ? `<g transform="${t}">${g}</g>` : g;
 }
 function drawHead(S: Spec, item: string): string {
-  if (item === "bow") return wear(S, "bow");
+  if (item === "bow" || item === "crown") return wear(S, item);
   const fn = HEADWEAR[item];
   if (!fn) return "";
   if (S.wear && S.wear[item]) return S.wear[item](S);
@@ -341,7 +349,7 @@ export interface WardrobeItem {
   unlockAt: number;
 }
 const UNLOCK_AT: Record<string, number> = {
-  tee: 0, scarf: 0, glasses: 4, cap: 6, bow: 8, beanie: 10, tubeteika: 12, kalpak: 15, chapan: 20,
+  tee: 0, scarf: 0, glasses: 4, cap: 6, bow: 8, beanie: 10, tubeteika: 12, kalpak: 15, chapan: 20, crown: 25, medal: 30,
 };
 export const WARDROBE: WardrobeItem[] = WARD_ORDER.map((k) => ({
   id: k,
@@ -360,6 +368,8 @@ export function wardrobeIcon(k: string): string {
   else if (k === "glasses") s += '<g stroke="#2A2233" stroke-width="2.5" fill="rgba(120,150,230,.28)"><circle cx="13" cy="20" r="9"/><circle cx="31" cy="20" r="9"/></g><line x1="22" y1="20" x2="22" y2="20" stroke="#2A2233" stroke-width="2.5"/>';
   else if (k === "tee") s += '<path d="M8 12 Q22 3 36 12 L32 30 Q22 35 12 30z" fill="#4F86F7"/>';
   else if (k === "scarf") s += '<path d="M8 14 Q22 24 36 14 L36 22 Q22 30 8 22z" fill="#22B473"/><rect x="24" y="22" width="7" height="12" rx="2" fill="#1B9160"/>';
+  else if (k === "crown") s += '<path d="M6 30 L10 13 L16 22 L22 10 L28 22 L34 13 L38 30 Q22 35 6 30z" fill="#F7C948" stroke="#D8A838" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="13" r="2.4" fill="#FF5C8A"/><circle cx="22" cy="10" r="2.8" fill="#4F86F7"/><circle cx="34" cy="13" r="2.4" fill="#22B473"/>';
+  else if (k === "medal") s += '<path d="M17 5 L20 19 M27 5 L24 19" stroke="#4F86F7" stroke-width="3" stroke-linecap="round"/><circle cx="22" cy="27" r="9" fill="#F7C948" stroke="#D8A838" stroke-width="1.5"/><path d="M22 21 l1.8 3.7 4.1 .6 -3 3 .7 4.1 -3.6 -1.9 -3.6 1.9 .7 -4.1 -3 -3 4.1 -.6z" fill="#E0A82E"/>';
   return s + "</svg>";
 }
 export const SLOT_LABELS: Record<Slot, { ru: string; ky: string }> = {

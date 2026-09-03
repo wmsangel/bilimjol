@@ -10,6 +10,7 @@ import { MobileMenu } from "./MobileMenu";
 interface HeaderDict {
   account: { play: string; progress: string; report: string };
   tests: { nav: string };
+  games: { nav: string };
   articles: { nav: string };
   subscribe: { nav: string };
   nav: { cabinet: string; signIn: string; menu: string };
@@ -24,6 +25,7 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
   // Разделы сайта (без «Кабинета» — он живёт в меню аккаунта справа).
   const items: NavItem[] = [
     { href: `/${lang}/play`, label: dict.account.play },
+    { href: `/${lang}/games`, label: dict.games.nav },
     { href: `/${lang}/tests`, label: dict.tests.nav },
     { href: `/${lang}/articles`, label: dict.articles.nav },
     { href: `/${lang}/subscribe`, label: dict.subscribe.nav },
