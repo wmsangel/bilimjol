@@ -53,6 +53,9 @@ export interface PlayLabels {
   lockedTitle: string;
   lockedText: string;
   subscribeCta: string;
+  guestSaveTitle: string;
+  guestSaveText: string;
+  guestSaveCta: string;
   backHome: string;
   starBadge: string;
 }
@@ -142,6 +145,7 @@ export function TaskPlayer({
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
   const [pairs, setPairs] = useState<Record<number, number>>({});
 
+  const [isGuest, setIsGuest] = useState(false);
   useEffect(() => {
     setHelperId(loadHelperId());
     setResults(loadProgress());
@@ -151,6 +155,8 @@ export function TaskPlayer({
       getEntitlement()
         .then((e) => setPremium(e.premium))
         .catch(() => undefined);
+    } else {
+      setIsGuest(true);
     }
   }, []);
 
@@ -463,6 +469,23 @@ export function TaskPlayer({
                     <p className="mt-3 text-3xl">
                       {"⭐".repeat(Math.max(stars, 0)) || "—"}
                     </p>
+
+                    {isGuest && (
+                      <div className="mt-6 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-500/30 dark:bg-emerald-500/10">
+                        <p className="font-display font-bold text-emerald-700 dark:text-emerald-300">
+                          💾 {labels.guestSaveTitle}
+                        </p>
+                        <p className="mt-1 text-sm text-emerald-700/80 dark:text-emerald-300/80">
+                          {labels.guestSaveText}
+                        </p>
+                        <Link
+                          href={`/${locale}/login`}
+                          className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98]"
+                        >
+                          ✅ {labels.guestSaveCta}
+                        </Link>
+                      </div>
+                    )}
 
                     {lockedCount > 0 && (
                       <div className="mt-6 rounded-2xl border-2 border-indigo-200 bg-indigo-50 p-5 dark:border-indigo-500/30 dark:bg-indigo-500/10">
