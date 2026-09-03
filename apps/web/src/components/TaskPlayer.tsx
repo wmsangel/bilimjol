@@ -5,9 +5,13 @@ import Link from "next/link";
 import {
   checkAnswer,
   getHelper,
+  getProgramTopics,
   getTopics,
   GRADES,
+  subjectLabels,
+  subjectsForGrade,
   type Locale,
+  type Subject,
   type Task,
 } from "@izn-study/shared";
 import { loadProgress, saveProgress, type ProgressMap } from "@/lib/progress";
@@ -26,6 +30,14 @@ import { countryForLocale, priceForCountry } from "@/lib/pricing";
 // Контакт администратора (пока оплата картой не подключена). Переопределяется env.
 const ADMIN_TG =
   process.env.NEXT_PUBLIC_ADMIN_TELEGRAM ?? "https://t.me/izagorodnyi";
+
+const SUBJECT_EMOJI: Record<Subject, string> = {
+  logic: "🧩",
+  math: "🔢",
+  reading: "📖",
+  world: "🌍",
+  olympiad: "🏆",
+};
 import { WARDROBE, type WardrobeItem } from "@/lib/characterArt";
 import { playSound } from "@/lib/sound";
 import { HelperPicker } from "./HelperPicker";
@@ -68,6 +80,8 @@ export interface GameLabels {
   subjectAll: string;
   gradeTitle: string;
   topicsTitle: string;
+  programCta: string;
+  programDesc: string;
   starHint: string;
   unlockFor: string;
   notEnoughStars: string;
@@ -116,6 +130,8 @@ export function TaskPlayer({
   const [pendingHelper, setPendingHelper] = useState<string | null>(null);
   const [grade, setGrade] = useState<number | null>(null);
   const [lastGrade, setLastGrade] = useState<number | null>(null);
+  // Выбор предмета: null — не выбран (экран выбора), "all" — общая программа.
+  const [subject, setSubject] = useState<Subject | "all" | null>(null);
   const [topicId, setTopicId] = useState<string | null>(null);
   const [results, setResults] = useState<ProgressMap>({});
   const [index, setIndex] = useState(0);
@@ -210,6 +226,7 @@ export function TaskPlayer({
     saveLastGrade(g);
     setLastGrade(g);
     setGrade(g);
+    setSubject(null); // сначала выбор предмета
     setTopicId(null);
   }
 
@@ -380,9 +397,67 @@ export function TaskPlayer({
     );
   }
 
+  // 2b. Выбор предмета (или общая программа)
+  if (subject === null) {
+    const subjects = subjectsForGrade(grade);
+    return (
+      <div className="mx-auto w-full max-w-lg">
+        <button
+          onClick={() => setGrade(null)}
+          className="text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+        >
+          ← {gradeLabels[String(grade)] ?? gameLabels.gradeTitle}
+        </button>
+        <div className="mb-4 mt-3 flex justify-center">
+          <Mascot helper={helper} mood="idle" />
+        </div>
+        <h2 className="text-center font-display text-3xl font-extrabold">
+          {gameLabels.subjectTitle}
+        </h2>
+
+        {/* Главная кнопка — общая программа (вперемешку по предметам) */}
+        <button
+          onClick={() => setSubject("all")}
+          className="mt-6 flex w-full flex-col items-center gap-1 rounded-3xl bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-5 text-center text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.99]"
+        >
+          <span className="font-display text-xl font-extrabold">
+            🚀 {gameLabels.programCta}
+          </span>
+          <span className="text-sm font-semibold text-white/85">
+            {gameLabels.programDesc}
+          </span>
+        </button>
+
+        <div className="my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-wide text-zinc-400">
+          <span className="h-px flex-1 bg-black/10 dark:bg-white/10" />
+          {locale === "ky" ? "же предмет боюнча" : "или по предмету"}
+          <span className="h-px flex-1 bg-black/10 dark:bg-white/10" />
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          {subjects.map((s) => (
+            <button
+              key={s}
+              onClick={() => setSubject(s)}
+              className="flex items-center gap-3 rounded-2xl border-2 border-black/[.06] bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+            >
+              <span className="text-3xl">{SUBJECT_EMOJI[s]}</span>
+              <span className="font-display font-bold">
+                {subjectLabels[s][locale]}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   // 3. Карта класса + (при выборе темы) вопрос поверх размытой карты
-  // Все темы класса по порядку (олимпиада — последней, order 90).
-  const pathTopics = getTopics({ grade });
+  // "all" — общая программа (вперемешку); иначе — темы одного предмета.
+  const pathTopics =
+    subject === "all"
+      ? getProgramTopics(grade)
+      : getTopics({ grade, subject });
   const inLesson = topicId !== null;
   const closeLabel = locale === "ky" ? "Картага" : "К карте";
 
@@ -403,10 +478,13 @@ export function TaskPlayer({
       >
         <div className="mb-3 flex flex-col items-center gap-1">
           <button
-            onClick={() => setGrade(null)}
+            onClick={() => setSubject(null)}
             className="self-start text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
           >
-            ← {gradeLabels[String(grade)] ?? gameLabels.gradeTitle}
+            ←{" "}
+            {subject === "all"
+              ? gameLabels.programCta
+              : subjectLabels[subject][locale]}
           </button>
           <h2 className="font-display text-3xl font-extrabold">
             {gameLabels.topicsTitle}

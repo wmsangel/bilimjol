@@ -219,3 +219,54 @@ export function getTopics(filter?: { subject?: Subject; grade?: Grade }): Topic[
 export function getTopic(id: string): Topic | undefined {
   return topics.find((t) => t.id === id);
 }
+
+// Фиксированный порядок предметов в UI.
+const SUBJECT_ORDER: Subject[] = [
+  "logic",
+  "math",
+  "reading",
+  "world",
+  "olympiad",
+];
+
+/** Предметы, у которых есть темы в данном классе (в фикс. порядке). */
+export function subjectsForGrade(grade: Grade): Subject[] {
+  const present = new Set(
+    topics.filter((t) => t.grade === grade).map((t) => t.subject),
+  );
+  return SUBJECT_ORDER.filter((s) => present.has(s));
+}
+
+/**
+ * «Общая программа» класса: темы вперемешку по предметам (round-robin),
+ * олимпиада — в самом конце как бонус. Внутри предмета — по order.
+ */
+export function getProgramTopics(grade: Grade): Topic[] {
+  const all = getTopics({ grade });
+  const olympiad = all.filter((t) => t.subject === "olympiad");
+  const rest = all.filter((t) => t.subject !== "olympiad");
+
+  const bySubject = new Map<Subject, Topic[]>();
+  for (const t of rest) {
+    const q = bySubject.get(t.subject) ?? [];
+    q.push(t);
+    bySubject.set(t.subject, q);
+  }
+  const queues = SUBJECT_ORDER.map((s) => bySubject.get(s)).filter(
+    (q): q is Topic[] => !!q,
+  );
+
+  const mixed: Topic[] = [];
+  let added = true;
+  while (added) {
+    added = false;
+    for (const q of queues) {
+      const t = q.shift();
+      if (t) {
+        mixed.push(t);
+        added = true;
+      }
+    }
+  }
+  return [...mixed, ...olympiad];
+}
