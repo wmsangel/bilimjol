@@ -7,6 +7,7 @@ import { rampTasks } from "./ramp";
 import { fillTasks } from "./fill1";
 import { fill2Tasks } from "./fill2";
 import { fill3Tasks } from "./fill3";
+import { fill4Tasks } from "./fill4";
 
 // Задания сгруппированы по темам (topic). Часть бесплатна (free: true).
 const baseTasks: Task[] = [
@@ -1645,6 +1646,7 @@ export const tasks: Task[] = [
   ...fillTasks,
   ...fill2Tasks,
   ...fill3Tasks,
+  ...fill4Tasks,
 ];
 
 export function getTasks(filter?: {

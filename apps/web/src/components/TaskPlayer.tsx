@@ -35,7 +35,8 @@ const ADMIN_TG =
 // Вариант ответа «как картинка» — эмодзи/символы без букв (показываем крупно).
 function isImageLike(s: string): boolean {
   const t = s.trim();
-  return t.length > 0 && t.length <= 8 && !/\p{L}/u.test(t);
+  // Эмодзи занимают по 2 UTF-16 символа — до ~6 картинок в группе (напр. «🍎🍎🍎»).
+  return t.length > 0 && t.length <= 12 && !/\p{L}/u.test(t);
 }
 
 const SUBJECT_EMOJI: Record<Subject, string> = {
