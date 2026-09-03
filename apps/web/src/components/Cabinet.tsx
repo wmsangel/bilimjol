@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getHelper, tasks as allTasks, type Locale } from "@izn-study/shared";
+import {
+  getHelper,
+  news,
+  tasks as allTasks,
+  unseenNewsCount,
+  type Locale,
+} from "@izn-study/shared";
 import { loadProgress } from "@/lib/progress";
 import { loadHelperId, removeHelperId } from "@/lib/prefs";
 import {
@@ -42,6 +48,7 @@ export interface CabinetLabels {
   daily: string;
   dailyDone: string;
   statsTitle: string;
+  newsTitle: string;
   answers: string;
   correct: string;
   incorrect: string;
@@ -91,6 +98,8 @@ export function Cabinet({
   const [subjectsTried, setSubjectsTried] = useState(0);
   const [email, setEmail] = useState<string | null>(null);
   const [premiumUntil, setPremiumUntil] = useState<string | null>(null);
+  const [prevSeen, setPrevSeen] = useState<string | null>(null);
+  const [unseenNews, setUnseenNews] = useState(0);
   const router = useRouter();
 
   function loadAll() {
@@ -123,6 +132,26 @@ export function Cabinet({
         .catch(() => undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Лента «Что нового»: считаем непрочитанное и отмечаем просмотренным.
+  useEffect(() => {
+    let seen: string | null = null;
+    try {
+      seen = window.localStorage.getItem("izn.study:news-seen:v1");
+    } catch {
+      /* ignore */
+    }
+    setPrevSeen(seen);
+    setUnseenNews(unseenNewsCount(seen));
+    const latest = news[0]?.date;
+    if (latest) {
+      try {
+        window.localStorage.setItem("izn.study:news-seen:v1", latest);
+      } catch {
+        /* ignore */
+      }
+    }
   }, []);
 
   const helper = getHelper(helperId);
@@ -333,6 +362,50 @@ export function Cabinet({
             )}
           </div>
         )}
+      </div>
+
+      {/* Что нового */}
+      <div className="mt-4 rounded-[2rem] border border-black/[.06] bg-white p-5 shadow-xl dark:border-white/10 dark:bg-zinc-900">
+        <div className="mb-3 flex items-center gap-2">
+          <h3 className="font-display text-base font-bold">
+            🆕 {labels.newsTitle}
+          </h3>
+          {unseenNews > 0 && (
+            <span className="rounded-full bg-rose-500 px-2 py-0.5 text-[11px] font-bold text-white">
+              {unseenNews}
+            </span>
+          )}
+        </div>
+        <ul className="space-y-1">
+          {news.slice(0, 4).map((n) => {
+            const isNew = prevSeen == null || n.date > prevSeen;
+            const inner = (
+              <span className="flex items-start gap-2.5">
+                <span className="text-lg leading-none">{n.emoji}</span>
+                <span className="flex-1 text-sm text-zinc-700 dark:text-zinc-300">
+                  {n.title[locale]}
+                </span>
+                {isNew && (
+                  <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-rose-500" />
+                )}
+              </span>
+            );
+            return (
+              <li key={n.date + n.emoji}>
+                {n.href ? (
+                  <Link
+                    href={`/${locale}${n.href}`}
+                    className="-mx-2 block rounded-xl px-2 py-1.5 transition hover:bg-black/[.03] dark:hover:bg-white/5"
+                  >
+                    {inner}
+                  </Link>
+                ) : (
+                  <div className="px-0 py-1.5">{inner}</div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );

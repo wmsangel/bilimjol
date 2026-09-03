@@ -3,5 +3,6 @@ export * from "./content/tasks";
 export * from "./content/topics";
 export * from "./content/helpers";
 export * from "./content/articles";
+export * from "./content/news";
 export * from "./content/legal";
 export * from "./content/tests";

@@ -36,7 +36,7 @@ export function SideNav({
 
   return (
     <div className="md:sticky md:top-6">
-      <nav className="flex gap-1.5 overflow-x-auto pb-1 md:flex-col md:overflow-visible md:pb-0">
+      <nav className="flex flex-wrap gap-1.5 md:flex-col md:flex-nowrap">
         {items.map((item) => {
           const active = pathname === item.href;
           return (
@@ -44,7 +44,7 @@ export function SideNav({
               key={item.href}
               href={item.href}
               className={
-                "flex items-center gap-2.5 whitespace-nowrap rounded-2xl px-4 py-2.5 text-sm font-bold transition " +
+                "flex items-center gap-2 whitespace-nowrap rounded-2xl px-3.5 py-2.5 text-sm font-bold transition md:px-4 " +
                 (active
                   ? "bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-md shadow-indigo-500/30"
                   : "text-zinc-600 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-white/5")
