@@ -26,10 +26,17 @@ import { getEntitlement, isLoggedIn, loadChildId } from "@/lib/api";
 import { syncChild } from "@/lib/sync";
 import { pushEvent, currencyIso } from "@/lib/gtm";
 import { countryForLocale, priceForCountry } from "@/lib/pricing";
+import { speak, speechSupported } from "@/lib/speech";
 
 // Контакт администратора (пока оплата картой не подключена). Переопределяется env.
 const ADMIN_TG =
   process.env.NEXT_PUBLIC_ADMIN_TELEGRAM ?? "https://t.me/izagorodnyi";
+
+// Вариант ответа «как картинка» — эмодзи/символы без букв (показываем крупно).
+function isImageLike(s: string): boolean {
+  const t = s.trim();
+  return t.length > 0 && t.length <= 8 && !/\p{L}/u.test(t);
+}
 
 const SUBJECT_EMOJI: Record<Subject, string> = {
   logic: "🧩",
@@ -656,96 +663,154 @@ export function TaskPlayer({
           </div>
         )}
 
-        <p className="font-display text-2xl font-bold leading-8">
-          {task.prompt[locale]}
-        </p>
+        <div className="flex items-start gap-3">
+          <p className="flex-1 font-display text-2xl font-bold leading-8">
+            {task.prompt[locale]}
+          </p>
+          {speechSupported() && (
+            <button
+              type="button"
+              onClick={() =>
+                speak(
+                  [
+                    task.prompt[locale],
+                    ...(task.type === "single_choice" ||
+                    task.type === "multi_select"
+                      ? task.options.map((o) => o[locale])
+                      : []),
+                  ].join(". "),
+                  locale,
+                )
+              }
+              aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
+              className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-indigo-100 text-xl transition hover:bg-indigo-200 active:scale-95 dark:bg-indigo-500/20"
+            >
+              🔊
+            </button>
+          )}
+        </div>
 
         {/* Ответы по типу задания */}
         <div className="mt-6">
-          {task.type === "single_choice" && (
-            <div className="space-y-3">
-              {task.options.map((opt, i) => {
-                const isSelected = selected === i;
-                const isCorrect = i === task.correctIndex;
-                let cls =
-                  "w-full rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
-                if (!answered) {
-                  cls += isSelected
-                    ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
-                    : "border-black/10 hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15";
-                } else if (isCorrect) {
-                  cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
-                } else if (isSelected) {
-                  cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
-                } else {
-                  cls += "border-black/10 opacity-60 dark:border-white/15";
-                }
-                return (
-                  <button
-                    key={i}
-                    disabled={answered}
-                    onClick={() => setSelected(i)}
-                    className={cls}
-                  >
-                    {opt[locale]}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {task.type === "multi_select" && (
-            <div className="space-y-3">
-              <p className="mb-1 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                {locale === "ky"
-                  ? "Бардык туура жоопторду белгиле"
-                  : "Отметь все верные ответы"}
-              </p>
-              {task.options.map((opt, i) => {
-                const isChecked = multiSelected.includes(i);
-                const isCorrect = task.correctIndexes.includes(i);
-                let cls =
-                  "flex w-full items-center gap-3 rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
-                if (!answered) {
-                  cls += isChecked
-                    ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
-                    : "border-black/10 hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15";
-                } else if (isCorrect) {
-                  cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
-                } else if (isChecked) {
-                  cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
-                } else {
-                  cls += "border-black/10 opacity-60 dark:border-white/15";
-                }
-                const box = answered
-                  ? isCorrect
-                    ? "✅"
-                    : isChecked
-                      ? "❌"
-                      : "⬜"
-                  : isChecked
-                    ? "☑️"
-                    : "⬜";
-                return (
-                  <button
-                    key={i}
-                    disabled={answered}
-                    onClick={() =>
-                      setMultiSelected((prev) =>
-                        prev.includes(i)
-                          ? prev.filter((x) => x !== i)
-                          : [...prev, i],
-                      )
+          {task.type === "single_choice" &&
+            (() => {
+              const asImages = task.options.every((o) => isImageLike(o[locale]));
+              return (
+                <div
+                  className={
+                    asImages
+                      ? "grid grid-cols-2 gap-3 sm:grid-cols-3"
+                      : "space-y-3"
+                  }
+                >
+                  {task.options.map((opt, i) => {
+                    const isSelected = selected === i;
+                    const isCorrect = i === task.correctIndex;
+                    let cls = asImages
+                      ? "flex items-center justify-center rounded-3xl border-2 py-8 text-6xl transition active:scale-95 "
+                      : "w-full rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
+                    if (!answered) {
+                      cls += isSelected
+                        ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                        : "border-black/10 hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15";
+                    } else if (isCorrect) {
+                      cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
+                    } else if (isSelected) {
+                      cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
+                    } else {
+                      cls += "border-black/10 opacity-60 dark:border-white/15";
                     }
-                    className={cls}
+                    return (
+                      <button
+                        key={i}
+                        disabled={answered}
+                        onClick={() => setSelected(i)}
+                        className={cls}
+                      >
+                        {opt[locale]}
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+
+          {task.type === "multi_select" &&
+            (() => {
+              const asImages = task.options.every((o) => isImageLike(o[locale]));
+              return (
+                <div>
+                  <p className="mb-2 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+                    {locale === "ky"
+                      ? "Бардык туура жоопторду белгиле"
+                      : "Отметь все верные ответы"}
+                  </p>
+                  <div
+                    className={
+                      asImages
+                        ? "grid grid-cols-2 gap-3 sm:grid-cols-3"
+                        : "space-y-3"
+                    }
                   >
-                    <span className="text-xl">{box}</span>
-                    <span>{opt[locale]}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
+                    {task.options.map((opt, i) => {
+                      const isChecked = multiSelected.includes(i);
+                      const isCorrect = task.correctIndexes.includes(i);
+                      let cls = asImages
+                        ? "relative flex items-center justify-center rounded-3xl border-2 py-8 text-6xl transition active:scale-95 "
+                        : "flex w-full items-center gap-3 rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
+                      if (!answered) {
+                        cls += isChecked
+                          ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                          : "border-black/10 hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15";
+                      } else if (isCorrect) {
+                        cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
+                      } else if (isChecked) {
+                        cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
+                      } else {
+                        cls += "border-black/10 opacity-60 dark:border-white/15";
+                      }
+                      const box = answered
+                        ? isCorrect
+                          ? "✅"
+                          : isChecked
+                            ? "❌"
+                            : "⬜"
+                        : isChecked
+                          ? "☑️"
+                          : "⬜";
+                      return (
+                        <button
+                          key={i}
+                          disabled={answered}
+                          onClick={() =>
+                            setMultiSelected((prev) =>
+                              prev.includes(i)
+                                ? prev.filter((x) => x !== i)
+                                : [...prev, i],
+                            )
+                          }
+                          className={cls}
+                        >
+                          {asImages ? (
+                            <>
+                              <span>{opt[locale]}</span>
+                              <span className="absolute right-2 top-2 text-lg">
+                                {box}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-xl">{box}</span>
+                              <span>{opt[locale]}</span>
+                            </>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })()}
 
           {task.type === "number_input" && (
             <input

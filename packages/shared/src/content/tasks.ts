@@ -6,6 +6,7 @@ import { varietyTasks, preWorldTasks } from "./variety";
 import { rampTasks } from "./ramp";
 import { fillTasks } from "./fill1";
 import { fill2Tasks } from "./fill2";
+import { fill3Tasks } from "./fill3";
 
 // Задания сгруппированы по темам (topic). Часть бесплатна (free: true).
 const baseTasks: Task[] = [
@@ -1643,6 +1644,7 @@ export const tasks: Task[] = [
   ...rampTasks,
   ...fillTasks,
   ...fill2Tasks,
+  ...fill3Tasks,
 ];
 
 export function getTasks(filter?: {
