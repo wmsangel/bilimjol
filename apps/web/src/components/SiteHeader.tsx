@@ -13,6 +13,7 @@ interface HeaderDict {
   games: { nav: string };
   articles: { nav: string };
   subscribe: { nav: string };
+  admin: { title: string };
   nav: { cabinet: string; signIn: string; menu: string };
   auth: { logout: string };
 }
@@ -36,6 +37,7 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
     cabinet: dict.nav.cabinet,
     progress: dict.account.progress,
     report: dict.account.report,
+    admin: dict.admin.title,
     logout: dict.auth.logout,
   };
 

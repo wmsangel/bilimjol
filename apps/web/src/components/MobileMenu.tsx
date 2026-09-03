@@ -10,6 +10,7 @@ export interface MobileMenuLabels {
   signIn: string;
   progress: string;
   report: string;
+  admin: string;
   logout: string;
   menu: string;
 }
@@ -27,13 +28,16 @@ export function MobileMenu({
   const [open, setOpen] = useState(false);
   const [logged, setLogged] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
     setLogged(isLoggedIn());
-    setEmail(loadAuth()?.user.email ?? null);
+    const auth = loadAuth();
+    setEmail(auth?.user.email ?? null);
+    setIsAdmin(auth?.user.role === "admin");
   }, []);
 
   // Закрываем панель при переходе на другой маршрут.
@@ -136,6 +140,14 @@ export function MobileMenu({
               >
                 👨‍👩‍👧 {labels.report}
               </Link>
+              {isAdmin && (
+                <Link
+                  href={`/${lang}/admin`}
+                  className={rowBase + " text-zinc-700 hover:bg-black/[.04] dark:text-zinc-200 dark:hover:bg-white/5"}
+                >
+                  🛠️ {labels.admin}
+                </Link>
+              )}
               <button
                 onClick={onLogout}
                 className={rowBase + " text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"}

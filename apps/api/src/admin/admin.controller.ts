@@ -37,6 +37,11 @@ export class AdminController {
     return this.admin.users(take, skip);
   }
 
+  @Get("users/:id/detail")
+  userDetail(@Param("id") id: string) {
+    return this.admin.userDetail(id);
+  }
+
   @Post("users/:id/grant-premium")
   grantPremium(
     @Param("id") id: string,

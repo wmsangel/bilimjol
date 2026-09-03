@@ -106,6 +106,49 @@ export class AdminService {
     });
   }
 
+  /** Детальная статистика пользователя: дети + их прогресс по задачам. */
+  async userDetail(userId: string) {
+    const user = await this.assertUser(userId);
+    const children = await this.prisma.childProfile.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        name: true,
+        grade: true,
+        avatarHelperId: true,
+        stats: {
+          select: {
+            streakCount: true,
+            spentStars: true,
+            totalAnswered: true,
+            totalCorrect: true,
+            timeSpentSec: true,
+            lastActiveDate: true,
+          },
+        },
+        progress: { select: { taskId: true, correct: true } },
+      },
+    });
+    return {
+      email: user.email,
+      children: children.map((c) => ({
+        id: c.id,
+        name: c.name,
+        grade: c.grade,
+        helperId: c.avatarHelperId,
+        stats: {
+          streakCount: c.stats?.streakCount ?? 0,
+          spentStars: c.stats?.spentStars ?? 0,
+          totalAnswered: c.stats?.totalAnswered ?? 0,
+          totalCorrect: c.stats?.totalCorrect ?? 0,
+          timeSpentSec: c.stats?.timeSpentSec ?? 0,
+          lastActiveDate: c.stats?.lastActiveDate ?? null,
+        },
+        progress: c.progress,
+      })),
+    };
+  }
+
   /** Выдать/продлить премиум вручную (провайдер "admin"). */
   async grantPremium(userId: string, days = 30) {
     await this.assertUser(userId);

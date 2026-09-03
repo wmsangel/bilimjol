@@ -10,6 +10,7 @@ export interface AccountMenuLabels {
   cabinet: string;
   progress: string;
   report: string;
+  admin: string;
   logout: string;
 }
 
@@ -26,13 +27,16 @@ export function AccountMenu({
 }) {
   const [state, setState] = useState<"loading" | "guest" | "user">("loading");
   const [email, setEmail] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   useEffect(() => {
     setState(isLoggedIn() ? "user" : "guest");
-    setEmail(loadAuth()?.user.email ?? null);
+    const auth = loadAuth();
+    setEmail(auth?.user.email ?? null);
+    setIsAdmin(auth?.user.role === "admin");
   }, []);
 
   useEffect(() => {
@@ -122,6 +126,15 @@ export function AccountMenu({
           >
             👨‍👩‍👧 {labels.report}
           </Link>
+          {isAdmin && (
+            <Link
+              href={`/${lang}/admin`}
+              className={item}
+              onClick={() => setOpen(false)}
+            >
+              🛠️ {labels.admin}
+            </Link>
+          )}
           <div className="my-1.5 h-px bg-black/[.06] dark:bg-white/10" />
           <button
             onClick={onLogout}

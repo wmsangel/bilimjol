@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { getHelper, type Locale } from "@izn-study/shared";
 import {
   ApiError,
-  clearLocalUserData,
   createChild,
   listChildren,
   loadChildId,
@@ -79,8 +78,9 @@ export function AccountForm({
     setError(null);
     try {
       if (mode === "register") {
-        // Новый аккаунт стартует с чистого листа (не наследует чужие локальные данные).
-        clearLocalUserData();
+        // ВАЖНО: НЕ чистим локальные данные — прогресс/помощник гостя должны
+        // переехать в новый аккаунт (ensureChild+syncChild зальют их на сервер).
+        // Очистка чужих данных происходит при выходе (logout), а не тут.
         await register(email, password, locale, locale === "ky" ? "KG" : "RU");
       } else {
         await login(email, password);

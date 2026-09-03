@@ -31,6 +31,7 @@ export class AuthService {
       email: user.email,
       locale: user.locale,
       country: user.country,
+      role: user.role,
     };
   }
 

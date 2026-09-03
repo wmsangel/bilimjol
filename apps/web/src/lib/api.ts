@@ -10,6 +10,7 @@ export interface AuthUser {
   email: string;
   locale: string;
   country: string | null;
+  role?: string;
 }
 
 interface AuthState {
@@ -255,6 +256,29 @@ export function getAdminUsers(limit = 50, offset = 0) {
   return request<AdminUser[]>(`/admin/users?limit=${limit}&offset=${offset}`, {
     method: "GET",
   });
+}
+
+export interface AdminChildDetail {
+  id: string;
+  name: string;
+  grade: number;
+  helperId: string;
+  stats: {
+    streakCount: number;
+    spentStars: number;
+    totalAnswered: number;
+    totalCorrect: number;
+    timeSpentSec: number;
+    lastActiveDate: string | null;
+  };
+  progress: { taskId: string; correct: boolean }[];
+}
+
+export function getAdminUserDetail(userId: string) {
+  return request<{ email: string; children: AdminChildDetail[] }>(
+    `/admin/users/${userId}/detail`,
+    { method: "GET" },
+  );
 }
 
 export function adminGrantPremium(userId: string, days?: number) {
