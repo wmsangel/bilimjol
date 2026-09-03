@@ -1,16 +1,14 @@
 import { ImageResponse } from "next/og";
+import { MARK_SVG, markDataUri } from "@/lib/brandMark";
 
-// Превью-картинка при шэре в мессенджерах/соцсетях (1200×630).
-// Рисуется кодом: без внешних картинок, без кириллицы в самом изображении
-// (текст-описание идёт в мета-тегах), чтобы рендер был надёжным.
+// Превью-картинка при шэре (1200×630). Знак «книга-дорога» + вордмарк.
+// Текст латиницей — надёжный рендер Satori без загрузки кириллических шрифтов.
 
 export const alt = "Bilimjol — развивающие занятия для детей на кыргызском и русском";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-// Контент не зависит от запроса — генерируем на билде и отдаём как статический ассет.
+// Контент не зависит от запроса — генерируем на билде.
 export const dynamic = "force-static";
-
-const CHARS = ["#F5943C", "#9AA6B8", "#CBD4E2", "#F1E4F5", "#78C56A"];
 
 export default function Image() {
   return new ImageResponse(
@@ -20,38 +18,46 @@ export default function Image() {
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "linear-gradient(135deg, #5a5ad6 0%, #7c5cfc 100%)",
-          color: "#ffffff",
+          padding: 22,
+          background:
+            "radial-gradient(120% 140% at 24% 20%, #2c2560 0%, #191539 46%, #100d27 100%)",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", gap: 26, marginBottom: 48 }}>
-          {CHARS.map((c, i) => (
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 44,
+            padding: "0 64px",
+            border: "2px solid rgba(230,192,121,0.55)",
+            borderRadius: 26,
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={markDataUri(MARK_SVG)} width={320} height={320} alt="" />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", fontSize: 104, fontWeight: 800, letterSpacing: "-2px" }}>
+              <span style={{ color: "#ffffff" }}>Bilim</span>
+              <span style={{ color: "#e6c079" }}>jol</span>
+            </div>
             <div
-              key={i}
               style={{
-                width: 148,
-                height: 148,
-                borderRadius: 74,
-                background: c,
+                marginTop: 26,
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 20,
-                boxShadow: "0 12px 30px rgba(30,20,70,0.25)",
+                padding: "10px 22px",
+                border: "1px solid rgba(230,192,121,0.6)",
+                borderRadius: 999,
+                fontSize: 34,
+                fontWeight: 700,
+                color: "#e6c079",
               }}
             >
-              <div style={{ width: 20, height: 30, borderRadius: 10, background: "#2C2540" }} />
-              <div style={{ width: 20, height: 30, borderRadius: 10, background: "#2C2540" }} />
+              bilimjol.com
             </div>
-          ))}
-        </div>
-        <div style={{ fontSize: 150, fontWeight: 800, letterSpacing: "-4px" }}>Bilimjol</div>
-        <div style={{ fontSize: 42, marginTop: 8, color: "rgba(255,255,255,0.85)" }}>
-          bilimjol.com
+          </div>
         </div>
       </div>
     ),

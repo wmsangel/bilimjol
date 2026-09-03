@@ -5,6 +5,7 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { HeaderNav, type NavItem } from "./HeaderNav";
 import { AccountMenu } from "./AccountMenu";
 import { MobileMenu } from "./MobileMenu";
+import { BrandMark } from "./BrandMark";
 
 /** Только те поля словаря, что нужны шапке (структурно совместимо с Dictionary). */
 interface HeaderDict {
@@ -47,9 +48,13 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
         <div className="flex min-w-0 justify-start">
           <Link
             href={`/${lang}`}
-            className="font-display text-xl font-extrabold tracking-tight"
+            className="flex items-center gap-2 font-display text-xl font-extrabold tracking-tight"
           >
-            Bilim<span className="text-indigo-600 dark:text-indigo-400">jol</span>
+            <BrandMark size={30} />
+            <span>
+              Bilim
+              <span className="text-indigo-600 dark:text-indigo-400">jol</span>
+            </span>
           </Link>
         </div>
 
