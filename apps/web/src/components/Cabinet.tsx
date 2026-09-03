@@ -49,6 +49,10 @@ export interface CabinetLabels {
   dailyDone: string;
   statsTitle: string;
   newsTitle: string;
+  nextTitle: string;
+  nextPlay: string;
+  nextGames: string;
+  nextWardrobe: string;
   answers: string;
   correct: string;
   incorrect: string;
@@ -197,7 +201,9 @@ export function Cabinet({
   });
 
   return (
-    <div className="mx-auto w-full max-w-md">
+    <div className="mx-auto grid w-full max-w-4xl items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+      {/* Зона 1 — прогресс */}
+      <div>
       <div className="mb-4 flex justify-center">
         <Mascot helper={helper} mood="idle" size="lg" />
       </div>
@@ -363,9 +369,12 @@ export function Cabinet({
           </div>
         )}
       </div>
+      </div>
 
+      {/* Зоны 2–3 — справа: новинки и «куда дальше» */}
+      <div className="flex flex-col gap-4">
       {/* Что нового */}
-      <div className="mt-4 rounded-[2rem] border border-black/[.06] bg-white p-5 shadow-xl dark:border-white/10 dark:bg-zinc-900">
+      <div className="rounded-[2rem] border border-black/[.06] bg-white p-5 shadow-xl dark:border-white/10 dark:bg-zinc-900">
         <div className="mb-3 flex items-center gap-2">
           <h3 className="font-display text-base font-bold">
             🆕 {labels.newsTitle}
@@ -406,6 +415,32 @@ export function Cabinet({
             );
           })}
         </ul>
+      </div>
+
+      {/* Куда дальше — рекомендации (двигатель гринда) */}
+      <div className="rounded-[2rem] border border-black/[.06] bg-white p-5 shadow-xl dark:border-white/10 dark:bg-zinc-900">
+        <h3 className="mb-3 font-display text-base font-bold">
+          🚀 {labels.nextTitle}
+        </h3>
+        <div className="flex flex-col gap-2">
+          {(
+            [
+              { href: `/${locale}/play`, icon: "🎮", label: labels.nextPlay },
+              { href: `/${locale}/games`, icon: "🧩", label: labels.nextGames },
+              { href: `/${locale}/wardrobe`, icon: "👕", label: labels.nextWardrobe },
+            ] as const
+          ).map((r) => (
+            <Link
+              key={r.href}
+              href={r.href}
+              className="flex items-center gap-3 rounded-2xl bg-black/[.03] px-3 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-black/[.06] dark:bg-white/[.04] dark:text-zinc-200 dark:hover:bg-white/10"
+            >
+              <span className="text-lg">{r.icon}</span>
+              {r.label}
+            </Link>
+          ))}
+        </div>
+      </div>
       </div>
     </div>
   );
