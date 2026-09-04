@@ -32,7 +32,7 @@ interface Clothing {
   name: string;
   draw?: () => string;
   color?: string;
-  style?: "tee" | "robe";
+  style?: "tee" | "robe" | "sweater";
   inner?: string;
   trim?: string;
 }
@@ -160,8 +160,34 @@ function wMedal(): string {
   return `<g><path d="M98 130 L106 166" stroke="#4F86F7" stroke-width="7" stroke-linecap="round"/><path d="M122 130 L114 166" stroke="#E23A6E" stroke-width="7" stroke-linecap="round"/><circle cx="110" cy="178" r="17" fill="#F7C948" stroke="#D8A838" stroke-width="2.5"/><path d="M110 168 l3.4 6.9 7.6 1.1 -5.5 5.4 1.3 7.6 -6.8 -3.6 -6.8 3.6 1.3 -7.6 -5.5 -5.4 7.6 -1.1 z" fill="#E0A82E"/></g>`;
 }
 
+// ── Новые вещи ──
+function wSunglasses(): string {
+  return `<g><path d="M64 95 h92 v3.5 h-92 z" fill="#2A2233"/><path d="M68 98 q-2 20 20 20 q19 0 18 -19 q-19 -5 -38 -1 z" fill="#1C1830"/><path d="M114 98 q19 -4 38 1 q2 19 -18 19 q-22 0 -20 -20 z" fill="#1C1830"/><path d="M104 100 q6 -3 12 0" stroke="#2A2233" stroke-width="3" fill="none"/><path d="M74 103 q-1 9 9 12" stroke="#5b6a8a" stroke-width="2.5" fill="none" opacity=".5"/></g>`;
+}
+function wBowtie(): string {
+  return `<g transform="translate(110 146)"><path d="M0 0 L-22 -13 L-22 13 Z" fill="#E23A6E"/><path d="M0 0 L22 -13 L22 13 Z" fill="#E23A6E"/><path d="M-22 -13 L-22 13 M22 -13 L22 13" stroke="#B92C55" stroke-width="2" opacity=".5"/><rect x="-6" y="-9" width="12" height="18" rx="3.5" fill="#B92C55"/></g>`;
+}
+function ushankaOn(): string {
+  const fur = "#9B7B57", dk = sh(fur, -24), band = "#EFE7DA";
+  return `<g><path d="M56 72 Q56 30 110 26 Q164 30 164 72 Q110 82 56 72 Z" fill="${fur}"/><path d="M52 66 Q46 94 58 114 Q72 110 70 88 Q68 76 64 70 Z" fill="${fur}"/><path d="M168 66 Q174 94 162 114 Q148 110 150 88 Q152 76 156 70 Z" fill="${fur}"/><ellipse cx="56" cy="114" rx="10" ry="7" fill="${band}"/><ellipse cx="164" cy="114" rx="10" ry="7" fill="${band}"/><path d="M48 74 Q110 94 172 74 Q170 88 110 92 Q50 88 48 74 Z" fill="${band}"/><g stroke="${dk}" stroke-width="1.8" fill="none" opacity=".4"><path d="M80 40 Q78 56 74 70"/><path d="M110 30 V80"/><path d="M140 40 Q142 56 146 70"/></g></g>`;
+}
+function helmetOn(): string {
+  const ring = "#E8ECF2", glass = "rgba(150,200,240,.28)", edge = "#B7C2D4";
+  return `<g><circle cx="110" cy="100" r="66" fill="${glass}" stroke="${ring}" stroke-width="7"/><circle cx="110" cy="100" r="66" fill="none" stroke="${edge}" stroke-width="1.5"/><path d="M70 62 Q100 46 140 60" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".5"/><rect x="150" y="90" width="15" height="18" rx="4" fill="${ring}"/><rect x="153" y="94" width="9" height="4" rx="2" fill="#26E0F0"/></g>`;
+}
+function partyhatOn(): string {
+  return `<g><path d="M110 18 L84 80 Q110 90 136 80 Z" fill="#F26D9D"/><path d="M110 18 L98 80 M110 18 L110 84 M110 18 L122 80" stroke="#fff" stroke-width="3" opacity=".45"/><circle cx="110" cy="16" r="7" fill="#F7C948"/><g fill="#4F86F7"><circle cx="97" cy="68" r="3.2"/><circle cx="123" cy="66" r="3.2"/><circle cx="110" cy="76" r="3.2"/></g></g>`;
+}
+
 const CLOTHES: Record<string, Clothing> = {
   cap: { slot: "head", name: "Кепка", draw: wCap },
+  ushanka: { slot: "head", name: "Ушанка" },
+  helmet: { slot: "head", name: "Шлем" },
+  partyhat: { slot: "head", name: "Колпак" },
+  sunglasses: { slot: "face", name: "Тёмные очки", draw: wSunglasses },
+  bowtie: { slot: "neck", name: "Бабочка", draw: wBowtie },
+  sweater: { slot: "body", name: "Свитер", color: "#C0574E", style: "sweater" },
+  spacesuit: { slot: "body", name: "Скафандр", color: "#E4E9F0", inner: "#C3CDDC", trim: "#5B9BD5", style: "robe" },
   kalpak: { slot: "head", name: "Калпак" },
   tubeteika: { slot: "head", name: "Тюбетейка" },
   beanie: { slot: "head", name: "Шапка" },
@@ -173,7 +199,7 @@ const CLOTHES: Record<string, Clothing> = {
   crown: { slot: "head", name: "Корона", draw: wCrown },
   medal: { slot: "neck", name: "Медаль", draw: wMedal },
 };
-const WARD_ORDER = ["cap", "kalpak", "tubeteika", "beanie", "bow", "crown", "glasses", "tee", "chapan", "scarf", "medal"];
+const WARD_ORDER = ["cap", "kalpak", "tubeteika", "beanie", "ushanka", "bow", "partyhat", "crown", "helmet", "glasses", "sunglasses", "tee", "sweater", "chapan", "spacesuit", "scarf", "bowtie", "medal"];
 
 function bodyOf(S: Spec, outfit: Outfit): string {
   const f = S.fur, b = S.belly, d = sh(f, S.darkAmt ?? -26);
@@ -197,6 +223,10 @@ function bodyOf(S: Spec, outfit: Outfit): string {
     g.push(`<path d="M60 178 q50 30 100 0 q-8 24 -50 24 q-42 0 -50 -24z" fill="${sd}" opacity=".3"/>`);
     g.push(`<path d="M88 148 q22 20 44 0 q-8 -14 -22 -14 q-14 0 -22 14z" fill="${f}"/>`);
     g.push(`<path d="M88 148 q22 20 44 0" fill="none" stroke="${sd}" stroke-width="2.5" opacity=".55"/>`);
+    if (item.style === "sweater") {
+      g.push(`<g stroke="${sl}" stroke-width="3" fill="none" opacity=".5"><path d="M62 158 q48 16 96 0"/><path d="M60 172 q50 18 100 0"/></g>`);
+      g.push(`<path d="M60 188 q50 22 100 0" fill="none" stroke="${sd}" stroke-width="3.5" opacity=".4"/>`);
+    }
   } else {
     g.push(`<ellipse cx="110" cy="162" rx="54" ry="48" fill="${S.bodyColor ?? f}"/><ellipse cx="110" cy="172" rx="33" ry="32" fill="${b}"/>`);
     if (S.bodyMarks) g.push(S.bodyMarks());
@@ -224,7 +254,7 @@ function tubeteikaOn(): string {
   const dk = "#1F2C35", orn = "#E4C061", wht = "#F3EFE0";
   return `<g><path d="M58 68 Q58 42 110 40 Q162 42 162 68 Q110 78 58 68 Z" fill="${dk}"/><path d="M56 66 Q110 80 164 66 Q110 74 56 70 Z" fill="${orn}"/><g fill="${wht}"><path d="M70 64 l4 -7 l4 7z"/><path d="M91 62 l4 -7 l4 7z"/><path d="M112 62 l4 -7 l4 7z"/><path d="M133 63 l4 -7 l4 7z"/></g><path d="M96 50 q14 -8 28 0" fill="none" stroke="${orn}" stroke-width="2.5"/><circle cx="110" cy="42" r="4" fill="${orn}"/></g>`;
 }
-const HEADWEAR: Record<string, (S: Spec) => string> = { cap: capOn, kalpak: kalpakOn, tubeteika: tubeteikaOn, beanie: beanieOn };
+const HEADWEAR: Record<string, (S: Spec) => string> = { cap: capOn, kalpak: kalpakOn, tubeteika: tubeteikaOn, beanie: beanieOn, ushanka: ushankaOn, helmet: helmetOn, partyhat: partyhatOn };
 
 function fitWrap(S: Spec, item: string, svg: string): string {
   const t = (S.fit && S.fit[item]) || "";
@@ -297,7 +327,7 @@ const SPECS: Record<string, Spec> = {
   bunny: { name: "Зайчик", type: "animal", fur: "#F1E4F5", belly: "#FFFFFF", darkAmt: -14, ears: bunnyEars, tail: nub("#FFFFFF"), face: bunnyFace, eyes: eye(84, false) + eye(136, false) },
   frog: {
     name: "Лягушонок", type: "animal", fur: "#78C56A", belly: "#D9F0CF",
-    fit: { glasses: "translate(-1 -40)", cap: "translate(110 32) scale(.5) translate(-110 -74)", kalpak: "translate(110 30) scale(.5) translate(-110 -60)", beanie: "translate(110 30) scale(.52) translate(-110 -64)", tubeteika: "translate(110 30) scale(.52) translate(-110 -60)", scarf: "translate(0 -4)" },
+    fit: { glasses: "translate(-1 -40)", sunglasses: "translate(-1 -40)", cap: "translate(110 32) scale(.5) translate(-110 -74)", kalpak: "translate(110 30) scale(.5) translate(-110 -60)", beanie: "translate(110 30) scale(.52) translate(-110 -64)", ushanka: "translate(110 30) scale(.52) translate(-110 -64)", tubeteika: "translate(110 30) scale(.52) translate(-110 -60)", partyhat: "translate(110 30) scale(.5) translate(-110 -60)", helmet: "translate(110 34) scale(.62) translate(-110 -100)", scarf: "translate(0 -4)", bowtie: "translate(0 -4)" },
     face: frogFace, eyes: `<g class="blink"><g class="pupils"><circle cx="82" cy="60" r="10" fill="${EYE}"/><circle cx="79" cy="56" r="3.6" fill="#fff"/><circle cx="138" cy="60" r="10" fill="${EYE}"/><circle cx="135" cy="56" r="3.6" fill="#fff"/></g></g>`, mouth: () => smile("M80 122 Q110 150 140 122"),
   },
   blocky: {
@@ -308,7 +338,7 @@ const SPECS: Record<string, Spec> = {
     name: "Стив", type: "game", noCheeks: true, fur: "#C89B6E", belly: "#2FBABA", bodyColor: "#26A9A9", darkAmt: -26, headShape: "square", hair: "#49331F",
     face: steveFace, eyes: `<g class="blink"><g class="pupils"><rect x="80" y="86" width="18" height="13" fill="#D8D8EA"/><rect x="90" y="86" width="8" height="13" fill="#4A3AA0"/><rect x="122" y="86" width="18" height="13" fill="#D8D8EA"/><rect x="122" y="86" width="8" height="13" fill="#4A3AA0"/></g></g>`,
   },
-  robot: { name: "Робот", type: "robot", fur: "#AEB6C2", belly: "#D2D8E0", darkAmt: -30, headShape: "square", fit: { glasses: "translate(0 -15)" }, ears: antenna, face: robotFace, eyes: "" },
+  robot: { name: "Робот", type: "robot", fur: "#AEB6C2", belly: "#D2D8E0", darkAmt: -30, headShape: "square", fit: { glasses: "translate(0 -15)", sunglasses: "translate(0 -15)" }, ears: antenna, face: robotFace, eyes: "" },
   monster: { name: "Монстрик", type: "monster", fur: "#A855F7", belly: "#E7CCFB", darkAmt: -24, ears: horns, tail: nub("#8B3ED6"), face: monsterFace, eyes: eye(84, true) + eye(136, true) },
 };
 
@@ -349,8 +379,22 @@ export interface WardrobeItem {
   unlockAt: number;
 }
 const UNLOCK_AT: Record<string, number> = {
-  tee: 0, scarf: 0, glasses: 4, cap: 6, bow: 8, beanie: 10, tubeteika: 12, kalpak: 15, chapan: 20, crown: 25, medal: 30,
+  tee: 0, scarf: 0, glasses: 4, cap: 6, partyhat: 7, bow: 8, sunglasses: 10, bowtie: 12, beanie: 10, tubeteika: 12, sweater: 14, kalpak: 15, ushanka: 16, chapan: 20, crown: 25, medal: 30, spacesuit: 34, helmet: 35,
 };
+
+export interface WardrobeSet {
+  id: string;
+  emoji: string;
+  name: { ru: string; ky: string };
+  items: string[];
+  /** Сколько звёзд нужно, чтобы открыть весь набор. */
+  unlockAt: number;
+}
+export const SETS: WardrobeSet[] = [
+  { id: "national", emoji: "🇰🇬", name: { ru: "Национальный", ky: "Улуттук" }, items: ["kalpak", "chapan"], unlockAt: 20 },
+  { id: "winter", emoji: "❄️", name: { ru: "Зимний", ky: "Кышкы" }, items: ["ushanka", "sweater", "scarf"], unlockAt: 16 },
+  { id: "space", emoji: "🚀", name: { ru: "Космос", ky: "Космос" }, items: ["helmet", "spacesuit"], unlockAt: 35 },
+];
 export const WARDROBE: WardrobeItem[] = WARD_ORDER.map((k) => ({
   id: k,
   slot: CLOTHES[k].slot,
@@ -370,6 +414,13 @@ export function wardrobeIcon(k: string): string {
   else if (k === "scarf") s += '<path d="M8 14 Q22 24 36 14 L36 22 Q22 30 8 22z" fill="#22B473"/><rect x="24" y="22" width="7" height="12" rx="2" fill="#1B9160"/>';
   else if (k === "crown") s += '<path d="M6 30 L10 13 L16 22 L22 10 L28 22 L34 13 L38 30 Q22 35 6 30z" fill="#F7C948" stroke="#D8A838" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="13" r="2.4" fill="#FF5C8A"/><circle cx="22" cy="10" r="2.8" fill="#4F86F7"/><circle cx="34" cy="13" r="2.4" fill="#22B473"/>';
   else if (k === "medal") s += '<path d="M17 5 L20 19 M27 5 L24 19" stroke="#4F86F7" stroke-width="3" stroke-linecap="round"/><circle cx="22" cy="27" r="9" fill="#F7C948" stroke="#D8A838" stroke-width="1.5"/><path d="M22 21 l1.8 3.7 4.1 .6 -3 3 .7 4.1 -3.6 -1.9 -3.6 1.9 .7 -4.1 -3 -3 4.1 -.6z" fill="#E0A82E"/>';
+  else if (k === "ushanka") s += '<path d="M10 22 Q10 6 22 4 Q34 6 34 22 Q22 26 10 22z" fill="#9B7B57"/><path d="M8 20 Q4 30 9 36 Q14 33 13 26z" fill="#9B7B57"/><path d="M36 20 Q40 30 35 36 Q30 33 31 26z" fill="#9B7B57"/><path d="M7 22 Q22 30 37 22 Q35 28 22 30 Q9 28 7 22z" fill="#EFE7DA"/>';
+  else if (k === "helmet") s += '<circle cx="22" cy="21" r="15" fill="rgba(150,200,240,.35)" stroke="#E3E8F0" stroke-width="3"/><path d="M12 14 Q22 8 32 13" stroke="#fff" stroke-width="2.5" fill="none" opacity=".6"/><rect x="33" y="18" width="4" height="6" rx="1.5" fill="#E3E8F0"/>';
+  else if (k === "partyhat") s += '<path d="M22 3 L12 32 Q22 36 32 32z" fill="#F26D9D"/><path d="M22 3 L17 32 M22 3 L22 34 M22 3 L27 32" stroke="#fff" stroke-width="1.6" opacity=".5"/><circle cx="22" cy="3" r="3" fill="#F7C948"/><g fill="#4F86F7"><circle cx="17" cy="26" r="1.6"/><circle cx="27" cy="24" r="1.6"/></g>';
+  else if (k === "sunglasses") s += '<path d="M6 16 h32 v2.4 h-32z" fill="#2A2233"/><path d="M8 18 q-1 10 8 10 q9 0 8 -9 q-8 -3 -16 -1z" fill="#1C1830"/><path d="M20 18 q8 -2 16 1 q1 9 -8 9 q-9 0 -8 -10z" fill="#1C1830"/>';
+  else if (k === "bowtie") s += '<g transform="translate(22 20)"><path d="M0 0 L-13 -8 L-13 8 Z" fill="#E23A6E"/><path d="M0 0 L13 -8 L13 8 Z" fill="#E23A6E"/><rect x="-4" y="-6" width="8" height="12" rx="2.5" fill="#B92C55"/></g>';
+  else if (k === "sweater") s += '<path d="M8 12 Q22 3 36 12 L32 30 Q22 35 12 30z" fill="#C0574E"/><g stroke="#D98A80" stroke-width="1.6" fill="none" opacity=".6"><path d="M11 18 q11 5 22 0"/><path d="M11 24 q11 5 22 0"/></g>';
+  else if (k === "spacesuit") s += '<path d="M8 12 Q22 4 36 12 L33 32 Q22 36 11 32z" fill="#E4E9F0"/><path d="M22 8 L28 12 L26 34 Q22 36 18 34 L16 12z" fill="#C3CDDC"/><circle cx="22" cy="22" r="4" fill="#5B9BD5"/>';
   return s + "</svg>";
 }
 export const SLOT_LABELS: Record<Slot, { ru: string; ky: string }> = {

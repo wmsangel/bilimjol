@@ -6,6 +6,7 @@ import { loadProgress } from "@/lib/progress";
 import { loadHelperId, removeHelperId } from "@/lib/prefs";
 import {
   WARDROBE,
+  SETS,
   SLOT_LABELS,
   characterName,
   wardrobeIcon,
@@ -49,6 +50,19 @@ export function Wardrobe({
     });
   }
 
+  const slotOf = (id: string) => WARDROBE.find((w) => w.id === id)?.slot;
+  function equipSet(itemIds: string[]) {
+    setOutfit(() => {
+      const next: Outfit = {};
+      for (const id of itemIds) {
+        const slot = slotOf(id);
+        if (slot) next[slot] = id;
+      }
+      saveOutfit(next);
+      return next;
+    });
+  }
+
   const t = (ru: string, ky: string) => (locale === "ky" ? ky : ru);
 
   if (!loaded) {
@@ -83,6 +97,60 @@ export function Wardrobe({
 
       {/* Гардероб по слотам */}
       <div>
+        {/* Готовые наборы */}
+        <div className="mb-6">
+          <h3 className="mb-3 text-xs font-extrabold uppercase tracking-wide text-zinc-400">
+            {t("Наборы", "Топтомдор")}
+          </h3>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {SETS.map((set) => {
+              const locked = stars < set.unlockAt;
+              const active = set.items.every(
+                (id) => outfit[slotOf(id) as Slot] === id,
+              );
+              return (
+                <button
+                  key={set.id}
+                  onClick={() => !locked && equipSet(set.items)}
+                  disabled={locked}
+                  className={
+                    "relative flex items-center gap-3 rounded-2xl border-2 bg-white p-3 text-left shadow-sm transition dark:bg-zinc-900 " +
+                    (active
+                      ? "border-indigo-500 shadow-indigo-500/20"
+                      : locked
+                        ? "cursor-not-allowed border-black/[.06] dark:border-white/10"
+                        : "border-black/[.06] hover:-translate-y-1 hover:border-indigo-300 dark:border-white/10")
+                  }
+                >
+                  <span className={"text-3xl " + (locked ? "opacity-40 grayscale" : "")}>
+                    {set.emoji}
+                  </span>
+                  <span className="min-w-0">
+                    <span
+                      className={
+                        "block truncate text-sm font-bold " +
+                        (locked ? "text-zinc-400" : "text-zinc-700 dark:text-zinc-200")
+                      }
+                    >
+                      {set.name[locale]}
+                    </span>
+                    <span className="text-xs font-semibold text-zinc-400">
+                      {locked
+                        ? `${set.unlockAt} ⭐`
+                        : t("Надеть набор", "Топтомду кий")}
+                    </span>
+                  </span>
+                  {active && (
+                    <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold text-white shadow">
+                      ✓
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {SLOTS.map((slot) => {
           const items = WARDROBE.filter((i) => i.slot === slot);
           return (
