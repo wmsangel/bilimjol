@@ -39,6 +39,14 @@ function isImageLike(s: string): boolean {
   return t.length > 0 && t.length <= 12 && !/\p{L}/u.test(t);
 }
 
+// Сетка для крупных карточек-картинок: 4 варианта → 2×2 (без сироты в ряду),
+// остальные — адаптивно (по 2 на телефоне, по 3 на широком экране).
+function imageGridClass(n: number): string {
+  return n === 4
+    ? "grid grid-cols-2 gap-3"
+    : "grid grid-cols-2 gap-3 sm:grid-cols-3";
+}
+
 // Текст для озвучки: вопрос + варианты, но эмодзи-варианты пропускаем
 // (их не прочитать голосом — ребёнок и так видит и тапает картинку).
 function speakText(task: Task, locale: Locale): string {
@@ -714,7 +722,7 @@ export function TaskPlayer({
                 <div
                   className={
                     asImages
-                      ? "grid grid-cols-2 gap-3 sm:grid-cols-3"
+                      ? imageGridClass(task.options.length)
                       : "space-y-3"
                   }
                 >
@@ -763,7 +771,7 @@ export function TaskPlayer({
                   <div
                     className={
                       asImages
-                        ? "grid grid-cols-2 gap-3 sm:grid-cols-3"
+                        ? imageGridClass(task.options.length)
                         : "space-y-3"
                     }
                   >
