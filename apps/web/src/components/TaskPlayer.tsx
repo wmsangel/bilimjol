@@ -39,6 +39,18 @@ function isImageLike(s: string): boolean {
   return t.length > 0 && t.length <= 12 && !/\p{L}/u.test(t);
 }
 
+// Текст для озвучки: вопрос + варианты, но эмодзи-варианты пропускаем
+// (их не прочитать голосом — ребёнок и так видит и тапает картинку).
+function speakText(task: Task, locale: Locale): string {
+  const parts = [task.prompt[locale]];
+  if (task.type === "single_choice" || task.type === "multi_select") {
+    for (const o of task.options) {
+      if (!isImageLike(o[locale])) parts.push(o[locale]);
+    }
+  }
+  return parts.join(". ");
+}
+
 const SUBJECT_EMOJI: Record<Subject, string> = {
   logic: "🧩",
   math: "🔢",
@@ -209,12 +221,7 @@ export function TaskPlayer({
   // выбор класса/темы, поэтому речь не блокируется браузером).
   useEffect(() => {
     if (grade !== 0 || topicId === null || finished || !task) return;
-    const text = [
-      task.prompt[locale],
-      ...(task.type === "single_choice" || task.type === "multi_select"
-        ? task.options.map((o) => o[locale])
-        : []),
-    ].join(". ");
+    const text = speakText(task, locale);
     const timer = setTimeout(() => speak(text, locale), 350);
     return () => {
       clearTimeout(timer);
@@ -689,18 +696,7 @@ export function TaskPlayer({
           {speechSupported() && (
             <button
               type="button"
-              onClick={() =>
-                speak(
-                  [
-                    task.prompt[locale],
-                    ...(task.type === "single_choice" ||
-                    task.type === "multi_select"
-                      ? task.options.map((o) => o[locale])
-                      : []),
-                  ].join(". "),
-                  locale,
-                )
-              }
+              onClick={() => speak(speakText(task, locale), locale)}
               aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
               className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-indigo-100 text-xl transition hover:bg-indigo-200 active:scale-95 dark:bg-indigo-500/20"
             >
