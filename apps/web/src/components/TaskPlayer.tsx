@@ -26,7 +26,7 @@ import { getEntitlement, isLoggedIn, loadChildId } from "@/lib/api";
 import { syncChild } from "@/lib/sync";
 import { pushEvent, currencyIso } from "@/lib/gtm";
 import { countryForLocale, priceForCountry } from "@/lib/pricing";
-import { speak, speechSupported } from "@/lib/speech";
+import { speak, speechSupported, stopSpeaking } from "@/lib/speech";
 
 // Контакт администратора (пока оплата картой не подключена). Переопределяется env.
 const ADMIN_TG =
@@ -204,6 +204,24 @@ export function TaskPlayer({
 
   const task = activeTasks[index];
   const answered = status !== "answering";
+
+  // Автоозвучка для 0 класса: читаем вопрос сразу при открытии (жест уже был —
+  // выбор класса/темы, поэтому речь не блокируется браузером).
+  useEffect(() => {
+    if (grade !== 0 || topicId === null || finished || !task) return;
+    const text = [
+      task.prompt[locale],
+      ...(task.type === "single_choice" || task.type === "multi_select"
+        ? task.options.map((o) => o[locale])
+        : []),
+    ].join(". ");
+    const timer = setTimeout(() => speak(text, locale), 350);
+    return () => {
+      clearTimeout(timer);
+      stopSpeaking();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, topicId, finished, grade, locale]);
   const stars = activeTasks.filter((t) => results[t.id]?.correct).length;
   const earnedStars = Object.values(results).filter((r) => r.correct).length;
 

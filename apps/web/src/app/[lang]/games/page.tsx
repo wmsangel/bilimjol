@@ -35,6 +35,12 @@ export default async function GamesPage({
       title: dict.games.memory.title,
       description: dict.games.memory.description,
     },
+    {
+      href: `/${lang}/games/build`,
+      icon: "🧮",
+      title: dict.games.build.title,
+      description: dict.games.build.description,
+    },
   ];
 
   return (
