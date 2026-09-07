@@ -9,9 +9,11 @@ export const STARS_PER_LEVEL = 5;
 
 export interface StatsStore {
   streakCount: number;
+  bestStreak: number; // рекорд серии дней
   lastActiveDate: string | null;
   dailyDate: string | null;
   dailySolved: number;
+  activeDates: string[]; // ISO активных дней (для недельной полоски), последние ~60
   unlockedHelpers: string[];
   spentStars: number;
   totalAnswered: number; // всего ответов (с повторами)
@@ -21,9 +23,11 @@ export interface StatsStore {
 
 const DEFAULT: StatsStore = {
   streakCount: 0,
+  bestStreak: 0,
   lastActiveDate: null,
   dailyDate: null,
   dailySolved: 0,
+  activeDates: [],
   unlockedHelpers: [],
   spentStars: 0,
   totalAnswered: 0,
@@ -84,6 +88,11 @@ export function recordActivity(opts?: {
   } else if (s.streakCount === 0) {
     s.streakCount = 1;
   }
+  if (s.streakCount > s.bestStreak) s.bestStreak = s.streakCount;
+  if (!s.activeDates.includes(today)) {
+    s.activeDates.push(today);
+    if (s.activeDates.length > 60) s.activeDates = s.activeDates.slice(-60);
+  }
 
   if (s.dailyDate !== today) {
     s.dailyDate = today;
@@ -121,6 +130,46 @@ export function todayProgress(stats: StatsStore): number {
   return stats.dailyDate === todayStr() ? stats.dailySolved : 0;
 }
 
+export interface DayCell {
+  date: string;
+  weekday: string;
+  active: boolean;
+  today: boolean;
+}
+
+const WEEKDAY_SHORT: Record<"ru" | "ky", string[]> = {
+  // индекс по getUTCDay(): 0 = воскресенье … 6 = суббота
+  ru: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+  ky: ["Жш", "Дш", "Шш", "Шр", "Бш", "Жм", "Иш"],
+};
+
+/** Последние 7 дней (включая сегодня) с отметкой активности — для полоски недели. */
+export function lastSevenDays(
+  stats: StatsStore,
+  locale: "ru" | "ky" = "ru",
+): DayCell[] {
+  const names = WEEKDAY_SHORT[locale];
+  const active = new Set(stats.activeDates);
+  const now = new Date();
+  const base = Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+  );
+  const cells: DayCell[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(base - i * 86_400_000);
+    const iso = d.toISOString().slice(0, 10);
+    cells.push({
+      date: iso,
+      weekday: names[d.getUTCDay()],
+      active: active.has(iso),
+      today: i === 0,
+    });
+  }
+  return cells;
+}
+
 export function levelInfo(earnedStars: number) {
   const level = Math.floor(earnedStars / STARS_PER_LEVEL) + 1;
   const inLevel = earnedStars % STARS_PER_LEVEL;
@@ -149,16 +198,27 @@ export function computeAchievements(summary: {
   earnedStars: number;
   totalSolved: number;
   streak: number;
+  bestStreak?: number;
   subjectsTried: number;
   unlockedCount: number;
+  accuracy?: number;
 }): AchievementState[] {
+  const bestStreak = Math.max(summary.streak, summary.bestStreak ?? 0);
   return [
     { id: "firstTask", icon: "👣", unlocked: summary.totalSolved >= 1 },
     { id: "stars5", icon: "⭐", unlocked: summary.earnedStars >= 5 },
     { id: "tasks10", icon: "🎯", unlocked: summary.totalSolved >= 10 },
-    { id: "streak3", icon: "🔥", unlocked: summary.streak >= 3 },
+    { id: "streak3", icon: "🔥", unlocked: bestStreak >= 3 },
     { id: "bothSubjects", icon: "🧠", unlocked: summary.subjectsTried >= 2 },
     { id: "unlockHero", icon: "🎁", unlocked: summary.unlockedCount >= 1 },
+    { id: "stars25", icon: "🏅", unlocked: summary.earnedStars >= 25 },
+    { id: "tasks50", icon: "🚀", unlocked: summary.totalSolved >= 50 },
+    { id: "streak7", icon: "📅", unlocked: bestStreak >= 7 },
+    {
+      id: "sharpshooter",
+      icon: "🎓",
+      unlocked: (summary.accuracy ?? 0) >= 90 && summary.totalSolved >= 20,
+    },
   ];
 }
 

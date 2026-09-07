@@ -17,6 +17,7 @@ import {
   computeAchievements,
   DAILY_GOAL,
   formatDuration,
+  lastSevenDays,
   levelInfo,
   loadStats,
   spendableStars,
@@ -45,6 +46,8 @@ export interface CabinetLabels {
   noHelperCta: string;
   level: string;
   streak: string;
+  bestStreak: string;
+  weekTitle: string;
   daily: string;
   dailyDone: string;
   statsTitle: string;
@@ -65,9 +68,11 @@ export interface CabinetLabels {
 
 const EMPTY_STATS: StatsStore = {
   streakCount: 0,
+  bestStreak: 0,
   lastActiveDate: null,
   dailyDate: null,
   dailySolved: 0,
+  activeDates: [],
   unlockedHelpers: [],
   spentStars: 0,
   totalAnswered: 0,
@@ -196,9 +201,12 @@ export function Cabinet({
     earnedStars,
     totalSolved,
     streak: stats.streakCount,
+    bestStreak: stats.bestStreak,
     subjectsTried,
     unlockedCount: stats.unlockedHelpers.length,
+    accuracy: accuracyPct(stats.totalAnswered, stats.totalCorrect),
   });
+  const week = lastSevenDays(stats, locale);
 
   return (
     <div className="mx-auto grid w-full max-w-4xl items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
@@ -283,6 +291,45 @@ export function Cabinet({
               {labels.dailyDone}
             </p>
           )}
+        </div>
+
+        {/* Неделя активности */}
+        <div className="mt-6">
+          <div className="mb-2 flex items-center justify-between text-sm font-bold">
+            <span>{labels.weekTitle}</span>
+            {stats.bestStreak > 0 && (
+              <span className="text-xs font-semibold text-orange-500 dark:text-orange-400">
+                🔥 {labels.bestStreak}: {stats.bestStreak}
+              </span>
+            )}
+          </div>
+          <div className="flex justify-between gap-1.5">
+            {week.map((d) => (
+              <div key={d.date} className="flex flex-1 flex-col items-center gap-1">
+                <div
+                  className={
+                    "flex h-9 w-full items-center justify-center rounded-xl text-sm font-extrabold transition " +
+                    (d.active
+                      ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-sm"
+                      : "bg-black/[.05] text-zinc-300 dark:bg-white/10 dark:text-zinc-600") +
+                    (d.today ? " ring-2 ring-indigo-400 ring-offset-1 dark:ring-offset-zinc-900" : "")
+                  }
+                >
+                  {d.active ? "🔥" : ""}
+                </div>
+                <span
+                  className={
+                    "text-[10px] font-semibold " +
+                    (d.today
+                      ? "text-indigo-500 dark:text-indigo-400"
+                      : "text-zinc-400")
+                  }
+                >
+                  {d.weekday}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Статистика */}

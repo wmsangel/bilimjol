@@ -15,9 +15,11 @@ import {
 
 const EMPTY_STATS: StatsStore = {
   streakCount: 0,
+  bestStreak: 0,
   lastActiveDate: null,
   dailyDate: null,
   dailySolved: 0,
+  activeDates: [],
   unlockedHelpers: [],
   spentStars: 0,
   totalAnswered: 0,
