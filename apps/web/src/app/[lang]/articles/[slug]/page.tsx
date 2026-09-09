@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { articles, getArticle } from "@izn-study/shared";
@@ -79,24 +80,40 @@ export default async function ArticlePage({
           </time>
 
           {article.sections.map((s, i) => (
-            <section key={i} className="mt-8">
-              <h2 className="font-display text-2xl font-bold">
-                {s.heading[lang]}
-              </h2>
-              {s.body.map((p, j) => (
-                <p
-                  key={j}
-                  className="mt-3 text-lg leading-8 text-zinc-700 dark:text-zinc-300"
-                >
-                  {p[lang]}
-                </p>
-              ))}
-            </section>
+            <Fragment key={i}>
+              <section className="mt-8">
+                <h2 className="font-display text-2xl font-bold">
+                  {s.heading[lang]}
+                </h2>
+                {s.body.map((p, j) => (
+                  <p
+                    key={j}
+                    className="mt-3 text-lg leading-8 text-zinc-700 dark:text-zinc-300"
+                  >
+                    {p[lang]}
+                  </p>
+                ))}
+              </section>
+              {i === 0 && article.sections.length >= 2 && (
+                <aside className="mt-8 flex flex-col items-start gap-3 rounded-2xl border border-indigo-200 bg-indigo-50/70 p-5 dark:border-indigo-500/30 dark:bg-indigo-500/10 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
+                  <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">
+                    💡 {dict.cta.inline}
+                  </p>
+                  <Link
+                    href={`/${lang}/play`}
+                    className="flex-none rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow transition hover:brightness-110"
+                  >
+                    {dict.cta.button} →
+                  </Link>
+                </aside>
+              )}
+            </Fragment>
           ))}
         </article>
 
         <div className="mt-12 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-violet-600 px-6 py-8 text-center text-white shadow-xl">
           <p className="font-display text-xl font-bold">{dict.cta.title}</p>
+          <p className="mt-1.5 text-sm text-white/85">{dict.cta.subtitle}</p>
           <Link
             href={`/${lang}/play`}
             className="mt-4 inline-block rounded-full bg-white px-6 py-3 font-bold text-indigo-600 shadow-lg transition hover:brightness-95"
