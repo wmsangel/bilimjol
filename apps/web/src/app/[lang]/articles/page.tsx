@@ -41,7 +41,28 @@ export default async function ArticlesPage({
           {dict.articles.subtitle}
         </p>
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+        {/* Промо теста готовности */}
+        <Link
+          href={`/${lang}/gotovnost-k-shkole`}
+          className="mt-8 flex items-center gap-4 rounded-3xl bg-gradient-to-br from-indigo-500 to-violet-600 p-6 text-white shadow-lg transition hover:-translate-y-0.5 hover:brightness-110"
+        >
+          <span className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-white/15 text-3xl">
+            🎒
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-display text-xl font-extrabold">
+              {dict.readiness.title}
+            </span>
+            <span className="mt-1 block text-sm text-white/85">
+              {dict.readiness.intro}
+            </span>
+          </span>
+          <span className="hidden flex-none rounded-full bg-white px-5 py-2.5 font-bold text-indigo-600 sm:block">
+            {dict.readiness.start} →
+          </span>
+        </Link>
+
+        <div className="mt-6 grid gap-5 sm:grid-cols-2">
           {articles.map((a) => (
             <Link
               key={a.slug}
