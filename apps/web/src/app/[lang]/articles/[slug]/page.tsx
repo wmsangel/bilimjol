@@ -7,6 +7,7 @@ import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
+import { localizedAlternates } from "@/lib/seo";
 import { getDictionary } from "../../dictionaries";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com";
@@ -26,6 +27,7 @@ export async function generateMetadata({
   return {
     title: `${article.title[lang]} — Bilimjol`,
     description: article.excerpt[lang],
+    alternates: localizedAlternates(lang, `/articles/${slug}`),
   };
 }
 
@@ -55,9 +57,24 @@ export default async function ArticlePage({
     publisher: { "@type": "Organization", name: "Bilimjol", url: SITE },
   };
 
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: dict.articles.title,
+        item: `${SITE}/${lang}/articles`,
+      },
+      { "@type": "ListItem", position: 2, name: article.title[lang], item: url },
+    ],
+  };
+
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
       <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumb} />
       <SiteHeader lang={lang} dict={dict} />
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">

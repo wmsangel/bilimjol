@@ -4,6 +4,7 @@ import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ReadinessTest } from "@/components/ReadinessTest";
+import { localizedAlternates } from "@/lib/seo";
 import { getDictionary } from "../dictionaries";
 
 export async function generateMetadata({
@@ -17,6 +18,7 @@ export async function generateMetadata({
   return {
     title: `${dict.readiness.title} — Bilimjol`,
     description: dict.readiness.intro,
+    alternates: localizedAlternates(lang, "/gotovnost-k-shkole"),
   };
 }
 

@@ -7,6 +7,7 @@ import "../globals.css";
 import { locales, isLocale } from "@/i18n/config";
 import { getDictionary } from "./dictionaries";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { JsonLd } from "@/components/JsonLd";
 
 // Google Analytics (gtag). ID можно переопределить через NEXT_PUBLIC_GA_ID.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "G-DMSQV35M09";
@@ -117,6 +118,29 @@ export default async function RootLayout({
             />
           </noscript>
         ) : null}
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": `${SITE}/#org`,
+                name: "Bilimjol",
+                url: SITE,
+                logo: `${SITE}/icon`,
+                description: dict.meta.description,
+              },
+              {
+                "@type": "WebSite",
+                "@id": `${SITE}/#website`,
+                name: "Bilimjol",
+                url: `${SITE}/${lang}`,
+                inLanguage: lang === "ky" ? "ky-KG" : "ru-RU",
+                publisher: { "@id": `${SITE}/#org` },
+              },
+            ],
+          }}
+        />
         {children}
         <MobileBottomNav
           lang={lang}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
+import { localizedAlternates } from "@/lib/seo";
 import { SprintGame } from "@/components/SprintGame";
 import { getDictionary } from "../../dictionaries";
 
@@ -17,6 +18,7 @@ export async function generateMetadata({
   return {
     title: `${dict.games.sprint.title} — Bilimjol`,
     description: dict.games.sprint.description,
+    alternates: localizedAlternates(lang, "/games/sprint"),
   };
 }
 
