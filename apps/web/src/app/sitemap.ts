@@ -5,7 +5,7 @@ import { locales } from "@/i18n/config";
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const publicRoutes = ["", "/play", "/games", "/games/memory", "/games/build", "/games/sprint", "/games/bubbles", "/gotovnost-k-shkole", "/articles", "/tests", "/subscribe", "/about", "/privacy", "/terms"];
+  const publicRoutes = ["", "/play", "/games", "/games/memory", "/games/build", "/games/sprint", "/games/bubbles", "/gotovnost-k-shkole", "/roditelyam", "/articles", "/tests", "/subscribe", "/about", "/privacy", "/terms"];
   const entries: MetadataRoute.Sitemap = [];
 
   for (const lang of locales) {
