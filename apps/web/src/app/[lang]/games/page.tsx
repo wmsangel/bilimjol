@@ -55,6 +55,12 @@ export default async function GamesPage({
       title: dict.games.bubbles.title,
       description: dict.games.bubbles.description,
     },
+    {
+      href: `/${lang}/games/trace`,
+      icon: "✏️",
+      title: dict.games.trace.title,
+      description: dict.games.trace.description,
+    },
   ];
 
   return (
