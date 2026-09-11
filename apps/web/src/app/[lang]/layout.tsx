@@ -8,6 +8,7 @@ import { locales, isLocale } from "@/i18n/config";
 import { getDictionary } from "./dictionaries";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { JsonLd } from "@/components/JsonLd";
+import { PwaSetup } from "@/components/PwaSetup";
 
 // Google Analytics (gtag). ID можно переопределить через NEXT_PUBLIC_GA_ID.
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "G-DMSQV35M09";
@@ -62,6 +63,11 @@ export async function generateMetadata({
     verification: {
       google: "1_chDy09cV4--r2aq31gDHSLHTx5nEOc1yntu3lKXJo",
       yandex: "081d5db07ae6a1f2",
+    },
+    appleWebApp: {
+      capable: true,
+      title: "Bilimjol",
+      statusBarStyle: "default",
     },
   };
 }
@@ -142,6 +148,10 @@ export default async function RootLayout({
           }}
         />
         {children}
+        <PwaSetup
+          installLabel={dict.pwa.install}
+          laterLabel={dict.pwa.later}
+        />
         <MobileBottomNav
           lang={lang}
           labels={{
