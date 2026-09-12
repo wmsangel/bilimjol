@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTest, tests } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
+import { localizedAlternates } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { TestPlayer } from "@/components/TestPlayer";
 import { getDictionary } from "../../dictionaries";
@@ -18,7 +19,12 @@ export async function generateMetadata({
   const { lang, testId } = await params;
   const test = getTest(testId);
   if (!isLocale(lang) || !test) return {};
-  return { title: `${test.title[lang]} — Bilimjol` };
+  const suffix = lang === "ky" ? "онлайн машыгуу" : "тренажёр онлайн";
+  return {
+    title: `${test.title[lang]} — ${suffix} | Bilimjol`,
+    description: test.description[lang],
+    alternates: localizedAlternates(lang, `/tests/${testId}`),
+  };
 }
 
 export default async function TestPage({

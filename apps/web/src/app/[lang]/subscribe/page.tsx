@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
+import { localizedAlternates } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SubscribePlans } from "@/components/SubscribePlans";
 import { getDictionary } from "../dictionaries";
@@ -17,6 +18,7 @@ export async function generateMetadata({
   return {
     title: `${dict.subscribe.title} — Bilimjol`,
     description: dict.subscribe.subtitle,
+    alternates: localizedAlternates(lang, "/subscribe"),
   };
 }
 

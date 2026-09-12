@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { legalDocs } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
+import { localizedAlternates } from "@/lib/seo";
 import { getDictionary } from "../dictionaries";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -15,7 +16,11 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const doc = legalDocs.terms;
-  return { title: `${doc.title[lang]} — Bilimjol`, description: doc.intro[lang] };
+  return {
+    title: `${doc.title[lang]} — Bilimjol`,
+    description: doc.intro[lang],
+    alternates: localizedAlternates(lang, "/terms"),
+  };
 }
 
 export default async function TermsPage({

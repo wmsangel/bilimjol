@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { tests } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
+import { localizedAlternates } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getDictionary } from "../dictionaries";
 
@@ -14,7 +15,11 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!isLocale(lang)) return {};
   const dict = await getDictionary(lang);
-  return { title: `${dict.tests.title} — Bilimjol`, description: dict.tests.subtitle };
+  return {
+    title: `${dict.tests.title} — Bilimjol`,
+    description: dict.tests.subtitle,
+    alternates: localizedAlternates(lang, "/tests"),
+  };
 }
 
 export default async function TestsPage({
