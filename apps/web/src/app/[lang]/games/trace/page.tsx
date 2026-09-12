@@ -3,8 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
+import { JsonLd } from "@/components/JsonLd";
 import { TraceGame } from "@/components/TraceGame";
-import { localizedAlternates } from "@/lib/seo";
+import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { getDictionary } from "../../dictionaries";
 
 export async function generateMetadata({
@@ -34,6 +35,7 @@ export default async function TracePage({
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
       <SiteHeader lang={lang} dict={dict} />
+      <JsonLd data={breadcrumbJsonLd(lang, [[dict.games.title, "/games"], [dict.games.trace.title, "/games/trace"]])} />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
         <div className="mb-6 text-center">

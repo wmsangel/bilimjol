@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTest, tests } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
-import { localizedAlternates } from "@/lib/seo";
+import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
+import { JsonLd } from "@/components/JsonLd";
 import { TestPlayer } from "@/components/TestPlayer";
 import { getDictionary } from "../../dictionaries";
 
@@ -41,6 +42,12 @@ export default async function TestPage({
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
       <SiteHeader lang={lang} dict={dict} />
+      <JsonLd
+        data={breadcrumbJsonLd(lang, [
+          [dict.tests.title, "/tests"],
+          [test.title[lang], `/tests/${test.id}`],
+        ])}
+      />
 
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center px-6 py-8">
         <h1 className="mb-6 font-display text-2xl font-extrabold tracking-tight">
