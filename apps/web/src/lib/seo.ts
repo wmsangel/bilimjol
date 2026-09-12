@@ -22,3 +22,35 @@ export function localizedAlternates(
     },
   };
 }
+
+/** BreadcrumbList JSON-LD. `items`: [name, path-without-locale] in order. */
+export function breadcrumbJsonLd(
+  lang: Locale,
+  items: [name: string, path: string][],
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map(([name, path], i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name,
+      item: `${SITE}/${lang}${path}`,
+    })),
+  };
+}
+
+/** FAQPage JSON-LD from question/answer pairs. */
+export function faqJsonLd(
+  items: { q: string; a: string }[],
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((it) => ({
+      "@type": "Question",
+      name: it.q,
+      acceptedAnswer: { "@type": "Answer", text: it.a },
+    })),
+  };
+}

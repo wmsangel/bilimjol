@@ -129,12 +129,13 @@ export default async function RootLayout({
             "@context": "https://schema.org",
             "@graph": [
               {
-                "@type": "Organization",
+                "@type": "EducationalOrganization",
                 "@id": `${SITE}/#org`,
                 name: "Bilimjol",
                 url: SITE,
                 logo: `${SITE}/icon`,
                 description: dict.meta.description,
+                inLanguage: ["ru", "ky"],
               },
               {
                 "@type": "WebSite",

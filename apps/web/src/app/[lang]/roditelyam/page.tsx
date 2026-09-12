@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { localizedAlternates } from "@/lib/seo";
+import { Faq } from "@/components/Faq";
+import { JsonLd } from "@/components/JsonLd";
+import { localizedAlternates, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 import { getDictionary } from "../dictionaries";
 
 const tr = (lang: Locale) => (ru: string, ky: string) => (lang === "ky" ? ky : ru);
@@ -91,6 +93,44 @@ export default async function ParentsLanding({
     },
   ];
 
+  const faq = [
+    {
+      q: t("С какого возраста можно заниматься?", "Кайсы жаштан баштап машыгууга болот?"),
+      a: t(
+        "Есть раздел «Подготовка к школе» для тех, кто ещё не читает: задания с картинками и озвучкой. Дальше — материал по классам с 1 по 11.",
+        "Окуй элек балдар үчүн «Мектепке даярдык» бөлүмү бар: сүрөттүү жана үн менен тапшырмалар. Андан ары — 1ден 11ге чейин класстар боюнча материал.",
+      ),
+    },
+    {
+      q: t("Это бесплатно?", "Бул акысызбы?"),
+      a: t(
+        "Первые задания в каждой теме бесплатны и доступны без регистрации. Полный доступ открывается по недорогой подписке.",
+        "Ар бир темадагы биринчи тапшырмалар акысыз жана катталуусуз жеткиликтүү. Толук доступ арзан жазылуу менен ачылат.",
+      ),
+    },
+    {
+      q: t("Нужно ли устанавливать приложение?", "Тиркемени орнотуу керекпи?"),
+      a: t(
+        "Нет, всё работает в браузере. При желании сайт можно установить на телефон как приложение — иконкой на экране.",
+        "Жок, баары браузерде иштейт. Кааласаңыз, сайтты телефонго тиркеме катары орнотсоңуз болот — экранга иконка менен.",
+      ),
+    },
+    {
+      q: t("На каком языке материалы?", "Материалдар кайсы тилде?"),
+      a: t(
+        "Всё доступно на русском и кыргызском — язык переключается в один тап.",
+        "Баары орусча жана кыргызча жеткиликтүү — тил бир тап менен которулат.",
+      ),
+    },
+    {
+      q: t("Сколько времени заниматься в день?", "Күнүнө канча убакыт машыгуу керек?"),
+      a: t(
+        "Достаточно 10–15 минут в день. Регулярность важнее длительности: короткие занятия каждый день дают больше, чем редкие длинные.",
+        "Күнүнө 10–15 мүнөт жетиштүү. Туруктуулук узактыктан маанилүү: күн сайын кыска сабактар сейрек узундарга караганда көбүрөөк пайда берет.",
+      ),
+    },
+  ];
+
   const tips = [
     t(
       "Занимайтесь понемногу, но каждый день — привычка важнее объёма.",
@@ -112,6 +152,12 @@ export default async function ParentsLanding({
 
   return (
     <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
+      <JsonLd
+        data={breadcrumbJsonLd(lang, [
+          [t("Родителям", "Ата-энелерге"), "/roditelyam"],
+        ])}
+      />
+      <JsonLd data={faqJsonLd(faq)} />
       <SiteHeader lang={lang} dict={dict} />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-10">
@@ -184,6 +230,9 @@ export default async function ParentsLanding({
             </Link>
           </p>
         </section>
+
+        {/* FAQ */}
+        <Faq title={t("Частые вопросы", "Көп берилүүчү суроолор")} items={faq} />
 
         {/* Финальный CTA */}
         <section className="mt-14 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-violet-600 px-6 py-10 text-center text-white shadow-xl">
