@@ -136,6 +136,7 @@ export default async function RootLayout({
                 logo: `${SITE}/icon`,
                 description: dict.meta.description,
                 inLanguage: ["ru", "ky"],
+                areaServed: "KG",
               },
               {
                 "@type": "WebSite",
