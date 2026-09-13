@@ -6,31 +6,80 @@ import Link from "next/link";
 export interface TraceLabels {
   title: string;
   description: string;
-  hint: string; // «Веди пальцем по линии от зелёной точки»
-  shapeLabel: string; // «Фигура {n} из {total}»
-  done: string; // «Готово!»
+  hint: string;
+  count: string; // «{n} из {total}»
+  done: string;
   next: string;
   restart: string;
   back: string;
+  setShapes: string;
+  setDigits: string;
+  setLetters: string;
 }
 
-// Фигуры на квадрате 0..100. Порядок — от простого к сложному.
-const SHAPES: { id: string; d: string; closed?: boolean }[] = [
-  { id: "line", d: "M12 50 L88 50" },
-  { id: "arc", d: "M12 78 Q50 8 88 78" },
-  { id: "wave", d: "M10 55 Q25 22 40 55 T70 55 T100 55" },
-  { id: "zigzag", d: "M12 72 L31 28 L50 72 L69 28 L88 72" },
-  { id: "triangle", d: "M50 14 L86 84 L14 84 Z", closed: true },
-  { id: "square", d: "M22 22 L78 22 L78 78 L22 78 Z", closed: true },
+interface Glyph {
+  id: string;
+  strokes: string[]; // каждый штрих — path d на квадрате 0..100
+}
+
+// ── Фигуры (по одному штриху) ──
+const SHAPES: Glyph[] = [
+  { id: "line", strokes: ["M12 50 L88 50"] },
+  { id: "arc", strokes: ["M12 78 Q50 8 88 78"] },
+  { id: "wave", strokes: ["M10 55 Q25 22 40 55 T70 55 T100 55"] },
+  { id: "zigzag", strokes: ["M12 72 L31 28 L50 72 L69 28 L88 72"] },
+  { id: "triangle", strokes: ["M50 14 L86 84 L14 84 Z"] },
+  { id: "square", strokes: ["M22 22 L78 22 L78 78 L22 78 Z"] },
   {
     id: "circle",
-    d: "M50 12 C71 12 88 29 88 50 C88 71 71 88 50 88 C29 88 12 71 12 50 C12 29 29 12 50 12 Z",
-    closed: true,
+    strokes: [
+      "M50 12 C71 12 88 29 88 50 C88 71 71 88 50 88 C29 88 12 71 12 50 C12 29 29 12 50 12 Z",
+    ],
   },
 ];
 
-const REACH = 13; // радиус попадания в точку (в единицах viewBox)
-const SAMPLES = 48;
+// ── Цифры 0–9 ──
+const DIGITS: Glyph[] = [
+  { id: "0", strokes: ["M50 15 C31 15 23 32 23 50 C23 68 31 85 50 85 C69 85 77 68 77 50 C77 32 69 15 50 15 Z"] },
+  { id: "1", strokes: ["M34 30 L52 15 L52 85"] },
+  { id: "2", strokes: ["M28 32 C28 16 62 12 70 32 C76 48 50 58 28 84 L78 84"] },
+  { id: "3", strokes: ["M30 26 C48 12 74 20 64 42 C58 52 50 51 50 51 C60 50 80 58 70 80 C62 94 36 90 28 76"] },
+  { id: "4", strokes: ["M62 14 L20 64 L82 64", "M64 30 L64 86"] },
+  { id: "5", strokes: ["M70 16 L36 16 L31 46 C56 39 78 50 70 70 C62 90 34 86 26 72"] },
+  { id: "6", strokes: ["M66 18 C44 22 29 44 29 64 C29 82 47 90 59 80 C72 69 67 50 47 51 C37 52 31 59 30 66"] },
+  { id: "7", strokes: ["M22 16 L80 16 L44 86"] },
+  { id: "8", strokes: ["M50 50 C34 46 34 22 50 16 C66 22 66 46 50 50 C72 55 74 84 50 86 C26 84 28 55 50 50 Z"] },
+  { id: "9", strokes: ["M66 40 C66 24 46 18 36 32 C27 44 37 59 54 57 C63 56 66 47 66 40 C66 62 60 80 42 88"] },
+];
+
+// ── Буквы (стартовый набор) ──
+const LETTERS: Glyph[] = [
+  { id: "А", strokes: ["M20 86 L50 14 L80 86", "M33 58 L67 58"] },
+  { id: "Б", strokes: ["M70 16 L32 16 L32 84 L60 84 C76 84 76 52 60 52 L32 52"] },
+  { id: "В", strokes: ["M32 16 L32 84", "M32 16 L60 16 C76 16 76 48 58 50 C78 52 78 84 60 84 L32 84"] },
+  { id: "Г", strokes: ["M28 84 L28 16 L74 16"] },
+  { id: "Д", strokes: ["M34 16 L66 16 L66 84", "M34 16 L34 84", "M22 84 L82 84"] },
+  { id: "Е", strokes: ["M66 16 L30 16 L30 84 L66 84", "M30 50 L58 50"] },
+  { id: "И", strokes: ["M28 84 L28 16", "M72 84 L72 16", "M28 80 L72 20"] },
+  { id: "К", strokes: ["M30 16 L30 84", "M72 16 L34 50 L72 84"] },
+  { id: "Л", strokes: ["M28 84 L46 16 L58 16 L74 84"] },
+  { id: "М", strokes: ["M24 84 L24 16 L50 56 L76 16 L76 84"] },
+  { id: "Н", strokes: ["M28 16 L28 84", "M72 16 L72 84", "M28 50 L72 50"] },
+  { id: "О", strokes: ["M50 15 C31 15 23 32 23 50 C23 68 31 85 50 85 C69 85 77 68 77 50 C77 32 69 15 50 15 Z"] },
+  { id: "П", strokes: ["M28 84 L28 16 L72 16 L72 84"] },
+  { id: "Р", strokes: ["M32 84 L32 16 L60 16 C80 16 80 52 60 52 L32 52"] },
+  { id: "С", strokes: ["M76 28 C62 14 26 18 24 50 C26 82 62 86 76 72"] },
+  { id: "Т", strokes: ["M20 16 L80 16", "M50 16 L50 84"] },
+  { id: "У", strokes: ["M26 16 L50 56 L74 16", "M50 56 L44 86 C42 94 30 92 28 84"] },
+  { id: "Ф", strokes: ["M50 16 L50 84", "M50 26 C30 26 30 62 50 62 C70 62 70 26 50 26 Z"] },
+  { id: "Э", strokes: ["M26 26 C40 14 72 18 74 50 C72 82 40 86 26 74", "M48 50 L74 50"] },
+];
+
+const SETS = { shapes: SHAPES, digits: DIGITS, letters: LETTERS } as const;
+type SetId = keyof typeof SETS;
+
+const REACH = 14;
+const SAMPLES = 40;
 
 interface Pt {
   x: number;
@@ -44,34 +93,42 @@ export function TraceGame({
   labels: TraceLabels;
   homeHref: string;
 }) {
-  const total = SHAPES.length;
-  const [shapeIdx, setShapeIdx] = useState(0);
-  const [progress, setProgress] = useState(0); // 0..1
+  const [setId, setSetId] = useState<SetId>("shapes");
+  const [glyphIdx, setGlyphIdx] = useState(0);
+  const [strokeIdx, setStrokeIdx] = useState(0);
+  const [progress, setProgress] = useState(0); // текущий штрих, 0..1
   const [done, setDone] = useState(false);
   const [drawing, setDrawing] = useState(false);
 
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const guideRef = useRef<SVGPathElement | null>(null);
-  const points = useRef<Pt[]>([]);
+  const strokeRefs = useRef<(SVGPathElement | null)[]>([]);
+  const points = useRef<Pt[][]>([]);
   const reached = useRef(0);
 
-  const shape = SHAPES[shapeIdx];
+  const glyphs = SETS[setId];
+  const total = glyphs.length;
+  const glyph = glyphs[glyphIdx];
 
-  // Пересчитать контрольные точки при смене фигуры.
+  // Пересчёт контрольных точек для всех штрихов при смене глифа/набора.
   useEffect(() => {
-    const path = guideRef.current;
-    if (!path) return;
-    const len = path.getTotalLength();
-    const pts: Pt[] = [];
-    for (let i = 0; i <= SAMPLES; i++) {
-      const p = path.getPointAtLength((len * i) / SAMPLES);
-      pts.push({ x: p.x, y: p.y });
-    }
-    points.current = pts;
+    const arr: Pt[][] = [];
+    glyph.strokes.forEach((_, i) => {
+      const el = strokeRefs.current[i];
+      if (!el) return;
+      const len = el.getTotalLength();
+      const pts: Pt[] = [];
+      for (let k = 0; k <= SAMPLES; k++) {
+        const p = el.getPointAtLength((len * k) / SAMPLES);
+        pts.push({ x: p.x, y: p.y });
+      }
+      arr[i] = pts;
+    });
+    points.current = arr;
     reached.current = 0;
+    setStrokeIdx(0);
     setProgress(0);
     setDone(false);
-  }, [shapeIdx]);
+  }, [setId, glyphIdx, glyph.strokes]);
 
   const toSvg = useCallback((clientX: number, clientY: number): Pt => {
     const svg = svgRef.current!;
@@ -85,31 +142,33 @@ export function TraceGame({
   const handleMove = useCallback(
     (clientX: number, clientY: number) => {
       if (done) return;
-      const pts = points.current;
-      if (!pts.length) return;
+      const pts = points.current[strokeIdx];
+      if (!pts || !pts.length) return;
       const p = toSvg(clientX, clientY);
-      // Двигаемся по точкам по порядку: пока следующая точка близко — засчитываем.
       let i = reached.current;
       while (i < pts.length) {
         const d = Math.hypot(pts[i].x - p.x, pts[i].y - p.y);
-        if (d <= REACH) {
-          i++;
-        } else {
-          break;
-        }
+        if (d <= REACH) i++;
+        else break;
       }
       if (i > reached.current) {
         reached.current = i;
         const prog = i / (pts.length - 1);
         setProgress(prog);
-        if (prog >= 0.94) {
-          setProgress(1);
-          setDone(true);
-          setDrawing(false);
+        if (prog >= 0.9) {
+          if (strokeIdx + 1 < glyph.strokes.length) {
+            setStrokeIdx(strokeIdx + 1);
+            reached.current = 0;
+            setProgress(0);
+          } else {
+            setProgress(1);
+            setDone(true);
+            setDrawing(false);
+          }
         }
       }
     },
-    [done, toSvg],
+    [done, toSvg, strokeIdx, glyph.strokes.length],
   );
 
   function onPointerDown(e: React.PointerEvent) {
@@ -126,25 +185,53 @@ export function TraceGame({
     setDrawing(false);
   }
 
-  function restartShape() {
+  function restartGlyph() {
     reached.current = 0;
+    setStrokeIdx(0);
     setProgress(0);
     setDone(false);
   }
   function next() {
-    if (shapeIdx + 1 < total) setShapeIdx(shapeIdx + 1);
-    else setShapeIdx(0);
+    setGlyphIdx((glyphIdx + 1) % total);
+  }
+  function chooseSet(s: SetId) {
+    setSetId(s);
+    setGlyphIdx(0);
   }
 
-  const start = points.current[0];
-  const end = points.current[points.current.length - 1];
+  const cur = points.current[strokeIdx];
+  const start = cur?.[0];
+  const end = cur?.[cur.length - 1];
+  const multi = glyph.strokes.length > 1;
+
+  const setBtn = (s: SetId, text: string) => (
+    <button
+      key={s}
+      onClick={() => chooseSet(s)}
+      className={
+        "flex-1 rounded-full px-4 py-2 text-sm font-bold transition " +
+        (setId === s
+          ? "bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow"
+          : "text-zinc-500 hover:text-foreground dark:text-zinc-400")
+      }
+    >
+      {text}
+    </button>
+  );
 
   return (
     <div className="mx-auto w-full max-w-md">
+      {/* Выбор набора */}
+      <div className="mb-4 flex gap-1 rounded-full border border-black/[.06] bg-white p-1 dark:border-white/10 dark:bg-zinc-900">
+        {setBtn("shapes", labels.setShapes)}
+        {setBtn("digits", labels.setDigits)}
+        {setBtn("letters", labels.setLetters)}
+      </div>
+
       <div className="mb-3 flex items-center justify-between text-sm font-bold text-zinc-600 dark:text-zinc-400">
         <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
-          {labels.shapeLabel
-            .replace("{n}", String(shapeIdx + 1))
+          {labels.count
+            .replace("{n}", String(glyphIdx + 1))
             .replace("{total}", String(total))}
         </span>
         <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
@@ -166,53 +253,98 @@ export function TraceGame({
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         >
-          {/* Направляющая-«дорога» */}
-          <path
-            ref={guideRef}
-            d={shape.d}
-            fill="none"
-            stroke="currentColor"
-            className="text-indigo-100 dark:text-indigo-500/20"
-            strokeWidth={14}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Пунктир по центру дороги */}
-          <path
-            d={shape.d}
-            fill="none"
-            stroke="currentColor"
-            className="text-indigo-300 dark:text-indigo-400/40"
-            strokeWidth={2}
-            strokeDasharray="1 7"
-            strokeLinecap="round"
-          />
-          {/* Обведённая часть */}
-          <path
-            d={shape.d}
-            fill="none"
-            stroke="url(#traceGrad)"
-            strokeWidth={14}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            pathLength={100}
-            style={{
-              strokeDasharray: 100,
-              strokeDashoffset: 100 - progress * 100,
-              transition: "stroke-dashoffset .1s linear",
-            }}
-          />
           <defs>
             <linearGradient id="traceGrad" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stopColor="#6366f1" />
               <stop offset="1" stopColor="#8b5cf6" />
             </linearGradient>
           </defs>
-          {/* Старт / финиш */}
-          {start && !done && (
+
+          {/* Дороги-направляющие для всех штрихов */}
+          {glyph.strokes.map((d, i) => (
+            <path
+              key={`g${i}`}
+              ref={(el) => {
+                strokeRefs.current[i] = el;
+              }}
+              d={d}
+              fill="none"
+              stroke="currentColor"
+              className="text-indigo-100 dark:text-indigo-500/20"
+              strokeWidth={14}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          ))}
+          {/* Пунктир по центру */}
+          {glyph.strokes.map((d, i) => (
+            <path
+              key={`d${i}`}
+              d={d}
+              fill="none"
+              stroke="currentColor"
+              className="text-indigo-300 dark:text-indigo-400/40"
+              strokeWidth={2}
+              strokeDasharray="1 7"
+              strokeLinecap="round"
+            />
+          ))}
+          {/* Обведённая часть: прошлые штрихи целиком, текущий — по прогрессу */}
+          {glyph.strokes.map((d, i) => {
+            if (i > strokeIdx) return null;
+            const off = i < strokeIdx ? 0 : 100 - progress * 100;
+            return (
+              <path
+                key={`t${i}`}
+                d={d}
+                fill="none"
+                stroke="url(#traceGrad)"
+                strokeWidth={14}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                pathLength={100}
+                style={{
+                  strokeDasharray: 100,
+                  strokeDashoffset: off,
+                  transition: "stroke-dashoffset .1s linear",
+                }}
+              />
+            );
+          })}
+          {/* Номера порядка штрихов (для много-штриховых) */}
+          {multi &&
+            !done &&
+            glyph.strokes.map((_, i) => {
+              const p = points.current[i]?.[0];
+              if (!p) return null;
+              return (
+                <g key={`n${i}`}>
+                  <circle
+                    cx={p.x}
+                    cy={p.y}
+                    r={7}
+                    fill={i === strokeIdx ? "#22c55e" : "#c7d2fe"}
+                    stroke="#fff"
+                    strokeWidth={1.5}
+                  />
+                  <text
+                    x={p.x}
+                    y={p.y + 3.2}
+                    textAnchor="middle"
+                    fontSize={9}
+                    fontWeight="700"
+                    fill={i === strokeIdx ? "#fff" : "#4338ca"}
+                  >
+                    {i + 1}
+                  </text>
+                </g>
+              );
+            })}
+          {/* Старт/финиш текущего штриха (для одно-штриховых) */}
+          {!multi && start && !done && (
             <circle cx={start.x} cy={start.y} r={5} fill="#22c55e" stroke="#fff" strokeWidth={1.5} />
           )}
-          {end && !shape.closed && !done && (
+          {!multi && end && !done && (
             <circle cx={end.x} cy={end.y} r={5} fill="#ef4444" stroke="#fff" strokeWidth={1.5} />
           )}
         </svg>
@@ -239,7 +371,7 @@ export function TraceGame({
           </button>
         ) : (
           <button
-            onClick={restartShape}
+            onClick={restartGlyph}
             className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
           >
             🔄 {labels.restart}
