@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { speak, speechSupported, stopSpeaking } from "@/lib/speech";
 
 export interface TraceLabels {
   title: string;
@@ -52,7 +53,7 @@ const DIGITS: Glyph[] = [
   { id: "9", strokes: ["M66 40 C66 24 46 18 36 32 C27 44 37 59 54 57 C63 56 66 47 66 40 C66 62 60 80 42 88"] },
 ];
 
-// ── Буквы (стартовый набор) ──
+// ── Буквы: полный алфавит (кыргызские Ң Ө Ү идут после Н О У) ──
 const LETTERS: Glyph[] = [
   { id: "А", strokes: ["M20 86 L50 14 L80 86", "M33 58 L67 58"] },
   { id: "Б", strokes: ["M70 16 L32 16 L32 84 L60 84 C76 84 76 52 60 52 L32 52"] },
@@ -60,19 +61,36 @@ const LETTERS: Glyph[] = [
   { id: "Г", strokes: ["M28 84 L28 16 L74 16"] },
   { id: "Д", strokes: ["M34 16 L66 16 L66 84", "M34 16 L34 84", "M22 84 L82 84"] },
   { id: "Е", strokes: ["M66 16 L30 16 L30 84 L66 84", "M30 50 L58 50"] },
+  { id: "Ё", strokes: ["M66 24 L30 24 L30 84 L66 84", "M30 54 L58 54", "M40 12 L40 18", "M60 12 L60 18"] },
+  { id: "Ж", strokes: ["M50 14 L50 86", "M22 20 L78 80", "M78 20 L22 80"] },
+  { id: "З", strokes: ["M28 24 C44 12 70 18 66 36 C64 48 48 50 48 50 C64 50 74 60 70 76 C64 92 34 90 28 74"] },
   { id: "И", strokes: ["M28 84 L28 16", "M72 84 L72 16", "M28 80 L72 20"] },
+  { id: "Й", strokes: ["M28 84 L28 16", "M72 84 L72 16", "M28 80 L72 20", "M40 10 Q50 18 60 10"] },
   { id: "К", strokes: ["M30 16 L30 84", "M72 16 L34 50 L72 84"] },
   { id: "Л", strokes: ["M28 84 L46 16 L58 16 L74 84"] },
   { id: "М", strokes: ["M24 84 L24 16 L50 56 L76 16 L76 84"] },
   { id: "Н", strokes: ["M28 16 L28 84", "M72 16 L72 84", "M28 50 L72 50"] },
+  { id: "Ң", strokes: ["M28 16 L28 84", "M72 16 L72 84", "M28 50 L72 50", "M72 84 L80 94"] },
   { id: "О", strokes: ["M50 15 C31 15 23 32 23 50 C23 68 31 85 50 85 C69 85 77 68 77 50 C77 32 69 15 50 15 Z"] },
+  { id: "Ө", strokes: ["M50 15 C31 15 23 32 23 50 C23 68 31 85 50 85 C69 85 77 68 77 50 C77 32 69 15 50 15 Z", "M34 50 L66 50"] },
   { id: "П", strokes: ["M28 84 L28 16 L72 16 L72 84"] },
   { id: "Р", strokes: ["M32 84 L32 16 L60 16 C80 16 80 52 60 52 L32 52"] },
   { id: "С", strokes: ["M76 28 C62 14 26 18 24 50 C26 82 62 86 76 72"] },
   { id: "Т", strokes: ["M20 16 L80 16", "M50 16 L50 84"] },
   { id: "У", strokes: ["M26 16 L50 56 L74 16", "M50 56 L44 86 C42 94 30 92 28 84"] },
+  { id: "Ү", strokes: ["M28 16 L50 52 L72 16", "M50 52 L50 86"] },
   { id: "Ф", strokes: ["M50 16 L50 84", "M50 26 C30 26 30 62 50 62 C70 62 70 26 50 26 Z"] },
+  { id: "Х", strokes: ["M24 16 L76 84", "M76 16 L24 84"] },
+  { id: "Ц", strokes: ["M28 16 L28 84 L72 84 L72 16", "M72 84 L78 94"] },
+  { id: "Ч", strokes: ["M30 16 L30 42 L70 42", "M70 16 L70 84"] },
+  { id: "Ш", strokes: ["M24 16 L24 84 L76 84 L76 16", "M50 16 L50 84"] },
+  { id: "Щ", strokes: ["M24 16 L24 84 L76 84 L76 16", "M50 16 L50 84", "M76 84 L82 94"] },
+  { id: "Ъ", strokes: ["M30 16 L44 16", "M44 16 L44 84 L64 84 C78 84 78 56 64 56 L44 56"] },
+  { id: "Ы", strokes: ["M30 16 L30 84 L52 84 C64 84 64 56 52 56 L30 56", "M74 16 L74 84"] },
+  { id: "Ь", strokes: ["M34 16 L34 84 L58 84 C72 84 72 54 58 54 L34 54"] },
   { id: "Э", strokes: ["M26 26 C40 14 72 18 74 50 C72 82 40 86 26 74", "M48 50 L74 50"] },
+  { id: "Ю", strokes: ["M28 16 L28 84", "M28 50 L44 50", "M62 26 C44 26 44 74 62 74 C80 74 80 26 62 26 Z"] },
+  { id: "Я", strokes: ["M64 84 L64 16 L40 16 C24 16 24 50 40 50 L64 50", "M40 50 L24 84"] },
 ];
 
 const SETS = { shapes: SHAPES, digits: DIGITS, letters: LETTERS } as const;
@@ -89,9 +107,11 @@ interface Pt {
 export function TraceGame({
   labels,
   homeHref,
+  locale,
 }: {
   labels: TraceLabels;
   homeHref: string;
+  locale: string;
 }) {
   const [setId, setSetId] = useState<SetId>("shapes");
   const [glyphIdx, setGlyphIdx] = useState(0);
@@ -129,6 +149,17 @@ export function TraceGame({
     setProgress(0);
     setDone(false);
   }, [setId, glyphIdx, glyph.strokes]);
+
+  // Озвучка буквы/цифры при показе — для тех, кто ещё не читает.
+  useEffect(() => {
+    if (setId === "shapes") return;
+    const timer = setTimeout(() => speak(glyph.id, locale), 350);
+    return () => {
+      clearTimeout(timer);
+      stopSpeaking();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setId, glyphIdx, locale]);
 
   const toSvg = useCallback((clientX: number, clientY: number): Pt => {
     const svg = svgRef.current!;
@@ -234,9 +265,21 @@ export function TraceGame({
             .replace("{n}", String(glyphIdx + 1))
             .replace("{total}", String(total))}
         </span>
-        <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
-          {Math.round(progress * 100)}%
-        </span>
+        <div className="flex items-center gap-2">
+          {setId !== "shapes" && speechSupported() && (
+            <button
+              type="button"
+              onClick={() => speak(glyph.id, locale)}
+              aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-base transition hover:bg-indigo-200 active:scale-95 dark:bg-indigo-500/20"
+            >
+              🔊
+            </button>
+          )}
+          <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+            {Math.round(progress * 100)}%
+          </span>
+        </div>
       </div>
 
       <p className="mb-3 text-center text-sm font-semibold text-zinc-500 dark:text-zinc-400">

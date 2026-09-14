@@ -49,7 +49,11 @@ export default async function TracePage({
             ✏️ {dict.games.trace.title}
           </h1>
         </div>
-        <TraceGame labels={dict.games.trace} homeHref={`/${lang}/games`} />
+        <TraceGame
+          labels={dict.games.trace}
+          homeHref={`/${lang}/games`}
+          locale={lang}
+        />
       </main>
     </div>
   );
