@@ -187,6 +187,13 @@ gtag('config', '${GA_ID}');`}
           </div>
         </noscript>
         <Analytics />
+        {/* Cloudflare Web Analytics — маячок без кук и без согласия; сайт идёт мимо прокси, поэтому вставляется руками */}
+        <Script
+          id="cf-beacon"
+          strategy="afterInteractive"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={'{"token": "b7369430f6c04d69a5910f34ac6e2395"}'}
+        />
       </body>
     </html>
   );
