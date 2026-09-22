@@ -12,6 +12,7 @@ import { fill5Tasks } from "./fill5";
 import { fill6Tasks } from "./fill6";
 import { fill7Tasks } from "./fill7";
 import { fill8Tasks } from "./fill8";
+import { fill9Tasks } from "./fill9";
 
 // Задания сгруппированы по темам (topic). Часть бесплатна (free: true).
 const baseTasks: Task[] = [
@@ -1649,6 +1650,7 @@ export const tasks: Task[] = [
   ...fill6Tasks,
   ...fill7Tasks,
   ...fill8Tasks,
+  ...fill9Tasks,
 ];
 
 export function getTasks(filter?: {
