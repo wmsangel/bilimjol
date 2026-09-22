@@ -13,6 +13,8 @@ const ANALYTICS_SCRIPT = [
   "https://mc.yandex.com",
   "https://connect.facebook.net",
   "https://www.facebook.com",
+  // Cloudflare Web Analytics (beacon.min.js) — без кук.
+  "https://static.cloudflareinsights.com",
 ];
 const ANALYTICS_CONNECT = [
   "https://www.google-analytics.com",
@@ -25,6 +27,8 @@ const ANALYTICS_CONNECT = [
   "wss://mc.yandex.ru",
   "wss://mc.yandex.com",
   "https://connect.facebook.net",
+  // Cloudflare Web Analytics — beacon шлёт данные сюда (POST /cdn-cgi/rum).
+  "https://cloudflareinsights.com",
 ];
 
 // Прагматичный CSP: скрипты допускают inline/eval (нужно GTM/аналитике),
