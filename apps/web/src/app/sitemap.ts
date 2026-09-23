@@ -19,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const article of articles) {
       entries.push({
         url: `${BASE}/${lang}/articles/${article.slug}`,
-        lastModified: new Date(article.date),
+        lastModified: new Date(article.updated ?? article.date),
         changeFrequency: "monthly",
         priority: 0.5,
       });

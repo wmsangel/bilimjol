@@ -51,7 +51,7 @@ export default async function ArticlePage({
     description: article.excerpt[lang],
     inLanguage: lang,
     datePublished: article.date,
-    dateModified: article.date,
+    dateModified: article.updated ?? article.date,
     mainEntityOfPage: url,
     author: { "@type": "Organization", name: "Bilimjol", url: SITE },
     publisher: { "@type": "Organization", name: "Bilimjol", url: SITE },
