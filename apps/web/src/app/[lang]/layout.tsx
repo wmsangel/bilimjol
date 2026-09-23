@@ -63,6 +63,7 @@ export async function generateMetadata({
     verification: {
       google: "1_chDy09cV4--r2aq31gDHSLHTx5nEOc1yntu3lKXJo",
       yandex: "081d5db07ae6a1f2",
+      other: { "msvalidate.01": "DD23F30879931F23A549B3235E3DB4AB" },
     },
     appleWebApp: {
       capable: true,
