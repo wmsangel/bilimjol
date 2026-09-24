@@ -187,7 +187,7 @@ export function MemoryGame({
   if (!level) {
     return (
       <div className="mx-auto w-full max-w-md">
-        <p className="mb-4 text-center font-semibold text-zinc-600 dark:text-zinc-400">
+        <p className="mb-4 text-center font-semibold text-[#5c5880]">
           {labels.chooseLevel}
         </p>
         <div className="flex flex-col gap-3">
@@ -197,7 +197,7 @@ export function MemoryGame({
               onClick={() => start(l)}
               className={
                 "flex items-center justify-between rounded-2xl px-6 py-4 text-left text-lg font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.99] " +
-                ["bg-gradient-to-r from-emerald-400 to-green-500", "bg-gradient-to-r from-sky-400 to-indigo-500", "bg-gradient-to-r from-fuchsia-500 to-purple-600"][i]
+                ["bg-gradient-to-r from-emerald-400 to-green-500", "bg-gradient-to-r from-sky-400 to-[#6d5cf7]", "bg-gradient-to-r from-fuchsia-500 to-purple-600"][i]
               }
             >
               <span>
@@ -219,13 +219,13 @@ export function MemoryGame({
     <div className="mx-auto w-full max-w-md">
       {/* Панель статуса */}
       <div className="mb-4 flex items-center justify-between text-sm font-bold">
-        <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+        <span className="rounded-full bg-black/[.05] px-3 py-1">
           {labels.moves}: {moves}
         </span>
-        <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+        <span className="rounded-full bg-black/[.05] px-3 py-1">
           ⏱️ {mmss}
         </span>
-        <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+        <span className="rounded-full bg-black/[.05] px-3 py-1">
           {matched.size}/{PAIRS}
         </span>
       </div>
@@ -243,10 +243,10 @@ export function MemoryGame({
               className={
                 "flex aspect-square items-center justify-center rounded-2xl text-center text-base font-extrabold transition sm:text-lg " +
                 (done
-                  ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300"
+                  ? "bg-emerald-100 text-emerald-700"
                   : open
-                    ? "bg-white text-zinc-900 shadow-md ring-2 ring-indigo-400 dark:bg-zinc-800 dark:text-white"
-                    : "bg-gradient-to-br from-indigo-500 to-violet-500 text-white shadow-sm hover:brightness-110")
+                    ? "bg-white text-[#191539] shadow-md ring-2 ring-[#b9b3e6]"
+                    : "bg-[#6d5cf7] text-white shadow-sm hover:brightness-110")
               }
             >
               {open ? c.label : "?"}
@@ -259,19 +259,19 @@ export function MemoryGame({
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <button
           onClick={() => start(level)}
-          className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
+          className="rounded-full bg-[#6d5cf7] px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
         >
           🔄 {labels.restart}
         </button>
         <button
           onClick={() => setLevel(null)}
-          className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+          className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04]"
         >
           {labels.change}
         </button>
         <Link
           href={homeHref}
-          className="rounded-full px-6 py-3 font-semibold text-zinc-500 transition hover:text-foreground dark:text-zinc-400"
+          className="rounded-full px-6 py-3 font-semibold text-[#5c5880] transition hover:text-foreground"
         >
           {labels.back}
         </Link>
@@ -280,27 +280,27 @@ export function MemoryGame({
       {/* Победа */}
       {won && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6">
-          <div className="w-full max-w-sm rounded-[2rem] bg-white p-8 text-center shadow-2xl dark:bg-zinc-900">
+          <div className="w-full max-w-sm rounded-[2rem] bg-white p-8 text-center shadow-2xl">
             <div className="text-5xl">🏆</div>
             <h2 className="mt-3 font-display text-2xl font-extrabold">{labels.win}</h2>
-            <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+            <p className="mt-2 text-[#5c5880]">
               {labels.winMsg.replace("{moves}", String(moves))} · ⏱️ {mmss}
             </p>
             {level && best[level] != null && (
-              <p className="mt-1 text-sm font-semibold text-amber-600 dark:text-amber-400">
+              <p className="mt-1 text-sm font-semibold text-amber-600">
                 🥇 {labels.best}: {best[level]}
               </p>
             )}
             <div className="mt-6 flex flex-col gap-2.5">
               <button
                 onClick={() => start(level)}
-                className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 font-bold text-white shadow-lg transition hover:brightness-110"
+                className="rounded-full bg-[#6d5cf7] px-6 py-3.5 font-bold text-white shadow-lg transition hover:brightness-110"
               >
                 🔄 {labels.restart}
               </button>
               <button
                 onClick={() => setLevel(null)}
-                className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+                className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04]"
               >
                 {labels.change}
               </button>

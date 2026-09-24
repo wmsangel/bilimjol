@@ -189,7 +189,7 @@ export function SprintGame({
   if (!level) {
     return (
       <div className="mx-auto w-full max-w-md">
-        <p className="mb-4 text-center text-lg font-bold text-zinc-600 dark:text-zinc-400">
+        <p className="mb-4 text-center text-lg font-bold text-[#5c5880]">
           {labels.chooseLevel}
         </p>
         <div className="flex flex-col gap-3">
@@ -197,11 +197,11 @@ export function SprintGame({
             <button
               key={l}
               onClick={() => start(l)}
-              className="flex items-center justify-between rounded-2xl border-2 border-black/[.06] bg-white px-6 py-5 text-left text-lg font-bold shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+              className="flex items-center justify-between rounded-2xl border-2 border-black/[.06] bg-white px-6 py-5 text-left text-lg font-bold shadow-sm transition hover:-translate-y-0.5 hover:border-[#b9b3e6] hover:shadow-md"
             >
               <span>{levelName(l)}</span>
               {best[l] !== undefined && (
-                <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">
+                <span className="text-sm font-semibold text-amber-600">
                   🥇 {best[l]}
                 </span>
               )}
@@ -215,16 +215,16 @@ export function SprintGame({
   return (
     <div className="mx-auto w-full max-w-md">
       {/* Шапка */}
-      <div className="mb-5 flex items-center justify-between text-sm font-bold text-zinc-600 dark:text-zinc-400">
-        <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+      <div className="mb-5 flex items-center justify-between text-sm font-bold text-[#5c5880]">
+        <span className="rounded-full bg-black/[.05] px-3 py-1">
           {labels.score}: {score}
         </span>
         <span
           className={
             "rounded-full px-3 py-1 " +
             (left <= 10
-              ? "bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-400"
-              : "bg-black/[.05] dark:bg-white/10")
+              ? "bg-red-100 text-red-600"
+              : "bg-black/[.05]")
           }
         >
           ⏱️ {left}
@@ -233,31 +233,31 @@ export function SprintGame({
 
       {problem && !over && (
         <>
-          <p className="mb-3 text-center text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+          <p className="mb-3 text-center text-sm font-semibold text-[#5c5880]">
             {labels.prompt}
           </p>
           <div
             className={
               "mb-6 flex items-center justify-center gap-3 rounded-3xl border py-8 font-display text-5xl font-extrabold shadow-sm transition " +
               (flash === "ok"
-                ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-500/10"
+                ? "border-emerald-400 bg-emerald-50"
                 : flash === "err"
-                  ? "border-red-400 bg-red-50 dark:bg-red-500/10"
-                  : "border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900")
+                  ? "border-red-400 bg-red-50"
+                  : "border-black/[.06] bg-white")
             }
           >
             <span>{problem.a}</span>
-            <span className="text-indigo-500">{problem.op}</span>
+            <span className="text-[#6d5cf7]">{problem.op}</span>
             <span>{problem.b}</span>
             <span>=</span>
-            <span className="text-indigo-400">?</span>
+            <span className="text-[#6d5cf7]">?</span>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {problem.options.map((opt) => (
               <button
                 key={opt}
                 onClick={() => answer(opt)}
-                className="rounded-2xl border-2 border-black/10 bg-white py-7 font-display text-3xl font-extrabold transition hover:-translate-y-0.5 hover:border-indigo-400 active:scale-95 dark:border-white/15 dark:bg-zinc-900"
+                className="rounded-2xl border-2 border-black/10 bg-white py-7 font-display text-3xl font-extrabold transition hover:-translate-y-0.5 hover:border-[#b9b3e6] active:scale-95"
               >
                 {opt}
               </button>
@@ -267,7 +267,7 @@ export function SprintGame({
           <div className="mt-6 text-center">
             <button
               onClick={() => setLevel(null)}
-              className="text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+              className="text-sm font-semibold text-[#6d5cf7] hover:underline"
             >
               {labels.change}
             </button>
@@ -276,29 +276,29 @@ export function SprintGame({
       )}
 
       {over && (
-        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl dark:border-white/10 dark:bg-zinc-900">
+        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl">
           <div className="text-5xl">⏱️</div>
           <h2 className="mt-3 font-display text-2xl font-extrabold">
             {labels.timeUp}
           </h2>
-          <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-lg text-[#5c5880]">
             {labels.timeUpMsg.replace("{score}", String(score))}
           </p>
           {best[level] !== undefined && (
-            <p className="mt-1 text-sm font-bold text-amber-600 dark:text-amber-400">
+            <p className="mt-1 text-sm font-bold text-amber-600">
               🥇 {labels.best}: {best[level]}
             </p>
           )}
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
               onClick={() => start(level)}
-              className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
+              className="rounded-full bg-[#6d5cf7] px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
             >
               🔄 {labels.restart}
             </button>
             <button
               onClick={() => setLevel(null)}
-              className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+              className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04]"
             >
               {labels.change}
             </button>
@@ -309,7 +309,7 @@ export function SprintGame({
       <div className="mt-6 text-center">
         <Link
           href={homeHref}
-          className="text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+          className="text-sm font-semibold text-[#6d5cf7] hover:underline"
         >
           {labels.back}
         </Link>

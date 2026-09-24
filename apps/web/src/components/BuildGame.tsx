@@ -188,7 +188,7 @@ export function BuildGame({
   if (!level) {
     return (
       <div className="mx-auto w-full max-w-md">
-        <p className="mb-4 text-center text-lg font-bold text-zinc-600 dark:text-zinc-400">
+        <p className="mb-4 text-center text-lg font-bold text-[#5c5880]">
           {labels.chooseLevel}
         </p>
         <div className="flex flex-col gap-3">
@@ -196,11 +196,11 @@ export function BuildGame({
             <button
               key={l}
               onClick={() => start(l)}
-              className="flex items-center justify-between rounded-2xl border-2 border-black/[.06] bg-white px-6 py-5 text-left text-lg font-bold shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+              className="flex items-center justify-between rounded-2xl border-2 border-black/[.06] bg-white px-6 py-5 text-left text-lg font-bold shadow-sm transition hover:-translate-y-0.5 hover:border-[#b9b3e6] hover:shadow-md"
             >
               <span>{levelName(l)}</span>
               {best[l] !== undefined && (
-                <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">
+                <span className="text-sm font-semibold text-amber-600">
                   🥇 {mmss(best[l])}
                 </span>
               )}
@@ -217,7 +217,7 @@ export function BuildGame({
       className={
         "inline-flex min-w-[54px] items-center justify-center rounded-xl px-2 " +
         (isBlank
-          ? "border-2 border-dashed border-indigo-400 bg-indigo-50 text-indigo-400 dark:bg-indigo-500/10"
+          ? "border-2 border-dashed border-[#b9b3e6] bg-[#efecff] text-[#6d5cf7]"
           : "")
       }
     >
@@ -228,22 +228,22 @@ export function BuildGame({
   return (
     <div className="mx-auto w-full max-w-md">
       {/* Шапка со статистикой */}
-      <div className="mb-5 flex items-center justify-between text-sm font-bold text-zinc-600 dark:text-zinc-400">
-        <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+      <div className="mb-5 flex items-center justify-between text-sm font-bold text-[#5c5880]">
+        <span className="rounded-full bg-black/[.05] px-3 py-1">
           {labels.roundLabel}: {Math.min(round + 1, ROUNDS)}/{ROUNDS}
         </span>
-        <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+        <span className="rounded-full bg-black/[.05] px-3 py-1">
           ⏱️ {mmss(seconds)}
         </span>
       </div>
 
       {problem && !won && (
         <>
-          <p className="mb-3 text-center text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+          <p className="mb-3 text-center text-sm font-semibold text-[#5c5880]">
             {labels.pick}
           </p>
           {/* Пример */}
-          <div className="mb-6 flex items-center justify-center gap-2 rounded-3xl border border-black/[.06] bg-white py-8 font-display text-4xl font-extrabold shadow-sm dark:border-white/10 dark:bg-zinc-900">
+          <div className="mb-6 flex items-center justify-center gap-2 rounded-3xl border border-black/[.06] bg-white py-8 font-display text-4xl font-extrabold shadow-sm">
             {slot(String(problem.a), false)}
             {slot(problem.missing === "op" ? "▢" : problem.op, problem.missing === "op")}
             {slot(problem.missing === "b" ? "▢" : String(problem.b), problem.missing === "b")}
@@ -261,8 +261,8 @@ export function BuildGame({
                   className={
                     "rounded-2xl border-2 py-7 font-display text-3xl font-extrabold transition active:scale-95 " +
                     (isWrong
-                      ? "border-red-400 bg-red-50 dark:bg-red-500/10"
-                      : "border-black/10 bg-white hover:-translate-y-0.5 hover:border-indigo-400 dark:border-white/15 dark:bg-zinc-900")
+                      ? "border-red-400 bg-red-50"
+                      : "border-black/10 bg-white hover:-translate-y-0.5 hover:border-[#b9b3e6]")
                   }
                 >
                   {opt}
@@ -274,13 +274,13 @@ export function BuildGame({
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
               onClick={() => start(level)}
-              className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
+              className="rounded-full bg-[#6d5cf7] px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
             >
               🔄 {labels.restart}
             </button>
             <button
               onClick={() => setLevel(null)}
-              className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+              className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04]"
             >
               {labels.change}
             </button>
@@ -289,27 +289,27 @@ export function BuildGame({
       )}
 
       {won && (
-        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl dark:border-white/10 dark:bg-zinc-900">
+        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl">
           <div className="text-5xl">🎉</div>
           <h2 className="mt-3 font-display text-2xl font-extrabold">{labels.win}</h2>
-          <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-lg text-[#5c5880]">
             {labels.winMsg.replace("{time}", mmss(seconds))}
           </p>
           {level && best[level] !== undefined && (
-            <p className="mt-1 text-sm font-bold text-amber-600 dark:text-amber-400">
+            <p className="mt-1 text-sm font-bold text-amber-600">
               🥇 {labels.best}: {mmss(best[level])}
             </p>
           )}
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
               onClick={() => start(level!)}
-              className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
+              className="rounded-full bg-[#6d5cf7] px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
             >
               🔄 {labels.restart}
             </button>
             <button
               onClick={() => setLevel(null)}
-              className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+              className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04]"
             >
               {labels.change}
             </button>
@@ -320,7 +320,7 @@ export function BuildGame({
       <div className="mt-6 text-center">
         <Link
           href={homeHref}
-          className="text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+          className="text-sm font-semibold text-[#6d5cf7] hover:underline"
         >
           {labels.back}
         </Link>

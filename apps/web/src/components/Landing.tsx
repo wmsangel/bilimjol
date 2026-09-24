@@ -170,11 +170,11 @@ export function Landing({ lang }: { lang: Locale }) {
           ["🧩", "#efecff", "5", t("предметов", "предмет")],
           ["🔊", "#fbf3e3", "2", t("языка с озвучкой", "тил, үн менен")],
         ].map(([icon, bg, num, label], i) => (
-          <div key={i} className="flex items-center gap-4 rounded-3xl bg-white p-6 shadow-[0_16px_40px_rgba(25,21,57,.1)] sm:p-7">
-            <div className="flex h-14 w-14 flex-none items-center justify-center rounded-[18px] text-3xl" style={{ background: bg as string }}>{icon}</div>
-            <div>
+          <div key={i} className="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-[0_16px_40px_rgba(25,21,57,.1)] sm:gap-4 sm:p-7">
+            <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl text-2xl sm:h-14 sm:w-14 sm:rounded-[18px] sm:text-3xl" style={{ background: bg as string }}>{icon}</div>
+            <div className="min-w-0">
               <div className="font-display text-2xl font-bold sm:text-[32px]">{num}</div>
-              <div className="text-sm font-bold text-[#5c5880]">{label}</div>
+              <div className="text-[13px] font-bold leading-tight text-[#5c5880] sm:text-sm">{label}</div>
             </div>
           </div>
         ))}

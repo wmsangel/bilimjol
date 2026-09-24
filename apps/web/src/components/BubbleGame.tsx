@@ -104,7 +104,7 @@ const HUES = [
   "from-rose-400 to-pink-500",
   "from-amber-400 to-orange-500",
   "from-emerald-400 to-teal-500",
-  "from-sky-400 to-indigo-500",
+  "from-sky-400 to-[#6d5cf7]",
   "from-violet-400 to-purple-500",
   "from-cyan-400 to-blue-500",
 ];
@@ -200,24 +200,24 @@ export function BubbleGame({
   if (!playing && !over) {
     return (
       <div className="mx-auto w-full max-w-md text-center">
-        <p className="mb-6 text-lg font-semibold text-zinc-600 dark:text-zinc-400">
+        <p className="mb-6 text-lg font-semibold text-[#5c5880]">
           {labels.description}
         </p>
         {best > 0 && (
-          <p className="mb-4 text-sm font-bold text-amber-600 dark:text-amber-400">
+          <p className="mb-4 text-sm font-bold text-amber-600">
             🥇 {labels.best}: {best}
           </p>
         )}
         <button
           onClick={start}
-          className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-10 py-4 text-lg font-bold text-white shadow-md transition hover:brightness-110 active:scale-95"
+          className="rounded-full bg-[#6d5cf7] px-10 py-4 text-lg font-bold text-white shadow-md transition hover:brightness-110 active:scale-95"
         >
           ▶ {labels.start}
         </button>
         <div className="mt-8">
           <Link
             href={homeHref}
-            className="text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+            className="text-sm font-semibold text-[#6d5cf7] hover:underline"
           >
             {labels.back}
           </Link>
@@ -228,16 +228,16 @@ export function BubbleGame({
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <div className="mb-4 flex items-center justify-between text-sm font-bold text-zinc-600 dark:text-zinc-400">
-        <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+      <div className="mb-4 flex items-center justify-between text-sm font-bold text-[#5c5880]">
+        <span className="rounded-full bg-black/[.05] px-3 py-1">
           {labels.score}: {score}
         </span>
         <span
           className={
             "rounded-full px-3 py-1 " +
             (left <= 10
-              ? "bg-red-100 text-red-600 dark:bg-red-500/15 dark:text-red-400"
-              : "bg-black/[.05] dark:bg-white/10")
+              ? "bg-red-100 text-red-600"
+              : "bg-black/[.05]")
           }
         >
           ⏱️ {left}
@@ -246,7 +246,7 @@ export function BubbleGame({
 
       {board && !over && (
         <>
-          <p className="mb-4 rounded-2xl bg-indigo-50 py-3 text-center font-display text-lg font-extrabold text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300">
+          <p className="mb-4 rounded-2xl bg-[#efecff] py-3 text-center font-display text-lg font-extrabold text-[#4b3cc9]">
             {labels.rules[board.rule]}
           </p>
           <div className="grid grid-cols-3 gap-3">
@@ -276,27 +276,27 @@ export function BubbleGame({
       )}
 
       {over && (
-        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl dark:border-white/10 dark:bg-zinc-900">
+        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl">
           <div className="text-5xl">🎈</div>
           <h2 className="mt-3 font-display text-2xl font-extrabold">
             {labels.timeUp}
           </h2>
-          <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-lg text-[#5c5880]">
             {labels.timeUpMsg.replace("{score}", String(score))}
           </p>
-          <p className="mt-1 text-sm font-bold text-amber-600 dark:text-amber-400">
+          <p className="mt-1 text-sm font-bold text-amber-600">
             🥇 {labels.best}: {best}
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
               onClick={start}
-              className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
+              className="rounded-full bg-[#6d5cf7] px-6 py-3 font-bold text-white shadow-md transition hover:brightness-110"
             >
               🔄 {labels.restart}
             </button>
             <Link
               href={homeHref}
-              className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+              className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04]"
             >
               {labels.back}
             </Link>

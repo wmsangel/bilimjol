@@ -242,8 +242,8 @@ export function TraceGame({
       className={
         "flex-1 rounded-full px-4 py-2 text-sm font-bold transition " +
         (setId === s
-          ? "bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow"
-          : "text-zinc-500 hover:text-foreground dark:text-zinc-400")
+          ? "bg-[#6d5cf7] text-white shadow"
+          : "text-[#5c5880] hover:text-foreground")
       }
     >
       {text}
@@ -253,14 +253,14 @@ export function TraceGame({
   return (
     <div className="mx-auto w-full max-w-md">
       {/* Выбор набора */}
-      <div className="mb-4 flex gap-1 rounded-full border border-black/[.06] bg-white p-1 dark:border-white/10 dark:bg-zinc-900">
+      <div className="mb-4 flex gap-1 rounded-full border border-black/[.06] bg-white p-1">
         {setBtn("shapes", labels.setShapes)}
         {setBtn("digits", labels.setDigits)}
         {setBtn("letters", labels.setLetters)}
       </div>
 
-      <div className="mb-3 flex items-center justify-between text-sm font-bold text-zinc-600 dark:text-zinc-400">
-        <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+      <div className="mb-3 flex items-center justify-between text-sm font-bold text-[#5c5880]">
+        <span className="rounded-full bg-black/[.05] px-3 py-1">
           {labels.count
             .replace("{n}", String(glyphIdx + 1))
             .replace("{total}", String(total))}
@@ -271,22 +271,22 @@ export function TraceGame({
               type="button"
               onClick={() => speak(glyph.id, locale)}
               aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-base transition hover:bg-indigo-200 active:scale-95 dark:bg-indigo-500/20"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e6e1ff] text-base transition hover:bg-[#d9d5f5] active:scale-95"
             >
               🔊
             </button>
           )}
-          <span className="rounded-full bg-black/[.05] px-3 py-1 dark:bg-white/10">
+          <span className="rounded-full bg-black/[.05] px-3 py-1">
             {Math.round(progress * 100)}%
           </span>
         </div>
       </div>
 
-      <p className="mb-3 text-center text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+      <p className="mb-3 text-center text-sm font-semibold text-[#5c5880]">
         {labels.hint}
       </p>
 
-      <div className="relative rounded-[2rem] border border-black/[.06] bg-white shadow-sm dark:border-white/10 dark:bg-zinc-900">
+      <div className="relative rounded-[2rem] border border-black/[.06] bg-white shadow-sm">
         <svg
           ref={svgRef}
           viewBox="0 0 100 100"
@@ -313,7 +313,7 @@ export function TraceGame({
               d={d}
               fill="none"
               stroke="currentColor"
-              className="text-indigo-100 dark:text-indigo-500/20"
+              className="text-[#e6e1ff]"
               strokeWidth={14}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -326,7 +326,7 @@ export function TraceGame({
               d={d}
               fill="none"
               stroke="currentColor"
-              className="text-indigo-300 dark:text-indigo-400/40"
+              className="text-[#6d5cf7]"
               strokeWidth={2}
               strokeDasharray="1 7"
               strokeLinecap="round"
@@ -393,7 +393,7 @@ export function TraceGame({
         </svg>
 
         {done && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[2rem] bg-white/70 dark:bg-zinc-900/70">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[2rem] bg-white/70">
             <div className="text-center">
               <div className="text-6xl">🎉</div>
               <p className="mt-2 font-display text-2xl font-extrabold">
@@ -408,14 +408,14 @@ export function TraceGame({
         {done ? (
           <button
             onClick={next}
-            className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-8 py-3 font-bold text-white shadow-md transition hover:brightness-110"
+            className="rounded-full bg-[#6d5cf7] px-8 py-3 font-bold text-white shadow-md transition hover:brightness-110"
           >
             {labels.next} →
           </button>
         ) : (
           <button
             onClick={restartGlyph}
-            className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+            className="rounded-full border-2 border-black/10 px-6 py-3 font-bold transition hover:bg-black/[.04]"
           >
             🔄 {labels.restart}
           </button>
@@ -425,7 +425,7 @@ export function TraceGame({
       <div className="mt-6 text-center">
         <Link
           href={homeHref}
-          className="text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+          className="text-sm font-semibold text-[#6d5cf7] hover:underline"
         >
           {labels.back}
         </Link>

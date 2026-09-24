@@ -207,9 +207,9 @@ export function LearningPath({
   }, [stops]);
 
   const height = TOP + Math.max(0, topics.length - 1) * STEP + 230;
-  const labelBg = world.night ? "bg-black/45" : "bg-white/90 dark:bg-black/45";
-  const titleC = world.night ? "text-cyan-50" : "text-emerald-950 dark:text-emerald-50";
-  const subC = world.night ? "text-cyan-200/70" : "text-emerald-800/70 dark:text-emerald-200/60";
+  const labelBg = world.night ? "bg-black/45" : "bg-white/90";
+  const titleC = world.night ? "text-cyan-50" : "text-emerald-950";
+  const subC = world.night ? "text-cyan-200/70" : "text-emerald-800/70";
 
   return (
     <div ref={ref} className="relative w-full overflow-hidden rounded-[2rem] shadow-inner" style={{ height: width === 0 ? 560 : height }}>
@@ -234,7 +234,7 @@ export function LearningPath({
               className={
                 "relative flex items-center justify-center rounded-full border-[6px] text-3xl transition " +
                 (stateName === "locked"
-                  ? "cursor-not-allowed border-white/70 bg-white/80 text-black/25 dark:border-white/15 dark:bg-white/10 dark:text-white/25"
+                  ? "cursor-not-allowed border-white/70 bg-white/80 text-black/25"
                   : stateName === "mastered"
                     ? "border-white bg-gradient-to-br from-amber-300 to-yellow-400 text-amber-900 shadow-xl"
                     : isOlympiad
