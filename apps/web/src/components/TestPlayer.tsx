@@ -36,7 +36,7 @@ function tpl(str: string, vars: Record<string, string | number>) {
 type Status = "answering" | "correct" | "wrong";
 
 const PRIMARY =
-  "w-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 text-lg font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-40";
+  "w-full rounded-full bg-[#6d5cf7] px-6 py-3.5 text-lg font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0";
 
 export function TestPlayer({
   locale,
@@ -120,7 +120,7 @@ export function TestPlayer({
 
   if (questions.length === 0) {
     return (
-      <div className="mx-auto h-64 w-full max-w-lg animate-pulse rounded-[2rem] border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+      <div className="mx-auto h-64 w-full max-w-lg animate-pulse rounded-[28px] bg-white shadow-[0_16px_40px_rgba(25,21,57,.08)]" />
     );
   }
 
@@ -128,16 +128,16 @@ export function TestPlayer({
     const total = questions.length;
     const mood = score >= total / 2 ? "happy" : "sad";
     return (
-      <div className="relative mx-auto w-full max-w-lg text-center">
+      <div className="relative mx-auto w-full max-w-lg text-center font-sans text-[#191539]">
         {score >= total / 2 && <Confetti />}
         <div className="mb-5 flex justify-center">
           <Mascot helper={helper} mood={mood} size="lg" />
         </div>
-        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-xl dark:border-white/10 dark:bg-zinc-900">
-          <h2 className="font-display text-3xl font-extrabold">
+        <div className="rounded-[28px] bg-white p-8 shadow-[0_20px_50px_rgba(25,21,57,.08)]">
+          <h2 className="font-display text-3xl font-bold">
             {labels.finishTitle}
           </h2>
-          <p className="mt-3 text-4xl font-extrabold text-indigo-600 dark:text-indigo-400">
+          <p className="mt-3 font-display text-4xl font-bold text-[#6d5cf7]">
             {score} / {total}
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -146,7 +146,7 @@ export function TestPlayer({
             </button>
             <Link
               href={backHref}
-              className="rounded-full border-2 border-black/10 px-8 py-3.5 text-lg font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+              className="rounded-full border-2 border-black/10 px-8 py-3.5 text-lg font-bold transition hover:bg-black/[.04]"
             >
               {labels.back}
             </Link>
@@ -157,19 +157,19 @@ export function TestPlayer({
   }
 
   return (
-    <div className="relative mx-auto w-full max-w-lg">
+    <div className="relative mx-auto w-full max-w-lg font-sans text-[#191539]">
       {status === "correct" && <Confetti />}
 
       <div className="mb-5">
-        <div className="mb-2 flex items-center justify-between text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+        <div className="mb-2 flex items-center justify-between text-sm font-extrabold text-[#5c5880]">
           <span>⭐ {score}</span>
           <span>
             {tpl(labels.progress, { current: index + 1, total: questions.length })}
           </span>
         </div>
-        <div className="h-3 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
+        <div className="h-3 overflow-hidden rounded-full bg-[#e6e1ff]">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500"
+            className="h-full rounded-full bg-[#6d5cf7] transition-all duration-500"
             style={{ width: `${((index + 1) / questions.length) * 100}%` }}
           />
         </div>
@@ -189,7 +189,7 @@ export function TestPlayer({
         />
       </div>
 
-      <div className="rounded-[2rem] border border-black/[.06] bg-white p-6 shadow-xl sm:p-8 dark:border-white/10 dark:bg-zinc-900">
+      <div className="rounded-[28px] bg-white p-6 shadow-[0_20px_50px_rgba(25,21,57,.08)] sm:p-8">
         <p className="text-center font-display text-3xl font-bold">
           {question.prompt[locale]}
         </p>
@@ -204,14 +204,14 @@ export function TestPlayer({
                   "w-full rounded-2xl border-2 px-5 py-4 text-center text-xl font-bold transition ";
                 if (!answered) {
                   cls += isSelected
-                    ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
-                    : "border-black/10 hover:border-indigo-300 dark:border-white/15";
+                    ? "border-[#6d5cf7] bg-[#efecff]"
+                    : "border-black/10 hover:border-[#b9b3e6]";
                 } else if (isCorrect) {
-                  cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
+                  cls += "border-[#34d399] bg-[#ecfdf5]";
                 } else if (isSelected) {
-                  cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
+                  cls += "border-[#fb7185] bg-[#fef2f2]";
                 } else {
-                  cls += "border-black/10 opacity-60 dark:border-white/15";
+                  cls += "border-black/10 opacity-60";
                 }
                 return (
                   <button key={i} disabled={answered} onClick={() => setSelected(i)} className={cls}>
@@ -233,7 +233,7 @@ export function TestPlayer({
                 if (e.key === "Enter" && canSubmit && !answered) submit();
               }}
               placeholder={labels.numberPlaceholder}
-              className="w-full rounded-2xl border-2 border-black/10 bg-transparent px-5 py-4 text-center text-3xl font-bold outline-none focus:border-indigo-500 dark:border-white/15"
+              className="w-full rounded-2xl border-2 border-black/10 bg-transparent px-5 py-4 text-center text-3xl font-bold outline-none focus:border-[#6d5cf7]"
             />
           )}
         </div>

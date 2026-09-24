@@ -111,7 +111,7 @@ export function Landing({ lang }: { lang: Locale }) {
             <Link href="/ru" className={"rounded-full px-3 py-1.5 " + (lang !== "ky" ? "bg-white text-[#191539]" : "text-[#d9d5f5]")}>RU</Link>
             <Link href="/ky" className={"rounded-full px-3 py-1.5 " + (lang === "ky" ? "bg-white text-[#191539]" : "text-[#d9d5f5]")}>KY</Link>
           </div>
-          <Link href={playHref} className="rounded-full bg-[#6d5cf7] px-5 py-3 text-[15px] font-extrabold text-white transition hover:shadow-[0_0_0_3px_#e6c079]">
+          <Link href={playHref} className="hidden rounded-full bg-[#6d5cf7] px-5 py-3 text-[15px] font-extrabold text-white transition hover:shadow-[0_0_0_3px_#e6c079] sm:inline-block">
             {t("Начать бесплатно", "Акысыз баштоо")}
           </Link>
         </div>

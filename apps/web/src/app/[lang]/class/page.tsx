@@ -38,7 +38,7 @@ export default async function ClassIndexPage({
   const t = (ru: string, ky: string) => (lang === "ky" ? ky : ru);
 
   return (
-    <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
+    <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-10">

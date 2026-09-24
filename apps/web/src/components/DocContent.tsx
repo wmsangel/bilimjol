@@ -14,7 +14,7 @@ function withEmail(text: string): ReactNode {
         <a
           key={`m${i}`}
           href={`mailto:${CONTACT}`}
-          className="font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+          className="font-semibold text-[#6d5cf7] hover:underline"
         >
           {CONTACT}
         </a>,
@@ -40,15 +40,15 @@ export function DocContent({
   const updated = locale === "ky" ? "Жаңыртылды" : "Обновлено";
 
   return (
-    <article>
+    <article className="font-sans text-[#191539]">
       <div className="text-4xl">{doc.emoji}</div>
-      <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight">
+      <h1 className="mt-4 font-display text-4xl font-bold tracking-tight">
         {doc.title[locale]}
       </h1>
-      <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="mt-2 text-sm font-semibold text-[#5c5880]">
         {updated}: {date}
       </p>
-      <p className="mt-5 text-lg leading-8 text-zinc-700 dark:text-zinc-300">
+      <p className="mt-5 text-lg leading-8 text-[#2d2950]">
         {doc.intro[locale]}
       </p>
 
@@ -59,7 +59,7 @@ export function DocContent({
             {s.body.map((b, j) => (
               <p
                 key={j}
-                className="mt-3 leading-7 text-zinc-700 dark:text-zinc-300"
+                className="mt-3 leading-7 text-[#2d2950]"
               >
                 {withEmail(b[locale])}
               </p>

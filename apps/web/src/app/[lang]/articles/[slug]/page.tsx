@@ -72,25 +72,25 @@ export default async function ArticlePage({
   };
 
   return (
-    <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
+    <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumb} />
       <SiteHeader lang={lang} dict={dict} />
 
-      <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
+      <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8 font-sans text-[#191539]">
         <Link
           href={`/${lang}/articles`}
-          className="text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+          className="text-sm font-extrabold text-[#6d5cf7] hover:underline"
         >
           {dict.articles.back}
         </Link>
 
         <article className="mt-6">
           <div className="text-6xl">{article.emoji}</div>
-          <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight tracking-tight">
+          <h1 className="mt-4 font-display text-4xl font-bold leading-tight tracking-tight">
             {article.title[lang]}
           </h1>
-          <time className="mt-2 block text-sm text-zinc-400">
+          <time className="mt-2 block text-sm font-semibold text-[#5c5880]">
             {new Date(article.date).toLocaleDateString(
               lang === "ky" ? "ky-KG" : "ru-RU",
             )}
@@ -105,20 +105,20 @@ export default async function ArticlePage({
                 {s.body.map((p, j) => (
                   <p
                     key={j}
-                    className="mt-3 text-lg leading-8 text-zinc-700 dark:text-zinc-300"
+                    className="mt-3 text-lg leading-8 text-[#2d2950]"
                   >
                     {p[lang]}
                   </p>
                 ))}
               </section>
               {i === 0 && article.sections.length >= 2 && (
-                <aside className="mt-8 flex flex-col items-start gap-3 rounded-2xl border border-indigo-200 bg-indigo-50/70 p-5 dark:border-indigo-500/30 dark:bg-indigo-500/10 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
-                  <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-200">
+                <aside className="mt-8 flex flex-col items-start gap-3 rounded-2xl border-2 border-[#e6c079] bg-[#fbf3e3] p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
+                  <p className="text-sm font-bold text-[#7a5a1e]">
                     💡 {dict.cta.inline}
                   </p>
                   <Link
                     href={`/${lang}/play`}
-                    className="flex-none rounded-full bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white shadow transition hover:brightness-110"
+                    className="flex-none rounded-full bg-[#191539] px-5 py-2.5 text-sm font-extrabold text-white shadow transition hover:brightness-125"
                   >
                     {dict.cta.button} →
                   </Link>
@@ -128,12 +128,12 @@ export default async function ArticlePage({
           ))}
         </article>
 
-        <div className="mt-12 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-violet-600 px-6 py-8 text-center text-white shadow-xl">
+        <div className="mt-12 overflow-hidden rounded-[28px] bg-[#191539] px-6 py-8 text-center text-white">
           <p className="font-display text-xl font-bold">{dict.cta.title}</p>
-          <p className="mt-1.5 text-sm text-white/85">{dict.cta.subtitle}</p>
+          <p className="mt-1.5 text-sm text-[#d9d5f5]">{dict.cta.subtitle}</p>
           <Link
             href={`/${lang}/play`}
-            className="mt-4 inline-block rounded-full bg-white px-6 py-3 font-bold text-indigo-600 shadow-lg transition hover:brightness-95"
+            className="mt-4 inline-block rounded-full bg-[#6d5cf7] px-6 py-3 font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5"
           >
             {dict.cta.button}
           </Link>
@@ -141,7 +141,7 @@ export default async function ArticlePage({
 
         {related.length > 0 && (
           <section className="mt-12">
-            <h2 className="font-display text-lg font-bold text-zinc-500 dark:text-zinc-400">
+            <h2 className="font-display text-lg font-bold text-[#5c5880]">
               {lang === "ky" ? "Дагы окуңуз" : "Читайте также"}
             </h2>
             <ul className="mt-4 space-y-3">
@@ -149,10 +149,10 @@ export default async function ArticlePage({
                 <li key={a.slug}>
                   <Link
                     href={`/${lang}/articles/${a.slug}`}
-                    className="group flex items-center gap-3 rounded-2xl border border-black/[.06] bg-white p-4 transition hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/10 dark:bg-zinc-900"
+                    className="group flex items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_6px_18px_rgba(25,21,57,.05)] transition hover:-translate-y-0.5 hover:shadow-[0_0_0_2px_#b9b3e6]"
                   >
                     <span className="text-2xl">{a.emoji}</span>
-                    <span className="font-display font-bold transition group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    <span className="font-display font-bold transition group-hover:text-[#6d5cf7]">
                       {a.title[lang]}
                     </span>
                   </Link>
