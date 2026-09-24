@@ -148,7 +148,7 @@ export function Landing({ lang }: { lang: Locale }) {
             <span>RU / KY</span>
           </div>
         </div>
-        <div className="relative hidden h-[480px] lg:block">
+        <div className="relative mx-auto hidden h-[480px] w-[440px] lg:block">
           <div className="absolute left-1/2 top-1/2 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full shadow-[0_30px_80px_rgba(0,0,0,.35)]" style={{ background: "radial-gradient(circle at 40% 35%,#8577ff,#4a3dc4)" }} />
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] text-[150px] leading-none">📖</div>
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#e6c079] px-[18px] py-2 text-sm font-extrabold text-[#191539]">
