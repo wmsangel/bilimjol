@@ -2,6 +2,18 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { JsonLd } from "@/components/JsonLd";
 import { faqJsonLd } from "@/lib/seo";
+import { buildCharacter } from "@/lib/characterArt";
+
+// SVG-персонаж в круглом «пузыре» (кадрируется головой/торсом). Server-safe.
+function Mascot({ id, size }: { id: string; size: number }) {
+  return (
+    <span
+      className="izn-char block"
+      style={{ width: size, height: Math.round(size * 1.08), marginTop: size * 0.12 }}
+      dangerouslySetInnerHTML={{ __html: buildCharacter(id) }}
+    />
+  );
+}
 
 // Продающий лендинг Bilimjol. Порт дизайн-хендоффа (Claude Design) в React/Tailwind.
 // Фиксированная бренд-палитра (маркетинговая страница), не реагирует на тему.
@@ -14,14 +26,16 @@ const LOGO = (
   </svg>
 );
 
+// [charId, x, y, animationDelay]
 const MASCOTS: [string, number, number, number][] = [
-  ["🦊", 40, 20, 0],
-  ["🐱", 300, 20, 0.6],
-  ["🐆", 330, 190, 1.2],
-  ["🐼", 0, 190, 0.3],
-  ["🐻", 40, 340, 0.9],
-  ["🐸", 300, 340, 1.5],
+  ["fox", 40, 20, 0],
+  ["cat", 300, 20, 0.6],
+  ["snowleopard", 330, 190, 1.2],
+  ["panda", 0, 190, 0.3],
+  ["bear", 40, 340, 0.9],
+  ["frog", 300, 340, 1.5],
 ];
+const STEP_MASCOTS = ["fox", "cat", "snowleopard", "panda", "bear", "frog"];
 
 export function Landing({ lang }: { lang: Locale }) {
   const t = (ru: string, ky: string) => (lang === "ky" ? ky : ru);
@@ -140,9 +154,9 @@ export function Landing({ lang }: { lang: Locale }) {
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#e6c079] px-[18px] py-2 text-sm font-extrabold text-[#191539]">
             {t("книга-дорога к знаниям", "билимге китеп-жол")}
           </div>
-          {MASCOTS.map(([e, x, y, d], i) => (
-            <div key={i} className="animate-bjfloat absolute flex h-[84px] w-[84px] items-center justify-center rounded-full bg-white text-[46px] shadow-[0_14px_30px_rgba(0,0,0,.25)]" style={{ left: x, top: y, animationDelay: `${d}s` }}>
-              {e}
+          {MASCOTS.map(([id, x, y, d], i) => (
+            <div key={i} className="animate-bjfloat absolute flex h-[84px] w-[84px] items-end justify-center overflow-hidden rounded-full bg-white shadow-[0_14px_30px_rgba(0,0,0,.25)]" style={{ left: x, top: y, animationDelay: `${d}s` }}>
+              <Mascot id={id} size={78} />
             </div>
           ))}
         </div>
@@ -270,7 +284,17 @@ export function Landing({ lang }: { lang: Locale }) {
           ].map(([num, bg, fg, emo, title, body], i) => (
             <div key={i} className="relative rounded-3xl bg-white p-9">
               <div className="absolute -top-[22px] left-9 flex h-12 w-12 items-center justify-center rounded-full font-display text-[22px] font-bold shadow-[0_0_0_6px_#efecff]" style={{ background: bg as string, color: fg as string }}>{num}</div>
-              <div className="mb-5 mt-4 text-[40px]">{emo}</div>
+              {i === 0 ? (
+                <div className="mb-5 mt-4 flex flex-wrap gap-1.5">
+                  {STEP_MASCOTS.map((m) => (
+                    <span key={m} className="flex h-9 w-9 items-end justify-center overflow-hidden rounded-full bg-[#f7f5ff]">
+                      <Mascot id={m} size={34} />
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <div className="mb-5 mt-4 text-[40px]">{emo}</div>
+              )}
               <h3 className="mb-2 font-display text-[22px]">{title}</h3>
               <p className="text-[17px] leading-[1.5] text-[#5c5880]">{body}</p>
             </div>
@@ -331,6 +355,24 @@ export function Landing({ lang }: { lang: Locale }) {
         </div>
       </section>
 
+      {/* WHY (честная замена секции отзывов — без выдуманных отзывов) */}
+      <section className="bg-[#191539] px-5 py-24 text-white sm:px-16">
+        <h2 className={h2 + " mb-12 text-center"}>{t("Почему выбирают Bilimjol", "Эмне үчүн Bilimjolду тандашат")}</h2>
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            ["🧒", t("Дети занимаются сами", "Балдар өздөрү машыгат"), t("Короткие задания в игре, герои-помощники и награды — ребёнок открывает Bilimjol без уговоров.", "Оюн түрүндөгү кыска тапшырмалар, жардамчы каармандар жана сыйлыктар — бала Bilimjolду көндүрүүсүз ачат.")],
+            ["👀", t("Родителям всё видно", "Ата-энеге баары көрүнөт"), t("Отчёт показывает, что пройдено и где нужна помощь — по каждому предмету и ребёнку.", "Отчёт эмне өтүлгөнүн жана кайда жардам керегин ар бир предмет жана бала боюнча көрсөтөт.")],
+            ["🛡️", t("Спокойно и безопасно", "Тынч жана коопсуз"), t("Без сторонней рекламы и чужих ссылок, данные ребёнка не передаются третьим лицам.", "Бөтөн жарнаксыз жана бөтөн шилтемесиз, баланын маалыматы үчүнчү жактарга берилбейт.")],
+          ].map(([icon, title, body], i) => (
+            <div key={i} className="rounded-3xl bg-white/[.06] p-8">
+              <div className="mb-4 text-[44px]">{icon}</div>
+              <h3 className="mb-2 font-display text-xl font-bold">{title}</h3>
+              <p className="leading-[1.55] text-[#d9d5f5]">{body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* PRICING */}
       <section id="price" className="px-5 py-24 sm:px-16">
         <h2 className={h2 + " text-center"}>{t("Начните бесплатно", "Акысыз баштаңыз")}</h2>
@@ -384,7 +426,11 @@ export function Landing({ lang }: { lang: Locale }) {
         <div className="relative overflow-hidden rounded-[32px] px-6 py-20 text-center text-white sm:px-16" style={{ background: "linear-gradient(135deg,#6d5cf7 0%,#4b3cc9 100%)" }}>
           <div className="pointer-events-none absolute -left-16 -top-20 h-[280px] w-[280px] rounded-full bg-[#e6c079] opacity-25 blur-[60px]" />
           <div className="pointer-events-none absolute -bottom-[120px] -right-20 h-[320px] w-[320px] rounded-full bg-[#191539] opacity-35 blur-[70px]" />
-          <div className="relative mb-5 flex justify-center gap-3 text-[52px]">🦊⭐🐼</div>
+          <div className="relative mb-5 flex items-center justify-center gap-3">
+            <span className="flex h-16 w-16 items-end justify-center overflow-hidden rounded-full bg-white/95"><Mascot id="fox" size={60} /></span>
+            <span className="text-[52px]">⭐</span>
+            <span className="flex h-16 w-16 items-end justify-center overflow-hidden rounded-full bg-white/95"><Mascot id="panda" size={60} /></span>
+          </div>
           <h2 className="relative font-display text-4xl font-bold sm:text-[56px]">{t("Попробуйте вместе с ребёнком", "Бала менен бирге сынап көрүңүз")}</h2>
           <p className="relative mb-9 mt-4 text-xl text-[#e6e1ff]">{t("Первые задания — бесплатно, без регистрации", "Биринчи тапшырмалар — акысыз, катталуусуз")}</p>
           <Link href={playHref} className="relative inline-block rounded-full bg-white px-10 py-5 text-lg font-extrabold text-[#6d5cf7] transition hover:-translate-y-0.5 hover:bg-[#e6c079] hover:text-[#191539]">{t("Начать бесплатно", "Акысыз баштоо")}</Link>
