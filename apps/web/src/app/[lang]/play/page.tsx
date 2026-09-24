@@ -30,7 +30,7 @@ export default async function PlayPage({
   const dict = await getDictionary(lang);
 
   return (
-    <div className="relative flex min-h-[100dvh] flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
+    <div className="relative flex min-h-[100dvh] flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
 
       {/* Игровые кнопки: звук и быстрый доступ к гардеробу */}

@@ -8,6 +8,7 @@ import {
   getProgramTopics,
   getTopics,
   GRADES,
+  helpers,
   subjectLabels,
   subjectsForGrade,
   type Locale,
@@ -138,6 +139,39 @@ function shuffle(arr: number[]): number[] {
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+
+// Индикатор шагов старта: Герой → Класс → Тема.
+function StepIndicator({
+  current,
+  locale,
+}: {
+  current: 1 | 2 | 3;
+  locale: Locale;
+}) {
+  const steps: [number, string][] = [
+    [1, locale === "ky" ? "Каарман" : "Герой"],
+    [2, locale === "ky" ? "Класс" : "Класс"],
+    [3, locale === "ky" ? "Тема" : "Тема"],
+  ];
+  return (
+    <div className="mb-7 flex items-center justify-center gap-2 text-[13px] font-extrabold text-[#5c5880]">
+      {steps.map(([n, label], i) => (
+        <div key={n} className="flex items-center gap-2">
+          {i > 0 && <span className="h-0.5 w-5 bg-black/10 sm:w-8" />}
+          <span
+            className={
+              "flex h-7 w-7 items-center justify-center rounded-full " +
+              (n <= current ? "bg-[#6d5cf7] text-white" : "bg-[#e6e1ff] text-[#6d5cf7]")
+            }
+          >
+            {n}
+          </span>
+          <span className={n === current ? "text-[#191539]" : ""}>{label}</span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 type Status = "answering" | "correct" | "wrong";
@@ -381,26 +415,76 @@ export function TaskPlayer({
 
   // 1. Выбор помощника
   if (!helper) {
+    const preview = pendingHelper
+      ? helpers.find((h) => h.id === pendingHelper)
+      : undefined;
+    const previewGradient = preview
+      ? helperGradient[preview.color] ?? "from-indigo-400 to-violet-500"
+      : "";
     return (
-      <div className="mx-auto w-full max-w-lg text-center">
-        <h2 className="font-display text-3xl font-extrabold">
-          {gameLabels.chooseTitle}
-        </h2>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-          {gameLabels.chooseSubtitle}
-        </p>
-        <div className="mt-6">
-          <HelperPicker
-            locale={locale}
-            selectedId={pendingHelper}
-            onSelect={(h) => setPendingHelper(h.id)}
-            earnedStars={earnedStars}
-            unlockForLabel={gameLabels.unlockFor}
-            notEnoughLabel={gameLabels.notEnoughStars}
-          />
+      <div className="mx-auto w-full max-w-4xl font-sans text-[#191539]">
+        <StepIndicator current={1} locale={locale} />
+        <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:items-start">
+          <div>
+            <h2 className="font-display text-3xl font-bold">{gameLabels.chooseTitle}</h2>
+            <p className="mt-1.5 text-[#5c5880]">{gameLabels.chooseSubtitle}</p>
+            <div className="mt-6">
+              <HelperPicker
+                locale={locale}
+                selectedId={pendingHelper}
+                onSelect={(h) => setPendingHelper(h.id)}
+                earnedStars={earnedStars}
+                unlockForLabel={gameLabels.unlockFor}
+                notEnoughLabel={gameLabels.notEnoughStars}
+              />
+            </div>
+            <p className="mt-5 text-sm text-[#5c5880]">
+              {locale === "ky"
+                ? "Жаңы каармандарды тапшырмалар үчүн алган жылдыздарга ач."
+                : "Новых героев открывай за звёзды, которые получаешь за задания."}
+            </p>
+          </div>
+
+          {/* Превью выбранного помощника (десктоп) */}
+          <div className="hidden rounded-[28px] bg-white p-8 text-center shadow-[0_16px_40px_rgba(25,21,57,.08)] lg:block">
+            {preview ? (
+              <>
+                <div
+                  className={
+                    "mx-auto mb-5 flex h-[180px] w-[180px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
+                    previewGradient
+                  }
+                >
+                  <Mascot helper={preview} mood="idle" size="lg" />
+                </div>
+                <div className="font-display text-2xl font-bold">{preview.name[locale]}</div>
+                <p className="mt-3 rounded-2xl bg-[#f7f5ff] px-4 py-3 text-[15px] leading-snug text-[#2d2950]">
+                  {locale === "ky"
+                    ? "«Салам! Кел, чогуу тапшырмаларды чечип, жылдыз жыйнайлы!»"
+                    : "«Привет! Давай вместе решать задачки и собирать звёзды!»"}
+                </p>
+                <button onClick={chooseHelper} className={"mt-6 " + PRIMARY_PILL}>
+                  {gameLabels.chooseCta}
+                </button>
+              </>
+            ) : (
+              <div className="flex min-h-[300px] flex-col items-center justify-center text-[#5c5880]">
+                <div className="text-5xl">👆</div>
+                <p className="mt-3 max-w-[200px] text-sm font-semibold">
+                  {gameLabels.chooseSubtitle}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
-        <button onClick={chooseHelper} disabled={!pendingHelper} className={"mt-6 " + PRIMARY_BTN}>
-          {gameLabels.chooseCta}
+
+        {/* CTA для мобилки */}
+        <button
+          onClick={chooseHelper}
+          disabled={!pendingHelper}
+          className={"mt-7 lg:hidden " + PRIMARY_PILL}
+        >
+          {preview ? `${gameLabels.chooseCta} — ${preview.name[locale]}` : gameLabels.chooseCta}
         </button>
       </div>
     );
@@ -409,28 +493,38 @@ export function TaskPlayer({
   // 2. Выбор класса
   if (grade === null) {
     return (
-      <div className="mx-auto w-full max-w-lg text-center">
+      <div className="mx-auto w-full max-w-2xl font-sans text-[#191539]">
+        <StepIndicator current={2} locale={locale} />
         <div className="mb-5 flex justify-center">
-          <Mascot helper={helper} mood="idle" />
+          <div
+            className={
+              "flex h-[104px] w-[104px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
+              (helperGradient[helper.color] ?? "from-indigo-400 to-violet-500")
+            }
+          >
+            <Mascot helper={helper} mood="idle" size="md" />
+          </div>
         </div>
-        <h2 className="font-display text-3xl font-extrabold">
+        <h2 className="text-center font-display text-3xl font-bold">
           {gameLabels.gradeTitle}
         </h2>
         {lastGrade !== null && GRADES.includes(lastGrade) && (
-          <button
-            onClick={() => chooseGrade(lastGrade)}
-            className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3 font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.98]"
-          >
-            ▶ {locale === "ky" ? "Улантуу" : "Продолжить"} —{" "}
-            {gradeLabels[String(lastGrade)] ?? lastGrade}
-          </button>
+          <div className="mt-5 text-center">
+            <button
+              onClick={() => chooseGrade(lastGrade)}
+              className="inline-flex items-center gap-2 rounded-full bg-[#6d5cf7] px-6 py-3 font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5"
+            >
+              ▶ {locale === "ky" ? "Улантуу" : "Продолжить"} —{" "}
+              {gradeLabels[String(lastGrade)] ?? lastGrade}
+            </button>
+          </div>
         )}
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {GRADES.map((g) => (
             <button
               key={g}
               onClick={() => chooseGrade(g)}
-              className="flex flex-col items-center gap-2 rounded-3xl border-2 border-black/[.06] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-indigo-300 hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+              className="flex flex-col items-center gap-2 rounded-3xl bg-white p-5 shadow-[0_8px_24px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
             >
               <span className="text-4xl">{g === 0 ? "🎒" : "🏫"}</span>
               <span className="font-display font-bold">
@@ -447,48 +541,39 @@ export function TaskPlayer({
   if (subject === null) {
     const subjects = subjectsForGrade(grade);
     return (
-      <div className="mx-auto w-full max-w-lg">
+      <div className="mx-auto w-full max-w-2xl font-sans text-[#191539]">
+        <StepIndicator current={3} locale={locale} />
         <button
           onClick={() => setGrade(null)}
-          className="text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+          className="text-sm font-extrabold text-[#5c5880] transition hover:text-[#191539]"
         >
           ← {gradeLabels[String(grade)] ?? gameLabels.gradeTitle}
         </button>
-        <div className="mb-4 mt-3 flex justify-center">
-          <Mascot helper={helper} mood="idle" />
-        </div>
-        <h2 className="text-center font-display text-3xl font-extrabold">
+        <h2 className="mt-3 text-center font-display text-3xl font-bold">
           {gameLabels.subjectTitle}
         </h2>
+        <p className="mt-1.5 text-center text-[#5c5880]">{gameLabels.programDesc}</p>
 
-        {/* Главная кнопка — общая программа (вперемешку по предметам) */}
-        <button
-          onClick={() => setSubject("all")}
-          className="mt-6 flex w-full flex-col items-center gap-1 rounded-3xl bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-5 text-center text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.99]"
-        >
-          <span className="font-display text-xl font-extrabold">
-            🚀 {gameLabels.programCta}
-          </span>
-          <span className="text-sm font-semibold text-white/85">
-            {gameLabels.programDesc}
-          </span>
-        </button>
-
-        <div className="my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-wide text-zinc-400">
-          <span className="h-px flex-1 bg-black/10 dark:bg-white/10" />
-          {locale === "ky" ? "же предмет боюнча" : "или по предмету"}
-          <span className="h-px flex-1 bg-black/10 dark:bg-white/10" />
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {/* Общая программа (вперемешку по предметам) */}
+          <button
+            onClick={() => setSubject("all")}
+            className="relative flex flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl bg-[#191539] p-5 text-center text-white transition hover:-translate-y-1"
+          >
+            <span className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#6d5cf7] opacity-40 blur-2xl" />
+            <span className="relative text-3xl">✨</span>
+            <span className="relative font-display text-sm font-bold sm:text-base">
+              {locale === "ky" ? "Баары чогуу" : "Всё вместе"}
+            </span>
+          </button>
           {subjects.map((s) => (
             <button
               key={s}
               onClick={() => setSubject(s)}
-              className="flex items-center gap-3 rounded-2xl border-2 border-black/[.06] bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md dark:border-white/10 dark:bg-zinc-900"
+              className="flex flex-col items-center justify-center gap-2 rounded-3xl bg-white p-5 text-center shadow-[0_8px_24px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_0_0_2px_#b9b3e6]"
             >
               <span className="text-3xl">{SUBJECT_EMOJI[s]}</span>
-              <span className="font-display font-bold">
+              <span className="font-display text-sm font-bold sm:text-base">
                 {subjectLabels[s][locale]}
               </span>
             </button>
@@ -529,20 +614,20 @@ export function TaskPlayer({
         className={inLesson ? "pointer-events-none select-none blur-[7px] brightness-95" : ""}
         aria-hidden={inLesson}
       >
-        <div className="mb-3 flex flex-col items-center gap-1">
+        <div className="mb-3 flex flex-col items-center gap-1 font-sans text-[#191539]">
           <button
             onClick={() => setSubject(null)}
-            className="self-start text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+            className="self-start text-sm font-extrabold text-[#5c5880] transition hover:text-[#191539]"
           >
             ←{" "}
             {subject === "all"
               ? gameLabels.programCta
               : subjectLabels[subject][locale]}
           </button>
-          <h2 className="font-display text-3xl font-extrabold">
+          <h2 className="font-display text-3xl font-bold">
             {gameLabels.topicsTitle}
           </h2>
-          <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-center text-sm text-[#5c5880]">
             {gameLabels.starHint}
           </p>
         </div>

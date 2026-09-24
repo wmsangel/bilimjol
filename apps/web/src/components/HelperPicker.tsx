@@ -64,7 +64,7 @@ export function HelperPicker({
   }
 
   return (
-    <div className="grid grid-cols-3 gap-3 sm:gap-4">
+    <div className="grid grid-cols-3 gap-3 sm:grid-cols-6 sm:gap-3.5">
       {helpers.map((helper, index) => {
         const active = helper.id === selectedId;
         const unlocked = isHelperUnlocked(helper.id, index, stats);
@@ -74,27 +74,27 @@ export function HelperPicker({
             key={helper.id}
             onClick={() => handleClick(helper, index)}
             className={
-              "relative flex flex-col items-center gap-1 rounded-3xl border-2 bg-white p-3 shadow-sm transition hover:-translate-y-1 dark:bg-zinc-900 " +
+              "relative flex flex-col items-center gap-1 rounded-[22px] border-2 bg-white p-3 pb-2.5 transition hover:-translate-y-1 " +
               (active
-                ? "border-indigo-500 ring-2 ring-indigo-300"
-                : "border-black/[.06] hover:border-indigo-300 dark:border-white/10") +
-              (denied ? " animate-shake border-red-400" : "")
+                ? "border-[#6d5cf7] shadow-[0_0_0_4px_#e6e1ff]"
+                : "border-black/[.06] shadow-[0_6px_18px_rgba(25,21,57,.05)] hover:border-[#b9b3e6]") +
+              (denied ? " animate-shake border-[#fb7185]" : "")
             }
           >
             <div className={unlocked ? "" : "opacity-40 grayscale"}>
               <Character charId={helper.id} sizePx={64} />
             </div>
             {unlocked ? (
-              <span className="font-display text-sm font-bold">
+              <span className="font-display text-[13px] font-bold text-[#191539]">
                 {helper.name[locale]}
               </span>
             ) : (
-              <span className="font-display text-xs font-bold text-amber-600 dark:text-amber-400">
+              <span className="font-display text-[11px] font-extrabold leading-tight text-[#9a7430]">
                 {denied ? notEnoughLabel : `${unlockForLabel} ${UNLOCK_COST} ⭐`}
               </span>
             )}
             {!unlocked && (
-              <span className="absolute right-2 top-2 text-sm">🔒</span>
+              <span className="absolute right-2 top-2 text-[13px]">🔒</span>
             )}
           </button>
         );
