@@ -101,7 +101,11 @@ body {
 .izn-char .antenna { transform-box: fill-box; transform-origin: 50% 100%; animation: wobble 3.2s ease-in-out infinite; }
 @keyframes wobble { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
 
+@keyframes bjFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.animate-bjfloat { animation: bjFloat 4s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
+  .animate-bjfloat,
   .animate-bob,
   .animate-float,
   .animate-pop,
