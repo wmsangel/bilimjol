@@ -16,7 +16,6 @@ import {
   accuracyPct,
   computeAchievements,
   DAILY_GOAL,
-  formatDuration,
   lastSevenDays,
   levelInfo,
   loadStats,
@@ -26,6 +25,7 @@ import {
 } from "@/lib/stats";
 import { getEntitlement, loadAuth, loadChildId } from "@/lib/api";
 import { syncChild } from "@/lib/sync";
+import { helperGradient } from "@/lib/helperTheme";
 import { Mascot } from "./Mascot";
 
 export interface AccountLabels {
@@ -128,7 +128,6 @@ export function Cabinet({
     setEmail(auth?.user.email ?? null);
     setLoaded(true);
 
-    // Если вошли — подтягиваем прогресс и статус подписки с сервера.
     const childId = loadChildId();
     if (auth && childId) {
       syncChild(childId)
@@ -143,7 +142,6 @@ export function Cabinet({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Лента «Что нового»: считаем непрочитанное и отмечаем просмотренным.
   useEffect(() => {
     let seen: string | null = null;
     try {
@@ -175,17 +173,17 @@ export function Cabinet({
 
   if (!loaded) {
     return (
-      <div className="mx-auto h-64 w-full max-w-md animate-pulse rounded-[2rem] border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+      <div className="mx-auto h-64 w-full max-w-md animate-pulse rounded-[28px] bg-white shadow-sm" />
     );
   }
 
   if (!helper) {
     return (
-      <div className="mx-auto w-full max-w-md rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl dark:border-white/10 dark:bg-zinc-900">
-        <p className="text-zinc-600 dark:text-zinc-400">{labels.noHelper}</p>
+      <div className="mx-auto w-full max-w-md rounded-[28px] bg-white p-8 text-center shadow-[0_8px_24px_rgba(25,21,57,.06)]">
+        <p className="text-[#5c5880]">{labels.noHelper}</p>
         <Link
           href={playHref}
-          className="mt-5 inline-block rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110"
+          className="mt-5 inline-block rounded-full bg-[#6d5cf7] px-6 py-3.5 font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:shadow-[0_0_0_3px_#e6c079]"
         >
           {labels.noHelperCta}
         </Link>
@@ -207,287 +205,201 @@ export function Cabinet({
     accuracy: accuracyPct(stats.totalAnswered, stats.totalCorrect),
   });
   const week = lastSevenDays(stats, locale);
+  const card = "rounded-3xl bg-white p-6 shadow-[0_8px_24px_rgba(25,21,57,.06)]";
 
   return (
-    <div className="mx-auto grid w-full max-w-4xl items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-      {/* Зона 1 — прогресс */}
-      <div>
-      <div className="mb-4 flex justify-center">
-        <Mascot helper={helper} mood="idle" size="lg" />
-      </div>
-
-      <div className="rounded-[2rem] border border-black/[.06] bg-white p-6 shadow-xl dark:border-white/10 dark:bg-zinc-900">
-        <div className="text-center">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            {labels.greeting}
-          </p>
-          <h2 className="font-display text-2xl font-extrabold">
-            {helper.name[locale]}
-          </h2>
-        </div>
-
-        {/* Уровень */}
-        <div className="mt-5">
-          <div className="mb-1.5 flex items-center justify-between text-sm font-bold">
-            <span>
-              {labels.level} {level}
-            </span>
-            <span className="text-zinc-400">
-              {inLevel}/{perLevel} ⭐
-            </span>
+    <div className="mx-auto grid w-full max-w-5xl items-start gap-6 font-sans text-[#191539] lg:grid-cols-[minmax(0,1fr)_320px]">
+      {/* Левая колонка */}
+      <div className="flex flex-col gap-4">
+        {/* Тёмная hero-карточка */}
+        <div className="relative flex flex-col gap-5 overflow-hidden rounded-[28px] bg-[#191539] p-6 text-white xl:flex-row xl:items-center xl:gap-6">
+          <div className="pointer-events-none absolute right-[-60px] top-[-80px] h-[260px] w-[260px] rounded-full bg-[#6d5cf7] opacity-40 blur-[60px]" />
+          <div
+            className={
+              "relative flex h-[120px] w-[120px] flex-none items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
+              (helperGradient[helper.color] ?? "from-indigo-400 to-violet-500")
+            }
+          >
+            <Mascot helper={helper} mood="idle" size="md" />
           </div>
-          <div className="h-3 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500"
-              style={{ width: `${(inLevel / perLevel) * 100}%` }}
-            />
+          <div className="relative flex-1">
+            <div className="text-[15px] font-bold text-[#d9d5f5]">{labels.greeting}</div>
+            <div className="mb-3.5 mt-1 font-display text-[26px] font-bold">{helper.name[locale]}</div>
+            <div className="mb-1.5 flex justify-between text-sm font-extrabold">
+              <span>{labels.level} {level}</span>
+              <span className="text-[#e6c079]">{inLevel}/{perLevel} ⭐</span>
+            </div>
+            <div className="h-2.5 rounded-full bg-white/[.12]">
+              <div className="h-2.5 rounded-full bg-[#e6c079]" style={{ width: `${(inLevel / perLevel) * 100}%` }} />
+            </div>
           </div>
+          <Link
+            href={playHref}
+            className="relative w-full rounded-full bg-[#6d5cf7] px-6 py-4 text-center font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 xl:w-auto"
+          >
+            ▶ {labels.continue}
+          </Link>
         </div>
 
         {/* Плитки: звёзды, серия, пройдено */}
-        <div className="mt-5 grid grid-cols-3 gap-3">
-          <div className="rounded-2xl bg-gradient-to-br from-amber-100 to-yellow-200 p-3 text-center dark:from-amber-500/15 dark:to-yellow-500/10">
-            <div className="font-display text-2xl font-extrabold text-amber-700 dark:text-amber-300">
-              {spendable}
+        <div className="grid grid-cols-3 gap-3">
+          <div className="rounded-[22px] bg-[#fbf3e3] p-4 text-[#7a5a1e]">
+            <div className="font-display text-[30px] font-bold leading-none">{spendable}</div>
+            <div className="mt-1 text-sm font-extrabold">⭐ {labels.stars}</div>
+          </div>
+          <div className="rounded-[22px] bg-[#ffedd5] p-4 text-[#9a3412]">
+            <div className="font-display text-[30px] font-bold leading-none">{stats.streakCount}</div>
+            <div className="mt-1 text-sm font-extrabold">🔥 {labels.streak}</div>
+          </div>
+          <div className="rounded-[22px] bg-[#efecff] p-4 text-[#4b3cc9]">
+            <div className="font-display text-[30px] font-bold leading-none">{totalSolved}</div>
+            <div className="mt-1 text-sm font-extrabold">✅ {labels.completed}</div>
+          </div>
+        </div>
+
+        {/* Цель + неделя | Достижения */}
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className={card}>
+            <div className="mb-2.5 flex justify-between text-sm font-extrabold">
+              <span>{labels.daily}</span>
+              <span className="text-[#5c5880]">{daily}/{DAILY_GOAL}</span>
             </div>
-            <div className="mt-0.5 text-[11px] font-semibold text-amber-700/80 dark:text-amber-300/80">
-              ⭐ {labels.stars}
+            <div className="mb-4 h-3 rounded-full bg-[#efecff]">
+              <div className="h-3 rounded-full bg-[#34d399] transition-all" style={{ width: `${dailyPct}%` }} />
+            </div>
+            {daily >= DAILY_GOAL && (
+              <p className="mb-3 text-sm font-bold text-[#059669]">{labels.dailyDone}</p>
+            )}
+            <div className="mb-2.5 flex items-center justify-between text-sm font-extrabold">
+              <span>{labels.weekTitle}</span>
+              {stats.bestStreak > 0 && (
+                <span className="text-[13px] text-[#c2410c]">🔥 {labels.bestStreak}: {stats.bestStreak}</span>
+              )}
+            </div>
+            <div className="grid grid-cols-7 gap-1.5 text-center text-[11px] font-extrabold text-[#5c5880]">
+              {week.map((d) => (
+                <div key={d.date}>
+                  <div
+                    className={
+                      "mb-1 flex h-[34px] items-center justify-center rounded-[10px] text-[15px] " +
+                      (d.active ? "bg-[#fb923c]" : "bg-[#efecff]") +
+                      (d.today ? " shadow-[0_0_0_2px_#fff,0_0_0_4px_#6d5cf7]" : "")
+                    }
+                  >
+                    {d.active ? "🔥" : ""}
+                  </div>
+                  <span className={d.today ? "text-[#6d5cf7]" : ""}>{d.weekday}</span>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="rounded-2xl bg-gradient-to-br from-orange-100 to-red-200 p-3 text-center dark:from-orange-500/15 dark:to-red-500/10">
-            <div className="font-display text-2xl font-extrabold text-orange-700 dark:text-orange-300">
-              {stats.streakCount}
-            </div>
-            <div className="mt-0.5 text-[11px] font-semibold text-orange-700/80 dark:text-orange-300/80">
-              🔥 {labels.streak}
-            </div>
-          </div>
-          <div className="rounded-2xl bg-gradient-to-br from-indigo-100 to-violet-200 p-3 text-center dark:from-indigo-500/15 dark:to-violet-500/10">
-            <div className="font-display text-2xl font-extrabold text-indigo-700 dark:text-indigo-300">
-              {totalSolved}
-            </div>
-            <div className="mt-0.5 text-[11px] font-semibold text-indigo-700/80 dark:text-indigo-300/80">
-              ✅ {labels.completed}
+
+          <div className={card}>
+            <div className="mb-3 text-sm font-extrabold">{labels.achievementsTitle}</div>
+            <div className="grid grid-cols-3 gap-2">
+              {achievements.map((a) => (
+                <div
+                  key={a.id}
+                  className={
+                    "rounded-2xl p-2.5 text-center " +
+                    (a.unlocked ? "border-[1.5px] border-[#e6c079] bg-[#fbf3e3]" : "bg-[#f7f5ff] opacity-50")
+                  }
+                >
+                  <div className={"text-[22px] " + (a.unlocked ? "" : "grayscale")}>{a.icon}</div>
+                  <div className="text-[11px] font-extrabold leading-tight">{achievementsLabels[a.id] ?? a.id}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Дневная цель */}
-        <div className="mt-5">
-          <div className="mb-1.5 flex items-center justify-between text-sm font-bold">
-            <span>{labels.daily}</span>
-            <span className="text-zinc-400">
-              {daily}/{DAILY_GOAL}
-            </span>
-          </div>
-          <div className="h-3 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-green-500 transition-all"
-              style={{ width: `${dailyPct}%` }}
-            />
-          </div>
-          {daily >= DAILY_GOAL && (
-            <p className="mt-2 text-center text-sm font-bold text-emerald-600 dark:text-emerald-400">
-              {labels.dailyDone}
-            </p>
+        {/* Мелочи: сменить героя / отчёт */}
+        <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-semibold text-[#5c5880]">
+          <button onClick={changeHelper} className="hover:text-[#6d5cf7]">{labels.changeHelper}</button>
+          <span className="text-[#d9d5f5]">·</span>
+          <Link href={parentHref} className="hover:text-[#6d5cf7]">📊 {accountLabels.parentReport}</Link>
+          {email && premiumUntil && (
+            <>
+              <span className="text-[#d9d5f5]">·</span>
+              <span className="rounded-full bg-[#fbf3e3] px-3 py-1 text-xs font-bold text-[#7a5a1e]">⭐ {labels.premiumActive} {fmtDate(premiumUntil)}</span>
+            </>
           )}
         </div>
+      </div>
 
-        {/* Неделя активности */}
-        <div className="mt-6">
-          <div className="mb-2 flex items-center justify-between text-sm font-bold">
-            <span>{labels.weekTitle}</span>
-            {stats.bestStreak > 0 && (
-              <span className="text-xs font-semibold text-orange-500 dark:text-orange-400">
-                🔥 {labels.bestStreak}: {stats.bestStreak}
-              </span>
+      {/* Правый рельс */}
+      <div className="flex flex-col gap-4">
+        {/* Что нового */}
+        <div className={card + " p-[22px]"}>
+          <div className="mb-3 flex items-center gap-2 font-display text-[17px] font-bold">
+            {labels.newsTitle}
+            {unseenNews > 0 && (
+              <span className="rounded-full bg-[#6d5cf7] px-2 py-0.5 font-sans text-xs font-bold text-white">{unseenNews}</span>
             )}
           </div>
-          <div className="flex justify-between gap-1.5">
-            {week.map((d) => (
-              <div key={d.date} className="flex flex-1 flex-col items-center gap-1">
-                <div
-                  className={
-                    "flex h-9 w-full items-center justify-center rounded-xl text-sm font-extrabold transition " +
-                    (d.active
-                      ? "bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-sm"
-                      : "bg-black/[.05] text-zinc-300 dark:bg-white/10 dark:text-zinc-600") +
-                    (d.today ? " ring-2 ring-indigo-400 ring-offset-1 dark:ring-offset-zinc-900" : "")
-                  }
-                >
-                  {d.active ? "🔥" : ""}
-                </div>
-                <span
-                  className={
-                    "text-[10px] font-semibold " +
-                    (d.today
-                      ? "text-indigo-500 dark:text-indigo-400"
-                      : "text-zinc-400")
-                  }
-                >
-                  {d.weekday}
+          <ul className="flex flex-col gap-3 text-sm">
+            {news.slice(0, 4).map((n) => {
+              const isNew = prevSeen == null || n.date > prevSeen;
+              const inner = (
+                <span className="flex items-start gap-2.5">
+                  <span className="text-lg leading-none">{n.emoji}</span>
+                  <span className={"flex-1 " + (isNew ? "text-[#191539]" : "text-[#5c5880]")}>{n.title[locale]}</span>
+                  {isNew && <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[#6d5cf7]" />}
                 </span>
-              </div>
-            ))}
-          </div>
+              );
+              return (
+                <li key={n.date + n.emoji}>
+                  {n.href ? (
+                    <Link href={`/${locale}${n.href}`} className="-mx-2 block rounded-xl px-2 py-1 transition hover:bg-[#f7f5ff]">{inner}</Link>
+                  ) : (
+                    <div className="py-1">{inner}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </div>
 
-        {/* Статистика */}
-        <div className="mt-6">
-          <p className="mb-2 text-sm font-bold">{labels.statsTitle}</p>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-2xl bg-black/[.03] p-3 text-center dark:bg-white/[.04]">
-              <div className="font-display text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
-                {accuracyPct(stats.totalAnswered, stats.totalCorrect)}%
-              </div>
-              <div className="mt-0.5 text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
-                🎯 {labels.accuracy}
-              </div>
-            </div>
-            <div className="rounded-2xl bg-black/[.03] p-3 text-center dark:bg-white/[.04]">
-              <div className="font-display text-2xl font-extrabold text-sky-600 dark:text-sky-400">
-                {formatDuration(stats.timeSpentSec)}
-              </div>
-              <div className="mt-0.5 text-[11px] font-semibold text-zinc-500 dark:text-zinc-400">
-                ⏱️ {labels.timeSpent}
-              </div>
-            </div>
-          </div>
-          <p className="mt-2 text-center text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            {labels.answers}: {stats.totalAnswered} · {labels.correct}:{" "}
-            {stats.totalCorrect} · {labels.incorrect}:{" "}
-            {Math.max(0, stats.totalAnswered - stats.totalCorrect)}
-          </p>
-        </div>
-
-        {/* Достижения */}
-        <div className="mt-6">
-          <h3 className="mb-3 font-display text-lg font-bold">
-            {labels.achievementsTitle}
-          </h3>
-          <div className="grid grid-cols-3 gap-3">
-            {achievements.map((a) => (
-              <div
-                key={a.id}
-                className={
-                  "flex flex-col items-center gap-1 rounded-2xl border p-3 text-center transition " +
-                  (a.unlocked
-                    ? "border-amber-300 bg-amber-50 dark:border-amber-500/40 dark:bg-amber-500/10"
-                    : "border-black/[.06] opacity-45 grayscale dark:border-white/10")
-                }
-              >
-                <span className="text-2xl">{a.icon}</span>
-                <span className="text-[11px] font-semibold leading-tight">
-                  {achievementsLabels[a.id] ?? a.id}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <Link
-          href={playHref}
-          className="mt-6 block rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 text-center text-lg font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.98]"
-        >
-          {labels.continue}
-        </Link>
-        <button
-          onClick={changeHelper}
-          className="mt-3 w-full text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
-        >
-          {labels.changeHelper}
-        </button>
-
-        {/* Подписка */}
-        {email && (
-          <div className="mt-5 border-t border-black/[.06] pt-4 text-center dark:border-white/10">
-            {premiumUntil ? (
-              <span className="inline-block rounded-full bg-gradient-to-r from-amber-300 to-yellow-400 px-3 py-1 text-xs font-bold text-amber-900">
-                ⭐ {labels.premiumActive} {fmtDate(premiumUntil)}
-              </span>
-            ) : (
+        {/* Куда дальше */}
+        <div className={card + " p-[22px]"}>
+          <div className="mb-3 font-display text-[17px] font-bold">{labels.nextTitle}</div>
+          <div className="flex flex-col gap-2">
+            {(
+              [
+                { href: `/${locale}/play`, icon: "🎮", label: labels.nextPlay },
+                { href: `/${locale}/games`, icon: "🧩", label: labels.nextGames },
+                { href: `/${locale}/wardrobe`, icon: "👕", label: labels.nextWardrobe },
+              ] as const
+            ).map((r) => (
               <Link
-                href={`/${locale}/subscribe`}
-                className="inline-block rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98]"
+                key={r.href}
+                href={r.href}
+                className="flex items-center gap-3 rounded-2xl bg-[#f7f5ff] px-3.5 py-3 text-[15px] font-extrabold text-[#191539] transition hover:shadow-[0_0_0_2px_#e6e1ff]"
               >
-                {labels.subscribe}
+                <span className="text-xl">{r.icon}</span>
+                {r.label}
               </Link>
-            )}
+            ))}
+          </div>
+        </div>
+
+        {/* Premium промо / вход */}
+        {premiumUntil ? null : (
+          <div className="rounded-[22px] bg-[#e6c079] p-[22px]">
+            <div className="mb-1.5 font-display text-[17px] font-bold text-[#191539]">
+              {locale === "ky" ? "Бардык тапшырмаларды ач" : "Открой все задания"}
+            </div>
+            <div className="mb-3.5 text-sm text-[#3d3420]">
+              {locale === "ky" ? "Бардык класстар, предметтер жана отчёт — Premiumда." : "Все классы, предметы и отчёт — в Premium."}
+            </div>
+            <Link
+              href={email ? `/${locale}/subscribe` : loginHref}
+              className="block rounded-full bg-[#191539] py-3 text-center font-extrabold text-white transition hover:brightness-125"
+            >
+              {labels.subscribe}
+            </Link>
           </div>
         )}
-      </div>
-      </div>
-
-      {/* Зоны 2–3 — справа: новинки и «куда дальше» */}
-      <div className="flex flex-col gap-4">
-      {/* Что нового */}
-      <div className="rounded-[2rem] border border-black/[.06] bg-white p-5 shadow-xl dark:border-white/10 dark:bg-zinc-900">
-        <div className="mb-3 flex items-center gap-2">
-          <h3 className="font-display text-base font-bold">
-            🆕 {labels.newsTitle}
-          </h3>
-          {unseenNews > 0 && (
-            <span className="rounded-full bg-rose-500 px-2 py-0.5 text-[11px] font-bold text-white">
-              {unseenNews}
-            </span>
-          )}
-        </div>
-        <ul className="space-y-1">
-          {news.slice(0, 4).map((n) => {
-            const isNew = prevSeen == null || n.date > prevSeen;
-            const inner = (
-              <span className="flex items-start gap-2.5">
-                <span className="text-lg leading-none">{n.emoji}</span>
-                <span className="flex-1 text-sm text-zinc-700 dark:text-zinc-300">
-                  {n.title[locale]}
-                </span>
-                {isNew && (
-                  <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-rose-500" />
-                )}
-              </span>
-            );
-            return (
-              <li key={n.date + n.emoji}>
-                {n.href ? (
-                  <Link
-                    href={`/${locale}${n.href}`}
-                    className="-mx-2 block rounded-xl px-2 py-1.5 transition hover:bg-black/[.03] dark:hover:bg-white/5"
-                  >
-                    {inner}
-                  </Link>
-                ) : (
-                  <div className="px-0 py-1.5">{inner}</div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-
-      {/* Куда дальше — рекомендации (двигатель гринда) */}
-      <div className="rounded-[2rem] border border-black/[.06] bg-white p-5 shadow-xl dark:border-white/10 dark:bg-zinc-900">
-        <h3 className="mb-3 font-display text-base font-bold">
-          🚀 {labels.nextTitle}
-        </h3>
-        <div className="flex flex-col gap-2">
-          {(
-            [
-              { href: `/${locale}/play`, icon: "🎮", label: labels.nextPlay },
-              { href: `/${locale}/games`, icon: "🧩", label: labels.nextGames },
-              { href: `/${locale}/wardrobe`, icon: "👕", label: labels.nextWardrobe },
-            ] as const
-          ).map((r) => (
-            <Link
-              key={r.href}
-              href={r.href}
-              className="flex items-center gap-3 rounded-2xl bg-black/[.03] px-3 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-black/[.06] dark:bg-white/[.04] dark:text-zinc-200 dark:hover:bg-white/10"
-            >
-              <span className="text-lg">{r.icon}</span>
-              {r.label}
-            </Link>
-          ))}
-        </div>
-      </div>
       </div>
     </div>
   );
