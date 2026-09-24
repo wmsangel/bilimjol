@@ -27,6 +27,7 @@ import { syncChild } from "@/lib/sync";
 import { pushEvent, currencyIso } from "@/lib/gtm";
 import { countryForLocale, priceForCountry } from "@/lib/pricing";
 import { speak, speechSupported, stopSpeaking } from "@/lib/speech";
+import { helperGradient } from "@/lib/helperTheme";
 
 // Контакт администратора (пока оплата картой не подключена). Переопределяется env.
 const ADMIN_TG =
@@ -117,6 +118,10 @@ export interface GameLabels {
 
 const PRIMARY_BTN =
   "w-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 text-lg font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none";
+
+// Основная кнопка «Проверить/Далее» в режиме занятия (бренд-палитра).
+const PRIMARY_PILL =
+  "w-full rounded-full bg-[#6d5cf7] px-6 py-4 text-lg font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:translate-y-0";
 
 function tpl(str: string, vars: Record<string, string | number>) {
   return str.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ""));
@@ -501,6 +506,8 @@ export function TaskPlayer({
       : getTopics({ grade, subject });
   const inLesson = topicId !== null;
   const closeLabel = locale === "ky" ? "Картага" : "К карте";
+  const lessonTitle =
+    subject === "all" ? gameLabels.programCta : subjectLabels[subject][locale];
 
   const mood: "idle" | "happy" | "sad" =
     status === "correct" ? "happy" : status === "wrong" ? "sad" : "idle";
@@ -509,6 +516,11 @@ export function TaskPlayer({
       ? labels.cheerCorrect
       : labels.cheerWrong
     : undefined;
+  // Реплика помощника в пузыре: похвала/поддержка после ответа, иначе — подбадривание.
+  const bubbleText =
+    mascotMessage ??
+    (locale === "ky" ? "Кана, ойлонуп көрөлү 🤔" : "Давай подумаем вместе 🤔");
+  const gradient = helperGradient[helper.color] ?? "from-indigo-400 to-violet-500";
 
   return (
     <div className="mx-auto w-full max-w-[1480px]">
@@ -550,463 +562,516 @@ export function TaskPlayer({
         )}
       </div>
 
-      {/* Оверлей поверх размытой карты: вопрос по центру или финал */}
+      {/* Режим погружения: только прогресс и выход */}
       {inLesson && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/45 backdrop-blur-[2px]">
-          {/* Помощник поверх размытия */}
-          <div className="pointer-events-none fixed bottom-4 left-4 z-10 hidden lg:block">
-            <Mascot helper={helper} mood={mood} message={mascotMessage} size="lg" />
-          </div>
-
-          <div className="flex min-h-full items-start justify-center p-4 sm:items-center">
-            <div className="w-full max-w-lg">
-              <div className="mb-3 flex justify-end">
-                <button
-                  onClick={closeLesson}
-                  className="rounded-full bg-white/90 px-4 py-1.5 text-sm font-bold text-zinc-700 shadow-md transition hover:bg-white dark:bg-zinc-800/90 dark:text-zinc-200 dark:hover:bg-zinc-800"
-                >
-                  ✕ {closeLabel}
-                </button>
-              </div>
-
-              {finished ? (
-                <div className="relative text-center">
-                  <Confetti />
-                  <div className="mb-5 flex justify-center">
-                    <Mascot helper={helper} mood="happy" size="lg" />
-                  </div>
-                  <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-xl dark:border-white/10 dark:bg-zinc-900">
-                    <h2 className="font-display text-3xl font-extrabold">
-                      {labels.finishTitle}
-                    </h2>
-                    <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
-                      {tpl(labels.finishScore, {
-                        score: stars,
-                        total: activeTasks.length,
-                      })}
-                    </p>
-                    <p className="mt-3 text-3xl">
-                      {"⭐".repeat(Math.max(stars, 0)) || "—"}
-                    </p>
-
-                    {isGuest && (
-                      <div className="mt-6 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-500/30 dark:bg-emerald-500/10">
-                        <p className="font-display font-bold text-emerald-700 dark:text-emerald-300">
-                          💾 {labels.guestSaveTitle}
-                        </p>
-                        <p className="mt-1 text-sm text-emerald-700/80 dark:text-emerald-300/80">
-                          {labels.guestSaveText}
-                        </p>
-                        <Link
-                          href={`/${locale}/login`}
-                          className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98]"
-                        >
-                          ✅ {labels.guestSaveCta}
-                        </Link>
-                      </div>
-                    )}
-
-                    {lockedCount > 0 && (
-                      <div className="mt-6 rounded-2xl border-2 border-indigo-200 bg-indigo-50 p-5 dark:border-indigo-500/30 dark:bg-indigo-500/10">
-                        <p className="font-display font-bold text-indigo-700 dark:text-indigo-300">
-                          {labels.lockedTitle}
-                        </p>
-                        <p className="mt-1 text-sm text-indigo-700/80 dark:text-indigo-300/80">
-                          {tpl(labels.lockedText, { count: lockedCount })}
-                        </p>
-                        <a
-                          href={ADMIN_TG}
-                          target="_blank"
-                          rel="noopener"
-                          onClick={() =>
-                            pushEvent("subscribe_click", {
-                              grade,
-                              plan: "premium",
-                              price: priceForCountry(countryForLocale(locale)).amount,
-                              currency: currencyIso(countryForLocale(locale)),
-                              source: "play_paywall",
-                            })
-                          }
-                          className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-400 to-indigo-500 px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98]"
-                        >
-                          ✈️ {labels.subscribeCta}
-                        </a>
-                      </div>
-                    )}
-
-                    <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                      <button onClick={restart} className={PRIMARY_BTN + " sm:w-auto sm:px-8"}>
-                        {labels.restart}
-                      </button>
-                      <button
-                        onClick={closeLesson}
-                        className="rounded-full border-2 border-black/10 px-8 py-3.5 text-lg font-bold transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
-                      >
-                        {closeLabel}
-                      </button>
-                      <Link
-                        href={homeHref}
-                        className="rounded-full px-6 py-3.5 text-lg font-bold text-zinc-500 transition hover:text-foreground dark:text-zinc-400"
-                      >
-                        {labels.backHome}
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ) : task ? (
-                <div className="relative">
-                  {status === "correct" && <Confetti />}
-
-                  {/* Прогресс */}
-                  <div className="mb-5">
-                    <div className="mb-2 flex items-center justify-between text-sm font-semibold text-white/80">
-                      <span>{labels.eyebrow}</span>
-                      <span>
-                        {tpl(labels.progress, {
-                          current: index + 1,
-                          total: activeTasks.length,
-                        })}
-                      </span>
-                    </div>
-                    <div className="h-3 overflow-hidden rounded-full bg-white/25">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-violet-400 transition-all duration-500"
-                        style={{ width: `${((index + 1) / activeTasks.length) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Карточка задания */}
-                  <div className="rounded-[2rem] border border-black/[.06] bg-white p-6 shadow-2xl sm:p-8 dark:border-white/10 dark:bg-zinc-900">
-        <div className="mb-4 flex items-center justify-between">
-          {task.star ? (
-            <span className="rounded-full border-2 border-amber-300 bg-amber-50 px-3 py-1 text-xs font-extrabold text-amber-700 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-300">
-              ⭐ {labels.starBadge}
-            </span>
-          ) : (
-            <span />
-          )}
-          <span className="rounded-full bg-gradient-to-r from-amber-300 to-yellow-400 px-4 py-1.5 text-sm font-extrabold text-amber-900 shadow-sm">
-            ⭐ {stars}
-          </span>
-        </div>
-
-        {task.illustration && (
-          <div className="mb-5 rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 py-7 text-center text-5xl dark:from-indigo-500/10 dark:to-violet-500/10">
-            {task.illustration}
-          </div>
-        )}
-
-        <div className="flex items-start gap-3">
-          <p className="flex-1 font-display text-2xl font-bold leading-8">
-            {task.prompt[locale]}
-          </p>
-          {speechSupported() && (
-            <button
-              type="button"
-              onClick={() => speak(speakText(task, locale), locale)}
-              aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
-              className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-indigo-100 text-xl transition hover:bg-indigo-200 active:scale-95 dark:bg-indigo-500/20"
-            >
-              🔊
-            </button>
-          )}
-        </div>
-
-        {/* Ответы по типу задания */}
-        <div className="mt-6">
-          {task.type === "single_choice" &&
-            (() => {
-              const asImages = task.options.every((o) => isImageLike(o[locale]));
-              return (
+        <div className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-[#f7f5ff] font-sans text-[#191539]">
+          {finished ? (
+            <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-[#191539] p-4 text-white">
+              <Confetti />
+              <div className="pointer-events-none absolute left-[10%] top-[8%] h-[380px] w-[380px] rounded-full bg-[#6d5cf7] opacity-30 blur-[100px]" />
+              <div className="pointer-events-none absolute bottom-[6%] right-[8%] h-[280px] w-[280px] rounded-full bg-[#e6c079] opacity-20 blur-[90px]" />
+              <div className="relative w-full max-w-md rounded-[32px] bg-white p-8 text-center text-[#191539] shadow-[0_30px_60px_rgba(0,0,0,.3)]">
                 <div
                   className={
-                    asImages
-                      ? imageGridClass(task.options.length)
-                      : "space-y-3"
+                    "mx-auto mb-5 flex h-[140px] w-[140px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
+                    gradient
                   }
                 >
-                  {task.options.map((opt, i) => {
-                    const isSelected = selected === i;
-                    const isCorrect = i === task.correctIndex;
-                    let cls = asImages
-                      ? "flex items-center justify-center rounded-3xl border-2 py-8 text-6xl transition active:scale-95 "
-                      : "w-full rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
-                    if (!answered) {
-                      cls += isSelected
-                        ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
-                        : "border-black/10 hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15";
-                    } else if (isCorrect) {
-                      cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
-                    } else if (isSelected) {
-                      cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
-                    } else {
-                      cls += "border-black/10 opacity-60 dark:border-white/15";
-                    }
-                    return (
-                      <button
-                        key={i}
-                        disabled={answered}
-                        onClick={() => setSelected(i)}
-                        className={cls}
-                      >
-                        {opt[locale]}
-                      </button>
-                    );
-                  })}
+                  <Mascot helper={helper} mood="happy" size="md" />
                 </div>
-              );
-            })()}
+                <h2 className="font-display text-[30px] font-bold">
+                  {labels.finishTitle}
+                </h2>
+                <p className="mt-1.5 text-[17px] text-[#5c5880]">
+                  {tpl(labels.finishScore, {
+                    score: stars,
+                    total: activeTasks.length,
+                  })}
+                </p>
+                {stars > 0 ? (
+                  <div className="my-4 flex flex-wrap justify-center gap-1 text-3xl">
+                    {Array.from({ length: stars }).map((_, i) => (
+                      <span key={i}>⭐</span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="my-4 text-4xl">—</p>
+                )}
 
-          {task.type === "multi_select" &&
-            (() => {
-              const asImages = task.options.every((o) => isImageLike(o[locale]));
-              return (
-                <div>
-                  <p className="mb-2 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                    {locale === "ky"
-                      ? "Бардык туура жоопторду белгиле"
-                      : "Отметь все верные ответы"}
-                  </p>
+                {isGuest && (
+                  <div className="mt-6 rounded-2xl border-2 border-[#a7f3d0] bg-[#ecfdf5] p-5 text-left">
+                    <p className="font-display font-bold text-[#047857]">
+                      💾 {labels.guestSaveTitle}
+                    </p>
+                    <p className="mt-1 text-sm text-[#059669]">
+                      {labels.guestSaveText}
+                    </p>
+                    <Link
+                      href={`/${locale}/login`}
+                      className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#10b981] px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-110 active:scale-[.98]"
+                    >
+                      ✅ {labels.guestSaveCta}
+                    </Link>
+                  </div>
+                )}
+
+                {lockedCount > 0 && (
+                  <div className="mt-6 rounded-2xl border-2 border-[#e6c079] bg-[#fbf3e3] p-5 text-left">
+                    <p className="font-display font-bold text-[#7a5a1e]">
+                      {labels.lockedTitle}
+                    </p>
+                    <p className="mt-1 text-sm text-[#7a5a1e]/80">
+                      {tpl(labels.lockedText, { count: lockedCount })}
+                    </p>
+                    <a
+                      href={ADMIN_TG}
+                      target="_blank"
+                      rel="noopener"
+                      onClick={() =>
+                        pushEvent("subscribe_click", {
+                          grade,
+                          plan: "premium",
+                          price: priceForCountry(countryForLocale(locale)).amount,
+                          currency: currencyIso(countryForLocale(locale)),
+                          source: "play_paywall",
+                        })
+                      }
+                      className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#191539] px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-125 active:scale-[.98]"
+                    >
+                      ✈️ {labels.subscribeCta}
+                    </a>
+                  </div>
+                )}
+
+                <div className="mt-7 flex flex-col gap-3">
+                  <button onClick={restart} className={PRIMARY_PILL}>
+                    🔄 {labels.restart}
+                  </button>
+                  <button
+                    onClick={closeLesson}
+                    className="rounded-full border-2 border-black/10 px-6 py-3.5 text-base font-bold transition hover:bg-black/[.04]"
+                  >
+                    {closeLabel}
+                  </button>
+                  <Link
+                    href={homeHref}
+                    className="rounded-full px-6 py-2 text-base font-bold text-[#5c5880] transition hover:text-[#191539]"
+                  >
+                    {labels.backHome}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : task ? (
+            <>
+              {/* Верхняя панель: выход, прогресс, кошелёк, звук */}
+              <header className="flex items-center gap-3 px-4 py-3 sm:gap-5 sm:px-8 sm:py-4">
+                <button
+                  onClick={closeLesson}
+                  aria-label={closeLabel}
+                  className="flex h-11 w-11 flex-none items-center justify-center rounded-2xl bg-white text-lg font-extrabold text-[#5c5880] shadow-[0_4px_14px_rgba(25,21,57,.08)] transition hover:text-[#191539]"
+                >
+                  ✕
+                </button>
+                <div className="min-w-0 flex-1">
+                  <div className="mb-1.5 flex items-center justify-between gap-3 text-[13px] font-extrabold text-[#5c5880] sm:text-sm">
+                    <span className="truncate">{lessonTitle}</span>
+                    <span className="flex-none">
+                      {tpl(labels.progress, {
+                        current: index + 1,
+                        total: activeTasks.length,
+                      })}
+                    </span>
+                  </div>
+                  <div className="h-2.5 rounded-full bg-[#e6e1ff] sm:h-3">
+                    <div
+                      className="h-full rounded-full bg-[#6d5cf7] transition-all duration-500"
+                      style={{ width: `${((index + 1) / activeTasks.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+                <span className="flex-none rounded-full bg-[#fbf3e3] px-3 py-2 text-sm font-extrabold text-[#7a5a1e] sm:px-4">
+                  ⭐ {earnedStars}
+                </span>
+                {speechSupported() && (
+                  <button
+                    type="button"
+                    onClick={() => speak(speakText(task, locale), locale)}
+                    aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
+                    className="hidden h-11 w-11 flex-none items-center justify-center rounded-2xl bg-white text-lg shadow-[0_4px_14px_rgba(25,21,57,.08)] transition hover:-translate-y-0.5 sm:flex"
+                  >
+                    🔈
+                  </button>
+                )}
+              </header>
+
+              {/* Тело: помощник + карточка задания */}
+              <div className="mx-auto grid w-full max-w-[1200px] flex-1 items-center gap-6 px-4 pb-8 sm:gap-10 sm:px-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+                {/* Помощник — десктоп */}
+                <div className="hidden flex-col items-center lg:flex">
+                  <div className="relative mb-5 max-w-[240px] rounded-[22px] bg-white px-5 py-4 text-center text-[15px] font-bold leading-snug shadow-[0_10px_30px_rgba(25,21,57,.08)]">
+                    {bubbleText}
+                    <span className="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 bg-white" />
+                  </div>
                   <div
                     className={
-                      asImages
-                        ? imageGridClass(task.options.length)
-                        : "space-y-3"
+                      "flex h-[200px] w-[200px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
+                      gradient
                     }
                   >
-                    {task.options.map((opt, i) => {
-                      const isChecked = multiSelected.includes(i);
-                      const isCorrect = task.correctIndexes.includes(i);
-                      let cls = asImages
-                        ? "relative flex items-center justify-center rounded-3xl border-2 py-8 text-6xl transition active:scale-95 "
-                        : "flex w-full items-center gap-3 rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
-                      if (!answered) {
-                        cls += isChecked
-                          ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
-                          : "border-black/10 hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15";
-                      } else if (isCorrect) {
-                        cls += "border-green-500 bg-green-50 dark:bg-green-500/10";
-                      } else if (isChecked) {
-                        cls += "border-red-400 bg-red-50 dark:bg-red-500/10";
-                      } else {
-                        cls += "border-black/10 opacity-60 dark:border-white/15";
-                      }
-                      const box = answered
-                        ? isCorrect
-                          ? "✅"
-                          : isChecked
-                            ? "❌"
-                            : "⬜"
-                        : isChecked
-                          ? "☑️"
-                          : "⬜";
-                      return (
-                        <button
-                          key={i}
-                          disabled={answered}
-                          onClick={() =>
-                            setMultiSelected((prev) =>
-                              prev.includes(i)
-                                ? prev.filter((x) => x !== i)
-                                : [...prev, i],
-                            )
-                          }
-                          className={cls}
-                        >
-                          {asImages ? (
-                            <>
-                              <span>{opt[locale]}</span>
-                              <span className="absolute right-2 top-2 text-lg">
-                                {box}
-                              </span>
-                            </>
-                          ) : (
-                            <>
-                              <span className="text-xl">{box}</span>
-                              <span>{opt[locale]}</span>
-                            </>
-                          )}
-                        </button>
-                      );
-                    })}
+                    <Mascot helper={helper} mood={mood} size="lg" />
+                  </div>
+                  <div className="mt-3 font-display text-xl font-bold">
+                    {helper.name[locale]}
                   </div>
                 </div>
-              );
-            })()}
 
-          {task.type === "number_input" && (
-            <input
-              type="number"
-              inputMode="numeric"
-              value={numberValue}
-              disabled={answered}
-              onChange={(e) => setNumberValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && canSubmit && !answered) submit();
-              }}
-              placeholder={labels.numberPlaceholder}
-              className="w-full rounded-2xl border-2 border-black/10 bg-transparent px-5 py-4 text-center text-2xl font-bold outline-none focus:border-indigo-500 dark:border-white/15"
-            />
-          )}
-
-          {task.type === "ordering" && (
-            <div>
-              <p className="mb-3 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                {labels.orderingHint}
-              </p>
-              <div className="mb-3 flex min-h-16 flex-wrap gap-2 rounded-2xl border-2 border-dashed border-black/15 p-3 dark:border-white/15">
-                {orderPicked.map((origIdx, pos) => {
-                  const stateCls = !answered
-                    ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
-                    : status === "correct"
-                      ? "border-green-500 bg-green-50 dark:bg-green-500/10"
-                      : "border-red-400 bg-red-50 dark:bg-red-500/10";
-                  return (
-                    <button
-                      key={origIdx}
-                      disabled={answered}
-                      onClick={() =>
-                        setOrderPicked(orderPicked.filter((_, p) => p !== pos))
-                      }
-                      className={`rounded-xl border-2 px-4 py-2 text-xl font-bold ${stateCls}`}
-                    >
-                      {task.items[origIdx][locale]}
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {orderShuffled
-                  .filter((i) => !orderPicked.includes(i))
-                  .map((i) => (
-                    <button
-                      key={i}
-                      disabled={answered}
-                      onClick={() => setOrderPicked([...orderPicked, i])}
-                      className="rounded-xl border-2 border-black/10 px-4 py-2 text-xl font-bold transition hover:-translate-y-0.5 hover:border-indigo-300 dark:border-white/15"
-                    >
-                      {task.items[i][locale]}
-                    </button>
-                  ))}
-              </div>
-            </div>
-          )}
-
-          {task.type === "match_pairs" && (
-            <div>
-              <p className="mb-3 text-sm font-semibold text-zinc-500 dark:text-zinc-400">
-                {labels.matchHint}
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-3">
-                  {task.left.map((l, i) => {
-                    const matchedRight = pairs[i];
-                    const isMatched = matchedRight !== undefined;
-                    let cls =
-                      "w-full rounded-2xl border-2 px-4 py-3 text-left text-lg font-semibold transition ";
-                    if (answered && isMatched) {
-                      cls +=
-                        matchedRight === i
-                          ? "border-green-500 bg-green-50 dark:bg-green-500/10"
-                          : "border-red-400 bg-red-50 dark:bg-red-500/10";
-                    } else if (selectedLeft === i) {
-                      cls +=
-                        "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10";
-                    } else if (isMatched) {
-                      cls += "border-indigo-300 dark:border-indigo-500/40";
-                    } else {
-                      cls +=
-                        "border-black/10 hover:border-indigo-300 dark:border-white/15";
+                {/* Помощник — мобилка (компактно) */}
+                <div className="flex items-end gap-3 lg:hidden">
+                  <div
+                    className={
+                      "flex h-[72px] w-[72px] flex-none items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
+                      gradient
                     }
-                    return (
-                      <button
-                        key={i}
-                        disabled={answered}
-                        onClick={() => {
-                          if (isMatched) {
-                            const p = { ...pairs };
-                            delete p[i];
-                            setPairs(p);
-                            setSelectedLeft(null);
-                          } else {
-                            setSelectedLeft(i);
-                          }
-                        }}
-                        className={cls}
-                      >
-                        {l[locale]}
-                        {isMatched && (
-                          <span className="text-zinc-500 dark:text-zinc-400">
-                            {" → "}
-                            {task.right[matchedRight][locale]}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="space-y-3">
-                  {rightShuffled.map((j) => {
-                    const used = Object.values(pairs).includes(j);
-                    return (
-                      <button
-                        key={j}
-                        disabled={answered || used}
-                        onClick={() => {
-                          if (selectedLeft !== null && !used) {
-                            setPairs({ ...pairs, [selectedLeft]: j });
-                            setSelectedLeft(null);
-                          }
-                        }}
-                        className={
-                          "w-full rounded-2xl border-2 px-4 py-3 text-left text-lg font-semibold transition " +
-                          (used
-                            ? "border-black/10 opacity-40 dark:border-white/15"
-                            : "border-black/10 hover:border-indigo-300 dark:border-white/15")
-                        }
-                      >
-                        {task.right[j][locale]}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Разбор */}
-        {answered && (
-          <div
-            className={
-              "mt-6 rounded-2xl p-4 text-sm " +
-              (status === "correct"
-                ? "bg-green-50 text-green-800 dark:bg-green-500/10 dark:text-green-300"
-                : "bg-amber-50 text-amber-800 dark:bg-amber-500/10 dark:text-amber-200")
-            }
-          >
-            {task.explanation[locale]}
-          </div>
-        )}
-
-        {/* Кнопка действия */}
-        <div className="mt-6">
-          {!answered ? (
-            <button onClick={submit} disabled={!canSubmit} className={PRIMARY_BTN}>
-              {labels.check}
-            </button>
-          ) : (
-            <button onClick={next} className={PRIMARY_BTN}>
-              {labels.next}
-            </button>
-          )}
-        </div>
+                  >
+                    <Mascot helper={helper} mood={mood} size="md" />
+                  </div>
+                  <div className="rounded-[16px] rounded-bl-md bg-white px-3.5 py-2.5 text-sm font-bold leading-snug shadow-[0_8px_20px_rgba(25,21,57,.06)]">
+                    {bubbleText}
                   </div>
                 </div>
-              ) : null}
-            </div>
-          </div>
+
+                {/* Карточка задания */}
+                <div className="relative rounded-[28px] bg-white p-6 shadow-[0_20px_50px_rgba(25,21,57,.08)] sm:rounded-[32px] sm:p-8 lg:p-10">
+                  {status === "correct" && <Confetti />}
+
+                  <div className="mb-6 flex items-start gap-4">
+                    {speechSupported() && (
+                      <button
+                        type="button"
+                        onClick={() => speak(speakText(task, locale), locale)}
+                        aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
+                        className="flex h-14 w-14 flex-none items-center justify-center rounded-full bg-[#6d5cf7] text-2xl text-white shadow-[0_0_0_6px_#e6e1ff] transition active:scale-95"
+                      >
+                        🔊
+                      </button>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <h2 className="font-display text-xl font-bold leading-snug sm:text-2xl">
+                        {task.prompt[locale]}
+                      </h2>
+                      {speechSupported() && (
+                        <p className="mt-1 text-sm font-bold text-[#5c5880]">
+                          {locale === "ky"
+                            ? "Угуу үчүн бас"
+                            : "Нажми, чтобы послушать вопрос"}
+                        </p>
+                      )}
+                    </div>
+                    {task.star && (
+                      <span className="flex-none rounded-full bg-[#fbf3e3] px-3 py-1.5 text-xs font-extrabold text-[#7a5a1e]">
+                        ⭐ {labels.starBadge}
+                      </span>
+                    )}
+                  </div>
+
+                  {task.illustration && (
+                    <div className="mb-6 rounded-2xl bg-[#efecff] py-7 text-center text-5xl">
+                      {task.illustration}
+                    </div>
+                  )}
+
+                  {/* Ответы по типу задания */}
+                  <div className="mt-6">
+                    {task.type === "single_choice" &&
+                      (() => {
+                        const asImages = task.options.every((o) => isImageLike(o[locale]));
+                        return (
+                          <div
+                            className={
+                              asImages
+                                ? imageGridClass(task.options.length)
+                                : "space-y-3"
+                            }
+                          >
+                            {task.options.map((opt, i) => {
+                              const isSelected = selected === i;
+                              const isCorrect = i === task.correctIndex;
+                              let cls = asImages
+                                ? "flex items-center justify-center rounded-3xl border-[3px] py-8 text-6xl transition active:scale-95 "
+                                : "w-full rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
+                              if (!answered) {
+                                cls += isSelected
+                                  ? "border-[#6d5cf7] bg-[#efecff]"
+                                  : "border-black/10 hover:-translate-y-0.5 hover:border-[#b9b3e6]";
+                              } else if (isCorrect) {
+                                cls += "border-[#34d399] bg-[#ecfdf5]";
+                              } else if (isSelected) {
+                                cls += "border-[#fb7185] bg-[#fef2f2]";
+                              } else {
+                                cls += "border-black/10 opacity-60";
+                              }
+                              return (
+                                <button
+                                  key={i}
+                                  disabled={answered}
+                                  onClick={() => setSelected(i)}
+                                  className={cls}
+                                >
+                                  {opt[locale]}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        );
+                      })()}
+
+                    {task.type === "multi_select" &&
+                      (() => {
+                        const asImages = task.options.every((o) => isImageLike(o[locale]));
+                        return (
+                          <div>
+                            <p className="mb-2 text-sm font-semibold text-[#5c5880]">
+                              {locale === "ky"
+                                ? "Бардык туура жоопторду белгиле"
+                                : "Отметь все верные ответы"}
+                            </p>
+                            <div
+                              className={
+                                asImages
+                                  ? imageGridClass(task.options.length)
+                                  : "space-y-3"
+                              }
+                            >
+                              {task.options.map((opt, i) => {
+                                const isChecked = multiSelected.includes(i);
+                                const isCorrect = task.correctIndexes.includes(i);
+                                let cls = asImages
+                                  ? "relative flex items-center justify-center rounded-3xl border-[3px] py-8 text-6xl transition active:scale-95 "
+                                  : "flex w-full items-center gap-3 rounded-2xl border-2 px-5 py-4 text-left text-lg font-semibold transition ";
+                                if (!answered) {
+                                  cls += isChecked
+                                    ? "border-[#6d5cf7] bg-[#efecff]"
+                                    : "border-black/10 hover:-translate-y-0.5 hover:border-[#b9b3e6]";
+                                } else if (isCorrect) {
+                                  cls += "border-[#34d399] bg-[#ecfdf5]";
+                                } else if (isChecked) {
+                                  cls += "border-[#fb7185] bg-[#fef2f2]";
+                                } else {
+                                  cls += "border-black/10 opacity-60";
+                                }
+                                const box = answered
+                                  ? isCorrect
+                                    ? "✅"
+                                    : isChecked
+                                      ? "❌"
+                                      : "⬜"
+                                  : isChecked
+                                    ? "☑️"
+                                    : "⬜";
+                                return (
+                                  <button
+                                    key={i}
+                                    disabled={answered}
+                                    onClick={() =>
+                                      setMultiSelected((prev) =>
+                                        prev.includes(i)
+                                          ? prev.filter((x) => x !== i)
+                                          : [...prev, i],
+                                      )
+                                    }
+                                    className={cls}
+                                  >
+                                    {asImages ? (
+                                      <>
+                                        <span>{opt[locale]}</span>
+                                        <span className="absolute right-2 top-2 text-lg">
+                                          {box}
+                                        </span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <span className="text-xl">{box}</span>
+                                        <span>{opt[locale]}</span>
+                                      </>
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                    {task.type === "number_input" && (
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        value={numberValue}
+                        disabled={answered}
+                        onChange={(e) => setNumberValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && canSubmit && !answered) submit();
+                        }}
+                        placeholder={labels.numberPlaceholder}
+                        className="w-full rounded-2xl border-2 border-black/10 bg-transparent px-5 py-4 text-center text-2xl font-bold outline-none focus:border-[#6d5cf7]"
+                      />
+                    )}
+
+                    {task.type === "ordering" && (
+                      <div>
+                        <p className="mb-3 text-sm font-semibold text-[#5c5880]">
+                          {labels.orderingHint}
+                        </p>
+                        <div className="mb-3 flex min-h-16 flex-wrap gap-2 rounded-2xl border-2 border-dashed border-black/15 p-3">
+                          {orderPicked.map((origIdx, pos) => {
+                            const stateCls = !answered
+                              ? "border-[#6d5cf7] bg-[#efecff]"
+                              : status === "correct"
+                                ? "border-[#34d399] bg-[#ecfdf5]"
+                                : "border-[#fb7185] bg-[#fef2f2]";
+                            return (
+                              <button
+                                key={origIdx}
+                                disabled={answered}
+                                onClick={() =>
+                                  setOrderPicked(orderPicked.filter((_, p) => p !== pos))
+                                }
+                                className={`rounded-xl border-2 px-4 py-2 text-xl font-bold ${stateCls}`}
+                              >
+                                {task.items[origIdx][locale]}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {orderShuffled
+                            .filter((i) => !orderPicked.includes(i))
+                            .map((i) => (
+                              <button
+                                key={i}
+                                disabled={answered}
+                                onClick={() => setOrderPicked([...orderPicked, i])}
+                                className="rounded-xl border-2 border-black/10 px-4 py-2 text-xl font-bold transition hover:-translate-y-0.5 hover:border-[#b9b3e6]"
+                              >
+                                {task.items[i][locale]}
+                              </button>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {task.type === "match_pairs" && (
+                      <div>
+                        <p className="mb-3 text-sm font-semibold text-[#5c5880]">
+                          {labels.matchHint}
+                        </p>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-3">
+                            {task.left.map((l, i) => {
+                              const matchedRight = pairs[i];
+                              const isMatched = matchedRight !== undefined;
+                              let cls =
+                                "w-full rounded-2xl border-2 px-4 py-3 text-left text-lg font-semibold transition ";
+                              if (answered && isMatched) {
+                                cls +=
+                                  matchedRight === i
+                                    ? "border-[#34d399] bg-[#ecfdf5]"
+                                    : "border-[#fb7185] bg-[#fef2f2]";
+                              } else if (selectedLeft === i) {
+                                cls += "border-[#6d5cf7] bg-[#efecff]";
+                              } else if (isMatched) {
+                                cls += "border-[#b9b3e6]";
+                              } else {
+                                cls += "border-black/10 hover:border-[#b9b3e6]";
+                              }
+                              return (
+                                <button
+                                  key={i}
+                                  disabled={answered}
+                                  onClick={() => {
+                                    if (isMatched) {
+                                      const p = { ...pairs };
+                                      delete p[i];
+                                      setPairs(p);
+                                      setSelectedLeft(null);
+                                    } else {
+                                      setSelectedLeft(i);
+                                    }
+                                  }}
+                                  className={cls}
+                                >
+                                  {l[locale]}
+                                  {isMatched && (
+                                    <span className="text-[#5c5880]">
+                                      {" → "}
+                                      {task.right[matchedRight][locale]}
+                                    </span>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <div className="space-y-3">
+                            {rightShuffled.map((j) => {
+                              const used = Object.values(pairs).includes(j);
+                              return (
+                                <button
+                                  key={j}
+                                  disabled={answered || used}
+                                  onClick={() => {
+                                    if (selectedLeft !== null && !used) {
+                                      setPairs({ ...pairs, [selectedLeft]: j });
+                                      setSelectedLeft(null);
+                                    }
+                                  }}
+                                  className={
+                                    "w-full rounded-2xl border-2 px-4 py-3 text-left text-lg font-semibold transition " +
+                                    (used
+                                      ? "border-black/10 opacity-40"
+                                      : "border-black/10 hover:border-[#b9b3e6]")
+                                  }
+                                >
+                                  {task.right[j][locale]}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Разбор */}
+                  {answered && (
+                    <div
+                      className={
+                        "mt-6 rounded-2xl p-4 text-sm font-semibold " +
+                        (status === "correct"
+                          ? "bg-[#ecfdf5] text-[#065f46]"
+                          : "bg-[#fef3e2] text-[#92400e]")
+                      }
+                    >
+                      {task.explanation[locale]}
+                    </div>
+                  )}
+
+                  {/* Кнопка действия */}
+                  <div className="mt-7">
+                    {!answered ? (
+                      <button onClick={submit} disabled={!canSubmit} className={PRIMARY_PILL}>
+                        {labels.check}
+                      </button>
+                    ) : (
+                      <button onClick={next} className={PRIMARY_PILL}>
+                        {labels.next} →
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : null}
         </div>
       )}
 
