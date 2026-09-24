@@ -212,7 +212,7 @@ export function LearningPath({
   const subC = world.night ? "text-cyan-200/70" : "text-emerald-800/70";
 
   return (
-    <div ref={ref} className="relative w-full overflow-hidden rounded-[2rem] shadow-inner" style={{ height: width === 0 ? 560 : height }}>
+    <div ref={ref} className="relative mx-auto w-full max-w-[600px] overflow-hidden rounded-[28px] shadow-[0_16px_40px_rgba(25,21,57,.12)]" style={{ height: width === 0 ? 560 : height }}>
       {width > 0 && (
         <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="pointer-events-none absolute inset-0" aria-hidden="true"
           dangerouslySetInnerHTML={{ __html: sceneSvg(world, width, height, stops) }} />
