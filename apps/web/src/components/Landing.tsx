@@ -25,7 +25,6 @@ const MASCOTS: [string, number, number, number][] = [
 
 export function Landing({ lang }: { lang: Locale }) {
   const t = (ru: string, ky: string) => (lang === "ky" ? ky : ru);
-  const other: Locale = lang === "ky" ? "ru" : "ky";
   const playHref = `/${lang}/play`;
   const readyHref = `/${lang}/gotovnost-k-shkole`;
   const priceHref = `/${lang}/subscribe`;
@@ -95,8 +94,8 @@ export function Landing({ lang }: { lang: Locale }) {
         </nav>
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="flex rounded-full bg-white/10 p-1 text-[13px] font-extrabold">
-            <Link href={`/${lang}/landing`} className={"rounded-full px-3 py-1.5 " + (lang !== "ky" ? "bg-white text-[#191539]" : "text-[#d9d5f5]")}>RU</Link>
-            <Link href={`/${other}/landing`} className={"rounded-full px-3 py-1.5 " + (lang === "ky" ? "bg-white text-[#191539]" : "text-[#d9d5f5]")}>KY</Link>
+            <Link href="/ru" className={"rounded-full px-3 py-1.5 " + (lang !== "ky" ? "bg-white text-[#191539]" : "text-[#d9d5f5]")}>RU</Link>
+            <Link href="/ky" className={"rounded-full px-3 py-1.5 " + (lang === "ky" ? "bg-white text-[#191539]" : "text-[#d9d5f5]")}>KY</Link>
           </div>
           <Link href={playHref} className="rounded-full bg-[#6d5cf7] px-5 py-3 text-[15px] font-extrabold text-white transition hover:shadow-[0_0_0_3px_#e6c079]">
             {t("Начать бесплатно", "Акысыз баштоо")}
@@ -415,8 +414,8 @@ export function Landing({ lang }: { lang: Locale }) {
             <div className="mb-1 font-extrabold text-white">{t("Контакты", "Байланыш")}</div>
             <a href="mailto:wmsangel@gmail.com" className="text-[#e6c079] hover:underline">wmsangel@gmail.com</a>
             <div className="mt-1.5 flex gap-2">
-              <Link href={`/ru/landing`} className="rounded-lg bg-white px-2.5 py-1 text-[13px] font-extrabold text-[#191539]">RU</Link>
-              <Link href={`/ky/landing`} className="rounded-lg border border-white/25 px-2.5 py-1 text-[13px] font-extrabold">KY</Link>
+              <Link href="/ru" className="rounded-lg bg-white px-2.5 py-1 text-[13px] font-extrabold text-[#191539]">RU</Link>
+              <Link href="/ky" className="rounded-lg border border-white/25 px-2.5 py-1 text-[13px] font-extrabold">KY</Link>
             </div>
           </div>
         </div>
