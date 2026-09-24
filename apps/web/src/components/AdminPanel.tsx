@@ -164,20 +164,20 @@ export function AdminPanel({
 
   if (!loaded) {
     return (
-      <div className="mx-auto h-64 w-full max-w-5xl animate-pulse rounded-[2rem] border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+      <div className="mx-auto h-64 w-full max-w-5xl animate-pulse rounded-[2rem] border border-black/[.06] bg-white" />
     );
   }
 
   if (!logged || forbidden) {
     return (
-      <div className="mx-auto w-full max-w-md rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl dark:border-white/10 dark:bg-zinc-900">
-        <p className="text-zinc-600 dark:text-zinc-400">
+      <div className="mx-auto w-full max-w-md rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl">
+        <p className="text-[#5c5880]">
           {forbidden ? labels.forbidden : labels.loginPrompt}
         </p>
         {!logged && (
           <Link
             href={loginHref}
-            className="mt-5 inline-block rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110"
+            className="mt-5 inline-block rounded-full bg-[#6d5cf7] px-6 py-3.5 font-bold text-white transition hover:brightness-110"
           >
             {labels.login}
           </Link>
@@ -194,18 +194,18 @@ export function AdminPanel({
   });
 
   const tile = (value: number | string, label: string) => (
-    <div className="rounded-2xl border border-black/[.06] bg-white p-4 text-center shadow-sm dark:border-white/10 dark:bg-zinc-900">
+    <div className="rounded-2xl border border-black/[.06] bg-white p-4 text-center shadow-sm">
       <div className="font-display text-3xl font-extrabold">{value}</div>
-      <div className="mt-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+      <div className="mt-1 text-xs font-semibold text-[#5c5880]">
         {label}
       </div>
     </div>
   );
 
   const miniTile = (value: number | string, label: string) => (
-    <div className="rounded-xl bg-black/[.03] p-2.5 text-center dark:bg-white/[.05]">
+    <div className="rounded-xl bg-black/[.03] p-2.5 text-center">
       <div className="font-display text-lg font-extrabold">{value}</div>
-      <div className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
+      <div className="text-[10px] font-semibold text-[#5c5880]">
         {label}
       </div>
     </div>
@@ -215,9 +215,9 @@ export function AdminPanel({
   function renderDetail(id: string) {
     const d = detail[id];
     if (d === undefined || d === "loading")
-      return <p className="text-sm text-zinc-500">Загружаем…</p>;
+      return <p className="text-sm text-[#5c5880]">Загружаем…</p>;
     if (d.length === 0)
-      return <p className="text-sm text-zinc-500">Пока нет данных занятий.</p>;
+      return <p className="text-sm text-[#5c5880]">Пока нет данных занятий.</p>;
     return (
       <div className="space-y-4">
         {d.map((c) => {
@@ -226,11 +226,11 @@ export function AdminPanel({
           return (
             <div
               key={c.id}
-              className="rounded-2xl border border-black/[.06] bg-white p-4 dark:border-white/10 dark:bg-zinc-900"
+              className="rounded-2xl border border-black/[.06] bg-white p-4"
             >
               <div className="mb-3 flex items-center gap-2 font-bold">
                 {c.name}
-                <span className="text-xs font-semibold text-zinc-400">
+                <span className="text-xs font-semibold text-[#5c5880]">
                   {c.grade === 0 ? "подгот." : `${c.grade} класс`}
                 </span>
               </div>
@@ -252,13 +252,13 @@ export function AdminPanel({
                     <div key={subj}>
                       <div className="mb-0.5 flex justify-between text-xs font-semibold">
                         <span>{subjectLabels[subj][locale as Locale]}</span>
-                        <span className="text-zinc-400">
+                        <span className="text-[#5c5880]">
                           верно {corr} · пройдено {done}/{subjTasks.length}
                         </span>
                       </div>
-                      <div className="h-2 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
+                      <div className="h-2 overflow-hidden rounded-full bg-black/[.06]">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500"
+                          className="h-full rounded-full bg-[#6d5cf7]"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -276,8 +276,8 @@ export function AdminPanel({
   return (
     <div className="mx-auto w-full max-w-5xl">
       {notice && (
-        <div className="mb-4 flex items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-500/40 dark:bg-amber-500/10">
-          <span className="font-mono text-sm font-bold text-amber-800 dark:text-amber-200">
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3">
+          <span className="font-mono text-sm font-bold text-amber-800">
             {notice}
           </span>
           <button
@@ -307,7 +307,7 @@ export function AdminPanel({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={labels.search}
-          className="min-w-0 flex-1 rounded-full border border-black/[.08] bg-white px-4 py-2 text-sm outline-none focus:border-indigo-400 dark:border-white/10 dark:bg-zinc-900"
+          className="min-w-0 flex-1 rounded-full border border-black/[.08] bg-white px-4 py-2 text-sm outline-none focus:border-[#b9b3e6]"
         />
         <button
           onClick={() => setOnlyPremium((v) => !v)}
@@ -315,19 +315,19 @@ export function AdminPanel({
             "rounded-full px-4 py-2 text-sm font-bold transition " +
             (onlyPremium
               ? "bg-amber-400 text-white shadow-md"
-              : "bg-black/[.05] text-zinc-600 hover:bg-black/10 dark:bg-white/10 dark:text-zinc-300")
+              : "bg-black/[.05] text-[#5c5880] hover:bg-black/10")
           }
         >
           ⭐ {labels.filterPremium}
         </button>
-        <span className="text-xs font-semibold text-zinc-400">
+        <span className="text-xs font-semibold text-[#5c5880]">
           {tpl(labels.showing, { count: String(filtered.length) })}
         </span>
       </div>
 
-      <div className="mt-3 overflow-x-auto rounded-2xl border border-black/[.06] dark:border-white/10">
+      <div className="mt-3 overflow-x-auto rounded-2xl border border-black/[.06]">
         <table className="w-full text-left text-sm">
-          <thead className="bg-black/[.03] text-xs uppercase text-zinc-500 dark:bg-white/5 dark:text-zinc-400">
+          <thead className="bg-black/[.03] text-xs uppercase text-[#5c5880]">
             <tr>
               <th className="px-4 py-3">{labels.colEmail}</th>
               <th className="px-4 py-3">{labels.colCountry}</th>
@@ -341,15 +341,15 @@ export function AdminPanel({
           <tbody>
             {filtered.map((u) => (
               <Fragment key={u.id}>
-              <tr className="border-t border-black/[.06] dark:border-white/10">
+              <tr className="border-t border-black/[.06]">
                 <td className="px-4 py-2.5 font-medium">
                   <button
                     onClick={() => toggleDetail(u.id)}
-                    className="flex items-center gap-1.5 text-left transition hover:text-indigo-600 dark:hover:text-indigo-400"
+                    className="flex items-center gap-1.5 text-left transition hover:text-[#6d5cf7]"
                   >
                     <span
                       className={
-                        "text-xs text-zinc-400 transition-transform " +
+                        "text-xs text-[#5c5880] transition-transform " +
                         (expandedId === u.id ? "rotate-90" : "")
                       }
                     >
@@ -358,9 +358,9 @@ export function AdminPanel({
                     {u.email}
                   </button>
                 </td>
-                <td className="px-4 py-2.5 text-zinc-500">{u.country ?? "—"}</td>
+                <td className="px-4 py-2.5 text-[#5c5880]">{u.country ?? "—"}</td>
                 <td className="px-4 py-2.5 text-center">{u.children}</td>
-                <td className="px-4 py-2.5 text-center text-xs text-zinc-500 dark:text-zinc-400">
+                <td className="px-4 py-2.5 text-center text-xs text-[#5c5880]">
                   {u.totalAnswered > 0
                     ? `${u.totalAnswered} · ${formatDuration(u.timeSpentSec)}`
                     : "—"}
@@ -370,11 +370,11 @@ export function AdminPanel({
                 </td>
                 <td className="px-4 py-2.5">
                   {u.role === "admin" ? (
-                    <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-bold text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300">
+                    <span className="rounded-full bg-[#e6e1ff] px-2 py-0.5 text-xs font-bold text-[#4b3cc9]">
                       admin
                     </span>
                   ) : (
-                    <span className="text-zinc-400">{u.role}</span>
+                    <span className="text-[#5c5880]">{u.role}</span>
                   )}
                 </td>
                 <td className="px-4 py-2.5">
@@ -382,21 +382,21 @@ export function AdminPanel({
                     <button
                       onClick={() => onGrant(u)}
                       disabled={busyId === u.id}
-                      className="whitespace-nowrap rounded-lg bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-700 transition hover:bg-amber-200 disabled:opacity-40 dark:bg-amber-500/15 dark:text-amber-300"
+                      className="whitespace-nowrap rounded-lg bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-700 transition hover:bg-amber-200 disabled:opacity-40"
                     >
                       {labels.grant}
                     </button>
                     <button
                       onClick={() => onReset(u)}
                       disabled={busyId === u.id}
-                      className="whitespace-nowrap rounded-lg bg-black/[.05] px-3 py-1.5 text-xs font-bold text-zinc-600 transition hover:bg-black/10 disabled:opacity-40 dark:bg-white/10 dark:text-zinc-300"
+                      className="whitespace-nowrap rounded-lg bg-black/[.05] px-3 py-1.5 text-xs font-bold text-[#5c5880] transition hover:bg-black/10 disabled:opacity-40"
                     >
                       {labels.reset}
                     </button>
                     <button
                       onClick={() => onDelete(u)}
                       disabled={busyId === u.id}
-                      className="whitespace-nowrap rounded-lg bg-red-100 px-3 py-1.5 text-xs font-bold text-red-700 transition hover:bg-red-200 disabled:opacity-40 dark:bg-red-500/15 dark:text-red-300"
+                      className="whitespace-nowrap rounded-lg bg-red-100 px-3 py-1.5 text-xs font-bold text-red-700 transition hover:bg-red-200 disabled:opacity-40"
                     >
                       {labels.delete}
                     </button>
@@ -404,7 +404,7 @@ export function AdminPanel({
                 </td>
               </tr>
               {expandedId === u.id && (
-                <tr className="bg-black/[.02] dark:bg-white/[.02]">
+                <tr className="bg-black/[.02]">
                   <td colSpan={7} className="px-4 py-4">
                     {renderDetail(u.id)}
                   </td>
@@ -416,7 +416,7 @@ export function AdminPanel({
         </table>
       </div>
 
-      <p className="mt-3 text-center text-xs text-zinc-400">
+      <p className="mt-3 text-center text-xs text-[#5c5880]">
         {new Date().toLocaleString(locale === "ky" ? "ky-KG" : "ru-RU")}
       </p>
 

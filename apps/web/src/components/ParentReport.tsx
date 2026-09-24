@@ -87,7 +87,7 @@ export function ParentReport({
 
   if (!loaded) {
     return (
-      <div className="mx-auto h-64 w-full max-w-lg animate-pulse rounded-[2rem] border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+      <div className="mx-auto h-64 w-full max-w-lg animate-pulse rounded-[28px] bg-white shadow-[0_8px_24px_rgba(25,21,57,.06)]" />
     );
   }
 

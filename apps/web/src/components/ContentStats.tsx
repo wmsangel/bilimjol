@@ -47,19 +47,19 @@ export function ContentStats({ locale }: { locale: Locale }) {
 
   const total = tasks.length;
   const cards = [
-    { label: t.grades, value: grades.length, tone: "from-indigo-100 to-violet-200 text-indigo-700 dark:from-indigo-500/15 dark:to-violet-500/10 dark:text-indigo-300" },
-    { label: t.topics, value: topics.length, tone: "from-sky-100 to-cyan-200 text-sky-700 dark:from-sky-500/15 dark:to-cyan-500/10 dark:text-sky-300" },
-    { label: t.tasks, value: total, tone: "from-emerald-100 to-green-200 text-emerald-700 dark:from-emerald-500/15 dark:to-green-500/10 dark:text-emerald-300" },
-    { label: t.free, value: tasks.filter((x) => x.free).length, tone: "from-teal-100 to-emerald-200 text-teal-700 dark:from-teal-500/15 dark:to-emerald-500/10 dark:text-teal-300" },
-    { label: t.star, value: tasks.filter((x) => x.star).length, tone: "from-amber-100 to-yellow-200 text-amber-700 dark:from-amber-500/15 dark:to-yellow-500/10 dark:text-amber-300" },
-    { label: t.oly, value: tasks.filter((x) => x.subject === "olympiad").length, tone: "from-orange-100 to-red-200 text-orange-700 dark:from-orange-500/15 dark:to-red-500/10 dark:text-orange-300" },
+    { label: t.grades, value: grades.length, tone: "from-[#efecff] to-violet-200 text-[#4b3cc9]" },
+    { label: t.topics, value: topics.length, tone: "from-sky-100 to-cyan-200 text-sky-700" },
+    { label: t.tasks, value: total, tone: "from-emerald-100 to-green-200 text-emerald-700" },
+    { label: t.free, value: tasks.filter((x) => x.free).length, tone: "from-teal-100 to-emerald-200 text-teal-700" },
+    { label: t.star, value: tasks.filter((x) => x.star).length, tone: "from-amber-100 to-yellow-200 text-amber-700" },
+    { label: t.oly, value: tasks.filter((x) => x.subject === "olympiad").length, tone: "from-orange-100 to-red-200 text-orange-700" },
   ];
 
-  const th = "px-3 py-2 text-left font-semibold text-zinc-500 dark:text-zinc-400";
+  const th = "px-3 py-2 text-left font-semibold text-[#5c5880]";
   const td = "px-3 py-2 tabular-nums";
 
   return (
-    <section className="mt-10 rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm dark:border-white/10 dark:bg-zinc-900">
+    <section className="mt-10 rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm">
       <h2 className="mb-5 font-display text-2xl font-extrabold">{t.title}</h2>
 
       {/* Карточки-итоги */}
@@ -74,9 +74,9 @@ export function ContentStats({ locale }: { locale: Locale }) {
 
       {/* По классам */}
       <h3 className="mb-2 mt-8 font-display text-lg font-bold">{t.byGrade}</h3>
-      <div className="overflow-x-auto rounded-2xl border border-black/[.06] dark:border-white/10">
+      <div className="overflow-x-auto rounded-2xl border border-black/[.06]">
         <table className="w-full text-sm">
-          <thead className="bg-black/[.03] dark:bg-white/5">
+          <thead className="bg-black/[.03]">
             <tr>
               <th className={th}>{t.grade}</th>
               <th className={th}>{t.topics}</th>
@@ -91,7 +91,7 @@ export function ContentStats({ locale }: { locale: Locale }) {
             {grades.map((g) => {
               const gt = tasks.filter((x) => x.grade === g);
               return (
-                <tr key={g} className="border-t border-black/[.05] dark:border-white/5">
+                <tr key={g} className="border-t border-black/[.05]">
                   <td className={td + " font-semibold"}>{g === 0 ? t.pre : g}</td>
                   <td className={td}>{topics.filter((x) => x.grade === g).length}</td>
                   <td className={td + " font-semibold"}>{gt.length}</td>
@@ -110,9 +110,9 @@ export function ContentStats({ locale }: { locale: Locale }) {
         {/* По предметам */}
         <div>
           <h3 className="mb-2 font-display text-lg font-bold">{t.bySubject}</h3>
-          <div className="overflow-x-auto rounded-2xl border border-black/[.06] dark:border-white/10">
+          <div className="overflow-x-auto rounded-2xl border border-black/[.06]">
             <table className="w-full text-sm">
-              <thead className="bg-black/[.03] dark:bg-white/5">
+              <thead className="bg-black/[.03]">
                 <tr>
                   <th className={th}>{t.subject}</th>
                   <th className={th}>{t.topics}</th>
@@ -124,7 +124,7 @@ export function ContentStats({ locale }: { locale: Locale }) {
                 {SUBJ_ORDER.map((s) => {
                   const st = tasks.filter((x) => x.subject === s);
                   return (
-                    <tr key={s} className="border-t border-black/[.05] dark:border-white/5">
+                    <tr key={s} className="border-t border-black/[.05]">
                       <td className={td + " font-semibold"}>{SUBJ_LABEL[s][locale] ?? SUBJ_LABEL[s].ru}</td>
                       <td className={td}>{topics.filter((x) => x.subject === s).length}</td>
                       <td className={td}>{st.length}</td>
@@ -140,9 +140,9 @@ export function ContentStats({ locale }: { locale: Locale }) {
         {/* По типам */}
         <div>
           <h3 className="mb-2 font-display text-lg font-bold">{t.byType}</h3>
-          <div className="overflow-x-auto rounded-2xl border border-black/[.06] dark:border-white/10">
+          <div className="overflow-x-auto rounded-2xl border border-black/[.06]">
             <table className="w-full text-sm">
-              <thead className="bg-black/[.03] dark:bg-white/5">
+              <thead className="bg-black/[.03]">
                 <tr>
                   <th className={th}>{t.type}</th>
                   <th className={th}>{t.count}</th>
@@ -153,7 +153,7 @@ export function ContentStats({ locale }: { locale: Locale }) {
                 {TYPE_ORDER.map((ty) => {
                   const c = tasks.filter((x) => x.type === ty).length;
                   return (
-                    <tr key={ty} className="border-t border-black/[.05] dark:border-white/5">
+                    <tr key={ty} className="border-t border-black/[.05]">
                       <td className={td + " font-semibold"}>{TYPE_LABEL[ty][locale] ?? TYPE_LABEL[ty].ru}</td>
                       <td className={td}>{c}</td>
                       <td className={td}>{pct(c, total)}%</td>
@@ -163,7 +163,7 @@ export function ContentStats({ locale }: { locale: Locale }) {
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mt-2 text-xs text-[#5c5880]">
             {t.tests}: {tests.length}
           </p>
         </div>

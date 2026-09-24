@@ -65,8 +65,8 @@ export function Mascot({
       </div>
 
       {message && (
-        <div className="animate-pop relative max-w-[11rem] rounded-2xl bg-white px-4 py-2 text-left font-display text-lg font-bold shadow-md dark:bg-zinc-800">
-          <span className="absolute top-1/2 -left-1.5 h-3 w-3 -translate-y-1/2 rotate-45 bg-white dark:bg-zinc-800" />
+        <div className="animate-pop relative max-w-[11rem] rounded-2xl bg-white px-4 py-2 text-left font-display text-lg font-bold text-[#191539] shadow-md">
+          <span className="absolute top-1/2 -left-1.5 h-3 w-3 -translate-y-1/2 rotate-45 bg-white" />
           {message}
         </div>
       )}

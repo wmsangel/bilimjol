@@ -41,7 +41,7 @@ export default async function BuildPage({
         <div className="mb-6 text-center">
           <Link
             href={`/${lang}/games`}
-            className="text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+            className="text-sm font-semibold text-[#6d5cf7] hover:underline"
           >
             {dict.games.build.back}
           </Link>

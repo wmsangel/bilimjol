@@ -10,28 +10,28 @@ export default function NotFound() {
       <h1 className="mt-4 font-display text-4xl font-extrabold tracking-tight">
         Страница не найдена
       </h1>
-      <p className="mt-2 font-display text-lg font-bold text-zinc-500 dark:text-zinc-400">
+      <p className="mt-2 font-display text-lg font-bold text-[#5c5880]">
         Барак табылган жок
       </p>
-      <p className="mt-4 text-zinc-600 dark:text-zinc-300">
+      <p className="mt-4 text-[#5c5880]">
         Возможно, ссылка устарела. Вернитесь на главную или выберите раздел ниже.
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
           href="/"
-          className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-7 py-3 font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110"
+          className="rounded-full bg-[#6d5cf7] px-7 py-3 font-bold text-white transition hover:brightness-110"
         >
           На главную
         </Link>
         <Link
           href="/ru/play"
-          className="rounded-full border-2 border-indigo-200 bg-white px-7 py-3 font-bold text-indigo-600 transition hover:border-indigo-400 dark:border-white/15 dark:bg-zinc-900 dark:text-indigo-300"
+          className="rounded-full border-2 border-[#e6e1ff] bg-white px-7 py-3 font-bold text-[#6d5cf7] transition hover:border-[#b9b3e6]"
         >
           Играть
         </Link>
         <Link
           href="/ru/articles"
-          className="rounded-full border-2 border-indigo-200 bg-white px-7 py-3 font-bold text-indigo-600 transition hover:border-indigo-400 dark:border-white/15 dark:bg-zinc-900 dark:text-indigo-300"
+          className="rounded-full border-2 border-[#e6e1ff] bg-white px-7 py-3 font-bold text-[#6d5cf7] transition hover:border-[#b9b3e6]"
         >
           Материалы
         </Link>

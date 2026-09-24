@@ -117,9 +117,6 @@ export interface GameLabels {
   notEnoughStars: string;
 }
 
-const PRIMARY_BTN =
-  "w-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-6 py-3.5 text-lg font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none";
-
 // Основная кнопка «Проверить/Далее» в режиме занятия (бренд-палитра).
 const PRIMARY_PILL =
   "w-full rounded-full bg-[#6d5cf7] px-6 py-4 text-lg font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5 active:scale-[.98] disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:translate-y-0";
@@ -409,7 +406,7 @@ export function TaskPlayer({
 
   if (!loaded) {
     return (
-      <div className="mx-auto h-72 w-full max-w-lg animate-pulse rounded-[2rem] border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+      <div className="mx-auto h-72 w-full max-w-lg animate-pulse rounded-[28px] bg-white shadow-[0_8px_24px_rgba(25,21,57,.06)]" />
     );
   }
 
@@ -419,7 +416,7 @@ export function TaskPlayer({
       ? helpers.find((h) => h.id === pendingHelper)
       : undefined;
     const previewGradient = preview
-      ? helperGradient[preview.color] ?? "from-indigo-400 to-violet-500"
+      ? helperGradient[preview.color] ?? "from-[#8577ff] to-violet-500"
       : "";
     return (
       <div className="mx-auto w-full max-w-4xl font-sans text-[#191539]">
@@ -499,7 +496,7 @@ export function TaskPlayer({
           <div
             className={
               "flex h-[104px] w-[104px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
-              (helperGradient[helper.color] ?? "from-indigo-400 to-violet-500")
+              (helperGradient[helper.color] ?? "from-[#8577ff] to-violet-500")
             }
           >
             <Mascot helper={helper} mood="idle" size="md" />
@@ -605,7 +602,7 @@ export function TaskPlayer({
   const bubbleText =
     mascotMessage ??
     (locale === "ky" ? "Кана, ойлонуп көрөлү 🤔" : "Давай подумаем вместе 🤔");
-  const gradient = helperGradient[helper.color] ?? "from-indigo-400 to-violet-500";
+  const gradient = helperGradient[helper.color] ?? "from-[#8577ff] to-violet-500";
 
   return (
     <div className="mx-auto w-full max-w-[1480px]">

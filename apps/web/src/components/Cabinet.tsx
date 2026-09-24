@@ -217,7 +217,7 @@ export function Cabinet({
           <div
             className={
               "relative flex h-[120px] w-[120px] flex-none items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
-              (helperGradient[helper.color] ?? "from-indigo-400 to-violet-500")
+              (helperGradient[helper.color] ?? "from-[#8577ff] to-violet-500")
             }
           >
             <Mascot helper={helper} mood="idle" size="md" />

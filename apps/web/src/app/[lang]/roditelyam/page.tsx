@@ -167,7 +167,7 @@ export default async function ParentsLanding({
           <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
             {t("Родителям", "Ата-энелерге")}
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-300">
+          <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#5c5880]">
             {t(
               "Bilimjol — это развивающие занятия для детей от подготовки к школе до 11 класса. Логика, счёт, чтение и окружающий мир в коротких игровых заданиях на русском и кыргызском.",
               "Bilimjol — мектепке даярдыктан 11-класска чейинки балдар үчүн өнүктүрүүчү сабактар. Логика, эсеп, окуу жана айлана-чөйрө кыска оюн тапшырмаларында, орусча жана кыргызча.",
@@ -176,13 +176,13 @@ export default async function ParentsLanding({
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link
               href={`/${lang}/play`}
-              className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-8 py-3.5 text-lg font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110"
+              className="rounded-full bg-[#6d5cf7] px-8 py-3.5 text-lg font-bold text-white transition hover:brightness-110"
             >
               {t("Начать бесплатно", "Акысыз баштоо")}
             </Link>
             <Link
               href={`/${lang}/gotovnost-k-shkole`}
-              className="rounded-full border-2 border-indigo-200 bg-white px-8 py-3.5 text-lg font-bold text-indigo-600 transition hover:border-indigo-400 dark:border-white/15 dark:bg-zinc-900 dark:text-indigo-300"
+              className="rounded-full border-2 border-[#e6e1ff] bg-white px-8 py-3.5 text-lg font-bold text-[#6d5cf7] transition hover:border-[#b9b3e6]"
             >
               🎒 {t("Тест готовности к школе", "Мектепке даярдык тести")}
             </Link>
@@ -198,11 +198,11 @@ export default async function ParentsLanding({
             {features.map((f) => (
               <div
                 key={f.title}
-                className="rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm dark:border-white/10 dark:bg-zinc-900"
+                className="rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm"
               >
                 <div className="text-3xl">{f.icon}</div>
                 <h3 className="mt-3 font-display text-lg font-bold">{f.title}</h3>
-                <p className="mt-2 leading-7 text-zinc-600 dark:text-zinc-400">
+                <p className="mt-2 leading-7 text-[#5c5880]">
                   {f.text}
                 </p>
               </div>
@@ -211,21 +211,21 @@ export default async function ParentsLanding({
         </section>
 
         {/* Советы */}
-        <section className="mt-14 rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-sm dark:border-white/10 dark:bg-zinc-900">
+        <section className="mt-14 rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-sm">
           <h2 className="font-display text-2xl font-extrabold">
             {t("Как заниматься дома", "Үйдө кантип машыгуу")}
           </h2>
           <ul className="mt-5 space-y-3">
             {tips.map((tip, i) => (
-              <li key={i} className="flex gap-3 text-lg leading-8 text-zinc-700 dark:text-zinc-300">
-                <span className="flex-none text-indigo-500">✓</span>
+              <li key={i} className="flex gap-3 text-lg leading-8 text-[#2d2950]">
+                <span className="flex-none text-[#6d5cf7]">✓</span>
                 <span>{tip}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-5 text-zinc-600 dark:text-zinc-400">
+          <p className="mt-5 text-[#5c5880]">
             {t("Подробнее — в наших материалах для родителей:", "Толугураак — ата-энелер үчүн материалдарда:")}{" "}
-            <Link href={`/${lang}/articles`} className="font-bold text-indigo-600 hover:underline dark:text-indigo-400">
+            <Link href={`/${lang}/articles`} className="font-bold text-[#6d5cf7] hover:underline">
               {t("читать статьи", "макалаларды окуу")} →
             </Link>
           </p>
@@ -235,7 +235,7 @@ export default async function ParentsLanding({
         <Faq title={t("Частые вопросы", "Көп берилүүчү суроолор")} items={faq} />
 
         {/* Финальный CTA */}
-        <section className="mt-14 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-violet-600 px-6 py-10 text-center text-white shadow-xl">
+        <section className="mt-14 rounded-[2rem] bg-[#6d5cf7] px-6 py-10 text-center text-white shadow-xl">
           <p className="font-display text-2xl font-extrabold">
             {t("Попробуйте вместе с ребёнком", "Бала менен бирге сынап көрүңүз")}
           </p>
@@ -247,7 +247,7 @@ export default async function ParentsLanding({
           </p>
           <Link
             href={`/${lang}/play`}
-            className="mt-6 inline-block rounded-full bg-white px-8 py-3.5 text-lg font-bold text-indigo-600 shadow-lg transition hover:brightness-95"
+            className="mt-6 inline-block rounded-full bg-white px-8 py-3.5 text-lg font-bold text-[#6d5cf7] shadow-lg transition hover:brightness-95"
           >
             {t("Начать бесплатно", "Акысыз баштоо")}
           </Link>

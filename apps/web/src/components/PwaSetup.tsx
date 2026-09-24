@@ -84,18 +84,18 @@ export function PwaSetup({
   if (!show) return null;
 
   return (
-    <div className="fixed inset-x-3 bottom-20 z-50 mx-auto flex max-w-md items-center gap-3 rounded-2xl border border-black/10 bg-white p-3 shadow-xl dark:border-white/15 dark:bg-zinc-900 sm:bottom-4">
+    <div className="fixed inset-x-3 bottom-20 z-50 mx-auto flex max-w-md items-center gap-3 rounded-2xl border border-black/10 bg-white p-3 shadow-xl sm:bottom-4">
       <span className="text-2xl">📲</span>
       <span className="flex-1 text-sm font-semibold">{installLabel}</span>
       <button
         onClick={install}
-        className="flex-none rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-4 py-2 text-sm font-bold text-white transition hover:brightness-110"
+        className="flex-none rounded-full bg-[#6d5cf7] px-4 py-2 text-sm font-bold text-white transition hover:brightness-110"
       >
         OK
       </button>
       <button
         onClick={dismiss}
-        className="flex-none px-2 text-sm font-semibold text-zinc-400 hover:text-foreground"
+        className="flex-none px-2 text-sm font-semibold text-[#5c5880] hover:text-foreground"
       >
         {laterLabel}
       </button>
