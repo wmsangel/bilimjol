@@ -46,7 +46,7 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-black/[.06] bg-white/80 backdrop-blur-md dark:border-white/10 dark:bg-zinc-950/80">
+    <header className="sticky top-0 z-40 border-b border-[#e6e1ff] bg-white/85 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-4">
         <div className="flex min-w-0 justify-start">
           <Link
@@ -55,9 +55,9 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
           >
             <BrandMark size={30} />
             {/* На самых узких экранах (<360px) остаётся только значок, имя — для скринридера. */}
-            <span className="max-[359px]:sr-only">
+            <span className="max-[359px]:sr-only text-[#191539]">
               Bilim
-              <span className="text-indigo-600 dark:text-indigo-400">jol</span>
+              <span className="text-[#c9a04f]">jol</span>
             </span>
           </Link>
         </div>

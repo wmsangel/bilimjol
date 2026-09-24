@@ -80,7 +80,7 @@ export function MobileMenu({
         aria-label={labels.menu}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+        className="flex h-11 w-11 items-center justify-center rounded-full border border-[#e6e1ff] text-[#191539] transition hover:bg-[#f7f5ff]"
       >
         {open ? (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
@@ -104,7 +104,7 @@ export function MobileMenu({
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-full z-50 border-b border-black/[.06] bg-white p-3 shadow-xl dark:border-white/10 dark:bg-zinc-950">
+        <div className="absolute inset-x-0 top-full z-50 border-b border-[#e6e1ff] bg-white p-3 shadow-[0_20px_50px_rgba(25,21,57,.12)]">
           <nav className="flex flex-col gap-1">
             {items.map((it) => (
               <Link
@@ -114,8 +114,8 @@ export function MobileMenu({
                 className={
                   rowBase +
                   (isActive(it.href)
-                    ? " bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300"
-                    : " text-zinc-700 hover:bg-black/[.04] dark:text-zinc-200 dark:hover:bg-white/5")
+                    ? " bg-[#efecff] text-[#6d5cf7]"
+                    : " text-[#191539] hover:bg-[#f7f5ff]")
                 }
               >
                 {it.label}
@@ -123,44 +123,44 @@ export function MobileMenu({
             ))}
           </nav>
 
-          <div className="my-2 h-px bg-black/[.06] dark:bg-white/10" />
+          <div className="my-2 h-px bg-[#efecff]" />
 
           {logged ? (
             <div className="flex flex-col gap-1">
               {email && (
-                <div className="truncate px-3 pb-1 text-xs text-zinc-400">
+                <div className="truncate px-3 pb-1 text-xs text-[#5c5880]">
                   {email}
                 </div>
               )}
               <Link
                 href={`/${lang}/me`}
-                className={rowBase + " text-zinc-700 hover:bg-black/[.04] dark:text-zinc-200 dark:hover:bg-white/5"}
+                className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
               >
                 📊 {labels.progress}
               </Link>
               <Link
                 href={`/${lang}/wardrobe`}
-                className={rowBase + " text-zinc-700 hover:bg-black/[.04] dark:text-zinc-200 dark:hover:bg-white/5"}
+                className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
               >
                 👕 {labels.wardrobe}
               </Link>
               <Link
                 href={`/${lang}/parent`}
-                className={rowBase + " text-zinc-700 hover:bg-black/[.04] dark:text-zinc-200 dark:hover:bg-white/5"}
+                className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
               >
                 👨‍👩‍👧 {labels.report}
               </Link>
               {isAdmin && (
                 <Link
                   href={`/${lang}/admin`}
-                  className={rowBase + " text-zinc-700 hover:bg-black/[.04] dark:text-zinc-200 dark:hover:bg-white/5"}
+                  className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
                 >
                   🛠️ {labels.admin}
                 </Link>
               )}
               <button
                 onClick={onLogout}
-                className={rowBase + " text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"}
+                className={rowBase + " text-[#b42318] hover:bg-[#fef2f2]"}
               >
                 🚪 {labels.logout}
               </button>
@@ -168,7 +168,7 @@ export function MobileMenu({
           ) : (
             <Link
               href={`/${lang}/login`}
-              className="flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-4 py-3 text-base font-bold text-white shadow-md shadow-indigo-500/30"
+              className="flex items-center justify-center rounded-full bg-[#6d5cf7] px-4 py-3 text-base font-extrabold text-white shadow-[0_8px_20px_rgba(109,92,247,.3)]"
             >
               {labels.signIn}
             </Link>

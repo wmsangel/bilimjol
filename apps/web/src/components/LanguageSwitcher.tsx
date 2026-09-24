@@ -19,7 +19,7 @@ export function LanguageSwitcher({ current }: { current: Locale }) {
   }
 
   return (
-    <div className="flex items-center gap-1 rounded-full border border-black/10 p-0.5 text-sm dark:border-white/15">
+    <div className="flex items-center gap-1 rounded-full border border-[#e6e1ff] p-0.5 text-sm font-extrabold">
       {locales.map((locale) => {
         const active = locale === current;
         return (
@@ -29,8 +29,8 @@ export function LanguageSwitcher({ current }: { current: Locale }) {
             aria-current={active ? "true" : undefined}
             className={
               active
-                ? "flex min-h-11 min-w-11 items-center justify-center rounded-full bg-foreground px-3 py-1 font-medium text-background md:min-h-0 md:min-w-0"
-                : "flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 py-1 text-zinc-600 md:min-h-0 md:min-w-0 hover:text-foreground dark:text-zinc-400"
+                ? "flex min-h-11 min-w-11 items-center justify-center rounded-full bg-[#191539] px-3 py-1 text-white md:min-h-0 md:min-w-0"
+                : "flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 py-1 text-[#5c5880] md:min-h-0 md:min-w-0 hover:text-[#191539]"
             }
           >
             {locale.toUpperCase()}

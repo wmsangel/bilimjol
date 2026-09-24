@@ -41,7 +41,7 @@ export function MobileBottomNav({
     <>
       {/* Спейсер, чтобы контент не прятался под фиксированной панелью */}
       <div className="h-16 md:hidden" aria-hidden />
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-black/[.08] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden dark:border-white/10 dark:bg-zinc-950/95">
+      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-[#e6e1ff] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
         <div className="mx-auto flex max-w-md items-stretch justify-around">
           {tabs.map((t) => {
             const active = isActive(t.href);
@@ -51,10 +51,8 @@ export function MobileBottomNav({
                 href={t.href}
                 aria-current={active ? "page" : undefined}
                 className={
-                  "flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-semibold transition " +
-                  (active
-                    ? "text-indigo-600 dark:text-indigo-400"
-                    : "text-zinc-500 dark:text-zinc-400")
+                  "flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-extrabold transition " +
+                  (active ? "text-[#6d5cf7]" : "text-[#5c5880]")
                 }
               >
                 <span className="text-xl leading-none">{t.icon}</span>

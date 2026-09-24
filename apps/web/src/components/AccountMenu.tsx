@@ -72,7 +72,7 @@ export function AccountMenu({
     return (
       <Link
         href={`/${lang}/login`}
-        className="hidden rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-4 py-2 text-sm font-bold text-white shadow-md shadow-indigo-500/30 transition hover:brightness-110 sm:inline-block"
+        className="hidden rounded-full bg-[#6d5cf7] px-4 py-2 text-sm font-extrabold text-white shadow-[0_8px_20px_rgba(109,92,247,.3)] transition hover:-translate-y-0.5 sm:inline-block"
       >
         {labels.signIn}
       </Link>
@@ -80,7 +80,7 @@ export function AccountMenu({
   }
 
   const item =
-    "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-semibold transition hover:bg-black/[.05] dark:hover:bg-white/10";
+    "flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-sm font-bold transition hover:bg-[#f7f5ff]";
 
   return (
     <div ref={ref} className="relative hidden sm:block">
@@ -88,7 +88,7 @@ export function AccountMenu({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 py-2 pl-4 pr-3 text-sm font-bold text-white shadow-md shadow-indigo-500/30 transition hover:brightness-110"
+        className="flex items-center gap-2 rounded-full bg-[#6d5cf7] py-2 pl-4 pr-3 text-sm font-extrabold text-white shadow-[0_8px_20px_rgba(109,92,247,.3)] transition hover:-translate-y-0.5"
       >
         {labels.cabinet}
         <svg
@@ -112,10 +112,10 @@ export function AccountMenu({
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-50 mt-2 w-60 overflow-hidden rounded-2xl border border-black/[.08] bg-white p-2 shadow-xl dark:border-white/10 dark:bg-zinc-900"
+          className="absolute right-0 top-full z-50 mt-2 w-60 overflow-hidden rounded-2xl border border-[#e6e1ff] bg-white p-2 shadow-[0_20px_50px_rgba(25,21,57,.12)]"
         >
           {email && (
-            <div className="truncate px-3 py-1.5 text-xs text-zinc-400">
+            <div className="truncate px-3 py-1.5 text-xs text-[#5c5880]">
               {email}
             </div>
           )}
@@ -147,10 +147,10 @@ export function AccountMenu({
               🛠️ {labels.admin}
             </Link>
           )}
-          <div className="my-1.5 h-px bg-black/[.06] dark:bg-white/10" />
+          <div className="my-1.5 h-px bg-[#efecff]" />
           <button
             onClick={onLogout}
-            className={item + " text-red-600 dark:text-red-400"}
+            className={item + " text-[#b42318]"}
           >
             🚪 {labels.logout}
           </button>

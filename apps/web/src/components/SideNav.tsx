@@ -54,8 +54,8 @@ export function SideNav({
               className={
                 "flex items-center gap-2 whitespace-nowrap rounded-2xl px-3.5 py-2.5 text-sm font-bold transition md:px-4 " +
                 (active
-                  ? "bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-md shadow-indigo-500/30"
-                  : "text-zinc-600 hover:bg-black/[.04] dark:text-zinc-300 dark:hover:bg-white/5")
+                  ? "bg-[#6d5cf7] text-white shadow-[0_8px_20px_rgba(109,92,247,.3)]"
+                  : "text-[#5c5880] hover:bg-[#efecff]")
               }
             >
               <span className="text-lg">{item.icon}</span>
@@ -66,16 +66,16 @@ export function SideNav({
       </nav>
 
       {/* Аккаунт (только на десктопе) */}
-      <div className="mt-6 hidden border-t border-black/[.06] pt-4 md:block dark:border-white/10">
+      <div className="mt-6 hidden border-t border-[#e6e1ff] pt-4 md:block">
         {email ? (
           <>
-            <p className="px-2 text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="px-2 text-xs text-[#5c5880]">
               {account.loggedInAs}
             </p>
-            <p className="mb-2 truncate px-2 text-sm font-semibold">{email}</p>
+            <p className="mb-2 truncate px-2 text-sm font-bold text-[#191539]">{email}</p>
             <button
               onClick={onLogout}
-              className="px-2 text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+              className="px-2 text-sm font-bold text-[#5c5880] hover:text-[#191539]"
             >
               {account.logout}
             </button>
@@ -83,7 +83,7 @@ export function SideNav({
         ) : (
           <Link
             href={account.loginHref}
-            className="px-2 text-sm font-bold text-indigo-600 hover:underline dark:text-indigo-400"
+            className="px-2 text-sm font-extrabold text-[#6d5cf7] hover:underline"
           >
             {account.login}
           </Link>

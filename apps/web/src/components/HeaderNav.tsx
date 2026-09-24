@@ -28,10 +28,10 @@ export function HeaderNav({
             href={it.href}
             aria-current={active ? "page" : undefined}
             className={
-              "whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-semibold transition " +
+              "whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-bold transition " +
               (active
-                ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300"
-                : "text-zinc-600 hover:bg-black/[.04] hover:text-foreground dark:text-zinc-300 dark:hover:bg-white/5")
+                ? "bg-[#efecff] text-[#6d5cf7]"
+                : "text-[#5c5880] hover:bg-[#f7f5ff] hover:text-[#191539]")
             }
           >
             {it.label}
