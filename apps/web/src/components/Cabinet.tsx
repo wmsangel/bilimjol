@@ -258,7 +258,7 @@ export function Cabinet({
         </div>
 
         {/* Цель + неделя | Достижения */}
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid items-start gap-4 md:grid-cols-2">
           <div className={card}>
             <div className="mb-2.5 flex justify-between text-sm font-extrabold">
               <span>{labels.daily}</span>
