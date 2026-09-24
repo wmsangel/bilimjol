@@ -416,7 +416,7 @@ export function TaskPlayer({
       ? helpers.find((h) => h.id === pendingHelper)
       : undefined;
     const previewGradient = preview
-      ? helperGradient[preview.color] ?? "from-[#8577ff] to-violet-500"
+      ? helperGradient[preview.color] ?? "from-[#8577ff] to-[#6d5cf7]"
       : "";
     return (
       <div className="mx-auto w-full max-w-4xl font-sans text-[#191539]">
@@ -496,7 +496,7 @@ export function TaskPlayer({
           <div
             className={
               "flex h-[104px] w-[104px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
-              (helperGradient[helper.color] ?? "from-[#8577ff] to-violet-500")
+              (helperGradient[helper.color] ?? "from-[#8577ff] to-[#6d5cf7]")
             }
           >
             <Mascot helper={helper} mood="idle" size="md" />
@@ -602,7 +602,7 @@ export function TaskPlayer({
   const bubbleText =
     mascotMessage ??
     (locale === "ky" ? "Кана, ойлонуп көрөлү 🤔" : "Давай подумаем вместе 🤔");
-  const gradient = helperGradient[helper.color] ?? "from-[#8577ff] to-violet-500";
+  const gradient = helperGradient[helper.color] ?? "from-[#8577ff] to-[#6d5cf7]";
 
   return (
     <div className="mx-auto w-full max-w-[1480px]">

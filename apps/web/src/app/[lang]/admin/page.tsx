@@ -19,7 +19,7 @@ export default async function AdminPage({
   const dict = await getDictionary(lang);
 
   return (
-    <div className="flex flex-1 flex-col bg-zinc-50">
+    <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
