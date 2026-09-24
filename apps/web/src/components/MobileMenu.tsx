@@ -80,7 +80,7 @@ export function MobileMenu({
         aria-label={labels.menu}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex h-9 w-9 items-center justify-center rounded-full border border-black/10 transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
+        className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 transition hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/5"
       >
         {open ? (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>

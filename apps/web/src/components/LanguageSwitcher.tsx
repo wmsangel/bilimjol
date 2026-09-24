@@ -29,8 +29,8 @@ export function LanguageSwitcher({ current }: { current: Locale }) {
             aria-current={active ? "true" : undefined}
             className={
               active
-                ? "rounded-full bg-foreground px-3 py-1 font-medium text-background"
-                : "rounded-full px-3 py-1 text-zinc-600 hover:text-foreground dark:text-zinc-400"
+                ? "flex min-h-11 min-w-11 items-center justify-center rounded-full bg-foreground px-3 py-1 font-medium text-background md:min-h-0 md:min-w-0"
+                : "flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 py-1 text-zinc-600 md:min-h-0 md:min-w-0 hover:text-foreground dark:text-zinc-400"
             }
           >
             {locale.toUpperCase()}
