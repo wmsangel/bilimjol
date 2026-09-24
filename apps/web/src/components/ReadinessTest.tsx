@@ -68,13 +68,13 @@ export function ReadinessTest({
   // Интро
   if (!started) {
     return (
-      <div className="mx-auto w-full max-w-xl text-center">
-        <p className="mb-6 text-lg text-zinc-600 dark:text-zinc-300">
+      <div className="mx-auto w-full max-w-xl text-center font-sans text-[#191539]">
+        <p className="mb-6 text-lg leading-relaxed text-[#5c5880]">
           {labels.intro}
         </p>
         <button
           onClick={() => setStarted(true)}
-          className="rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 px-10 py-4 text-lg font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:brightness-110 active:scale-95"
+          className="rounded-full bg-[#6d5cf7] px-10 py-4 text-lg font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5 active:scale-95"
         >
           {labels.start}
         </button>
@@ -90,32 +90,32 @@ export function ReadinessTest({
       score >= max * 0.83 ? "high" : score >= max * 0.55 ? "mid" : "low";
     const band = labels.bands[key];
     return (
-      <div className="mx-auto w-full max-w-xl">
-        <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl dark:border-white/10 dark:bg-zinc-900">
+      <div className="mx-auto w-full max-w-xl font-sans text-[#191539]">
+        <div className="rounded-[32px] bg-white p-8 text-center shadow-[0_20px_50px_rgba(25,21,57,.08)]">
           <div className="text-6xl">{BAND_EMOJI[key]}</div>
-          <p className="mt-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
+          <p className="mt-3 text-xs font-extrabold uppercase tracking-[1.4px] text-[#5c5880]">
             {labels.resultTitle}
           </p>
-          <h2 className="mt-1 font-display text-3xl font-extrabold">
+          <h2 className="mt-1 font-display text-[28px] font-bold">
             {band.label}
           </h2>
-          <div className="mt-3 inline-block rounded-full bg-indigo-50 px-4 py-1.5 text-sm font-bold text-indigo-600 dark:bg-indigo-500/15 dark:text-indigo-300">
+          <div className="mt-3 inline-block rounded-full bg-[#efecff] px-4 py-1.5 text-sm font-extrabold text-[#4b3cc9]">
             {labels.yourScore
               .replace("{score}", String(score))
               .replace("{max}", String(max))}
           </div>
-          <p className="mt-4 text-left text-lg leading-8 text-zinc-700 dark:text-zinc-300">
+          <p className="mt-4 text-left text-[17px] leading-relaxed text-[#2d2950]">
             {band.text}
           </p>
 
-          <div className="mt-6 rounded-2xl bg-black/[.03] p-5 text-left dark:bg-white/[.04]">
-            <p className="mb-2 font-display text-sm font-bold text-zinc-500 dark:text-zinc-400">
+          <div className="mt-6 rounded-2xl bg-[#f7f5ff] p-5 text-left">
+            <p className="mb-3 font-display text-[15px] font-bold text-[#191539]">
               {labels.tipsTitle}
             </p>
             <ul className="space-y-2">
               {band.tips.map((tip, i) => (
-                <li key={i} className="flex gap-2 text-zinc-700 dark:text-zinc-300">
-                  <span className="text-indigo-500">•</span>
+                <li key={i} className="flex gap-2 text-[15px] leading-snug text-[#2d2950]">
+                  <span className="font-bold text-[#6d5cf7]">•</span>
                   <span>{tip}</span>
                 </li>
               ))}
@@ -123,11 +123,11 @@ export function ReadinessTest({
           </div>
         </div>
 
-        <div className="mt-6 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-violet-600 px-6 py-8 text-center text-white shadow-xl">
-          <p className="font-display text-xl font-bold">{labels.ctaText}</p>
+        <div className="mt-4 rounded-[24px] bg-[#6d5cf7] px-6 py-7 text-center text-white shadow-[0_16px_40px_rgba(109,92,247,.3)]">
+          <p className="font-display text-lg font-bold">{labels.ctaText}</p>
           <Link
             href={playHref}
-            className="mt-4 inline-block rounded-full bg-white px-6 py-3 font-bold text-indigo-600 shadow-lg transition hover:brightness-95"
+            className="mt-4 inline-block rounded-full bg-white px-7 py-3 font-extrabold text-[#6d5cf7] shadow-md transition hover:-translate-y-0.5"
           >
             {labels.ctaButton}
           </Link>
@@ -135,7 +135,7 @@ export function ReadinessTest({
 
         <button
           onClick={restart}
-          className="mt-4 block w-full text-center text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+          className="mt-4 block w-full text-center text-sm font-extrabold text-[#5c5880] transition hover:text-[#191539]"
         >
           🔄 {labels.restart}
         </button>
@@ -144,45 +144,46 @@ export function ReadinessTest({
   }
 
   // Вопрос
-  const pct = (index / total) * 100;
+  const pct = ((index + 1) / total) * 100;
   return (
-    <div className="mx-auto w-full max-w-xl">
-      <div className="mb-2 flex items-center justify-between text-sm font-bold text-zinc-500 dark:text-zinc-400">
+    <div className="mx-auto w-full max-w-xl font-sans text-[#191539]">
+      <div className="mb-2 flex items-center justify-between text-sm font-extrabold text-[#5c5880]">
         <span>
           {labels.question
             .replace("{n}", String(index + 1))
             .replace("{total}", String(total))}
         </span>
+        <span>{Math.round(pct)}%</span>
       </div>
-      <div className="mb-6 h-2.5 overflow-hidden rounded-full bg-black/[.06] dark:bg-white/10">
+      <div className="mb-7 h-3 overflow-hidden rounded-full bg-[#e6e1ff]">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all"
+          className="h-full rounded-full bg-[#6d5cf7] transition-all duration-300"
           style={{ width: `${pct}%` }}
         />
       </div>
 
-      <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-sm dark:border-white/10 dark:bg-zinc-900">
-        <p className="font-display text-2xl font-bold leading-8">
+      <div className="rounded-[32px] bg-white p-7 shadow-[0_20px_50px_rgba(25,21,57,.08)] sm:p-9">
+        <p className="font-display text-[22px] font-bold leading-snug sm:text-[26px]">
           {labels.qs[index]}
         </p>
-        <div className="mt-6 flex flex-col gap-3">
+        <div className="mt-7 flex flex-col gap-3">
           {(
             [
-              [2, labels.optYes, "emerald"],
-              [1, labels.optSometimes, "amber"],
-              [0, labels.optNo, "zinc"],
+              [2, labels.optYes, "yes"],
+              [1, labels.optSometimes, "sometimes"],
+              [0, labels.optNo, "no"],
             ] as const
           ).map(([value, text, tone]) => (
             <button
               key={value}
               onClick={() => answer(value)}
               className={
-                "rounded-2xl border-2 px-6 py-4 text-left text-lg font-bold transition hover:-translate-y-0.5 active:scale-[.99] " +
-                (tone === "emerald"
-                  ? "border-emerald-200 hover:border-emerald-400 dark:border-emerald-500/30"
-                  : tone === "amber"
-                    ? "border-amber-200 hover:border-amber-400 dark:border-amber-500/30"
-                    : "border-black/10 hover:border-zinc-400 dark:border-white/15")
+                "rounded-2xl border-2 px-6 py-4 text-left text-lg font-extrabold transition hover:-translate-y-0.5 active:scale-[.99] " +
+                (tone === "yes"
+                  ? "border-[#a7f3d0] hover:border-[#34d399]"
+                  : tone === "sometimes"
+                    ? "border-[#e6c079] bg-[#fbf3e3] hover:border-[#c9a04f]"
+                    : "border-black/10 hover:border-[#b9b3e6]")
               }
             >
               {text}
@@ -194,7 +195,7 @@ export function ReadinessTest({
       {index > 0 && (
         <button
           onClick={back}
-          className="mt-4 text-sm font-semibold text-zinc-500 hover:text-foreground dark:text-zinc-400"
+          className="mt-4 text-sm font-extrabold text-[#5c5880] transition hover:text-[#191539]"
         >
           ← {labels.back}
         </button>

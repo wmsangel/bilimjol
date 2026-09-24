@@ -59,7 +59,7 @@ export default async function ReadinessPage({
   ];
 
   return (
-    <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
+    <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <JsonLd
         data={breadcrumbJsonLd(lang, [
           [dict.readiness.title, "/gotovnost-k-shkole"],
