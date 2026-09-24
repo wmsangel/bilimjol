@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
-import { ThemeToggle } from "./ThemeToggle";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { HeaderNav, type NavItem } from "./HeaderNav";
 import { AccountMenu } from "./AccountMenu";
@@ -68,7 +67,6 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
         />
 
         <div className="flex shrink-0 items-center justify-end gap-2">
-          <ThemeToggle />
           <LanguageSwitcher current={lang} />
           <AccountMenu lang={lang} labels={accountLabels} />
           <MobileMenu

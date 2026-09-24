@@ -56,13 +56,11 @@ export function Settings({
   const [email, setEmail] = useState<string | null>(null);
   const [premiumUntil, setPremiumUntil] = useState<string | null>(null);
   const [muted, setMutedState] = useState(false);
-  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     const auth = loadAuth();
     setEmail(auth?.user.email ?? null);
     setMutedState(isMuted());
-    setDark(document.documentElement.classList.contains("dark"));
     setLoaded(true);
     if (isLoggedIn()) {
       getEntitlement()
@@ -75,14 +73,6 @@ export function Settings({
     const nextMuted = toggleMuted();
     setMutedState(nextMuted);
     if (!nextMuted) playSound("click");
-  }
-
-  function toggleTheme() {
-    const el = document.documentElement;
-    const next = !el.classList.contains("dark");
-    el.classList.toggle("dark", next);
-    document.cookie = `izn-theme=${next ? "dark" : "light"}; path=/; max-age=31536000; samesite=lax`;
-    setDark(next);
   }
 
   async function onLogout() {
@@ -162,10 +152,6 @@ export function Settings({
           <div className="flex items-center justify-between gap-3 py-3">
             <span className="font-extrabold">🔊 {t("Звуки и озвучка", "Үн жана окуу")}</span>
             <Toggle on={!muted} onClick={toggleSound} />
-          </div>
-          <div className="flex items-center justify-between gap-3 py-3">
-            <span className="font-extrabold">🌙 {t("Тёмная тема", "Караңгы тема")}</span>
-            <Toggle on={dark} onClick={toggleTheme} />
           </div>
           <div className="flex items-center justify-between gap-3 py-3">
             <span className="font-extrabold">🦊 {t("Герой ребёнка", "Баланын каарманы")}</span>

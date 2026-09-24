@@ -97,12 +97,6 @@ export default async function RootLayout({
             {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${META_PIXEL_ID}');fbq('track','PageView');`}
           </Script>
         ) : null}
-        {/* Тема ставится до отрисовки из cookie — без SSR-на-каждый-визит и без мигания. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `try{if(document.cookie.split('; ').indexOf('izn-theme=dark')>-1)document.documentElement.classList.add('dark')}catch(e){}`,
-          }}
-        />
         {/* Google Tag Manager (noscript) — сразу после <body> */}
         <noscript>
           <iframe
