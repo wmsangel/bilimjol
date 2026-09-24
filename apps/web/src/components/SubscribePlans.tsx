@@ -84,46 +84,33 @@ export function SubscribePlans({
   }, []);
 
   const primaryBtn =
-    "flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-center text-lg font-bold text-white shadow-lg transition hover:brightness-110 active:scale-[.99]";
+    "flex w-full items-center justify-center gap-2 rounded-full bg-[#6d5cf7] px-6 py-4 text-center text-lg font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 active:scale-[.99]";
 
   return (
-    <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 shadow-xl dark:border-white/10 dark:bg-zinc-900">
-      {/* Цена / план */}
-      <div className="flex items-baseline gap-2">
-        <span className="font-display text-5xl font-extrabold tracking-tight">
-          {priceText}
-        </span>
-        <span className="text-lg text-zinc-500 dark:text-zinc-400">
-          {labels.period}
-        </span>
-      </div>
-      <p className="mt-1 font-semibold text-zinc-600 dark:text-zinc-400">
-        {labels.planName}
-      </p>
+    <div className="relative overflow-hidden rounded-[32px] bg-[#191539] p-8 font-sans text-white shadow-[0_30px_60px_rgba(25,21,57,.3)]">
+      <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-[#6d5cf7] opacity-45 blur-[60px]" />
 
-      {/* Что входит */}
-      <ul className="mt-6 space-y-3">
-        {labels.benefits.map((b) => (
-          <li key={b} className="flex items-start gap-3">
-            <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400">
-              ✓
-            </span>
-            <span className="text-zinc-700 dark:text-zinc-300">{b}</span>
-          </li>
-        ))}
-      </ul>
+      {/* Цена / план */}
+      <div className="relative">
+        <span className="inline-block rounded-full bg-[#e6c079] px-3 py-1 text-[13px] font-extrabold text-[#191539]">
+          ⭐ {labels.planName}
+        </span>
+        <div className="mt-4 flex items-baseline gap-2">
+          <span className="font-display text-5xl font-bold tracking-tight text-[#e6c079]">
+            {priceText}
+          </span>
+          <span className="text-lg text-[#d9d5f5]">{labels.period}</span>
+        </div>
+      </div>
 
       {/* Действие */}
-      <div className="mt-8">
+      <div className="relative mt-7">
         {status === "loading" && (
-          <div className="h-14 w-full animate-pulse rounded-full bg-black/[.05] dark:bg-white/10" />
+          <div className="h-14 w-full animate-pulse rounded-full bg-white/10" />
         )}
 
         {status === "guest" && (
-          <Link
-            href={loginHref}
-            className={primaryBtn + " bg-gradient-to-r from-amber-400 to-orange-500 shadow-orange-500/30"}
-          >
+          <Link href={loginHref} className={primaryBtn}>
             {labels.ctaLogin}
           </Link>
         )}
@@ -143,12 +130,12 @@ export function SubscribePlans({
                   source: "subscribe_page",
                 })
               }
-              className={primaryBtn + " bg-gradient-to-r from-sky-400 to-indigo-500 shadow-indigo-500/30"}
+              className={primaryBtn}
             >
               ✈️ {labels.cta}
             </a>
             {email && (
-              <p className="mt-3 text-center text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+              <p className="mt-3 text-center text-sm font-semibold text-[#b9b3e6]">
                 {labels.emailHint.replace("{email}", email)}
               </p>
             )}
@@ -156,7 +143,7 @@ export function SubscribePlans({
         )}
 
         {status === "active" && (
-          <div className="rounded-2xl bg-gradient-to-r from-amber-300 to-yellow-400 px-6 py-4 text-center font-bold text-amber-900">
+          <div className="rounded-2xl bg-[#e6c079] px-6 py-4 text-center font-bold text-[#191539]">
             ⭐ {labels.activeTitle}
             <div className="mt-0.5 text-sm font-semibold">
               {labels.activeUntil.replace("{date}", fmtDate(until, locale))}
@@ -165,7 +152,7 @@ export function SubscribePlans({
         )}
       </div>
 
-      <p className="mt-5 text-center text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="relative mt-5 text-center text-sm text-[#b9b3e6]">
         {labels.note}
       </p>
     </div>

@@ -67,20 +67,22 @@ export function Wardrobe({
 
   if (!loaded) {
     return (
-      <div className="h-72 w-full animate-pulse rounded-[2rem] border border-black/[.06] bg-white dark:border-white/10 dark:bg-zinc-900" />
+      <div className="h-72 w-full animate-pulse rounded-[28px] bg-white shadow-[0_16px_40px_rgba(25,21,57,.08)]" />
     );
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[300px_1fr] lg:items-start">
+    <div className="grid gap-6 font-sans text-[#191539] lg:grid-cols-[300px_1fr] lg:items-start">
       {/* Превью персонажа */}
       <div className="lg:sticky lg:top-6">
-        <div className="flex flex-col items-center rounded-[2rem] border border-black/[.06] bg-gradient-to-b from-indigo-50 to-sky-50 p-6 shadow-sm dark:border-white/10 dark:from-zinc-900 dark:to-zinc-950">
-          <Character charId={charId} outfit={outfit} sizePx={190} />
-          <div className="mt-2 font-display text-xl font-extrabold">
+        <div className="flex flex-col items-center rounded-[28px] bg-gradient-to-b from-[#efecff] to-white p-7 shadow-[0_16px_40px_rgba(25,21,57,.08)]">
+          <div className="flex h-[220px] w-[220px] items-center justify-center rounded-full bg-white/60 shadow-[inset_0_0_0_1px_rgba(25,21,57,.05)]">
+            <Character charId={charId} outfit={outfit} sizePx={190} />
+          </div>
+          <div className="mt-3 font-display text-2xl font-bold">
             {characterName(charId)}
           </div>
-          <div className="mt-1 rounded-full bg-gradient-to-r from-amber-300 to-yellow-400 px-3 py-1 text-sm font-extrabold text-amber-900">
+          <div className="mt-2 rounded-full bg-[#e6c079] px-4 py-1 text-sm font-extrabold text-[#191539]">
             ⭐ {stars}
           </div>
           <button
@@ -88,7 +90,7 @@ export function Wardrobe({
               removeHelperId();
               window.location.href = changeHelperHref;
             }}
-            className="mt-4 text-sm font-semibold text-indigo-600 hover:underline dark:text-indigo-400"
+            className="mt-4 text-sm font-extrabold text-[#6d5cf7] transition hover:underline"
           >
             {t("Сменить героя", "Каарманды алмаштыруу")}
           </button>
@@ -99,7 +101,7 @@ export function Wardrobe({
       <div>
         {/* Готовые наборы */}
         <div className="mb-6">
-          <h3 className="mb-3 text-xs font-extrabold uppercase tracking-wide text-zinc-400">
+          <h3 className="mb-3 text-[13px] font-extrabold uppercase tracking-[1.3px] text-[#5c5880]">
             {t("Наборы", "Топтомдор")}
           </h3>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -114,12 +116,12 @@ export function Wardrobe({
                   onClick={() => !locked && equipSet(set.items)}
                   disabled={locked}
                   className={
-                    "relative flex items-center gap-3 rounded-2xl border-2 bg-white p-3 text-left shadow-sm transition dark:bg-zinc-900 " +
+                    "relative flex items-center gap-3 rounded-2xl border-2 bg-white p-3 text-left shadow-[0_6px_18px_rgba(25,21,57,.05)] transition " +
                     (active
-                      ? "border-indigo-500 shadow-indigo-500/20"
+                      ? "border-[#6d5cf7]"
                       : locked
-                        ? "cursor-not-allowed border-black/[.06] dark:border-white/10"
-                        : "border-black/[.06] hover:-translate-y-1 hover:border-indigo-300 dark:border-white/10")
+                        ? "cursor-not-allowed border-transparent"
+                        : "border-transparent hover:-translate-y-1 hover:border-[#b9b3e6]")
                   }
                 >
                   <span className={"text-3xl " + (locked ? "opacity-40 grayscale" : "")}>
@@ -129,19 +131,26 @@ export function Wardrobe({
                     <span
                       className={
                         "block truncate text-sm font-bold " +
-                        (locked ? "text-zinc-400" : "text-zinc-700 dark:text-zinc-200")
+                        (locked ? "text-[#8f8aa8]" : "text-[#191539]")
                       }
                     >
                       {set.name[locale]}
                     </span>
-                    <span className="text-xs font-semibold text-zinc-400">
+                    <span
+                      className={
+                        "text-xs font-extrabold " +
+                        (locked ? "text-[#9a7430]" : "text-[#5c5880]")
+                      }
+                    >
                       {locked
                         ? `${set.unlockAt} ⭐`
-                        : t("Надеть набор", "Топтомду кий")}
+                        : active
+                          ? t("Надет", "Кийилген")
+                          : t("Надеть набор", "Топтомду кий")}
                     </span>
                   </span>
                   {active && (
-                    <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-indigo-500 text-xs font-bold text-white shadow">
+                    <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#6d5cf7] text-xs font-bold text-white shadow">
                       ✓
                     </span>
                   )}
@@ -155,7 +164,7 @@ export function Wardrobe({
           const items = WARDROBE.filter((i) => i.slot === slot);
           return (
             <div key={slot} className="mb-6">
-              <h3 className="mb-3 text-xs font-extrabold uppercase tracking-wide text-zinc-400">
+              <h3 className="mb-3 text-[13px] font-extrabold uppercase tracking-[1.3px] text-[#5c5880]">
                 {SLOT_LABELS[slot][locale]}
               </h3>
               <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
@@ -168,12 +177,12 @@ export function Wardrobe({
                       onClick={() => toggle(it)}
                       disabled={locked}
                       className={
-                        "relative flex flex-col items-center gap-1 rounded-2xl border-2 bg-white p-3 shadow-sm transition dark:bg-zinc-900 " +
+                        "relative flex flex-col items-center gap-1 rounded-2xl border-2 bg-white p-3 shadow-[0_6px_18px_rgba(25,21,57,.05)] transition " +
                         (equipped
-                          ? "border-emerald-500 shadow-emerald-500/20 hover:shadow-md"
+                          ? "border-[#34d399]"
                           : locked
-                            ? "cursor-not-allowed border-black/[.06] dark:border-white/10"
-                            : "border-black/[.06] hover:-translate-y-1 hover:border-indigo-300 dark:border-white/10")
+                            ? "cursor-not-allowed border-transparent"
+                            : "border-transparent hover:-translate-y-1 hover:border-[#b9b3e6]")
                       }
                     >
                       <span
@@ -183,18 +192,18 @@ export function Wardrobe({
                       <span
                         className={
                           "truncate text-xs font-bold " +
-                          (locked ? "text-zinc-400" : "text-zinc-700 dark:text-zinc-200")
+                          (locked ? "text-[#8f8aa8]" : "text-[#191539]")
                         }
                       >
                         {it.name}
                       </span>
                       {equipped && (
-                        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-xs font-bold text-white shadow">
+                        <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#10b981] text-xs font-bold text-white shadow">
                           ✓
                         </span>
                       )}
                       {locked && (
-                        <span className="absolute right-1.5 top-1.5 rounded-full bg-amber-100 px-1.5 text-[10px] font-bold text-amber-700 dark:bg-amber-500/15 dark:text-amber-300">
+                        <span className="absolute right-1.5 top-1.5 rounded-full bg-[#fbf3e3] px-1.5 text-[10px] font-extrabold text-[#7a5a1e]">
                           {it.unlockAt} ⭐
                         </span>
                       )}
@@ -205,7 +214,7 @@ export function Wardrobe({
             </div>
           );
         })}
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-[#5c5880]">
           {t(
             "Решай задания и получай звёзды — за них открываются новые вещи.",
             "Тапшырмаларды чечип, жылдыз жыйна — алар үчүн жаңы буюмдар ачылат.",

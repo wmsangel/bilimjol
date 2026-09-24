@@ -26,11 +26,12 @@ export default async function AccountLayout({
     { href: `/${lang}/wardrobe`, label: lang === "ky" ? "Гардероб" : "Гардероб", icon: "👕" },
     { href: `/${lang}/tests`, label: dict.tests.nav, icon: "🎯" },
     { href: `/${lang}/parent`, label: dict.account.report, icon: "👨‍👩‍👧" },
+    { href: `/${lang}/settings`, label: lang === "ky" ? "Жөндөөлөр" : "Настройки", icon: "⚙️" },
     { href: `/${lang}/admin`, label: dict.admin.title, icon: "🛠️", adminOnly: true },
   ];
 
   return (
-    <div className="flex flex-1 flex-col bg-gradient-to-b from-indigo-50 via-white to-amber-50 dark:from-zinc-950 dark:via-zinc-950 dark:to-zinc-900">
+    <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
 
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-6 pb-12 pt-6 md:flex-row">
