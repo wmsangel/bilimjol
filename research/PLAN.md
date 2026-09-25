@@ -35,6 +35,39 @@ Console — не на общих соображениях. Цифры в раз�
 
 ---
 
+# Оплата — Paddle (подключено в коде, ждёт go-live владельца)
+
+## [ ] П1. Paddle go-live — действия владельца
+
+**Статус.** Код готов и залит (сессия 2026-09-25). Подключены:
+- Paddle.js overlay-чекаут (`apps/web/src/lib/paddle.ts`) — 2 плана: месячный
+  `pri_01m3bx11sxnp35sth25ptm90ds` ($1.99), годовой
+  `pri_01m3bx124svzmzasfd2mct47h0` ($15.99, −33%). Продукт
+  `pro_01m3bx11fwwrnjeasg76jf98yt`. Client token — live (взят у foldout).
+- Экран подписки (`SubscribePlans.tsx`): тумблер месяц/год, чекаут + опрос
+  entitlement, **всегда виден фолбэк «не получилось оплатить — напишите админу»**.
+- Вебхук (`apps/api/.../paddle-webhook.controller.ts` → `handlePaddleEvent`):
+  `POST /billing/webhook/paddle`, проверка подписи HMAC-SHA256, апсерт
+  `Subscription` (provider="paddle") по `subscription.*`.
+- Юр. раскрытие (`legal.ts`): Paddle как Merchant of Record, раздел возврата/
+  отмены — в Terms и Privacy.
+
+**Что осталось (только владелец, вне кода):**
+1. Добавить `bilimjol.com` в approved domains в кабинете Paddle (до апрува
+   overlay-чекаут на боевом домене не откроется — работает фолбэк «напишите
+   админу», продукт при этом не сломан).
+2. Прописать env на API: `PADDLE_API_KEY`, `PADDLE_WEBHOOK_SECRET`,
+   `PADDLE_ENV=production`.
+3. Зарегистрировать вебхук `https://<api-host>/billing/webhook/paddle` на
+   события `subscription.*`, секрет положить в `PADDLE_WEBHOOK_SECRET`.
+4. После апрува — проверить реальную покупку (месяц) → приход вебхука →
+   `entitlement` = premium.
+
+**Гейт.** Пункты 1–4 — вне репозитория; отметить `[x]`, когда покупка проходит
+на боевом домене без фолбэка.
+
+---
+
 # Трек 1 — Визуальные улучшения
 
 ## [x] В1. Шапка: кнопка темы налезает на логотип на мобильном
