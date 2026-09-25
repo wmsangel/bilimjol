@@ -205,6 +205,12 @@ export function Cabinet({
     accuracy: accuracyPct(stats.totalAnswered, stats.totalCorrect),
   });
   const week = lastSevenDays(stats, locale);
+  // Как в макете — компактная сетка 3×2: показываем полученные достижения
+  // первыми, затем ближайшие цели. Всего 6, чтобы карточка была вровень с
+  // блоком «Цель/Неделя», а не вытягивалась на все 10.
+  const shownAchievements = [...achievements]
+    .sort((a, b) => Number(b.unlocked) - Number(a.unlocked))
+    .slice(0, 6);
   const card = "rounded-3xl bg-white p-6 shadow-[0_8px_24px_rgba(25,21,57,.06)]";
 
   return (
@@ -297,7 +303,7 @@ export function Cabinet({
           <div className={card}>
             <div className="mb-3 text-sm font-extrabold">{labels.achievementsTitle}</div>
             <div className="grid grid-cols-3 gap-2">
-              {achievements.map((a) => (
+              {shownAchievements.map((a) => (
                 <div
                   key={a.id}
                   className={
