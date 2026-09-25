@@ -86,14 +86,14 @@ export default async function GamesPage({
         </h1>
         <p className="mt-2 text-lg text-[#5c5880]">{dict.games.subtitle}</p>
 
-        <div className="mt-8 grid gap-4 lg:grid-cols-3 lg:grid-rows-2">
+        <div className="mt-8 grid gap-4 lg:grid-cols-[1.3fr_1fr_1fr] lg:grid-rows-2">
           {/* Игра дня */}
           <Link
             href={featured.href}
             className="group relative flex gap-5 overflow-hidden rounded-[28px] bg-[#191539] p-7 text-white transition hover:-translate-y-1 sm:items-center lg:col-span-1 lg:row-span-2 lg:flex-col lg:items-start lg:justify-between"
           >
             <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[#6d5cf7] opacity-40 blur-[60px]" />
-            <div className="relative text-[72px] leading-none sm:text-[88px] lg:mt-2">
+            <div className="relative text-[72px] leading-none sm:text-[96px] lg:mt-2">
               {featured.icon}
             </div>
             <div className="relative flex-1">

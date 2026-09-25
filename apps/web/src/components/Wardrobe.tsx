@@ -17,8 +17,6 @@ import {
 import { loadOutfit, saveOutfit } from "@/lib/wardrobe";
 import { Character } from "./Character";
 
-const SLOTS: Slot[] = ["head", "body", "face", "neck"];
-
 export function Wardrobe({
   locale,
   changeHelperHref,
@@ -160,14 +158,21 @@ export function Wardrobe({
           </div>
         </div>
 
-        {SLOTS.map((slot) => {
-          const items = WARDROBE.filter((i) => i.slot === slot);
-          return (
-            <div key={slot} className="mb-6">
-              <h3 className="mb-3 text-[13px] font-extrabold uppercase tracking-[1.3px] text-[#5c5880]">
-                {SLOT_LABELS[slot][locale]}
-              </h3>
-              <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+        {(
+          [
+            [SLOT_LABELS.head[locale], WARDROBE.filter((i) => i.slot === "head")],
+            [SLOT_LABELS.body[locale], WARDROBE.filter((i) => i.slot === "body")],
+            [
+              locale === "ky" ? "Бет жана моюн" : "Лицо и шея",
+              WARDROBE.filter((i) => i.slot === "face" || i.slot === "neck"),
+            ],
+          ] as [string, WardrobeItem[]][]
+        ).map(([label, items]) => (
+          <div key={label} className="mb-6">
+            <h3 className="mb-3 text-[13px] font-extrabold uppercase tracking-[1.3px] text-[#5c5880]">
+              {label}
+            </h3>
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                 {items.map((it) => {
                   const locked = stars < it.unlockAt;
                   const equipped = outfit[it.slot] === it.id;
@@ -212,8 +217,7 @@ export function Wardrobe({
                 })}
               </div>
             </div>
-          );
-        })}
+        ))}
         <p className="text-sm text-[#5c5880]">
           {t(
             "Решай задания и получай звёзды — за них открываются новые вещи.",

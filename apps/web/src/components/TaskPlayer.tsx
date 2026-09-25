@@ -22,7 +22,7 @@ import {
   loadLastGrade,
   saveLastGrade,
 } from "@/lib/prefs";
-import { recordActivity } from "@/lib/stats";
+import { loadStats, recordActivity } from "@/lib/stats";
 import { getEntitlement, isLoggedIn, loadChildId } from "@/lib/api";
 import { syncChild } from "@/lib/sync";
 import { pushEvent, currencyIso } from "@/lib/gtm";
@@ -45,7 +45,7 @@ function isImageLike(s: string): boolean {
 // остальные — адаптивно (по 2 на телефоне, по 3 на широком экране).
 function imageGridClass(n: number): string {
   return n === 4
-    ? "grid grid-cols-2 gap-3"
+    ? "grid grid-cols-2 gap-3 lg:grid-cols-4"
     : "grid grid-cols-2 gap-3 sm:grid-cols-3";
 }
 
@@ -419,11 +419,11 @@ export function TaskPlayer({
       ? helperGradient[preview.color] ?? "from-[#8577ff] to-[#6d5cf7]"
       : "";
     return (
-      <div className="mx-auto w-full max-w-4xl font-sans text-[#191539]">
+      <div className="mx-auto w-full max-w-5xl font-sans text-[#191539]">
         <StepIndicator current={1} locale={locale} />
-        <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:items-start">
+        <div className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start">
           <div>
-            <h2 className="font-display text-3xl font-bold">{gameLabels.chooseTitle}</h2>
+            <h2 className="font-display text-3xl font-bold sm:text-4xl">{gameLabels.chooseTitle}</h2>
             <p className="mt-1.5 text-[#5c5880]">{gameLabels.chooseSubtitle}</p>
             <div className="mt-6">
               <HelperPicker
@@ -448,7 +448,7 @@ export function TaskPlayer({
               <>
                 <div
                   className={
-                    "mx-auto mb-5 flex h-[180px] w-[180px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
+                    "mx-auto mb-5 flex h-[200px] w-[200px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-br " +
                     previewGradient
                   }
                 >
@@ -670,15 +670,38 @@ export function TaskPlayer({
                     total: activeTasks.length,
                   })}
                 </p>
-                {stars > 0 ? (
-                  <div className="my-4 flex flex-wrap justify-center gap-1 text-3xl">
-                    {Array.from({ length: stars }).map((_, i) => (
-                      <span key={i}>⭐</span>
-                    ))}
+                {/* Рейтинг 0–3 звезды по доле верных */}
+                <div className="my-4 flex justify-center gap-1.5 text-4xl">
+                  {[0, 1, 2].map((i) => (
+                    <span
+                      key={i}
+                      className={
+                        i < Math.round((stars / Math.max(1, activeTasks.length)) * 3)
+                          ? ""
+                          : "opacity-25 grayscale"
+                      }
+                    >
+                      ⭐
+                    </span>
+                  ))}
+                </div>
+                {/* Заработано за занятие + серия дней */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-[#fbf3e3] p-3 text-[#7a5a1e]">
+                    <div className="font-display text-2xl font-bold leading-none">+{stars}</div>
+                    <div className="mt-1 text-[13px] font-extrabold">
+                      {locale === "ky" ? "жылдыз" : "звёзд"}
+                    </div>
                   </div>
-                ) : (
-                  <p className="my-4 text-4xl">—</p>
-                )}
+                  <div className="rounded-2xl bg-[#ffedd5] p-3 text-[#9a3412]">
+                    <div className="font-display text-2xl font-bold leading-none">
+                      🔥 {loadStats().streakCount}
+                    </div>
+                    <div className="mt-1 text-[13px] font-extrabold">
+                      {locale === "ky" ? "күн катары" : "дней подряд"}
+                    </div>
+                  </div>
+                </div>
 
                 {isGuest && (
                   <div className="mt-6 rounded-2xl border-2 border-[#a7f3d0] bg-[#ecfdf5] p-5 text-left">
@@ -726,14 +749,14 @@ export function TaskPlayer({
                 )}
 
                 <div className="mt-7 flex flex-col gap-3">
-                  <button onClick={restart} className={PRIMARY_PILL}>
-                    🔄 {labels.restart}
+                  <button onClick={closeLesson} className={PRIMARY_PILL}>
+                    {closeLabel} →
                   </button>
                   <button
-                    onClick={closeLesson}
+                    onClick={restart}
                     className="rounded-full border-2 border-black/10 px-6 py-3.5 text-base font-bold transition hover:bg-black/[.04]"
                   >
-                    {closeLabel}
+                    🔄 {labels.restart}
                   </button>
                   <Link
                     href={homeHref}

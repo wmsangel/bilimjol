@@ -163,7 +163,7 @@ export function Settings({
       </div>
 
       {/* Данные и документы */}
-      <div className={card + " md:col-span-2"}>
+      <div className={card}>
         <h3 className={rowTitle}>{t("Данные и документы", "Маалымат жана документтер")}</h3>
         <div className="divide-y divide-black/[.06]">
           <Link

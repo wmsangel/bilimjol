@@ -153,7 +153,6 @@ export function ReadinessTest({
             .replace("{n}", String(index + 1))
             .replace("{total}", String(total))}
         </span>
-        <span>{Math.round(pct)}%</span>
       </div>
       <div className="mb-7 h-3 overflow-hidden rounded-full bg-[#e6e1ff]">
         <div

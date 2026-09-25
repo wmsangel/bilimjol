@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getHelper, type Locale } from "@izn-study/shared";
 import {
@@ -35,10 +36,12 @@ export function AccountForm({
   locale,
   labels,
   meHref,
+  guestHref,
 }: {
   locale: Locale;
   labels: AuthLabels;
   meHref: string;
+  guestHref?: string;
 }) {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
@@ -174,6 +177,17 @@ export function AccountForm({
       >
         {mode === "login" ? labels.toRegister : labels.toLogin}
       </button>
+
+      {guestHref && (
+        <div className="mt-6 border-t border-black/[.06] pt-5 text-center text-sm font-semibold text-[#5c5880]">
+          {locale === "ky"
+            ? "Кирбей эле окууга болот — "
+            : "Можно заниматься и без входа — "}
+          <Link href={guestHref} className="font-extrabold text-[#6d5cf7] hover:underline">
+            {locale === "ky" ? "конок катары улантуу" : "продолжить как гость"}
+          </Link>
+        </div>
+      )}
     </form>
   );
 }

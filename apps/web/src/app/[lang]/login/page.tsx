@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { getDictionary } from "../dictionaries";
@@ -36,7 +35,29 @@ export default async function LoginPage({
       <SiteHeader lang={lang} dict={dict} />
 
       <main className="mx-auto grid w-full max-w-5xl flex-1 items-stretch gap-8 px-6 py-10 lg:grid-cols-2">
-        {/* Левая маркетинговая панель */}
+        {/* Компактная маркетинговая шапка для мобилки */}
+        <div className="relative overflow-hidden rounded-[24px] bg-[#191539] p-6 text-white lg:hidden">
+          <div className="pointer-events-none absolute -right-16 top-6 h-56 w-56 rounded-full bg-[#6d5cf7] opacity-35 blur-[70px]" />
+          <div className="relative mb-4 flex gap-2">
+            {AVATARS.map(([emoji, bg]) => (
+              <div
+                key={emoji}
+                className="flex h-14 w-14 items-center justify-center rounded-full text-[28px]"
+                style={{ background: bg }}
+              >
+                {emoji}
+              </div>
+            ))}
+          </div>
+          <h1 className="relative font-display text-2xl font-bold leading-tight">
+            {t("Сохраните прогресс ребёнка", "Баланын прогрессин сактаңыз")}
+          </h1>
+          <p className="relative mt-2 text-sm leading-relaxed text-[#d9d5f5]">
+            {t("Звёзды и награды — на всех устройствах.", "Жылдыздар жана сыйлыктар — бардык түзмөктөрдө.")}
+          </p>
+        </div>
+
+        {/* Левая маркетинговая панель (десктоп) */}
         <div className="relative hidden overflow-hidden rounded-[28px] bg-[#191539] p-10 text-white lg:flex lg:flex-col lg:justify-center">
           <div className="pointer-events-none absolute -right-24 top-40 h-[420px] w-[420px] rounded-full bg-[#6d5cf7] opacity-35 blur-[80px]" />
           <div className="relative mb-7 flex gap-2.5">
@@ -71,16 +92,12 @@ export default async function LoginPage({
 
         {/* Форма входа / регистрации */}
         <div className="flex flex-col items-center justify-center">
-          <AccountForm locale={lang} labels={dict.auth} meHref={`/${lang}/me`} />
-          <Link
-            href={`/${lang}/play`}
-            className="mt-5 text-center text-sm font-semibold text-[#5c5880] transition hover:text-[#191539]"
-          >
-            {t("Можно заниматься и без входа — ", "Кирбей эле окууга болот — ")}
-            <span className="font-extrabold text-[#6d5cf7]">
-              {t("продолжить как гость", "конок катары улантуу")}
-            </span>
-          </Link>
+          <AccountForm
+            locale={lang}
+            labels={dict.auth}
+            meHref={`/${lang}/me`}
+            guestHref={`/${lang}/play`}
+          />
         </div>
       </main>
     </div>
