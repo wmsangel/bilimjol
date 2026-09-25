@@ -52,22 +52,23 @@ Console — не на общих соображениях. Цифры в раз�
 - Юр. раскрытие (`legal.ts`): Paddle как Merchant of Record, раздел возврата/
   отмены — в Terms и Privacy.
 
-**Что осталось (только владелец, вне кода):**
-1. ✅ `bilimjol.com` одобрен в Paddle (approved domains, 2026-09-25) —
-   overlay-чекаут теперь открывается на боевом домене.
-2. В Paddle → **Developer Tools → Notifications** создать destination:
-   URL `https://<api-host>/billing/webhook/paddle`, подписать на события
-   `subscription.created/updated/canceled` (+ `activated/past_due` по вкусу).
-3. Скопировать **секрет** этого destination (строка вида `pdl_ntfset_…`) и
-   положить в env API как `PADDLE_WEBHOOK_SECRET`. **Это единственная env,
-   которую читает сервер.** Client token и priceId уже вшиты live в код
-   (`apps/web/src/lib/paddle.ts`) — их можно не задавать; при желании
-   переопределяются публичными `NEXT_PUBLIC_PADDLE_*`.
-4. Проверить реальную покупку (месяц) → приход вебхука → `entitlement` =
-   premium.
+**Сделано (2026-09-25):**
+1. ✅ `bilimjol.com` одобрен в Paddle (approved domains) — overlay-чекаут
+   открывается на боевом домене.
+2. ✅ Destination создан: `https://izn-studyapi-production.up.railway.app/billing/webhook/paddle`,
+   события `subscription.*`, Usage type Both.
+3. ✅ `PADDLE_WEBHOOK_SECRET` прописан в Railway (env API). Это единственная env,
+   которую читает сервер; client token и priceId вшиты live в
+   `apps/web/src/lib/paddle.ts`.
+4. ✅ Проверка подписи подтверждена: Paddle Simulate `subscription.created` →
+   **HTTP 200 `{ok:true}`**. (Диагностика показала rawBody=3999, причина
+   прежних 400 — лишние символы в секрете при вставке; вылечено чистой
+   перекопией + `.trim()` в коде.)
 
-**Гейт.** Пункты 1–4 — вне репозитория; отметить `[x]`, когда покупка проходит
-на боевом домене без фолбэка.
+**Осталось (одна контрольная проверка владельца):**
+5. Реальная тестовая покупка месяца на bilimjol.com → приход `subscription.*`
+   с нашим `userId` в `custom_data` → запись `Subscription` в БД →
+   `entitlement` = premium в кабинете. После этого П1 = `[x]`.
 
 ---
 
