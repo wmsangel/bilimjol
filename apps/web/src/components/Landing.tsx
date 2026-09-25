@@ -330,7 +330,7 @@ export function Landing({ lang }: { lang: Locale }) {
             ))}
             <div className="flex items-center gap-4 rounded-3xl bg-[#191539] p-6 text-white sm:col-span-2">
               <div className="flex h-12 w-12 flex-none items-center justify-center rounded-[14px] bg-white/10 text-2xl">📲</div>
-              <div>
+              <div className="min-w-0">
                 <div className="mb-1 text-[17px] font-extrabold">{t("Работает в браузере и ставится на телефон", "Браузерде иштейт жана телефонго орнотулат")}</div>
                 <div className="text-[15px] leading-[1.5] text-[#d9d5f5]">{t("Как приложение (PWA) — без магазинов и лишних загрузок.", "Тиркеме катары (PWA) — дүкөнсүз жана ашыкча жүктөөсүз.")}</div>
               </div>
