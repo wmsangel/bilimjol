@@ -291,7 +291,7 @@ export default async function ClassPage({
           </div>
           <div className="rounded-3xl bg-[#6d5cf7] p-9 text-white shadow-[0_20px_50px_rgba(109,92,247,.35)]">
             <div className="mb-2.5 flex items-center justify-between"><div className="font-display text-[26px] font-bold">Premium</div><span className="rounded-full bg-[#e6c079] px-3 py-1.5 text-[13px] font-extrabold text-[#191539]">{t("все классы 0–11", "бардык класс 0–11")}</span></div>
-            <div className="mb-6 text-[17px] leading-[1.55] text-[#e6e1ff]">{t(`Все ${totalTasks} заданий класса, тесты, олимпиада и отчёт — по недорогой подписке (199 сом/мес).`, `Класстын бардык ${totalTasks} тапшырмасы, тесттер, олимпиада жана отчёт — арзан жазылуу менен (199 сом/ай).`)}</div>
+            <div className="mb-6 text-[17px] leading-[1.55] text-[#e6e1ff]">{t(`Все ${totalTasks} заданий класса, тесты, олимпиада и отчёт — по недорогой подписке ($1.99/мес, ≈175 сом).`, `Класстын бардык ${totalTasks} тапшырмасы, тесттер, олимпиада жана отчёт — арзан жазылуу менен ($1.99/ай, ≈175 сом).`)}</div>
             <Link href={priceHref} className="block rounded-full bg-white py-3.5 text-center font-extrabold text-[#6d5cf7] transition hover:bg-[#e6c079] hover:text-[#191539]">{t("Открыть полный доступ", "Толук доступту ачуу")}</Link>
           </div>
         </div>

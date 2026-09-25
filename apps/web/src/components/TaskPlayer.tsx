@@ -26,8 +26,8 @@ import {
 import { loadStats, recordActivity } from "@/lib/stats";
 import { getEntitlement, isLoggedIn, loadChildId } from "@/lib/api";
 import { syncChild } from "@/lib/sync";
-import { pushEvent, currencyIso } from "@/lib/gtm";
-import { countryForLocale, priceForCountry } from "@/lib/pricing";
+import { pushEvent } from "@/lib/gtm";
+import { PRICE } from "@/lib/pricing";
 import { speak, speechSupported, stopSpeaking } from "@/lib/speech";
 import { helperGradient } from "@/lib/helperTheme";
 import { gradeBadge } from "@/lib/classContent";
@@ -756,8 +756,8 @@ export function TaskPlayer({
                         pushEvent("subscribe_click", {
                           grade,
                           plan: "premium",
-                          price: priceForCountry(countryForLocale(locale)).amount,
-                          currency: currencyIso(countryForLocale(locale)),
+                          price: PRICE.monthly.usd,
+                          currency: "USD",
                           source: "play_paywall",
                         })
                       }

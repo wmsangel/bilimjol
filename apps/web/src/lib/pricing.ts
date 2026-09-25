@@ -1,30 +1,31 @@
-// Цена подписки по стране пользователя. Числа — плейсхолдеры, легко поменять.
-// Определяем страну из профиля (user.country), для гостя — по языку.
+// Каноническая цена подписки — в USD: именно её списывает Paddle
+// (см. apps/web/src/lib/paddle.ts, PADDLE_PLANS). Показывать нужно ровно это,
+// иначе рассинхрон с чеком. Местные суммы ниже — ПРИБЛИЗИТЕЛЬНЫЕ ориентиры
+// (курс плавает), поэтому всегда с пометкой «примерно».
 
-export interface PlanPrice {
-  amount: number;
-  /** Символ/слово валюты после суммы: "199 сом", "199 ₽". */
-  currency: string;
+export const PRICE = {
+  monthly: { usd: 1.99, display: "$1.99" },
+  annual: { usd: 15.99, display: "$15.99" },
+} as const;
+
+/**
+ * Приблизительный местный эквивалент цены — чтобы доллар не пугал.
+ * По умолчанию (и для гостя) — сомы (основная аудитория КГ); для страны RU — рубли.
+ * Суммы округлены и всегда идут с пометкой «примерно» (курс плавает).
+ * TODO: когда в Paddle заведём RUB-оверрайд — синхронизировать суммы.
+ */
+export function approxLocal(plan: "monthly" | "annual", country?: string | null): string {
+  const rub = country?.toUpperCase() === "RU";
+  if (plan === "annual") return rub ? "≈ 1500 ₽" : "≈ 1400 сом";
+  return rub ? "≈ 190 ₽" : "≈ 175 сом";
 }
 
-export const PLAN_PRICES: Record<string, PlanPrice> = {
-  KG: { amount: 199, currency: "сом" },
-  RU: { amount: 199, currency: "₽" },
-};
-
-const DEFAULT_PRICE = PLAN_PRICES.KG;
-
-/** Цена по коду страны (ISO-2). Неизвестная страна → цена по умолчанию (КР). */
-export function priceForCountry(country?: string | null): PlanPrice {
-  if (!country) return DEFAULT_PRICE;
-  return PLAN_PRICES[country.toUpperCase()] ?? DEFAULT_PRICE;
+/** Короткий алиас для месячной цены (лендинг). */
+export function approxLocalMonthly(country?: string | null): string {
+  return approxLocal("monthly", country);
 }
 
-/** Гостю страну не знаем — угадываем по языку интерфейса. */
+/** Гостю страну не знаем — угадываем по языку интерфейса (ky → КГ). */
 export function countryForLocale(locale: string): string {
-  return locale === "ky" ? "KG" : "RU";
-}
-
-export function formatPrice(p: PlanPrice): string {
-  return `${p.amount} ${p.currency}`;
+  return locale === "ky" ? "KG" : "KG";
 }

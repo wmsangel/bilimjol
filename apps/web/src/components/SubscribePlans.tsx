@@ -6,6 +6,7 @@ import { getEntitlement, isLoggedIn, loadAuth } from "@/lib/api";
 import { pushEvent } from "@/lib/gtm";
 import { loadLastGrade } from "@/lib/prefs";
 import { PADDLE_PLANS, openPaddleCheckout, type PlanKey } from "@/lib/paddle";
+import { approxLocal } from "@/lib/pricing";
 
 // Запасной путь: если оплата картой недоступна (домен ещё на апруве / Paddle не
 // загрузился) — написать администратору. Переопределяется env.
@@ -204,6 +205,9 @@ export function SubscribePlans({
           <span className="text-lg text-[#d9d5f5]">
             / {selected.per[locale === "ky" ? "ky" : "ru"]}
           </span>
+        </div>
+        <div className="mt-1 text-sm text-[#b9b3e6]">
+          {approxLocal(plan)} · {t("примерно", "болжолдуу")}
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { LandingHeaderCta } from "./LandingHeaderCta";
 import { faqJsonLd } from "@/lib/seo";
 import { buildCharacter } from "@/lib/characterArt";
+import { PRICE, approxLocalMonthly } from "@/lib/pricing";
 
 // SVG-персонаж в круглом «пузыре» (кадрируется головой/торсом). Server-safe.
 function Mascot({ id, size }: { id: string; size: number }) {
@@ -383,7 +384,7 @@ export function Landing({ lang }: { lang: Locale }) {
         <div className="mx-auto grid max-w-[960px] gap-6 md:grid-cols-2">
           <div className="flex flex-col rounded-3xl bg-white p-10 shadow-[0_8px_24px_rgba(25,21,57,.06)]">
             <div className="mb-1.5 font-display text-[28px] font-bold">Free</div>
-            <div className="mb-6 font-display text-[40px] font-bold">0 <span className="text-lg text-[#5c5880]">{t("сом", "сом")}</span></div>
+            <div className="mb-6 font-display text-[40px] font-bold">{t("Бесплатно", "Акысыз")}</div>
             <div className="mb-8 flex flex-1 flex-col gap-3 text-[17px]">
               {[t("Первые задания в каждой теме", "Ар бир темада биринчи тапшырмалар"), t("Без регистрации", "Катталуусуз"), t("RU и KY с озвучкой", "RU жана KY, үн менен")].map((f, i) => (
                 <div key={i} className="flex gap-2.5"><span className="font-extrabold text-[#6d5cf7]">✓</span>{f}</div>
@@ -396,7 +397,8 @@ export function Landing({ lang }: { lang: Locale }) {
               <div className="font-display text-[28px] font-bold">Premium</div>
               <div className="rounded-full bg-[#e6c079] px-3.5 py-1.5 text-[13px] font-extrabold text-[#191539]">{t("Полный доступ", "Толук доступ")}</div>
             </div>
-            <div className="mb-6 font-display text-[40px] font-bold">199 <span className="text-lg text-[#e6e1ff]">{t("сом / мес", "сом / ай")}</span></div>
+            <div className="mb-1 font-display text-[40px] font-bold">{PRICE.monthly.display} <span className="text-lg text-[#e6e1ff]">{t("/ мес", "/ ай")}</span></div>
+            <div className="mb-6 text-sm text-[#c9bfff]">{approxLocalMonthly()} · {t("примерно", "болжолдуу")}</div>
             <div className="mb-8 flex flex-1 flex-col gap-3 text-[17px]">
               {[t("Все 1200+ заданий и игры", "Бардык 1200+ тапшырма жана оюндар"), t("Все классы 0–11 и олимпиада", "Бардык класстар 0–11 жана олимпиада"), t("Отчёт для родителей", "Ата-энелерге отчёт"), t("Гардероб и награды героя", "Каармандын гардероб жана сыйлыктары")].map((f, i) => (
                 <div key={i} className="flex gap-2.5"><span className="font-extrabold text-[#e6c079]">✓</span>{f}</div>
