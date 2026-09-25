@@ -10,7 +10,8 @@ export type GameId =
   | "bubbles"
   | "trace"
   | "build"
-  | "pattern";
+  | "pattern"
+  | "word";
 
 export interface GameMeta {
   id: GameId;
@@ -40,6 +41,13 @@ export const GAME_META: Record<GameId, GameMeta> = {
     slug: "/games/pattern",
     icon: "🔁",
     title: { ru: "Продолжи ряд", ky: "Катарды улант" },
+    premium: false,
+  },
+  word: {
+    id: "word",
+    slug: "/games/word",
+    icon: "🔤",
+    title: { ru: "Собери слово", ky: "Сөз түз" },
     premium: false,
   },
   memory: {

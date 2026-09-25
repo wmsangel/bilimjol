@@ -74,6 +74,12 @@ export default async function GamesPage({
       title: dict.games.pattern.title,
       description: dict.games.pattern.description,
     },
+    {
+      href: `/${lang}/games/word`,
+      icon: "🔤",
+      title: dict.games.word.title,
+      description: dict.games.word.description,
+    },
   ];
 
   // Игра дня — детерминированно по дню (страница ревалидируется раз в сутки).
