@@ -26,6 +26,27 @@ export interface SubscribeLabels {
 
 type Status = "loading" | "guest" | "available" | "active";
 
+// Делает слово «Telegram» в тексте note кликабельной ссылкой на чат админа.
+// Работает для обеих локалей — в ru/ky note есть литерал «Telegram».
+function noteWithTelegram(note: string, href: string) {
+  const parts = note.split("Telegram");
+  if (parts.length === 1) return note;
+  return (
+    <>
+      {parts[0]}
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener"
+        className="font-bold text-[#e6c079] underline underline-offset-2 transition hover:text-white"
+      >
+        Telegram
+      </a>
+      {parts.slice(1).join("Telegram")}
+    </>
+  );
+}
+
 function fmtDate(iso: string | null, locale: string): string {
   if (!iso) return "";
   return new Date(iso).toLocaleDateString(locale === "ky" ? "ky-KG" : "ru-RU", {
@@ -215,7 +236,7 @@ export function SubscribePlans({
       </div>
 
       <p className="relative mt-5 text-center text-sm text-[#b9b3e6]">
-        {labels.note}
+        {noteWithTelegram(labels.note, ADMIN_TG)}
       </p>
     </div>
   );
