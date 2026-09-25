@@ -26,6 +26,20 @@ body {
   font-family: var(--font-nunito), system-ui, sans-serif;
 }
 
+/* Курсор-палец на всё кликабельное: Tailwind v4 не ставит pointer на <button>
+   сам по себе. В @layer base — чтобы точечные утилиты cursor-* (например
+   disabled:cursor-wait) всегда перебивали, а disabled-элементы не затрагивались. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  a[href],
+  label[for],
+  summary,
+  select {
+    cursor: pointer;
+  }
+}
+
 /* ---------- Анимации для детского интерфейса ---------- */
 
 @keyframes bob {
