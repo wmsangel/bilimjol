@@ -251,23 +251,23 @@ export function Landing({ lang }: { lang: Locale }) {
             ["🧠", t("Мемори", "Мемори"), "/games/memory"], ["⚡", t("Быстрый счёт", "Ылдам эсеп"), "/games/sprint"],
             ["🎈", t("Лови правильные", "Туурасын кар"), "/games/bubbles"], ["✏️", t("Обводилки", "Сызуучулар"), "/games/trace"],
           ].map(([icon, label, href], i) => (
-            <Link key={i} href={`/${lang}${href}`} className="flex items-center gap-4 rounded-3xl bg-[#191539] p-6 text-white transition hover:brightness-125">
-              <div className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-white/10 text-3xl">{icon}</div>
-              <div className="font-display text-lg font-bold">{label}</div>
+            <Link key={i} href={`/${lang}${href}`} className="flex items-center gap-3 rounded-3xl bg-[#191539] p-5 text-white transition hover:brightness-125 sm:gap-4 sm:p-6">
+              <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-white/10 text-2xl sm:h-14 sm:w-14 sm:text-3xl">{icon}</div>
+              <div className="min-w-0 font-display text-base font-bold leading-tight sm:text-lg">{label}</div>
             </Link>
           ))}
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Link href={`/${lang}/tests`} className="flex items-center gap-5 rounded-3xl bg-white p-8 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1">
-            <div className="text-5xl">📝</div>
-            <div>
+            <div className="flex-none text-5xl">📝</div>
+            <div className="min-w-0">
               <div className="mb-1.5 font-display text-xl font-bold">{t("Тесты-тренажёры", "Тест-тренажёрлор")}</div>
               <div className="text-[#5c5880]">{t("Закрепляют пройденное и показывают прогресс по теме.", "Өтүлгөндү бекемдеп, тема боюнча прогрессти көрсөтөт.")}</div>
             </div>
           </Link>
           <div className="flex items-center gap-5 rounded-3xl bg-[#e6c079] p-8">
-            <div className="text-5xl">🎒</div>
-            <div className="flex-1">
+            <div className="flex-none text-5xl">🎒</div>
+            <div className="min-w-0 flex-1">
               <div className="mb-1.5 font-display text-xl font-bold">{t("Тест готовности к школе", "Мектепке даярдык тести")}</div>
               <div className="text-[#3d3420]">{t("Узнайте за 15 минут, что ребёнок уже умеет.", "15 мүнөттө бала эмнени билерин билиңиз.")}</div>
             </div>
