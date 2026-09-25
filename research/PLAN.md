@@ -65,6 +65,12 @@ Console — не на общих соображениях. Цифры в раз�
    прежних 400 — лишние символы в секрете при вставке; вылечено чистой
    перекопией + `.trim()` в коде.)
 
+6. ✅ Оверлей-чекаут проверен вживую на bilimjol.com — открывается ($1.99,
+   email/страна, «Продолжить»). Причина прежнего «при нажатии ничего не
+   происходит» — CSP в `apps/web/next.config.ts` не пускал `cdn.paddle.com`
+   (script-src) и iframe `buy.paddle.com` (frame-src); добавлен
+   `https://*.paddle.com` в script-src/frame-src/connect-src.
+
 **Осталось (одна контрольная проверка владельца):**
 5. Реальная тестовая покупка месяца на bilimjol.com → приход `subscription.*`
    с нашим `userId` в `custom_data` → запись `Subscription` в БД →
