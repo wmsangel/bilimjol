@@ -71,10 +71,17 @@ Console — не на общих соображениях. Цифры в раз�
    (script-src) и iframe `buy.paddle.com` (frame-src); добавлен
    `https://*.paddle.com` в script-src/frame-src/connect-src.
 
-**Осталось (одна контрольная проверка владельца):**
-5. Реальная тестовая покупка месяца на bilimjol.com → приход `subscription.*`
-   с нашим `userId` в `custom_data` → запись `Subscription` в БД →
-   `entitlement` = premium в кабинете. После этого П1 = `[x]`.
+7. ✅ Реальная тестовая покупка проведена (2026-09-25): чекаут завершился,
+   Paddle прислал чек (Bilimjol Premium, 1,99 $/мес, Visa ••7581, продление
+   25.10.2026). Оплата работает end-to-end.
+
+**Осталось (финальная проверка):**
+5. Подтвердить, что вебхук привязал `userId` и `entitlement` = premium в
+   кабинете (перезагрузить /subscribe под тем же аккаунтом → «Премиум активен»).
+   После этого П1 = `[x]`.
+6. *(косметика)* В письме/выписке продавец = «Foldout / PADDLE.NET* OCRSNIP»
+   (аккаунт Paddle общий с foldout/ocrsnip). Проверить в настройках Paddle
+   Business/Brand, можно ли показывать «Bilimjol». Не блокер.
 
 ---
 
