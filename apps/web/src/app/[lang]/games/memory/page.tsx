@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { MemoryGame } from "@/components/MemoryGame";
+import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
 
 export async function generateMetadata({
@@ -49,7 +50,14 @@ export default async function MemoryPage({
             🧠 {dict.games.memory.title}
           </h1>
         </div>
-        <MemoryGame labels={dict.games.memory} homeHref={`/${lang}/games`} />
+        <PremiumGate
+          locale={lang}
+          subscribeHref={`/${lang}/subscribe`}
+          gameTitle={dict.games.memory.title}
+          source="game_memory"
+        >
+          <MemoryGame labels={dict.games.memory} homeHref={`/${lang}/games`} />
+        </PremiumGate>
       </main>
     </div>
   );

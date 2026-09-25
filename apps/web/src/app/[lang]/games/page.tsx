@@ -40,12 +40,14 @@ export default async function GamesPage({
       icon: "🧠",
       title: dict.games.memory.title,
       description: dict.games.memory.description,
+      premium: true,
     },
     {
       href: `/${lang}/games/build`,
       icon: "🧮",
       title: dict.games.build.title,
       description: dict.games.build.description,
+      premium: true,
     },
     {
       href: `/${lang}/games/sprint`,
@@ -58,6 +60,7 @@ export default async function GamesPage({
       icon: "🎈",
       title: dict.games.bubbles.title,
       description: dict.games.bubbles.description,
+      premium: true,
     },
     {
       href: `/${lang}/games/trace`,
@@ -68,8 +71,10 @@ export default async function GamesPage({
   ];
 
   // Игра дня — детерминированно по дню (страница ревалидируется раз в сутки).
+  // Только из бесплатных игр: приглашать в «игру дня» и упираться в пейвол — плохо.
   const dayIndex = Math.floor(Date.now() / 86_400_000);
-  const featured = games[dayIndex % games.length];
+  const freeGames = games.filter((g) => !g.premium);
+  const featured = freeGames[dayIndex % freeGames.length];
   const rest = games.filter((g) => g.href !== featured.href);
 
   const featuredLabel = lang === "ky" ? "Күндүн оюну" : "Игра дня";
@@ -130,6 +135,11 @@ export default async function GamesPage({
               <div className="min-w-0">
                 <h2 className="font-display text-lg font-bold sm:text-xl">
                   {g.title}
+                  {g.premium && (
+                    <span className="ml-2 inline-block rounded-full bg-[#fbf3e3] px-2 py-0.5 align-middle text-[11px] font-extrabold text-[#7a5a1e]">
+                      ⭐ Премиум
+                    </span>
+                  )}
                 </h2>
                 <p className="mt-1 text-sm leading-snug text-[#5c5880] sm:text-[15px]">
                   {g.description}

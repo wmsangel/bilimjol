@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { BubbleGame } from "@/components/BubbleGame";
+import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
 
 export async function generateMetadata({
@@ -49,7 +50,14 @@ export default async function BubblesPage({
             🎈 {dict.games.bubbles.title}
           </h1>
         </div>
-        <BubbleGame labels={dict.games.bubbles} homeHref={`/${lang}/games`} />
+        <PremiumGate
+          locale={lang}
+          subscribeHref={`/${lang}/subscribe`}
+          gameTitle={dict.games.bubbles.title}
+          source="game_bubbles"
+        >
+          <BubbleGame labels={dict.games.bubbles} homeHref={`/${lang}/games`} />
+        </PremiumGate>
       </main>
     </div>
   );

@@ -16,6 +16,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 import { pluralRu } from "@/lib/plural";
 import { buildCharacter } from "@/lib/characterArt";
+import { ClassGames } from "@/components/ClassGames";
 import { groupForGrade, GRADE_ACCENT, GRADE_MASCOT } from "@/lib/classContent";
 import { getDictionary } from "../../dictionaries";
 
@@ -262,6 +263,9 @@ export default async function ClassPage({
           </div>
         </div>
       </section>
+
+      {/* GAMES for this class */}
+      <ClassGames grade={g} lang={lang as "ru" | "ky"} />
 
       {/* HOW (dark) */}
       <section className="px-5 pb-24 sm:px-16">
