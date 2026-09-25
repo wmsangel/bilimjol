@@ -24,6 +24,8 @@ async function bootstrap() {
     // trustProxy — за прокси Railway читаем реальный IP из X-Forwarded-For
     // (нужно для корректного rate-limiting по клиенту, а не по одному IP прокси).
     new FastifyAdapter({ trustProxy: true }),
+    // rawBody — нужен для проверки подписи вебхука Paddle (HMAC по сырому телу).
+    { rawBody: true },
   );
 
   app.enableCors({ origin: corsOrigins(), credentials: false });

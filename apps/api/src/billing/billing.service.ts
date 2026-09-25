@@ -70,4 +70,49 @@ export class BillingService {
     // Ожидание оплаты у провайдера.
     return { premium: false, until: null, redirectUrl: result.redirectUrl ?? null };
   }
+
+  /**
+   * Обработка события вебхука Paddle. Нас интересуют subscription.* — по ним
+   * ведём строку Subscription (provider="paddle"), из которой считается премиум.
+   * Пользователь ищется по custom_data.userId, переданному при чекауте.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async handlePaddleEvent(event: any): Promise<void> {
+    const type: string = event?.event_type ?? "";
+    if (!type.startsWith("subscription.")) return;
+
+    const data = event.data ?? {};
+    const userId: string | undefined = data.custom_data?.userId;
+    const externalId: string | undefined = data.id;
+    if (!userId || !externalId) return;
+
+    const status: string = data.status ?? "";
+    const active = status === "active" || status === "trialing";
+    const endsAt: string | undefined =
+      data.current_billing_period?.ends_at ?? data.next_billed_at ?? undefined;
+    const currentPeriodEnd = endsAt
+      ? new Date(endsAt)
+      : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+    const item = Array.isArray(data.items) ? data.items[0] : undefined;
+    const plan: string =
+      item?.price?.custom_data?.plan ??
+      (item?.price?.billing_cycle?.interval === "year" ? "annual" : "monthly");
+
+    const existing = await this.prisma.subscription.findFirst({
+      where: { provider: "paddle", externalId },
+    });
+    const values = {
+      status: active ? "active" : "canceled",
+      currentPeriodEnd,
+      plan,
+    };
+    if (existing) {
+      await this.prisma.subscription.update({ where: { id: existing.id }, data: values });
+    } else {
+      await this.prisma.subscription.create({
+        data: { userId, provider: "paddle", externalId, ...values },
+      });
+    }
+  }
 }
