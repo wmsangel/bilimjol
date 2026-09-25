@@ -35,6 +35,10 @@ import { gradeBadge } from "@/lib/classContent";
 const ADMIN_TG =
   process.env.NEXT_PUBLIC_ADMIN_TELEGRAM ?? "https://t.me/izagorodnyi";
 
+// Email для сообщений об ошибке в задании.
+const CONTACT_EMAIL =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "wmsangel@gmail.com";
+
 // Вариант ответа «как картинка» — эмодзи/символы без букв (показываем крупно).
 function isImageLike(s: string): boolean {
   const t = s.trim();
@@ -1159,17 +1163,44 @@ export function TaskPlayer({
                     )}
                   </div>
 
-                  {/* Разбор */}
+                  {/* Разбор — помощь разобраться (с озвучкой) */}
                   {answered && (
                     <div
                       className={
-                        "mt-6 rounded-2xl p-4 text-sm font-semibold " +
-                        (status === "correct"
-                          ? "bg-[#ecfdf5] text-[#065f46]"
-                          : "bg-[#fef3e2] text-[#92400e]")
+                        "mt-6 rounded-2xl p-4 " +
+                        (status === "correct" ? "bg-[#ecfdf5]" : "bg-[#fef3e2]")
                       }
                     >
-                      {task.explanation[locale]}
+                      <div className="mb-1.5 flex items-center justify-between gap-2">
+                        <span
+                          className={
+                            "text-sm font-extrabold " +
+                            (status === "correct" ? "text-[#065f46]" : "text-[#92400e]")
+                          }
+                        >
+                          {status === "correct"
+                            ? "💡 " + (locale === "ky" ? "Мына эмне үчүн" : "Почему так")
+                            : "💡 " + (locale === "ky" ? "Кел, чечмелейли" : "Давай разберёмся")}
+                        </span>
+                        {speechSupported() && (
+                          <button
+                            type="button"
+                            onClick={() => speak(task.explanation[locale], locale)}
+                            aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
+                            className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-white/70 text-sm transition active:scale-95"
+                          >
+                            🔊
+                          </button>
+                        )}
+                      </div>
+                      <p
+                        className={
+                          "text-sm font-semibold " +
+                          (status === "correct" ? "text-[#065f46]" : "text-[#92400e]")
+                        }
+                      >
+                        {task.explanation[locale]}
+                      </p>
                     </div>
                   )}
 
@@ -1184,6 +1215,20 @@ export function TaskPlayer({
                         {labels.next} →
                       </button>
                     )}
+                  </div>
+
+                  {/* Сообщить об ошибке в задании */}
+                  <div className="mt-4 text-center">
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+                        `Bilimjol — замечание к заданию ${task.id}`,
+                      )}&body=${encodeURIComponent(
+                        `Задание: ${task.prompt[locale]}\nID: ${task.id}\n\nЧто не так / правильный ответ:`,
+                      )}`}
+                      className="text-xs font-semibold text-[#8f8aa8] transition hover:text-[#6d5cf7]"
+                    >
+                      🚩 {locale === "ky" ? "Ката таптыңызбы? Билдириңиз" : "Нашли ошибку? Сообщите"}
+                    </a>
                   </div>
                 </div>
               </div>
