@@ -26,19 +26,11 @@ export class PaddleWebhookController {
     @Req() req: RawBodyRequest<IncomingMessage>,
     @Headers("paddle-signature") signature: string,
   ) {
+    // .trim() — защита от случайных пробелов/переносов при вставке секрета в env.
     const secret = process.env.PADDLE_WEBHOOK_SECRET?.trim();
     const raw = req.rawBody?.toString("utf8") ?? "";
     if (!secret || !verifySignature(signature, raw, secret)) {
-      // Временная диагностика go-live (без утечки секрета): длина сырого тела,
-      // выставлен ли секрет, пришёл ли заголовок подписи. Убрать после 200.
-      throw new BadRequestException({
-        message: "bad signature",
-        _debug: {
-          rawLen: raw.length,
-          secretSet: !!secret,
-          sigHeader: !!signature,
-        },
-      });
+      throw new BadRequestException("bad signature");
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let event: any;
