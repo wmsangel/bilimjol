@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { Locale } from "@izn-study/shared";
 import { loadProgress } from "@/lib/progress";
 import { loadHelperId, removeHelperId } from "@/lib/prefs";
+import { getEntitlement, isLoggedIn } from "@/lib/api";
 import {
   WARDROBE,
   SETS,
@@ -27,6 +28,7 @@ export function Wardrobe({
   const [charId, setCharId] = useState("fox");
   const [outfit, setOutfit] = useState<Outfit>({});
   const [stars, setStars] = useState(0);
+  const [premium, setPremium] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -35,10 +37,19 @@ export function Wardrobe({
     const progress = loadProgress();
     setStars(Object.values(progress).filter((r) => r.correct).length);
     setLoaded(true);
+    // Премиум открывает весь гардероб сразу (бесплатным — за звёзды).
+    if (isLoggedIn()) {
+      getEntitlement()
+        .then((e) => setPremium(e.premium))
+        .catch(() => {});
+    }
   }, []);
 
+  // Вещь заблокирована, только если НЕ премиум и звёзд не хватает.
+  const isLocked = (unlockAt: number) => !premium && stars < unlockAt;
+
   function toggle(item: WardrobeItem) {
-    if (stars < item.unlockAt) return;
+    if (isLocked(item.unlockAt)) return;
     setOutfit((prev) => {
       const next: Outfit = { ...prev };
       if (next[item.slot] === item.id) delete next[item.slot];
@@ -104,7 +115,7 @@ export function Wardrobe({
           </h3>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {SETS.map((set) => {
-              const locked = stars < set.unlockAt;
+              const locked = isLocked(set.unlockAt);
               const active = set.items.every(
                 (id) => outfit[slotOf(id) as Slot] === id,
               );
@@ -174,7 +185,7 @@ export function Wardrobe({
             </h3>
             <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                 {items.map((it) => {
-                  const locked = stars < it.unlockAt;
+                  const locked = isLocked(it.unlockAt);
                   const equipped = outfit[it.slot] === it.id;
                   return (
                     <button
@@ -219,10 +230,15 @@ export function Wardrobe({
             </div>
         ))}
         <p className="text-sm text-[#5c5880]">
-          {t(
-            "Решай задания и получай звёзды — за них открываются новые вещи.",
-            "Тапшырмаларды чечип, жылдыз жыйна — алар үчүн жаңы буюмдар ачылат.",
-          )}
+          {premium
+            ? t(
+                "⭐ Премиум открыл весь гардероб — наряжай героя как хочешь!",
+                "⭐ Премиум бүт гардеробду ачты — каарманды каалагандай кийиндир!",
+              )
+            : t(
+                "Решай задания и получай звёзды — за них открываются новые вещи.",
+                "Тапшырмаларды чечип, жылдыз жыйна — алар үчүн жаңы буюмдар ачылат.",
+              )}
         </p>
       </div>
     </div>
