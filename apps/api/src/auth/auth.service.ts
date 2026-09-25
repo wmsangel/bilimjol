@@ -8,6 +8,7 @@ import * as bcrypt from "bcryptjs";
 import { createHash, randomBytes } from "node:crypto";
 import type { User } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
+import { MailService } from "../mail/mail.service";
 import type { LoginDto, RegisterDto } from "./dto";
 
 @Injectable()
@@ -15,6 +16,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
+    private readonly mail: MailService,
   ) {}
 
   private readonly accessSecret = process.env.JWT_ACCESS_SECRET ?? "dev-access";
@@ -67,6 +69,8 @@ export class AuthService {
         country: dto.country ?? null,
       },
     });
+    // Welcome-письмо — fire-and-forget, не блокируем регистрацию.
+    void this.mail.sendWelcome({ email: user.email, locale: user.locale });
     const tokens = await this.issueTokens(user.id, device);
     return { user: this.publicUser(user), ...tokens };
   }

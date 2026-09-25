@@ -4,6 +4,7 @@ import {
   Injectable,
 } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { MailService } from "../mail/mail.service";
 import { providers } from "./providers";
 
 const PLAN_DAYS: Record<string, number> = { monthly: 30 };
@@ -14,7 +15,10 @@ const DEV_CHECKOUT_ALLOWED = process.env.ALLOW_DEV_CHECKOUT === "1";
 
 @Injectable()
 export class BillingService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mail: MailService,
+  ) {}
 
   private activeSub(userId: string) {
     return this.prisma.subscription.findFirst({
@@ -113,6 +117,17 @@ export class BillingService {
       await this.prisma.subscription.create({
         data: { userId, provider: "paddle", externalId, ...values },
       });
+      // Первая активация подписки → письмо «премиум активирован» (fire-and-forget).
+      // Только для новой активной подписки, чтобы не слать при апдейтах/отмене.
+      if (active) {
+        const user = await this.prisma.user.findUnique({
+          where: { id: userId },
+          select: { email: true, locale: true },
+        });
+        if (user) {
+          void this.mail.sendPremiumActivated(user, currentPeriodEnd);
+        }
+      }
     }
   }
 }
