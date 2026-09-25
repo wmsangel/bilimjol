@@ -21,10 +21,26 @@ export interface SubscribeLabels {
   emailHint: string;
   activeTitle: string;
   activeUntil: string;
+  successTitle: string;
+  successText: string;
+  goPlay: string;
   note: string;
 }
 
 type Status = "loading" | "guest" | "available" | "active";
+
+// Праздничные частицы (позиция/скорость/задержка заданы статично, чтобы не
+// дёргать Math.random на каждый рендер и не расходиться SSR/CSR).
+const CONFETTI = [
+  { emoji: "🎉", left: "8%", dur: 2.6, delay: 0 },
+  { emoji: "⭐", left: "20%", dur: 3.1, delay: 0.4 },
+  { emoji: "✨", left: "33%", dur: 2.4, delay: 0.15 },
+  { emoji: "🎊", left: "46%", dur: 2.9, delay: 0.6 },
+  { emoji: "⭐", left: "58%", dur: 2.7, delay: 0.25 },
+  { emoji: "✨", left: "70%", dur: 3.2, delay: 0.5 },
+  { emoji: "🎉", left: "82%", dur: 2.5, delay: 0.1 },
+  { emoji: "🌟", left: "92%", dur: 3.0, delay: 0.35 },
+];
 
 // Делает слово «Telegram» в тексте note кликабельной ссылкой на чат админа.
 // Работает для обеих локалей — в ru/ky note есть литерал «Telegram».
@@ -60,6 +76,7 @@ export function SubscribePlans({
   labels,
   locale,
   loginHref,
+  playHref,
 }: {
   labels: SubscribeLabels;
   locale: string;
@@ -73,6 +90,9 @@ export function SubscribePlans({
   const [plan, setPlan] = useState<PlanKey>("monthly");
   const [paying, setPaying] = useState(false);
   const [checkoutFailed, setCheckoutFailed] = useState(false);
+  // Праздничный экран — только при активации ИМЕННО в этой сессии (после оплаты),
+  // а не при обычном заходе на страницу с уже активной подпиской.
+  const [celebrate, setCelebrate] = useState(false);
 
   const t = (ru: string, ky: string) => (locale === "ky" ? ky : ru);
   const selected = PADDLE_PLANS.find((p) => p.key === plan) ?? PADDLE_PLANS[0];
@@ -108,6 +128,12 @@ export function SubscribePlans({
         if (e.premium) {
           setUntil(e.until);
           setStatus("active");
+          setCelebrate(true);
+          pushEvent("subscribe_success", {
+            plan: selected.key,
+            price: selected.key === "annual" ? 15.99 : 1.99,
+            currency: "USD",
+          });
           return;
         }
       } catch {
@@ -225,7 +251,7 @@ export function SubscribePlans({
           </>
         )}
 
-        {status === "active" && (
+        {status === "active" && !celebrate && (
           <div className="rounded-2xl bg-[#e6c079] px-6 py-4 text-center font-bold text-[#191539]">
             ⭐ {labels.activeTitle}
             <div className="mt-0.5 text-sm font-semibold">
@@ -233,7 +259,50 @@ export function SubscribePlans({
             </div>
           </div>
         )}
+
+        {status === "active" && celebrate && (
+          <div className="animate-[pop_.45s_cubic-bezier(.2,.9,.3,1.4)] rounded-2xl bg-white/[.06] px-6 py-7 text-center ring-1 ring-[#e6c079]/40">
+            <div className="mx-auto mb-2 text-5xl">🎉</div>
+            <div className="text-xl font-extrabold text-[#e6c079]">
+              {labels.successTitle}
+            </div>
+            <p className="mt-1.5 text-sm text-[#d9d5f5]">{labels.successText}</p>
+            <div className="mt-1 text-xs font-semibold text-[#b9b3e6]">
+              {labels.activeUntil.replace("{date}", fmtDate(until, locale))}
+            </div>
+            <Link
+              href={playHref}
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-[#6d5cf7] px-6 py-3.5 text-base font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 active:scale-[.99]"
+            >
+              {labels.goPlay} →
+            </Link>
+          </div>
+        )}
       </div>
+
+      {/* Конфетти — только на праздничном экране после оплаты. */}
+      {status === "active" && celebrate && (
+        <>
+          <style>{`
+            @keyframes pop { 0%{transform:scale(.8);opacity:0} 100%{transform:scale(1);opacity:1} }
+            @keyframes conf { 0%{transform:translateY(-10px) rotate(0);opacity:1} 100%{transform:translateY(320px) rotate(340deg);opacity:0} }
+          `}</style>
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            {CONFETTI.map((c, i) => (
+              <span
+                key={i}
+                className="absolute top-0 text-lg"
+                style={{
+                  left: c.left,
+                  animation: `conf ${c.dur}s linear ${c.delay}s infinite`,
+                }}
+              >
+                {c.emoji}
+              </span>
+            ))}
+          </div>
+        </>
+      )}
 
       <p className="relative mt-5 text-center text-sm text-[#b9b3e6]">
         {noteWithTelegram(labels.note, ADMIN_TG)}
