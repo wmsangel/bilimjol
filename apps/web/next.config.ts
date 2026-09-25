@@ -31,6 +31,11 @@ const ANALYTICS_CONNECT = [
   "https://cloudflareinsights.com",
 ];
 
+// Paddle Billing (оплата): паддловский checkout.js грузится с cdn.paddle.com,
+// оверлей-чекаут открывается айфреймом с buy.paddle.com, конфиг тянется с
+// checkout-service.paddle.com. Wildcard *.paddle.com покрывает и sandbox.
+const PADDLE = "https://*.paddle.com";
+
 // Прагматичный CSP: скрипты допускают inline/eval (нужно GTM/аналитике),
 // но ИСТОЧНИКИ ограничены allowlist'ом; фрейминг запрещён (антикликджекинг).
 const csp = [
@@ -42,9 +47,9 @@ const csp = [
   "img-src 'self' data: https:",
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
-  `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${ANALYTICS_SCRIPT.join(" ")}`,
-  `connect-src 'self' ${API} ${ANALYTICS_CONNECT.join(" ")}`,
-  "frame-src https://www.googletagmanager.com https://td.doubleclick.net",
+  `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${ANALYTICS_SCRIPT.join(" ")} ${PADDLE}`,
+  `connect-src 'self' ${API} ${ANALYTICS_CONNECT.join(" ")} ${PADDLE}`,
+  `frame-src https://www.googletagmanager.com https://td.doubleclick.net ${PADDLE}`,
   "worker-src 'self' blob:",
 ].join("; ");
 
