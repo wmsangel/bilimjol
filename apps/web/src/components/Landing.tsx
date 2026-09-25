@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import { JsonLd } from "@/components/JsonLd";
+import { LandingHeaderCta } from "./LandingHeaderCta";
 import { faqJsonLd } from "@/lib/seo";
 import { buildCharacter } from "@/lib/characterArt";
 
@@ -111,9 +112,11 @@ export function Landing({ lang }: { lang: Locale }) {
             <Link href="/ru" className={"rounded-full px-3 py-1.5 " + (lang !== "ky" ? "bg-white text-[#191539]" : "text-[#d9d5f5]")}>RU</Link>
             <Link href="/ky" className={"rounded-full px-3 py-1.5 " + (lang === "ky" ? "bg-white text-[#191539]" : "text-[#d9d5f5]")}>KY</Link>
           </div>
-          <Link href={playHref} className="hidden rounded-full bg-[#6d5cf7] px-5 py-3 text-[15px] font-extrabold text-white transition hover:shadow-[0_0_0_3px_#e6c079] sm:inline-block">
-            {t("Начать бесплатно", "Акысыз баштоо")}
-          </Link>
+          <LandingHeaderCta
+            lang={lang}
+            startLabel={t("Начать бесплатно", "Акысыз баштоо")}
+            cabinetLabel={t("Кабинет", "Кабинет")}
+          />
         </div>
       </header>
 

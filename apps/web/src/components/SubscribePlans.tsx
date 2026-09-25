@@ -102,7 +102,7 @@ export function SubscribePlans({
     pushEvent("subscribe_click", {
       grade: loadLastGrade(),
       plan: selected.key,
-      price: selected.key === "annual" ? 19.99 : 2.49,
+      price: selected.key === "annual" ? 15.99 : 1.99,
       currency: "USD",
       source: "subscribe_page",
     });

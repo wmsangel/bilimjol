@@ -20,14 +20,14 @@ export const PADDLE_PLANS: {
     key: "monthly",
     priceId:
       process.env.NEXT_PUBLIC_PADDLE_PRICE_MONTHLY ?? "pri_01m3bx11sxnp35sth25ptm90ds",
-    price: "$2.49",
+    price: "$1.99",
     per: { ru: "мес", ky: "ай" },
   },
   {
     key: "annual",
     priceId:
       process.env.NEXT_PUBLIC_PADDLE_PRICE_ANNUAL ?? "pri_01m3bx124svzmzasfd2mct47h0",
-    price: "$19.99",
+    price: "$15.99",
     per: { ru: "год", ky: "жыл" },
     save: "−33%",
   },
