@@ -13,6 +13,14 @@ export type Grade = number;
 /** Строка, переведённая на все поддерживаемые языки. */
 export type LocalizedText = Record<Locale, string>;
 
+// Мини-урок «разобраться в теме»: что это, как думать, короткий пример.
+// Показывается ребёнку (особенно после ошибки), можно озвучить.
+export interface TopicExplainer {
+  what: LocalizedText; // что это за тема — одним понятным предложением
+  how: LocalizedText; // как думать / правило
+  example: LocalizedText; // короткий конкретный пример
+}
+
 interface TaskBase {
   id: string;
   subject: Subject;

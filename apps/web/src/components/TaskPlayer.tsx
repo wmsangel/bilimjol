@@ -7,6 +7,7 @@ import {
   getHelper,
   getProgramTopics,
   getTopics,
+  getTopicExplainer,
   GRADES,
   helpers,
   subjectLabels,
@@ -220,6 +221,7 @@ export function TaskPlayer({
     if (isLoggedIn() && childId) syncChild(childId).catch(() => undefined);
   }, [finished]);
   const [reward, setReward] = useState<WardrobeItem | null>(null);
+  const [showExplainer, setShowExplainer] = useState(false);
 
   const [selected, setSelected] = useState<number | null>(null);
   const [multiSelected, setMultiSelected] = useState<number[]>([]);
@@ -284,6 +286,7 @@ export function TaskPlayer({
   useEffect(() => {
     if (!task) return;
     setStatus("answering");
+    setShowExplainer(false);
     setSelected(null);
     setMultiSelected([]);
     setNumberValue("");
@@ -619,6 +622,7 @@ export function TaskPlayer({
     mascotMessage ??
     (locale === "ky" ? "Кана, ойлонуп көрөлү 🤔" : "Давай подумаем вместе 🤔");
   const gradient = helperGradient[helper.color] ?? "from-[#8577ff] to-[#6d5cf7]";
+  const topicExplainer = topicId ? getTopicExplainer(topicId) : undefined;
 
   return (
     <div className="mx-auto w-full max-w-[1480px]">
@@ -1203,6 +1207,61 @@ export function TaskPlayer({
                       </p>
                     </div>
                   )}
+
+                  {/* Разобраться в теме — короткий мини-урок (что · как · пример) */}
+                  {answered &&
+                    topicExplainer &&
+                    (showExplainer ? (
+                      <div className="mt-4 rounded-2xl bg-[#f7f5ff] p-4">
+                        <div className="mb-2 flex items-center justify-between gap-2">
+                          <span className="font-display text-[15px] font-bold text-[#191539]">
+                            📖 {locale === "ky" ? "Тема боюнча" : "Разбор темы"}
+                          </span>
+                          {speechSupported() && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                speak(
+                                  [
+                                    topicExplainer.what[locale],
+                                    topicExplainer.how[locale],
+                                    topicExplainer.example[locale],
+                                  ].join(". "),
+                                  locale,
+                                )
+                              }
+                              aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
+                              className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-white text-sm transition active:scale-95"
+                            >
+                              🔊
+                            </button>
+                          )}
+                        </div>
+                        <div className="space-y-2 text-sm leading-snug text-[#2d2950]">
+                          <p>{topicExplainer.what[locale]}</p>
+                          <p>
+                            <b className="text-[#6d5cf7]">
+                              {locale === "ky" ? "Кантип: " : "Как думать: "}
+                            </b>
+                            {topicExplainer.how[locale]}
+                          </p>
+                          <p>
+                            <b className="text-[#6d5cf7]">
+                              {locale === "ky" ? "Мисал: " : "Пример: "}
+                            </b>
+                            {topicExplainer.example[locale]}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setShowExplainer(true)}
+                        className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#e6e1ff] bg-white py-3 text-[15px] font-extrabold text-[#6d5cf7] transition hover:bg-[#f7f5ff]"
+                      >
+                        📖 {locale === "ky" ? "Теманы түшүнүү" : "Разобраться в теме"}
+                      </button>
+                    ))}
 
                   {/* Кнопка действия */}
                   <div className="mt-7">
