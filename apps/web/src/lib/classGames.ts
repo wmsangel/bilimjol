@@ -4,7 +4,13 @@
 //   бесплатные: Обводилки (trace), Быстрый счёт (sprint);
 //   премиум:    Мемори (memory), Лови правильные (bubbles), Собери пример (build).
 
-export type GameId = "memory" | "sprint" | "bubbles" | "trace" | "build";
+export type GameId =
+  | "memory"
+  | "sprint"
+  | "bubbles"
+  | "trace"
+  | "build"
+  | "pattern";
 
 export interface GameMeta {
   id: GameId;
@@ -27,6 +33,13 @@ export const GAME_META: Record<GameId, GameMeta> = {
     slug: "/games/sprint",
     icon: "⚡",
     title: { ru: "Быстрый счёт", ky: "Ылдам эсеп" },
+    premium: false,
+  },
+  pattern: {
+    id: "pattern",
+    slug: "/games/pattern",
+    icon: "🔁",
+    title: { ru: "Продолжи ряд", ky: "Катарды улант" },
     premium: false,
   },
   memory: {
