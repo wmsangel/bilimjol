@@ -29,6 +29,7 @@ import { pushEvent, currencyIso } from "@/lib/gtm";
 import { countryForLocale, priceForCountry } from "@/lib/pricing";
 import { speak, speechSupported, stopSpeaking } from "@/lib/speech";
 import { helperGradient } from "@/lib/helperTheme";
+import { gradeBadge } from "@/lib/classContent";
 
 // Контакт администратора (пока оплата картой не подключена). Переопределяется env.
 const ADMIN_TG =
@@ -523,7 +524,18 @@ export function TaskPlayer({
               onClick={() => chooseGrade(g)}
               className="flex flex-col items-center gap-2 rounded-3xl bg-white p-5 shadow-[0_8px_24px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
             >
-              <span className="text-4xl">{g === 0 ? "🎒" : "🏫"}</span>
+              {g === 0 ? (
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#e6e1ff] text-4xl">
+                  🎒
+                </span>
+              ) : (
+                <span
+                  className="flex h-16 w-16 items-center justify-center rounded-full font-display text-2xl font-bold"
+                  style={{ background: gradeBadge(g).bg, color: gradeBadge(g).fg }}
+                >
+                  {g}
+                </span>
+              )}
               <span className="font-display font-bold">
                 {gradeLabels[String(g)] ?? String(g)}
               </span>

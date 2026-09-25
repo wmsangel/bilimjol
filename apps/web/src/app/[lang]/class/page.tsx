@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { localizedAlternates } from "@/lib/seo";
 import { pluralRu } from "@/lib/plural";
+import { gradeBadge } from "@/lib/classContent";
 import { getDictionary } from "../dictionaries";
 
 export async function generateMetadata({
@@ -63,9 +64,18 @@ export default async function ClassIndexPage({
                 href={`/${lang}/class/${g}`}
                 className="flex items-center gap-4 rounded-3xl border border-black/[.06] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
-                <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-[#efecff] text-2xl">
-                  {g === 0 ? "🎒" : g}
-                </span>
+                {g === 0 ? (
+                  <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-[#e6e1ff] text-2xl">
+                    🎒
+                  </span>
+                ) : (
+                  <span
+                    className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl font-display text-2xl font-bold"
+                    style={{ background: gradeBadge(g).bg, color: gradeBadge(g).fg }}
+                  >
+                    {g}
+                  </span>
+                )}
                 <span className="min-w-0">
                   <span className="block font-display text-lg font-bold">
                     {name}

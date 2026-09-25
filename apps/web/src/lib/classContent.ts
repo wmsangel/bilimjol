@@ -186,6 +186,14 @@ export function groupForGrade(grade: Grade): GroupContent {
 }
 
 // Цвет блоба (акцент) для тёмного hero по классу.
+// Бейдж класса: цифра в цветном круге с градацией по ступеням. Тёмный текст на
+// светлом фоне — контраст ≥4.5:1. Класс 0 («Подготовка») рисуется рюкзаком.
+export function gradeBadge(grade: number): { bg: string; fg: string } {
+  if (grade <= 4) return { bg: "#dcfce7", fg: "#15803d" }; // начальная — зелёная
+  if (grade <= 9) return { bg: "#e6e1ff", fg: "#4b3cc9" }; // средняя — фиолетовая
+  return { bg: "#fbf3e3", fg: "#7a5a1e" }; // старшая — золотая
+}
+
 export const GRADE_ACCENT = [
   "#e6a64f", "#6d5cf7", "#6d5cf7", "#7b6cf8", "#8a7cff", "#4f8df7",
   "#4f8df7", "#3fa7c9", "#3fa7c9", "#3fa7c9", "#9a6cf7", "#9a6cf7",
