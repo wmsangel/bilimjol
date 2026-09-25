@@ -319,17 +319,13 @@ export function Cabinet({
           </div>
         </div>
 
-        {/* Мелочи: сменить героя / отчёт */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-semibold text-[#5c5880]">
-          <button onClick={changeHelper} className="hover:text-[#6d5cf7]">{labels.changeHelper}</button>
-          <span className="text-[#d9d5f5]">·</span>
-          <Link href={parentHref} className="hover:text-[#6d5cf7]">📊 {accountLabels.parentReport}</Link>
+        {/* Мелочи: статус премиума + сменить героя / отчёт — друг под другом */}
+        <div className="flex flex-col items-center gap-2.5 text-sm font-semibold text-[#5c5880]">
           {email && premiumUntil && (
-            <>
-              <span className="text-[#d9d5f5]">·</span>
-              <span className="rounded-full bg-[#fbf3e3] px-3 py-1 text-xs font-bold text-[#7a5a1e]">⭐ {labels.premiumActive} {fmtDate(premiumUntil)}</span>
-            </>
+            <span className="rounded-full bg-[#fbf3e3] px-3 py-1 text-xs font-bold text-[#7a5a1e]">⭐ {labels.premiumActive} {fmtDate(premiumUntil)}</span>
           )}
+          <button onClick={changeHelper} className="hover:text-[#6d5cf7]">{labels.changeHelper}</button>
+          <Link href={parentHref} className="hover:text-[#6d5cf7]">📊 {accountLabels.parentReport}</Link>
         </div>
       </div>
 
