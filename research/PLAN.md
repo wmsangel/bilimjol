@@ -53,15 +53,18 @@ Console — не на общих соображениях. Цифры в раз�
   отмены — в Terms и Privacy.
 
 **Что осталось (только владелец, вне кода):**
-1. Добавить `bilimjol.com` в approved domains в кабинете Paddle (до апрува
-   overlay-чекаут на боевом домене не откроется — работает фолбэк «напишите
-   админу», продукт при этом не сломан).
-2. Прописать env на API: `PADDLE_API_KEY`, `PADDLE_WEBHOOK_SECRET`,
-   `PADDLE_ENV=production`.
-3. Зарегистрировать вебхук `https://<api-host>/billing/webhook/paddle` на
-   события `subscription.*`, секрет положить в `PADDLE_WEBHOOK_SECRET`.
-4. После апрува — проверить реальную покупку (месяц) → приход вебхука →
-   `entitlement` = premium.
+1. ✅ `bilimjol.com` одобрен в Paddle (approved domains, 2026-09-25) —
+   overlay-чекаут теперь открывается на боевом домене.
+2. В Paddle → **Developer Tools → Notifications** создать destination:
+   URL `https://<api-host>/billing/webhook/paddle`, подписать на события
+   `subscription.created/updated/canceled` (+ `activated/past_due` по вкусу).
+3. Скопировать **секрет** этого destination (строка вида `pdl_ntfset_…`) и
+   положить в env API как `PADDLE_WEBHOOK_SECRET`. **Это единственная env,
+   которую читает сервер.** Client token и priceId уже вшиты live в код
+   (`apps/web/src/lib/paddle.ts`) — их можно не задавать; при желании
+   переопределяются публичными `NEXT_PUBLIC_PADDLE_*`.
+4. Проверить реальную покупку (месяц) → приход вебхука → `entitlement` =
+   premium.
 
 **Гейт.** Пункты 1–4 — вне репозитория; отметить `[x]`, когда покупка проходит
 на боевом домене без фолбэка.
