@@ -49,7 +49,10 @@ export function Wardrobe({
   const isLocked = (unlockAt: number) => !premium && stars < unlockAt;
 
   function toggle(item: WardrobeItem) {
-    if (isLocked(item.unlockAt)) return;
+    const equipped = outfit[item.slot] === item.id;
+    // Надетую вещь можно снять всегда; надеть заблокированную — нельзя.
+    // (Важно после истечения премиума: вещь снова заперта, но снять её можно.)
+    if (!equipped && isLocked(item.unlockAt)) return;
     setOutfit((prev) => {
       const next: Outfit = { ...prev };
       if (next[item.slot] === item.id) delete next[item.slot];
