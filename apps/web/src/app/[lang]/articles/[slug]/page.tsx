@@ -41,7 +41,11 @@ export default async function ArticlePage({
   const article = getArticle(slug);
   if (!article) notFound();
   const dict = await getDictionary(lang);
-  const related = articles.filter((a) => a.slug !== slug).slice(0, 3);
+  // Ring: each article links to the next 3, so every article gets inbound links.
+  const idx = articles.findIndex((a) => a.slug === slug);
+  const related = [1, 2, 3]
+    .map((k) => articles[(idx + k) % articles.length])
+    .filter((a) => a.slug !== slug);
   const url = `${SITE}/${lang}/articles/${slug}`;
 
   const jsonLd = {
