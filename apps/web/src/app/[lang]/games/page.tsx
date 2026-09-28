@@ -98,6 +98,12 @@ export default async function GamesPage({
       title: dict.games.compare.title,
       description: dict.games.compare.description,
     },
+    {
+      href: `/${lang}/games/shadow`,
+      icon: "🌑",
+      title: dict.games.shadow.title,
+      description: dict.games.shadow.description,
+    },
   ];
 
   // Игра дня — детерминированно по дню (страница ревалидируется раз в сутки).
