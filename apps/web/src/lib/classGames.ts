@@ -52,21 +52,21 @@ export const GAME_META: Record<GameId, GameMeta> = {
     slug: "/games/word",
     icon: "🔤",
     title: { ru: "Собери слово", ky: "Сөз түз" },
-    premium: false,
+    premium: true,
   },
   groups: {
     id: "groups",
     slug: "/games/groups",
     icon: "🧺",
     title: { ru: "Разложи по группам", ky: "Топторго бөл" },
-    premium: false,
+    premium: true,
   },
   clock: {
     id: "clock",
     slug: "/games/clock",
     icon: "🕐",
     title: { ru: "Который час", ky: "Саат канча" },
-    premium: false,
+    premium: true,
   },
   compare: {
     id: "compare",
@@ -116,7 +116,13 @@ export function isPremiumGame(id: string): boolean {
 
 /** Две игры класса: [бесплатная, премиум] — подобраны по возрасту. */
 export function gamesForGrade(grade: number): [GameMeta, GameMeta] {
-  if (grade <= 1) return [GAME_META.trace, GAME_META.memory];
-  if (grade <= 4) return [GAME_META.sprint, GAME_META.bubbles];
-  return [GAME_META.sprint, GAME_META.build];
+  const G = GAME_META;
+  if (grade <= 0) return [G.shadow, G.groups];
+  if (grade === 1) return [G.trace, G.word];
+  if (grade === 2) return [G.sprint, G.clock];
+  if (grade === 3) return [G.compare, G.build];
+  if (grade === 4) return [G.sprint, G.memory];
+  if (grade <= 6) return [G.pattern, G.bubbles];
+  if (grade <= 9) return [G.sprint, G.build];
+  return [G.pattern, G.memory]; // 10-11
 }

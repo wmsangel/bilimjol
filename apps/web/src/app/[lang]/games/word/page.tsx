@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { WordGame } from "@/components/WordGame";
+import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
 
 export async function generateMetadata({
@@ -54,11 +55,18 @@ export default async function WordPage({
             🔤 {dict.games.word.title}
           </h1>
         </div>
-        <WordGame
-          labels={dict.games.word}
+        <PremiumGate
           locale={lang}
-          homeHref={`/${lang}/games`}
-        />
+          subscribeHref={`/${lang}/subscribe`}
+          gameTitle={dict.games.word.title}
+          source="game_word"
+        >
+          <WordGame
+            labels={dict.games.word}
+            locale={lang}
+            homeHref={`/${lang}/games`}
+          />
+        </PremiumGate>
       </main>
     </div>
   );

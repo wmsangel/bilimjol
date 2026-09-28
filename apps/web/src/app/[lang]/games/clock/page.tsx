@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { ClockGame } from "@/components/ClockGame";
+import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
 
 export async function generateMetadata({
@@ -54,7 +55,14 @@ export default async function ClockPage({
             🕐 {dict.games.clock.title}
           </h1>
         </div>
-        <ClockGame labels={dict.games.clock} homeHref={`/${lang}/games`} />
+        <PremiumGate
+          locale={lang}
+          subscribeHref={`/${lang}/subscribe`}
+          gameTitle={dict.games.clock.title}
+          source="game_clock"
+        >
+          <ClockGame labels={dict.games.clock} homeHref={`/${lang}/games`} />
+        </PremiumGate>
       </main>
     </div>
   );

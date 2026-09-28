@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { GroupGame } from "@/components/GroupGame";
+import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
 
 export async function generateMetadata({
@@ -54,11 +55,18 @@ export default async function GroupsPage({
             🧺 {dict.games.groups.title}
           </h1>
         </div>
-        <GroupGame
-          labels={dict.games.groups}
+        <PremiumGate
           locale={lang}
-          homeHref={`/${lang}/games`}
-        />
+          subscribeHref={`/${lang}/subscribe`}
+          gameTitle={dict.games.groups.title}
+          source="game_groups"
+        >
+          <GroupGame
+            labels={dict.games.groups}
+            locale={lang}
+            homeHref={`/${lang}/games`}
+          />
+        </PremiumGate>
       </main>
     </div>
   );

@@ -79,18 +79,21 @@ export default async function GamesPage({
       icon: "🔤",
       title: dict.games.word.title,
       description: dict.games.word.description,
+      premium: true,
     },
     {
       href: `/${lang}/games/groups`,
       icon: "🧺",
       title: dict.games.groups.title,
       description: dict.games.groups.description,
+      premium: true,
     },
     {
       href: `/${lang}/games/clock`,
       icon: "🕐",
       title: dict.games.clock.title,
       description: dict.games.clock.description,
+      premium: true,
     },
     {
       href: `/${lang}/games/compare`,
