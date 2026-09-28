@@ -13,7 +13,8 @@ export type GameId =
   | "pattern"
   | "word"
   | "groups"
-  | "clock";
+  | "clock"
+  | "compare";
 
 export interface GameMeta {
   id: GameId;
@@ -64,6 +65,13 @@ export const GAME_META: Record<GameId, GameMeta> = {
     slug: "/games/clock",
     icon: "🕐",
     title: { ru: "Который час", ky: "Саат канча" },
+    premium: false,
+  },
+  compare: {
+    id: "compare",
+    slug: "/games/compare",
+    icon: "⚖️",
+    title: { ru: "Больше или меньше", ky: "Чоңбу же кичине" },
     premium: false,
   },
   memory: {

@@ -92,6 +92,12 @@ export default async function GamesPage({
       title: dict.games.clock.title,
       description: dict.games.clock.description,
     },
+    {
+      href: `/${lang}/games/compare`,
+      icon: "⚖️",
+      title: dict.games.compare.title,
+      description: dict.games.compare.description,
+    },
   ];
 
   // Игра дня — детерминированно по дню (страница ревалидируется раз в сутки).
