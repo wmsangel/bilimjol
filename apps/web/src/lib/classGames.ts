@@ -11,7 +11,8 @@ export type GameId =
   | "trace"
   | "build"
   | "pattern"
-  | "word";
+  | "word"
+  | "groups";
 
 export interface GameMeta {
   id: GameId;
@@ -48,6 +49,13 @@ export const GAME_META: Record<GameId, GameMeta> = {
     slug: "/games/word",
     icon: "🔤",
     title: { ru: "Собери слово", ky: "Сөз түз" },
+    premium: false,
+  },
+  groups: {
+    id: "groups",
+    slug: "/games/groups",
+    icon: "🧺",
+    title: { ru: "Разложи по группам", ky: "Топторго бөл" },
     premium: false,
   },
   memory: {

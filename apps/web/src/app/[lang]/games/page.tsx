@@ -80,6 +80,12 @@ export default async function GamesPage({
       title: dict.games.word.title,
       description: dict.games.word.description,
     },
+    {
+      href: `/${lang}/games/groups`,
+      icon: "🧺",
+      title: dict.games.groups.title,
+      description: dict.games.groups.description,
+    },
   ];
 
   // Игра дня — детерминированно по дню (страница ревалидируется раз в сутки).
