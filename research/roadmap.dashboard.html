@@ -1,0 +1,187 @@
+<title>Bilimjol Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" />
+<style>
+  /* Layout: single centered column; big-number status tiles, then A/B/C roadmap, done, ideas. */
+  :root {
+    --bg: #f4f2fb;
+    --surface: #ffffff;
+    --surface-2: #efeaff;
+    --ink: #191539;
+    --muted: #5c5880;
+    --line: #e6e1f5;
+    --violet: #6d5cf7;
+    --gold: #a9791f;
+    --gold-soft: #fbf3e3;
+    --good: #15803d;
+    --warn: #b45309;
+    --shadow: 0 8px 24px rgba(25, 21, 57, 0.06);
+    --font-display: "Comfortaa", system-ui, sans-serif;
+    --font-body: "Nunito", system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f0d1f;
+      --surface: #1a1730;
+      --surface-2: #241f3d;
+      --ink: #f2f0fb;
+      --muted: #a9a3c9;
+      --line: #2c2748;
+      --violet: #9d8cff;
+      --gold: #e6c079;
+      --gold-soft: #2a2412;
+      --good: #4ade80;
+      --warn: #fbbf24;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f0d1f;
+    --surface: #1a1730;
+    --surface-2: #241f3d;
+    --ink: #f2f0fb;
+    --muted: #a9a3c9;
+    --line: #2c2748;
+    --violet: #9d8cff;
+    --gold: #e6c079;
+    --gold-soft: #2a2412;
+    --good: #4ade80;
+    --warn: #fbbf24;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+  * { box-sizing: border-box; }
+  .wrap { max-width: 860px; margin: 0 auto; padding-inline: 18px; padding-block: 28px 56px; }
+
+  header.top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-bottom: 6px; }
+  .brand { font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 6vw, 38px); letter-spacing: -0.5px; }
+  .brand .jol { color: var(--gold); }
+  .brand .tag { color: var(--muted); font-family: var(--font-body); font-weight: 800; font-size: 0.5em; letter-spacing: 0.5px; text-transform: uppercase; }
+  .updated { color: var(--muted); font-size: 13px; font-weight: 600; }
+  .lead { color: var(--muted); font-size: 14px; line-height: 1.55; margin: 6px 0 22px; max-width: 60ch; }
+  .lead code { background: var(--surface-2); padding: 1px 6px; border-radius: 6px; font-size: 12px; }
+
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 32px 0 14px; display: flex; align-items: center; gap: 9px; }
+
+  /* status tiles */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(116px, 1fr)); gap: 12px; }
+  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; box-shadow: var(--shadow); min-width: 0; }
+  .tile .v { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+  .tile .v.sm { font-size: 17px; }
+  .tile .l { color: var(--muted); font-size: 12px; font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+
+  /* roadmap blocks */
+  .block { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 6px 18px 14px; box-shadow: var(--shadow); margin-bottom: 14px; }
+  .block-h { font-weight: 800; font-size: 13px; letter-spacing: 0.6px; text-transform: uppercase; color: var(--violet); padding: 14px 0 4px; }
+  ol.steps { list-style: none; margin: 0; padding: 0; }
+  ol.steps li { display: flex; gap: 12px; align-items: flex-start; padding: 11px 0; border-top: 1px solid var(--line); }
+  ol.steps li:first-child { border-top: 0; }
+  .num { flex: none; width: 26px; height: 26px; border-radius: 9px; background: var(--surface-2); color: var(--violet); font-family: var(--font-display); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
+  .step-body { min-width: 0; flex: 1; }
+  .step-title { font-weight: 700; font-size: 15px; }
+  .step-note { color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 2px; }
+  .chip { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; letter-spacing: 0.3px; }
+  .chip.next { background: var(--violet); color: #fff; }
+  .chip.big { background: var(--gold-soft); color: var(--gold); }
+
+  /* lists (done / ideas / parking) */
+  ul.rows { list-style: none; margin: 0; padding: 0; }
+  ul.rows li { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.5; }
+  ul.rows li:first-child { border-top: 0; }
+  ul.rows .mark { flex: none; }
+  ul.rows .date { color: var(--muted); font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .done { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 4px 18px; box-shadow: var(--shadow); }
+  .ideas { background: var(--gold-soft); border: 1px solid var(--line); border-radius: 18px; padding: 4px 18px; }
+  .ideas li { border-top-color: color-mix(in srgb, var(--gold) 22%, transparent); }
+  .parking { color: var(--muted); font-size: 13px; line-height: 1.6; }
+  footer { margin-top: 34px; color: var(--muted); font-size: 12.5px; line-height: 1.6; border-top: 1px solid var(--line); padding-top: 16px; }
+  footer code { background: var(--surface-2); padding: 1px 6px; border-radius: 6px; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Bilim<span class="jol">jol</span> <span class="tag">Roadmap</span></div>
+    <div class="updated">обновлено 29.09.2026</div>
+  </header>
+  <p class="lead">Живой план продукта. Источник правды — <code>research/ROADMAP.md</code> в репозитории; эта страница — витрина поверх него, переопубликовывается на тот же URL после каждой выполненной задачи.</p>
+
+  <div class="tiles">
+    <div class="tile"><div class="v">1249</div><div class="l">заданий</div></div>
+    <div class="tile"><div class="v">92</div><div class="l">темы</div></div>
+    <div class="tile"><div class="v">11</div><div class="l">игр</div></div>
+    <div class="tile"><div class="v">23</div><div class="l">статьи</div></div>
+    <div class="tile"><div class="v">9</div><div class="l">тестов</div></div>
+    <div class="tile"><div class="v">0–11</div><div class="l">классы</div></div>
+    <div class="tile"><div class="v sm">RU · KY</div><div class="l">языки</div></div>
+    <div class="tile"><div class="v sm">Paddle live</div><div class="l">$1.99 / $15.99</div></div>
+  </div>
+
+  <h2>🗺 Ближайшие ~10 запусков</h2>
+
+  <div class="block">
+    <div class="block-h">Блок A — закалка под запуск</div>
+    <ol class="steps">
+      <li><span class="num">1</span><div class="step-body"><div class="step-title">Правда цифр + статьи с главной<span class="chip next">next</span></div><div class="step-note">К1: «900+ заданий» → фактические 1249. Плюс блок «Свежие статьи» на <code>/ru</code> и <code>/ky</code> — главная пока не ссылается ни на одну статью (ускорит индексацию, особенно KY).</div></div></li>
+      <li><span class="num">2</span><div class="step-body"><div class="step-title">U8 — аналитика (GA4/GTM)</div><div class="step-note">События: старт занятия, игры, тесты, клики пейвола, регистрация. Нужно до трафика, чтобы видеть, что популярно.</div></div></li>
+      <li><span class="num">3</span><div class="step-body"><div class="step-title">U9 — дожать письма</div><div class="step-note">Resend-код готов; проверить welcome/премиум после <code>RESEND_API_KEY</code> (владелец) и закрыть гейт.</div></div></li>
+      <li><span class="num">4</span><div class="step-body"><div class="step-title">В4 — превью ссылки при пересылке (OG)</div><div class="step-note">Каждая расшаренная ссылка должна выглядеть хорошо — важно для органического шеринга.</div></div></li>
+    </ol>
+  </div>
+
+  <div class="block">
+    <div class="block-h">Блок B — рост и SEO</div>
+    <ol class="steps">
+      <li><span class="num">5</span><div class="step-body"><div class="step-title">К2 + перелинковка</div><div class="step-note">Тематические «похожие статьи» вместо кольца из 3 + ссылки статья↔игры/тесты.</div></div></li>
+      <li><span class="num">6</span><div class="step-body"><div class="step-title">К3 — свои URL у 92 тем<span class="chip big">⚠️ крупное</span></div><div class="step-note">Большая индексируемая поверхность. Требует согласования объёма перед стартом.</div></div></li>
+    </ol>
+  </div>
+
+  <div class="block">
+    <div class="block-h">Блок C — глубина и новые магниты</div>
+    <ol class="steps">
+      <li><span class="num">7</span><div class="step-body"><div class="step-title">Н9 — мини-уроки, классы 2–3</div><div class="step-note">Продолжаем explainers по классу-пачке (после ошибки: что · как думать · пример).</div></div></li>
+      <li><span class="num">8</span><div class="step-body"><div class="step-title">Н11 — пилот ОРТ</div><div class="step-note">Тест в формате ОРТ + посадочная «подготовка к ОРТ». Новая аудитория (старшие), SEO-магнит. Позже ЕГЭ.</div></div></li>
+      <li><span class="num">9</span><div class="step-body"><div class="step-title">Гардероб тематично через Claude Design</div><div class="step-note">Наборы (космос/спорт/сказка…). Премиум уже открывает весь гардероб.</div></div></li>
+      <li><span class="num">10</span><div class="step-body"><div class="step-title">Тест на профориентацию</div><div class="step-note">Сильный инструмент для 8–11 классов — расширяет аудиторию, SEO-магнит, потенциальный премиум.</div></div></li>
+    </ol>
+  </div>
+
+  <h2>✅ Сделано</h2>
+  <div class="done">
+    <ul class="rows">
+      <li><span class="mark">✅</span><div class="step-body"><b>Paddle go-live</b> end-to-end: чекаут, вебхук (200), премиум активируется (П1).</div><span class="date">25.09</span></li>
+      <li><span class="mark">✅</span><div class="step-body"><b>Цены</b> → $ как основная + «≈ сом · примерно» везде.</div><span class="date">25.09</span></li>
+      <li><span class="mark">✅</span><div class="step-body"><b>Премиум открывает весь гардероб</b> (+ корректно после истечения).</div><span class="date">25.09</span></li>
+      <li><span class="mark">✅</span><div class="step-body"><b>Письма (U9, код):</b> Resend-модуль, welcome + «премиум активирован», RU/KY.</div><span class="date">25.09</span></li>
+      <li><span class="mark">✅</span><div class="step-body"><b>Игры: 5 → 11</b> (Продолжи ряд, Собери слово, Разложи по группам, Который час, Больше/меньше, Найди тень).</div><span class="date">25–28.09</span></li>
+      <li><span class="mark">✅</span><div class="step-body"><b>Н10:</b> маппинг игр по классам (2 на класс, 2-я премиум).</div><span class="date">28.09</span></li>
+      <li><span class="mark">✅</span><div class="step-body"><b>Мини-уроки</b> «разобраться в теме», классы 0–1 (Н9).</div><span class="date">25.09</span></li>
+      <li><span class="mark">✅</span><div class="step-body"><b>Визуальный прогон под запуск:</b> фикс overflow лендинга, cursor:pointer на всё кликабельное.</div><span class="date">25.09</span></li>
+    </ul>
+  </div>
+
+  <h2>💡 Входящие идеи (копилка)</h2>
+  <div class="ideas">
+    <ul class="rows">
+      <li><span class="mark">💡</span><div class="step-body">Свои предметы на каждый класс (в старших — Физика/Химия/Биология/История/География).</div></li>
+      <li><span class="mark">💡</span><div class="step-body">Экспансия на русскоязычную диаспору (US/EU/Израиль/Германия) + СНГ (KZ/UZ).</div></li>
+      <li><span class="mark">💡</span><div class="step-body">RUB-оверрайд в Paddle (KGS не поддерживается) — для РФ-трафика.</div></li>
+      <li><span class="mark">💡</span><div class="step-body">Тематичное наполнение гардероба через Claude Design.</div></li>
+      <li><span class="mark">💡</span><div class="step-body">Тест на профориентацию для 8–11 классов.</div></li>
+      <li><span class="mark">💡</span><div class="step-body">SEO: «Свежие статьи» на главной, тематические «похожие статьи», индексация KY.</div></li>
+      <li><span class="mark">💡</span><div class="step-body">Контекстные do-follow ссылки на 24zdorovie (карта готова, ждёт ок).</div></li>
+      <li><span class="mark">💡</span><div class="step-body">Вынести смену персонажа из гардероба в отдельное место.</div></li>
+    </ul>
+  </div>
+
+  <h2>🅿️ Парковка</h2>
+  <p class="parking">UX-полировка: В5 типографика · В6 анимации · U1–U7. SEO-добор: К4–К8. Контент/механика: Н1–Н8 (разнообразие типов заданий, «Окр. мир», логика 5–11, олимпиада, раздробить темы, новые тесты, аудит качества).</p>
+
+  <footer>
+    Источник правды — <code>research/ROADMAP.md</code> в репозитории. Детальный каталог задач — <code>research/PLAN.md</code>, сырой инбокс идей — <code>research/IDEAS.md</code>. Эта страница переопубликовывается на тот же URL после каждой выполненной задачи.
+  </footer>
+</div>
