@@ -5,6 +5,7 @@ import { LandingHeaderCta } from "./LandingHeaderCta";
 import { faqJsonLd } from "@/lib/seo";
 import { buildCharacter } from "@/lib/characterArt";
 import { PRICE, approxLocalMonthly } from "@/lib/pricing";
+import { tasks, articles } from "@izn-study/shared";
 
 // SVG-персонаж в круглом «пузыре» (кадрируется головой/торсом). Server-safe.
 function Mascot({ id, size }: { id: string; size: number }) {
@@ -44,6 +45,13 @@ export function Landing({ lang }: { lang: Locale }) {
   const playHref = `/${lang}/play`;
   const readyHref = `/${lang}/gotovnost-k-shkole`;
   const priceHref = `/${lang}/subscribe`;
+
+  // Счётчик заданий — динамический, округлён вниз до сотни («1200+»), не устаревает.
+  const taskCount = `${Math.floor(tasks.length / 100) * 100}+`;
+  // Свежие статьи — по дате (обновление важнее публикации), 6 штук.
+  const recentArticles = [...articles]
+    .sort((a, b) => (b.updated ?? b.date).localeCompare(a.updated ?? a.date))
+    .slice(0, 6);
 
   const faq = [
     {
@@ -147,7 +155,7 @@ export function Landing({ lang }: { lang: Locale }) {
             </Link>
           </div>
           <div className="inline-flex items-center gap-3.5 rounded-2xl bg-white/[.07] px-5 py-3 text-[15px] font-bold">
-            <span>{t("1200+ заданий", "1200+ тапшырма")}</span><span className="text-[#e6c079]">·</span>
+            <span>{t(`${taskCount} заданий`, `${taskCount} тапшырма`)}</span><span className="text-[#e6c079]">·</span>
             <span>{t("без рекламы", "жарнаксыз")}</span><span className="text-[#e6c079]">·</span>
             <span>RU / KY</span>
           </div>
@@ -169,7 +177,7 @@ export function Landing({ lang }: { lang: Locale }) {
       {/* STATS */}
       <section className="relative mx-5 -mt-16 grid grid-cols-2 gap-4 sm:mx-16 sm:grid-cols-4 sm:gap-5">
         {[
-          ["📚", "#efecff", "1200+", t("заданий", "тапшырма")],
+          ["📚", "#efecff", taskCount, t("заданий", "тапшырма")],
           ["🎓", "#fbf3e3", "12", t("классов (0–11)", "класс (0–11)")],
           ["🧩", "#efecff", "5", t("предметов", "предмет")],
           ["🔊", "#fbf3e3", "2", t("языка с озвучкой", "тил, үн менен")],
@@ -400,7 +408,7 @@ export function Landing({ lang }: { lang: Locale }) {
             <div className="mb-1 font-display text-[40px] font-bold">{PRICE.monthly.display} <span className="text-lg text-[#e6e1ff]">{t("/ мес", "/ ай")}</span></div>
             <div className="mb-6 text-sm text-[#c9bfff]">{approxLocalMonthly()} · {t("примерно", "болжолдуу")}</div>
             <div className="mb-8 flex flex-1 flex-col gap-3 text-[17px]">
-              {[t("Все 1200+ заданий и игры", "Бардык 1200+ тапшырма жана оюндар"), t("Все классы 0–11 и олимпиада", "Бардык класстар 0–11 жана олимпиада"), t("Отчёт для родителей", "Ата-энелерге отчёт"), t("Гардероб и награды героя", "Каармандын гардероб жана сыйлыктары")].map((f, i) => (
+              {[t(`Все ${taskCount} заданий и игры`, `Бардык ${taskCount} тапшырма жана оюндар`), t("Все классы 0–11 и олимпиада", "Бардык класстар 0–11 жана олимпиада"), t("Отчёт для родителей", "Ата-энелерге отчёт"), t("Гардероб и награды героя", "Каармандын гардероб жана сыйлыктары")].map((f, i) => (
                 <div key={i} className="flex gap-2.5"><span className="font-extrabold text-[#e6c079]">✓</span>{f}</div>
               ))}
             </div>
@@ -423,6 +431,42 @@ export function Landing({ lang }: { lang: Locale }) {
               <div className="px-7 pb-6 text-[17px] leading-[1.6] text-[#5c5880]">{item.a}</div>
             </details>
           ))}
+        </div>
+      </section>
+
+      {/* СВЕЖИЕ СТАТЬИ */}
+      <section className="px-5 pb-24 sm:px-16">
+        <h2 className={h2 + " mb-3 text-center"}>{t("Свежие статьи", "Жаңы макалалар")}</h2>
+        <p className="mx-auto mb-10 max-w-xl text-center text-lg text-[#5c5880]">
+          {t(
+            "Гайды для родителей: как учить, мотивировать и готовить к школе.",
+            "Ата-энелер үчүн гайддар: кантип окутуу, түрткү берүү жана мектепке даярдоо.",
+          )}
+        </p>
+        <div className="mx-auto grid max-w-[1000px] gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {recentArticles.map((a) => (
+            <Link
+              key={a.slug}
+              href={`/${lang}/articles/${a.slug}`}
+              className="group flex flex-col rounded-3xl bg-white p-6 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1"
+            >
+              <div className="mb-3 text-4xl">{a.emoji}</div>
+              <div className="mb-1.5 font-display text-lg font-bold leading-snug group-hover:text-[#6d5cf7]">
+                {a.title[lang]}
+              </div>
+              <div className="line-clamp-2 text-[15px] leading-relaxed text-[#5c5880]">
+                {a.excerpt[lang]}
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-8 text-center">
+          <Link
+            href={`/${lang}/articles`}
+            className="inline-block rounded-full border-2 border-[#6d5cf7] px-7 py-3.5 text-[16px] font-extrabold text-[#6d5cf7] transition hover:border-[#e6c079] hover:bg-[#fbf3e3] hover:text-[#191539]"
+          >
+            {t("Все статьи", "Бардык макалалар")} →
+          </Link>
         </div>
       </section>
 
