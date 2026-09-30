@@ -38,6 +38,10 @@ Console — не на общих соображениях. Цифры в раз�
    (сейчас враньё, чинить до промо). + идея из IDEAS: блок «Свежие статьи» (3–6)
    на `/ru` и `/ky` — главная сейчас не ссылается ни на одну статью, это ускорит
    индексацию (особенно KY). Мелко, высокий эффект.
+2. ✅ **U8 — аналитика (готово 30.09, код).** Расставлены события воронки:
+   hero/grade/subject/topic_start, task_answer, lesson_finish, test_start/finish,
+   game_open (все 11 игр), lang_switch, cabinet_*, outfit_equip. Осталось за
+   владельцем — завести цели в GA4/GTM. Ниже — исходное описание.
 2. **U8 — аналитика (GA4/GTM события).** Обвесить продукт событиями (старт
    занятия, игры, тесты, клики пейвола, регистрация). Нужно ДО трафика, чтобы
    после запуска видеть, что популярно.
@@ -547,7 +551,18 @@ throttling. Посмотреть вес JS: игры и плеер — клие�
 
 ---
 
-## [ ] U8. Обвесить продукт аналитическими событиями (GA4/GTM)
+## [x] U8. Обвесить продукт аналитическими событиями (GA4/GTM) — ГОТОВО (2026-09-30, код)
+
+**Сделано.** События (единый snake_case, параметры grade/subject/topic/lang, без
+PII, через `pushEvent`): воронка обучения в `TaskPlayer` (`hero_select`,
+`grade_select`, `subject_select`, `topic_start`, `task_answer`, `lesson_finish`);
+тесты в `TestPlayer` (`test_start`, `test_finish`); игры — `game_open` на всех 11
+страницах (новый `<Track>`); навигация — `lang_switch`; кабинет —
+`cabinet_continue`/`cabinet_parent_report`/`cabinet_change_helper`; гардероб —
+`outfit_equip`. Проверено вживую (события в dataLayer).
+**Осталось:** завести цели в GA4/GTM (действие владельца). Опциональный добор
+(потом): `game_finish` по играм, `reward_open`, разделы шапки, source у
+лендинговых CTA.
 
 **Почему.** Сейчас событий почти нет — через `pushEvent` (`apps/web/src/lib/gtm.ts`
 → dataLayer → GTM → GA4) шлётся только `subscribe_click` и `view_subscribe`. Не
