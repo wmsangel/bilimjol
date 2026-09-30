@@ -87,6 +87,7 @@
   .chip { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; letter-spacing: 0.3px; }
   .chip.next { background: var(--violet); color: #fff; }
   .chip.big { background: var(--gold-soft); color: var(--gold); }
+  .chip.done { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
 
   /* lists (done / ideas / parking) */
   ul.rows { list-style: none; margin: 0; padding: 0; }
@@ -105,7 +106,7 @@
 <div class="wrap">
   <header class="top">
     <div class="brand">Bilim<span class="jol">jol</span> <span class="tag">Roadmap</span></div>
-    <div class="updated">обновлено 29.09.2026</div>
+    <div class="updated">обновлено 30.09.2026</div>
   </header>
   <p class="lead">Живой план продукта. Источник правды — <code>research/ROADMAP.md</code> в репозитории; эта страница — витрина поверх него, переопубликовывается на тот же URL после каждой выполненной задачи.</p>
 
@@ -125,8 +126,8 @@
   <div class="block">
     <div class="block-h">Блок A — закалка под запуск</div>
     <ol class="steps">
-      <li><span class="num">1</span><div class="step-body"><div class="step-title">Правда цифр + статьи с главной<span class="chip next">next</span></div><div class="step-note">К1: «900+ заданий» → фактические 1249. Плюс блок «Свежие статьи» на <code>/ru</code> и <code>/ky</code> — главная пока не ссылается ни на одну статью (ускорит индексацию, особенно KY).</div></div></li>
-      <li><span class="num">2</span><div class="step-body"><div class="step-title">U8 — аналитика (GA4/GTM)</div><div class="step-note">События: старт занятия, игры, тесты, клики пейвола, регистрация. Нужно до трафика, чтобы видеть, что популярно.</div></div></li>
+      <li><span class="num">1</span><div class="step-body"><div class="step-title">Правда цифр + статьи с главной<span class="chip done">✅ 30.09</span></div><div class="step-note">К1: «900+ заданий» → фактические 1249. Плюс блок «Свежие статьи» на <code>/ru</code> и <code>/ky</code> — главная пока не ссылается ни на одну статью (ускорит индексацию, особенно KY).</div></div></li>
+      <li><span class="num">2</span><div class="step-body"><div class="step-title">U8 — аналитика (GA4/GTM)<span class="chip next">next</span></div><div class="step-note">События: старт занятия, игры, тесты, клики пейвола, регистрация. Нужно до трафика, чтобы видеть, что популярно.</div></div></li>
       <li><span class="num">3</span><div class="step-body"><div class="step-title">U9 — дожать письма</div><div class="step-note">Resend-код готов; проверить welcome/премиум после <code>RESEND_API_KEY</code> (владелец) и закрыть гейт.</div></div></li>
       <li><span class="num">4</span><div class="step-body"><div class="step-title">В4 — превью ссылки при пересылке (OG)</div><div class="step-note">Каждая расшаренная ссылка должна выглядеть хорошо — важно для органического шеринга.</div></div></li>
     </ol>
@@ -153,6 +154,7 @@
   <h2>✅ Сделано</h2>
   <div class="done">
     <ul class="rows">
+      <li><span class="mark">✅</span><div class="step-body"><b>К1 + «Свежие статьи»:</b> динамический счётчик заданий + 6 прямых ссылок на статьи с главной (было 0).</div><span class="date">30.09</span></li>
       <li><span class="mark">✅</span><div class="step-body"><b>Paddle go-live</b> end-to-end: чекаут, вебхук (200), премиум активируется (П1).</div><span class="date">25.09</span></li>
       <li><span class="mark">✅</span><div class="step-body"><b>Цены</b> → $ как основная + «≈ сом · примерно» везде.</div><span class="date">25.09</span></li>
       <li><span class="mark">✅</span><div class="step-body"><b>Премиум открывает весь гардероб</b> (+ корректно после истечения).</div><span class="date">25.09</span></li>
