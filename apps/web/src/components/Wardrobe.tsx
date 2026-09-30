@@ -5,6 +5,7 @@ import type { Locale } from "@izn-study/shared";
 import { loadProgress } from "@/lib/progress";
 import { loadHelperId, removeHelperId } from "@/lib/prefs";
 import { getEntitlement, isLoggedIn } from "@/lib/api";
+import { pushEvent } from "@/lib/gtm";
 import {
   WARDROBE,
   SETS,
@@ -53,6 +54,7 @@ export function Wardrobe({
     // Надетую вещь можно снять всегда; надеть заблокированную — нельзя.
     // (Важно после истечения премиума: вещь снова заперта, но снять её можно.)
     if (!equipped && isLocked(item.unlockAt)) return;
+    if (!equipped) pushEvent("outfit_equip", { item: item.id, slot: item.slot });
     setOutfit((prev) => {
       const next: Outfit = { ...prev };
       if (next[item.slot] === item.id) delete next[item.slot];

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
+import { Track } from "@/components/Track";
 import { JsonLd } from "@/components/JsonLd";
 import { TraceGame } from "@/components/TraceGame";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
@@ -35,6 +36,7 @@ export default async function TracePage({
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
+      <Track event="game_open" params={{ game: "trace", lang }} />
       <JsonLd data={breadcrumbJsonLd(lang, [[dict.games.title, "/games"], [dict.games.trace.title, "/games/trace"]])} />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">

@@ -13,6 +13,7 @@ import { loadHelperId } from "@/lib/prefs";
 import { recordActivity } from "@/lib/stats";
 import { isLoggedIn, loadChildId } from "@/lib/api";
 import { syncChild } from "@/lib/sync";
+import { pushEvent } from "@/lib/gtm";
 import { Mascot } from "./Mascot";
 import { Confetti } from "./Confetti";
 
@@ -73,6 +74,7 @@ export function TestPlayer({
   useEffect(() => {
     setQuestions(test?.generate() ?? []);
     setHelperId(loadHelperId());
+    pushEvent("test_start", { test: testId, lang: locale });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -106,6 +108,12 @@ export function TestPlayer({
       setIndex((i) => i + 1);
       reset();
     } else {
+      pushEvent("test_finish", {
+        test: testId,
+        score,
+        total: questions.length,
+        lang: locale,
+      });
       setFinished(true);
     }
   }

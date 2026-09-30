@@ -305,6 +305,7 @@ export function TaskPlayer({
     if (!pendingHelper) return;
     saveHelperId(pendingHelper);
     setHelperId(pendingHelper);
+    pushEvent("hero_select", { hero: pendingHelper, lang: locale });
   }
 
   function chooseGrade(g: number) {
@@ -313,12 +314,24 @@ export function TaskPlayer({
     setGrade(g);
     setSubject(null); // сначала выбор предмета
     setTopicId(null);
+    pushEvent("grade_select", { grade: g, lang: locale });
+  }
+
+  function chooseSubject(s: Subject | "all") {
+    setSubject(s);
+    pushEvent("subject_select", { subject: s, grade, lang: locale });
   }
 
   function chooseTopic(id: string) {
     const list = allTasks.filter((t) => t.topic === id && (premium || t.free));
     const firstUndone = list.findIndex((t) => !(t.id in results));
     setTopicId(id);
+    pushEvent("topic_start", {
+      grade,
+      subject: subject ?? "all",
+      topic: id,
+      lang: locale,
+    });
     if (firstUndone === -1) setFinished(true);
     else {
       setIndex(firstUndone);
@@ -371,6 +384,14 @@ export function TaskPlayer({
     )
       return;
     const correct = checkAnswer(task, response);
+    pushEvent("task_answer", {
+      correct,
+      type: task.type,
+      grade,
+      subject: subject ?? "all",
+      topic: topicId,
+      lang: locale,
+    });
     const alreadyCorrect = results[task.id]?.correct === true;
     const nextResults = { ...results, [task.id]: { correct } };
     setResults(nextResults);
@@ -400,7 +421,17 @@ export function TaskPlayer({
   function next() {
     playSound("click");
     if (index < activeTasks.length - 1) setIndex((i) => i + 1);
-    else setFinished(true);
+    else {
+      pushEvent("lesson_finish", {
+        score: stars,
+        total: activeTasks.length,
+        grade,
+        subject: subject ?? "all",
+        topic: topicId,
+        lang: locale,
+      });
+      setFinished(true);
+    }
   }
 
   function restart() {
@@ -573,7 +604,7 @@ export function TaskPlayer({
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {/* Общая программа (вперемешку по предметам) */}
           <button
-            onClick={() => setSubject("all")}
+            onClick={() => chooseSubject("all")}
             className="relative flex flex-col items-center justify-center gap-2 overflow-hidden rounded-3xl bg-[#191539] p-5 text-center text-white transition hover:-translate-y-1"
           >
             <span className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[#6d5cf7] opacity-40 blur-2xl" />
@@ -585,7 +616,7 @@ export function TaskPlayer({
           {subjects.map((s) => (
             <button
               key={s}
-              onClick={() => setSubject(s)}
+              onClick={() => chooseSubject(s)}
               className="flex flex-col items-center justify-center gap-2 rounded-3xl bg-white p-5 text-center shadow-[0_8px_24px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_0_0_2px_#b9b3e6]"
             >
               <span className="text-3xl">{SUBJECT_EMOJI[s]}</span>

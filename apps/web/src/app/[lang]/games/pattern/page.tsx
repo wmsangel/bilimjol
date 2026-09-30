@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
+import { Track } from "@/components/Track";
 import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { PatternGame } from "@/components/PatternGame";
@@ -35,6 +36,7 @@ export default async function PatternPage({
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
+      <Track event="game_open" params={{ game: "pattern", lang }} />
       <JsonLd
         data={breadcrumbJsonLd(lang, [
           [dict.games.title, "/games"],

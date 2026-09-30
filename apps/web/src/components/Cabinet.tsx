@@ -26,6 +26,7 @@ import {
 import { getEntitlement, loadAuth, loadChildId } from "@/lib/api";
 import { syncChild } from "@/lib/sync";
 import { helperGradient } from "@/lib/helperTheme";
+import { pushEvent } from "@/lib/gtm";
 import { Mascot } from "./Mascot";
 
 export interface AccountLabels {
@@ -164,6 +165,7 @@ export function Cabinet({
   const helper = getHelper(helperId);
 
   function changeHelper() {
+    pushEvent("cabinet_change_helper", {});
     removeHelperId();
     router.push(playHref);
   }
@@ -241,6 +243,7 @@ export function Cabinet({
           </div>
           <Link
             href={playHref}
+            onClick={() => pushEvent("cabinet_continue", {})}
             className="relative w-full rounded-full bg-[#6d5cf7] px-6 py-4 text-center font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 xl:w-auto"
           >
             ▶ {labels.continue}
@@ -325,7 +328,7 @@ export function Cabinet({
             <span className="rounded-full bg-[#fbf3e3] px-3 py-1 text-xs font-bold text-[#7a5a1e]">⭐ {labels.premiumActive} {fmtDate(premiumUntil)}</span>
           )}
           <button onClick={changeHelper} className="hover:text-[#6d5cf7]">{labels.changeHelper}</button>
-          <Link href={parentHref} className="hover:text-[#6d5cf7]">📊 {accountLabels.parentReport}</Link>
+          <Link href={parentHref} onClick={() => pushEvent("cabinet_parent_report", {})} className="hover:text-[#6d5cf7]">📊 {accountLabels.parentReport}</Link>
         </div>
       </div>
 

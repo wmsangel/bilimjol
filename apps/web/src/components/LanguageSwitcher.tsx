@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { locales, isLocale, type Locale } from "@/i18n/config";
+import { pushEvent } from "@/lib/gtm";
 
 // Переключатель языка: ведёт на тот же путь, но с другой локалью.
 export function LanguageSwitcher({ current }: { current: Locale }) {
@@ -26,6 +27,7 @@ export function LanguageSwitcher({ current }: { current: Locale }) {
           <Link
             key={locale}
             href={hrefFor(locale)}
+            onClick={() => !active && pushEvent("lang_switch", { to: locale })}
             aria-current={active ? "true" : undefined}
             className={
               active
