@@ -2,13 +2,35 @@ import type { Metadata } from "next";
 import { Fragment } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { articles, getArticle } from "@izn-study/shared";
+import { articles, getArticle, getRelatedArticles, tests } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates } from "@/lib/seo";
+import { GAME_META, type GameId } from "@/lib/classGames";
 import { getDictionary } from "../../dictionaries";
+
+// Перелинковка статья → профильная игра и тест по основному тегу.
+const TAG_GAME: Record<string, GameId> = {
+  chtenie: "word",
+  rech: "word",
+  matematika: "sprint",
+  logika: "pattern",
+  vnimanie: "shadow",
+  pamyat: "memory",
+  motorika: "trace",
+  podgotovka: "pattern",
+};
+// Тег → тест (id из shared) либо readiness-страница.
+const TAG_TEST: Record<string, { testId?: string; readiness?: boolean }> = {
+  matematika: { testId: "add" },
+  chtenie: { testId: "speech" },
+  rech: { testId: "speech" },
+  podgotovka: { readiness: true },
+  logika: { readiness: true },
+  vnimanie: { readiness: true },
+};
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com";
 
@@ -41,12 +63,19 @@ export default async function ArticlePage({
   const article = getArticle(slug);
   if (!article) notFound();
   const dict = await getDictionary(lang);
-  // Ring: each article links to the next 3, so every article gets inbound links.
-  const idx = articles.findIndex((a) => a.slug === slug);
-  const related = [1, 2, 3]
-    .map((k) => articles[(idx + k) % articles.length])
-    .filter((a) => a.slug !== slug);
+  // Похожие статьи — по тегам (с добором кольцом для покрытия всего корпуса).
+  const related = getRelatedArticles(slug, 3);
   const url = `${SITE}/${lang}/articles/${slug}`;
+
+  // Перелинковка на игру/тест по основному тегу статьи.
+  const primaryTag = article.tags?.[0];
+  const practiceGame = primaryTag
+    ? GAME_META[TAG_GAME[primaryTag] ?? "pattern"]
+    : undefined;
+  const testMap = primaryTag ? TAG_TEST[primaryTag] : undefined;
+  const practiceTest = testMap?.testId
+    ? tests.find((tt) => tt.id === testMap.testId)
+    : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -142,6 +171,67 @@ export default async function ArticlePage({
             {dict.cta.button}
           </Link>
         </div>
+
+        {(practiceGame || practiceTest || testMap?.readiness) && (
+          <section className="mt-12">
+            <h2 className="font-display text-lg font-bold text-[#5c5880]">
+              {lang === "ky" ? "Практикада бекемде" : "Закрепите на практике"}
+            </h2>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {practiceGame && (
+                <Link
+                  href={`/${lang}${practiceGame.slug}`}
+                  className="group flex items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_6px_18px_rgba(25,21,57,.05)] transition hover:-translate-y-0.5 hover:shadow-[0_0_0_2px_#b9b3e6]"
+                >
+                  <span className="text-2xl">{practiceGame.icon}</span>
+                  <span className="min-w-0">
+                    <span className="block text-xs font-bold uppercase tracking-wide text-[#c9a04f]">
+                      {lang === "ky" ? "Оюн" : "Игра"}
+                    </span>
+                    <span className="font-display font-bold transition group-hover:text-[#6d5cf7]">
+                      {practiceGame.title[lang]}
+                    </span>
+                  </span>
+                </Link>
+              )}
+              {practiceTest ? (
+                <Link
+                  href={`/${lang}/tests/${practiceTest.id}`}
+                  className="group flex items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_6px_18px_rgba(25,21,57,.05)] transition hover:-translate-y-0.5 hover:shadow-[0_0_0_2px_#b9b3e6]"
+                >
+                  <span className="text-2xl">{practiceTest.icon}</span>
+                  <span className="min-w-0">
+                    <span className="block text-xs font-bold uppercase tracking-wide text-[#6d5cf7]">
+                      {lang === "ky" ? "Тест" : "Тест"}
+                    </span>
+                    <span className="font-display font-bold transition group-hover:text-[#6d5cf7]">
+                      {practiceTest.title[lang]}
+                    </span>
+                  </span>
+                </Link>
+              ) : (
+                testMap?.readiness && (
+                  <Link
+                    href={`/${lang}/gotovnost-k-shkole`}
+                    className="group flex items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_6px_18px_rgba(25,21,57,.05)] transition hover:-translate-y-0.5 hover:shadow-[0_0_0_2px_#b9b3e6]"
+                  >
+                    <span className="text-2xl">🎒</span>
+                    <span className="min-w-0">
+                      <span className="block text-xs font-bold uppercase tracking-wide text-[#6d5cf7]">
+                        {lang === "ky" ? "Тест" : "Тест"}
+                      </span>
+                      <span className="font-display font-bold transition group-hover:text-[#6d5cf7]">
+                        {lang === "ky"
+                          ? "Мектепке даярдык тести"
+                          : "Тест готовности к школе"}
+                      </span>
+                    </span>
+                  </Link>
+                )
+              )}
+            </div>
+          </section>
+        )}
 
         {related.length > 0 && (
           <section className="mt-12">

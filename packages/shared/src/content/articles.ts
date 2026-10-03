@@ -10,6 +10,8 @@ export interface Article {
   emoji: string;
   date: string; // ISO — дата публикации
   updated?: string; // ISO — дата существенного обновления, если было
+  /** Тематические теги — для подбора «похожих» статей и перелинковки на игры/тесты. */
+  tags?: string[];
   title: LocalizedText;
   excerpt: LocalizedText;
   sections: ArticleSection[];
@@ -18,6 +20,7 @@ export interface Article {
 export const articles: Article[] = [
   {
     slug: "podgotovka-k-shkole",
+    tags: ["podgotovka", "roditelyam"],
     emoji: "🎒",
     date: "2026-08-01",
     title: {
@@ -55,6 +58,7 @@ export const articles: Article[] = [
   },
   {
     slug: "razvitie-logiki",
+    tags: ["logika"],
     emoji: "🧩",
     date: "2026-08-02",
     updated: "2026-09-23",
@@ -128,6 +132,7 @@ export const articles: Article[] = [
   },
   {
     slug: "ekrannoe-vremya",
+    tags: ["roditelyam", "vnimanie"],
     emoji: "⏰",
     date: "2026-08-03",
     title: {
@@ -161,6 +166,7 @@ export const articles: Article[] = [
   },
   {
     slug: "kak-nauchit-schitat",
+    tags: ["matematika"],
     emoji: "🔢",
     date: "2026-08-05",
     title: {
@@ -203,6 +209,7 @@ export const articles: Article[] = [
   },
   {
     slug: "kak-nauchit-chitat",
+    tags: ["chtenie"],
     emoji: "📖",
     date: "2026-08-07",
     title: {
@@ -245,6 +252,7 @@ export const articles: Article[] = [
   },
   {
     slug: "vnimanie-i-usidchivost",
+    tags: ["vnimanie"],
     emoji: "🎯",
     date: "2026-08-10",
     title: {
@@ -287,6 +295,7 @@ export const articles: Article[] = [
   },
   {
     slug: "motivaciya-k-uchebe",
+    tags: ["motivaciya", "roditelyam"],
     emoji: "✨",
     date: "2026-08-12",
     title: {
@@ -329,6 +338,7 @@ export const articles: Article[] = [
   },
   {
     slug: "dvuyazychnyy-rebenok",
+    tags: ["chtenie", "rech"],
     emoji: "🌍",
     date: "2026-08-15",
     updated: "2026-09-23",
@@ -398,6 +408,7 @@ export const articles: Article[] = [
   },
   {
     slug: "matematika-cherez-igru",
+    tags: ["matematika", "logika"],
     emoji: "➕",
     date: "2026-08-18",
     title: {
@@ -440,6 +451,7 @@ export const articles: Article[] = [
   },
   {
     slug: "kak-nauchit-pisat",
+    tags: ["motorika", "chtenie"],
     emoji: "✏️",
     date: "2026-08-20",
     title: {
@@ -490,6 +502,7 @@ export const articles: Article[] = [
   },
   {
     slug: "kak-razvit-pamyat",
+    tags: ["pamyat", "vnimanie"],
     emoji: "🧠",
     date: "2026-08-22",
     title: {
@@ -540,6 +553,7 @@ export const articles: Article[] = [
   },
   {
     slug: "chek-list-gotovnosti-k-shkole",
+    tags: ["podgotovka"],
     emoji: "🎒",
     date: "2026-09-03",
     title: {
@@ -582,6 +596,7 @@ export const articles: Article[] = [
   },
   {
     slug: "kak-vyuchit-tablicu-umnozheniya",
+    tags: ["matematika"],
     emoji: "✖️",
     date: "2026-09-04",
     title: {
@@ -624,6 +639,7 @@ export const articles: Article[] = [
   },
   {
     slug: "vo-skolko-let-v-shkolu",
+    tags: ["podgotovka", "roditelyam"],
     emoji: "📅",
     date: "2026-09-07",
     title: {
@@ -666,6 +682,7 @@ export const articles: Article[] = [
   },
   {
     slug: "domashnee-zadanie-bez-slez",
+    tags: ["motivaciya", "roditelyam"],
     emoji: "📝",
     date: "2026-09-07",
     title: {
@@ -708,6 +725,7 @@ export const articles: Article[] = [
   },
   {
     slug: "nauchit-vnimatelnosti",
+    tags: ["vnimanie"],
     emoji: "👀",
     date: "2026-09-09",
     title: {
@@ -759,6 +777,7 @@ export const articles: Article[] = [
   },
   {
     slug: "razvitie-rechi",
+    tags: ["rech", "chtenie"],
     emoji: "🗣️",
     date: "2026-09-10",
     title: {
@@ -801,6 +820,7 @@ export const articles: Article[] = [
   },
   {
     slug: "logicheskie-zadachi",
+    tags: ["logika"],
     emoji: "🧩",
     date: "2026-09-10",
     title: {
@@ -843,6 +863,7 @@ export const articles: Article[] = [
   },
   {
     slug: "adaptaciya-k-shkole",
+    tags: ["podgotovka", "roditelyam"],
     emoji: "🏫",
     date: "2026-09-10",
     title: {
@@ -885,6 +906,7 @@ export const articles: Article[] = [
   },
   {
     slug: "razvitie-melkoy-motoriki",
+    tags: ["motorika"],
     emoji: "✋",
     date: "2026-09-21",
     title: {
@@ -927,6 +949,7 @@ export const articles: Article[] = [
   },
   {
     slug: "rebenok-putaet-bukvy",
+    tags: ["chtenie", "motorika"],
     emoji: "🔤",
     date: "2026-09-21",
     title: {
@@ -969,6 +992,7 @@ export const articles: Article[] = [
   },
   {
     slug: "vo-skolko-chitat-schitat",
+    tags: ["chtenie", "matematika", "podgotovka"],
     emoji: "📖",
     date: "2026-09-21",
     title: {
@@ -1011,6 +1035,7 @@ export const articles: Article[] = [
   },
   {
     slug: "kak-vyuchit-stihotvorenie",
+    tags: ["pamyat", "rech"],
     emoji: "🎭",
     date: "2026-09-21",
     title: {
@@ -1055,4 +1080,30 @@ export const articles: Article[] = [
 
 export function getArticle(slug: string): Article | undefined {
   return articles.find((a) => a.slug === slug);
+}
+
+// Стабильный тематический порядок: статьи с общими тегами стоят рядом
+// (ключ сортировки — склеенные теги). «Соседи» по этому порядку тематически
+// близки.
+const THEMATIC_ORDER: Article[] = [...articles].sort((a, b) => {
+  const ka = (a.tags ?? []).join(",");
+  const kb = (b.tags ?? []).join(",");
+  return ka.localeCompare(kb) || a.slug.localeCompare(b.slug);
+});
+
+/**
+ * Похожие статьи: следующие `limit` в тематическом порядке (кольцом). Это даёт
+ * сразу два свойства: подборка осмысленна по теме (соседи делят теги) И каждая
+ * статья получает ровно `limit` входящих ссылок — ссылочный вес расходится по
+ * всему корпусу, а не копится на одних и тех же 3 статьях.
+ */
+export function getRelatedArticles(slug: string, limit = 3): Article[] {
+  const idx = THEMATIC_ORDER.findIndex((a) => a.slug === slug);
+  if (idx < 0) return [];
+  const out: Article[] = [];
+  for (let k = 1; out.length < limit && k < THEMATIC_ORDER.length; k++) {
+    const cand = THEMATIC_ORDER[(idx + k) % THEMATIC_ORDER.length];
+    if (cand.slug !== slug) out.push(cand);
+  }
+  return out;
 }
