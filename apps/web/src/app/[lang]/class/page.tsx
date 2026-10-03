@@ -4,8 +4,9 @@ import { notFound } from "next/navigation";
 import { tasks, GRADES, subjectsForGrade } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
+import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
-import { localizedAlternates } from "@/lib/seo";
+import { localizedAlternates, itemListJsonLd } from "@/lib/seo";
 import { pluralRu } from "@/lib/plural";
 import { gradeBadge } from "@/lib/classContent";
 import { getDictionary } from "../dictionaries";
@@ -41,6 +42,7 @@ export default async function ClassIndexPage({
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
+      <JsonLd data={itemListJsonLd(lang, GRADES.map((g) => [dict.grades[String(g) as keyof typeof dict.grades], `/class/${g}`] as [string, string]))} />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-10">
         <h1 className="font-display text-4xl font-extrabold tracking-tight">

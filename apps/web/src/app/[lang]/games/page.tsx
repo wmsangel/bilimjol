@@ -3,8 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
+import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
-import { localizedAlternates } from "@/lib/seo";
+import { localizedAlternates, itemListJsonLd } from "@/lib/seo";
 import { getDictionary } from "../dictionaries";
 
 // Раз в сутки перегенерируем страницу — тогда «Игра дня» реально меняется.
@@ -123,6 +124,7 @@ export default async function GamesPage({
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff] font-sans text-[#191539]">
       <SiteHeader lang={lang} dict={dict} />
+      <JsonLd data={itemListJsonLd(lang, games.map((x) => [x.title, x.href.replace(`/${lang}`, "")] as [string, string]))} />
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">
         <h1 className="font-display text-[32px] font-bold tracking-tight sm:text-4xl">

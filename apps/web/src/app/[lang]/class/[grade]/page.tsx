@@ -13,7 +13,7 @@ import {
 import { isLocale, type Locale } from "@/i18n/config";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
-import { localizedAlternates, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
+import { localizedAlternates, breadcrumbJsonLd, faqJsonLd, courseJsonLd } from "@/lib/seo";
 import { pluralRu } from "@/lib/plural";
 import { buildCharacter } from "@/lib/characterArt";
 import { ClassGames } from "@/components/ClassGames";
@@ -123,6 +123,19 @@ export default async function ClassPage({
     <div className="w-full overflow-hidden bg-[#f7f5ff] font-sans text-[#191539]">
       <JsonLd data={breadcrumbJsonLd(lang as Locale, [[classesLabel, "/class"], [name, `/class/${g}`]])} />
       <JsonLd data={faqJsonLd(faqItems)} />
+      <JsonLd
+        data={courseJsonLd(lang as Locale, {
+          name: t(`Занятия для ${nameIn}`, `${nameIn} үчүн сабактар`),
+          description:
+            seoParas[0] ??
+            t(
+              `Задания и тесты по программе ${nameIn}.`,
+              `${nameIn} программасы боюнча тапшырмалар жана тесттер.`,
+            ),
+          path: `/class/${g}`,
+          level: name,
+        })}
+      />
 
       {/* HEADER */}
       <header className="flex items-center justify-between bg-[#191539] px-5 py-4 sm:px-16 sm:py-[22px]">

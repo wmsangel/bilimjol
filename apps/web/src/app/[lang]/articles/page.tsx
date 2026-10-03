@@ -4,8 +4,9 @@ import { notFound } from "next/navigation";
 import { articles } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
+import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
-import { localizedAlternates } from "@/lib/seo";
+import { localizedAlternates, itemListJsonLd } from "@/lib/seo";
 import { getDictionary } from "../dictionaries";
 
 export async function generateMetadata({
@@ -35,6 +36,7 @@ export default async function ArticlesPage({
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
+      <JsonLd data={itemListJsonLd(lang, articles.map((a) => [a.title[lang], `/articles/${a.slug}`] as [string, string]))} />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-8 font-sans text-[#191539]">
         <h1 className="font-display text-4xl font-bold tracking-tight">

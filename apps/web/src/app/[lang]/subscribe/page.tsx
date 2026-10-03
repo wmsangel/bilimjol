@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
-import { localizedAlternates } from "@/lib/seo";
+import { localizedAlternates, productJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
+import { JsonLd } from "@/components/JsonLd";
 import { SubscribePlans } from "@/components/SubscribePlans";
 import { getDictionary } from "../dictionaries";
 
@@ -35,6 +36,12 @@ export default async function SubscribePage({
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff] font-sans text-[#191539]">
       <SiteHeader lang={lang} dict={dict} />
+      <JsonLd
+        data={productJsonLd(lang, {
+          name: "Bilimjol Premium",
+          description: s.subtitle,
+        })}
+      />
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
         <div className="grid items-start gap-10 lg:grid-cols-[1fr_420px]">

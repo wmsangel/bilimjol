@@ -3,8 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { tests } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
-import { localizedAlternates } from "@/lib/seo";
+import { localizedAlternates, itemListJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
+import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { getDictionary } from "../dictionaries";
 
@@ -35,6 +36,7 @@ export default async function TestsPage({
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
+      <JsonLd data={itemListJsonLd(lang, tests.map((x) => [x.title[lang], `/tests/${x.id}`] as [string, string]))} />
 
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-8 font-sans text-[#191539]">
         <h1 className="font-display text-4xl font-bold tracking-tight">
