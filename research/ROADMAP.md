@@ -56,7 +56,7 @@ SEO-добор: К4 посадочные · К5 цикл GSC · К6 пачка �
 
 ## ✅ Сделано (недавнее)
 
-- Discovery-добор под KY: hreflang-alternates в sitemap (ru/ky/x-default, 134 URL) — прямой удар по «URL неизвестен Google» (K7) — 2026-10-06
+- Discovery-добор под KY: hreflang-alternates в sitemap (134 URL) + класс→статья перелинковка (вес на непроиндексированные статьи) — K7 — 2026-10-06
 - К2: тематические «похожие статьи» (теги, у каждой ровно 3 входящих) + перелинковка статья→игра/тест — 2026-10-03
 - В4: OG-превью проверено (кириллица ок) + SEO-разметка Course/ItemList/Product — 2026-10-03
 - U8: аналитика — события воронки (hero/grade/subject/topic, task_answer, lesson_finish, test_*, game_open×11, lang_switch, cabinet_*, outfit_equip) — 2026-09-30
