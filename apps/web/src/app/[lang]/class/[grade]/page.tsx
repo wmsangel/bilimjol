@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   tasks,
   GRADES,
+  articles,
   subjectsForGrade,
   getTopics,
   subjectLabels,
@@ -79,6 +80,11 @@ export default async function ClassPage({
   const subjects = subjectsForGrade(g);
   const totalTasks = tasks.filter((x) => x.grade === g).length;
   const age = t(g === 0 ? "5–6 лет" : `${g + 5}–${g + 6} лет`, g === 0 ? "5–6 жаш" : `${g + 5}–${g + 6} жаш`);
+  // Статьи для родителей — ротация по классу, чтобы разные классы ссылались на
+  // разные статьи (распределяем ссылочный вес на весь корпус, помогаем discovery).
+  const classArticles = [0, 1, 2].map(
+    (k) => articles[(g * 3 + k) % articles.length],
+  );
   const accent = GRADE_ACCENT[g];
   const mascotSvg = buildCharacter(GRADE_MASCOT[g]);
   const playHref = `/${lang}/play`;
@@ -357,6 +363,35 @@ export default async function ClassPage({
               {x === 0 ? t("Подгот.", "Даярдык") : t(`${x} класс`, `${x}-класс`)}
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* СТАТЬИ ДЛЯ РОДИТЕЛЕЙ — внутренние ссылки на статьи (помогают их индексации) */}
+      <section className="px-5 pb-20 sm:px-16">
+        <h2 className="mb-6 text-center font-display text-2xl font-bold sm:text-3xl">
+          {t("Статьи для родителей", "Ата-энелер үчүн макалалар")}
+        </h2>
+        <div className="mx-auto grid max-w-[1000px] gap-4 sm:grid-cols-3">
+          {classArticles.map((a) => (
+            <Link
+              key={a.slug}
+              href={`/${lang}/articles/${a.slug}`}
+              className="group flex flex-col rounded-3xl bg-white p-6 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1"
+            >
+              <div className="mb-3 text-4xl">{a.emoji}</div>
+              <div className="font-display text-lg font-bold leading-snug group-hover:text-[#6d5cf7]">
+                {a.title[lang]}
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-7 text-center">
+          <Link
+            href={`/${lang}/articles`}
+            className="inline-block rounded-full border-2 border-[#6d5cf7] px-7 py-3.5 text-[16px] font-extrabold text-[#6d5cf7] transition hover:border-[#e6c079] hover:bg-[#fbf3e3] hover:text-[#191539]"
+          >
+            {t("Все статьи", "Бардык макалалар")} →
+          </Link>
         </div>
       </section>
 
