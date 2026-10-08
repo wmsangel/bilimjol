@@ -63,6 +63,25 @@ export default async function TestsPage({
           </div>
         </Link>
 
+        <Link
+          href={`/${lang}/test-na-proforientaciyu`}
+          className="mt-3 flex items-center gap-4 rounded-[26px] bg-white p-5 shadow-[0_8px_24px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
+        >
+          <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#efecff] text-3xl">
+            🧭
+          </span>
+          <div className="min-w-0">
+            <h2 className="font-display text-xl font-bold">
+              {lang === "ky" ? "Ким болуу керек?" : "Кем стать?"}
+            </h2>
+            <p className="mt-1 text-sm text-[#5c5880]">
+              {lang === "ky"
+                ? "Профориентация тести (8–11-класс) — жөндөмдөрүңдү бил →"
+                : "Тест на профориентацию (8–11 класс) — узнай свои склонности →"}
+            </p>
+          </div>
+        </Link>
+
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {tests.map((t) => (
             <Link

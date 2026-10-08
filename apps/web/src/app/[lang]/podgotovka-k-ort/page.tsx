@@ -250,6 +250,26 @@ export default async function OrtLandingPage({
           </Link>
         </div>
 
+        <Link
+          href={`/${lang}/test-na-proforientaciyu`}
+          className="mt-6 flex items-center gap-4 rounded-[26px] bg-white p-5 shadow-[0_8px_24px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
+        >
+          <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#efecff] text-3xl">
+            🧭
+          </span>
+          <div className="min-w-0">
+            <h2 className="font-display text-xl font-bold">
+              {t("Ещё не выбрали направление?", "Багытты тандай элексизби?")}
+            </h2>
+            <p className="mt-1 text-sm text-[#5c5880]">
+              {t(
+                "Пройдите тест на профориентацию — он подскажет профессии и предметы →",
+                "Профориентация тестин өтүңүз — ал кесиптерди жана предметтерди сунуштайт →",
+              )}
+            </p>
+          </div>
+        </Link>
+
         <Faq title={t("Частые вопросы", "Көп берилүүчү суроолор")} items={faq} />
       </main>
 

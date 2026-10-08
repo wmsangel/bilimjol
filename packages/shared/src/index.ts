@@ -7,3 +7,4 @@ export * from "./content/articles";
 export * from "./content/news";
 export * from "./content/legal";
 export * from "./content/tests";
+export * from "./content/career";
