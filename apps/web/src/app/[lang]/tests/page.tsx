@@ -44,6 +44,25 @@ export default async function TestsPage({
         </h1>
         <p className="mt-3 text-lg text-[#5c5880]">{dict.tests.subtitle}</p>
 
+        <Link
+          href={`/${lang}/podgotovka-k-ort`}
+          className="mt-6 flex items-center gap-4 rounded-[26px] bg-[#6d5cf7] p-5 text-white shadow-[0_8px_24px_rgba(25,21,57,.1)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.18)]"
+        >
+          <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-white/20 text-3xl">
+            🎓
+          </span>
+          <div className="min-w-0">
+            <h2 className="font-display text-xl font-bold">
+              {lang === "ky" ? "ЖРТга даярданасызбы?" : "Готовитесь к ОРТ?"}
+            </h2>
+            <p className="mt-1 text-sm text-white/85">
+              {lang === "ky"
+                ? "Пробный тест жана математика тренажёру — акысыз →"
+                : "Пробный тест и тренажёр по математике — бесплатно →"}
+            </p>
+          </div>
+        </Link>
+
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {tests.map((t) => (
             <Link

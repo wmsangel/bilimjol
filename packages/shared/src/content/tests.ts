@@ -252,7 +252,159 @@ const SPEECH_POOL: Record<string, unknown>[] = [
     correctIndex: 0, explanation: { ru: "«Огромный».", ky: "«Эбегейсиз»." } },
 ];
 
+// ── ОРТ / ЖРТ (пилот): пулы для тренажёра в формате Общереспубликанского
+// тестирования (11 класс, поступление в вуз). Вопросы бери вразброс.
+// Грамотность написана по-язычно: RU-вариант проверяет русскую норму,
+// KY-вариант — кыргызскую (correctIndex общий для обоих).
+
+const ORT_MATH_POOL: Record<string, unknown>[] = [
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Сколько будет 25% от 80?", ky: "80дин 25% канча болот?" },
+    answer: 20, explanation: { ru: "80 × 0,25 = 20.", ky: "80 × 0,25 = 20." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Найдите 15% от 200.", ky: "200дүн 15% тап." },
+    answer: 30, explanation: { ru: "200 × 0,15 = 30.", ky: "200 × 0,15 = 30." } },
+  { type: "single_choice", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "2, 6, 18, 54, … Какое число следующее?", ky: "2, 6, 18, 54, … Кийинки сан кайсы?" },
+    options: [{ ru: "162", ky: "162" }, { ru: "108", ky: "108" }, { ru: "120", ky: "120" }, { ru: "216", ky: "216" }],
+    correctIndex: 0, explanation: { ru: "Каждое число ×3: 54 × 3 = 162.", ky: "Ар бир сан ×3: 54 × 3 = 162." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Если 3x = 21, чему равен x?", ky: "Эгер 3x = 21 болсо, x канчага барабар?" },
+    answer: 7, explanation: { ru: "x = 21 ÷ 3 = 7.", ky: "x = 21 ÷ 3 = 7." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Поезд прошёл 240 км за 3 часа. Средняя скорость (км/ч)?", ky: "Поезд 240 км 3 саатта басты. Орточо ылдамдык (км/с)?" },
+    answer: 80, explanation: { ru: "240 ÷ 3 = 80 км/ч.", ky: "240 ÷ 3 = 80 км/с." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Периметр квадрата 20 см. Чему равна его площадь (см²)?", ky: "Чарчынын периметри 20 см. Анын аянты канча (см²)?" },
+    answer: 25, explanation: { ru: "Сторона 20 ÷ 4 = 5, площадь 5 × 5 = 25.", ky: "Тарабы 20 ÷ 4 = 5, аянты 5 × 5 = 25." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Вычислите 2⁶.", ky: "2⁶ эсепте." },
+    answer: 64, explanation: { ru: "2⁶ = 64.", ky: "2⁶ = 64." } },
+  { type: "single_choice", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Сколько процентов составляет 30 от 150?", ky: "30 150дин канча пайызы?" },
+    options: [{ ru: "20%", ky: "20%" }, { ru: "15%", ky: "15%" }, { ru: "25%", ky: "25%" }, { ru: "30%", ky: "30%" }],
+    correctIndex: 0, explanation: { ru: "30 ÷ 150 = 0,2 = 20%.", ky: "30 ÷ 150 = 0,2 = 20%." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "a + b = 12 и a − b = 4. Чему равно a?", ky: "a + b = 12 жана a − b = 4. a канчага барабар?" },
+    answer: 8, explanation: { ru: "Сложив уравнения: 2a = 16, a = 8.", ky: "Теңдемелерди кошсок: 2a = 16, a = 8." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "В классе 30 учеников, 40% — девочки. Сколько девочек?", ky: "Класста 30 окуучу, 40% — кыздар. Канча кыз бар?" },
+    answer: 12, explanation: { ru: "30 × 0,4 = 12.", ky: "30 × 0,4 = 12." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Найдите значение 2(x + 3) при x = 5.", ky: "x = 5 болгондо 2(x + 3) маанисин тап." },
+    answer: 16, explanation: { ru: "2 × (5 + 3) = 2 × 8 = 16.", ky: "2 × (5 + 3) = 2 × 8 = 16." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Среднее арифметическое чисел 4, 8 и 12?", ky: "4, 8 жана 12 сандарынын орточо арифметикасы?" },
+    answer: 8, explanation: { ru: "(4 + 8 + 12) ÷ 3 = 24 ÷ 3 = 8.", ky: "(4 + 8 + 12) ÷ 3 = 24 ÷ 3 = 8." } },
+  { type: "single_choice", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Сторону квадрата увеличили в 2 раза. Во сколько раз выросла площадь?", ky: "Чарчынын тарабын 2 эсе чоңойтту. Аянты канча эсе өстү?" },
+    options: [{ ru: "в 4 раза", ky: "4 эсе" }, { ru: "в 2 раза", ky: "2 эсе" }, { ru: "в 8 раз", ky: "8 эсе" }],
+    correctIndex: 0, explanation: { ru: "Площадь растёт как квадрат: 2² = 4.", ky: "Аянт квадрат сыяктуу өсөт: 2² = 4." } },
+  { type: "number_input", subject: "math", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Чему равен √144?", ky: "√144 канчага барабар?" },
+    answer: 12, explanation: { ru: "12 × 12 = 144, значит √144 = 12.", ky: "12 × 12 = 144, демек √144 = 12." } },
+];
+
+const ORT_VERBAL_POOL: Record<string, unknown>[] = [
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Врач — больница. Учитель — ?", ky: "Дарыгер — оорукана. Мугалим — ?" },
+    options: [{ ru: "школа", ky: "мектеп" }, { ru: "доска", ky: "доска" }, { ru: "ученик", ky: "окуучу" }],
+    correctIndex: 0, explanation: { ru: "Место работы: врач — в больнице, учитель — в школе.", ky: "Иштеген жери: дарыгер — ооруканада, мугалим — мектепте." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "День — ночь. Свет — ?", ky: "Күн — түн. Жарык — ?" },
+    options: [{ ru: "тьма", ky: "караңгы" }, { ru: "лампа", ky: "чырак" }, { ru: "солнце", ky: "күн" }],
+    correctIndex: 0, explanation: { ru: "Противоположности: день↔ночь, свет↔тьма.", ky: "Карама-каршы: күн↔түн, жарык↔караңгы." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Писатель — книга. Художник — ?", ky: "Жазуучу — китеп. Сүрөтчү — ?" },
+    options: [{ ru: "картина", ky: "сүрөт" }, { ru: "кисть", ky: "кылкалем" }, { ru: "музей", ky: "музей" }],
+    correctIndex: 0, explanation: { ru: "Что создаёт: писатель — книгу, художник — картину.", ky: "Эмне жаратат: жазуучу — китеп, сүрөтчү — сүрөт." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 2, free: true,
+    prompt: { ru: "Найдите лишнее слово.", ky: "Ашыкча сөздү тап." },
+    options: [{ ru: "морковь", ky: "сабиз" }, { ru: "яблоко", ky: "алма" }, { ru: "груша", ky: "алмурут" }, { ru: "слива", ky: "алча" }],
+    correctIndex: 0, explanation: { ru: "Морковь — овощ, остальное — фрукты.", ky: "Сабиз — жашылча, калганы — мөмө." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 2, free: true,
+    prompt: { ru: "Найдите лишнее слово.", ky: "Ашыкча сөздү тап." },
+    options: [{ ru: "дуб", ky: "эмен" }, { ru: "роза", ky: "роза" }, { ru: "тюльпан", ky: "лала" }, { ru: "ромашка", ky: "ромашка" }],
+    correctIndex: 0, explanation: { ru: "Дуб — дерево, остальное — цветы.", ky: "Эмен — дарак, калганы — гүл." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 2, free: true,
+    prompt: { ru: "Синоним к слову «храбрый»?", ky: "«Эр жүрөк» сөзүнүн синоними?" },
+    options: [{ ru: "смелый", ky: "кайраттуу" }, { ru: "слабый", ky: "алсыз" }, { ru: "грустный", ky: "капалуу" }],
+    correctIndex: 0, explanation: { ru: "«Смелый» — близко по значению.", ky: "«Кайраттуу» — мааниси жакын." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Антоним к слову «щедрый»?", ky: "«Айкөл» сөзүнүн антоними?" },
+    options: [{ ru: "жадный", ky: "сараң" }, { ru: "добрый", ky: "боорукер" }, { ru: "весёлый", ky: "шайыр" }],
+    correctIndex: 0, explanation: { ru: "Противоположность щедрости — жадность.", ky: "Айкөлдүктүн карама-каршысы — сараңдык." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Чтобы хорошо сдать экзамен, нужно систематически …", ky: "Экзаменди жакшы тапшыруу үчүн системалуу …" },
+    options: [{ ru: "готовиться", ky: "даярдануу" }, { ru: "отдыхать", ky: "эс алуу" }, { ru: "волноваться", ky: "толкундануу" }],
+    correctIndex: 0, explanation: { ru: "По смыслу подходит «готовиться».", ky: "Мааниси боюнча «даярдануу» туура келет." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Все розы — цветы. Это роза. Значит, это …", ky: "Бардык розалар — гүл. Бул роза. Демек, бул …" },
+    options: [{ ru: "цветок", ky: "гүл" }, { ru: "дерево", ky: "дарак" }, { ru: "трава", ky: "чөп" }],
+    correctIndex: 0, explanation: { ru: "Логический вывод: роза входит в множество цветов.", ky: "Логикалык жыйынтык: роза гүлдөрдүн тобуна кирет." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 2, free: true,
+    prompt: { ru: "Синоним к слову «быстрый»?", ky: "«Тез» сөзүнүн синоними?" },
+    options: [{ ru: "скорый", ky: "шамдагай" }, { ru: "медленный", ky: "жай" }, { ru: "тихий", ky: "акырын" }],
+    correctIndex: 0, explanation: { ru: "«Скорый» — близко по значению.", ky: "«Шамдагай» — мааниси жакын." } },
+];
+
+const ORT_GRAMMAR_POOL: Record<string, unknown>[] = [
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Где нужна запятая? «Когда стемнело_ мы вернулись домой».", ky: "Үтүр кайда керек? «Караңгы киргенде_ үйгө кайттык»." },
+    options: [{ ru: "после «стемнело»", ky: "«киргенде»ден кийин" }, { ru: "после «мы»", ky: "«үйгө»дөн кийин" }, { ru: "запятая не нужна", ky: "үтүр керек эмес" }],
+    correctIndex: 0, explanation: { ru: "Придаточное отделяется запятой от главного.", ky: "Багыныңкы сүйлөм башкы сүйлөмдөн үтүр менен бөлүнөт." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Выберите слово без ошибки.", ky: "Катасыз сөздү танда." },
+    options: [{ ru: "агентство", ky: "директор" }, { ru: "агенство", ky: "диретор" }, { ru: "агенцтво", ky: "директр" }],
+    correctIndex: 0, explanation: { ru: "Верно: «агентство».", ky: "Туура: «директор»." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "Укажите грамматически верный вариант.", ky: "Грамматикалык туура вариантты көрсөт." },
+    options: [{ ru: "их дом", ky: "алардын үйү" }, { ru: "ихний дом", ky: "аларын үйү" }],
+    correctIndex: 0, explanation: { ru: "Форма «ихний» — просторечие; верно «их».", ky: "Туура таандык форма — «алардын үйү»." } },
+  { type: "single_choice", subject: "reading", topic: "ort", grade: 11, difficulty: 3, free: true,
+    prompt: { ru: "«Невежда» — это человек, который …", ky: "«Наадан» — бул … адам." },
+    options: [{ ru: "мало знает", ky: "аз билген" }, { ru: "груб в общении", ky: "одоно" }, { ru: "много работает", ky: "көп иштеген" }],
+    correctIndex: 0, explanation: { ru: "Невежда — несведущий, малознающий (не путать с невежей — грубияном).", ky: "Наадан — билимсиз, аз билген адам." } },
+];
+
+// Комбинированный ОРТ-пробник: сбалансированная выборка математика + аналогии
+// + грамотность, перемешанная. Варианты ответа тоже тасуются.
+function ortTrial(math: number, verbal: number, grammar: number): Task[] {
+  const take = (pool: Record<string, unknown>[], n: number) =>
+    [...pool].sort(() => Math.random() - 0.5).slice(0, n);
+  const chosen = [
+    ...take(ORT_MATH_POOL, math),
+    ...take(ORT_VERBAL_POOL, verbal),
+    ...take(ORT_GRAMMAR_POOL, grammar),
+  ].sort(() => Math.random() - 0.5);
+  return chosen.map((base, i) => {
+    if (base.type === "single_choice" && Array.isArray(base.options)) {
+      const opts = base.options as LocalizedText[];
+      const correct = opts[base.correctIndex as number];
+      const mixed = [...opts].sort(() => Math.random() - 0.5);
+      return q({ ...base, options: mixed, correctIndex: mixed.indexOf(correct) }, i);
+    }
+    return q(base, i);
+  });
+}
+
 export const tests: TestDef[] = [
+  {
+    id: "ort",
+    icon: "🎓",
+    count: 15,
+    title: { ru: "Пробный ОРТ", ky: "ЖРТ сыноосу" },
+    description: { ru: "15 заданий: математика, аналогии, грамотность", ky: "15 тапшырма: математика, аналогиялар, сабаттуулук" },
+    generate: () => ortTrial(6, 5, 4),
+  },
+  {
+    id: "ort-math",
+    icon: "🧮",
+    count: 10,
+    title: { ru: "Математика ОРТ", ky: "ЖРТ математика" },
+    description: { ru: "10 задач уровня ОРТ: проценты, уравнения, ряды", ky: "ЖРТ деңгээлиндеги 10 маселе: пайыздар, теңдемелер, катарлар" },
+    generate: () => pickPool(ORT_MATH_POOL, 10),
+  },
   {
     id: "mult-table",
     icon: "✖️",
