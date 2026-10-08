@@ -23,11 +23,13 @@ export function CareerTest({
   classHref,
   ortHref,
   subscribeHref,
+  loginHref,
 }: {
   locale: Locale;
   classHref: string;
   ortHref: string;
   subscribeHref: string;
+  loginHref: string;
 }) {
   const total = careerQuestions.length;
   const [started, setStarted] = useState(false);
@@ -35,12 +37,17 @@ export function CareerTest({
   const [answers, setAnswers] = useState<number[]>([]);
   const [done, setDone] = useState(false);
   const [premium, setPremium] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const paywallFired = useRef(false);
 
   const t = (ru: string, ky: string) => (locale === "ky" ? ky : ru);
 
   useEffect(() => {
-    if (isLoggedIn()) {
+    const li = isLoggedIn();
+    setLoggedIn(li);
+    setAuthChecked(true);
+    if (li) {
       getEntitlement()
         .then((e) => setPremium(e.premium))
         .catch(() => {});
@@ -95,14 +102,38 @@ export function CareerTest({
           )}
         </p>
         <p className="mb-6 text-sm text-[#8f8aa8]">
-          {t("Методика RIASEC · 4–5 минут · без регистрации", "RIASEC методикасы · 4–5 мүнөт · катталуусуз")}
+          {t("Методика RIASEC · 4–5 минут · результат сохранится в аккаунте", "RIASEC методикасы · 4–5 мүнөт · жыйынтык аккаунтка сакталат")}
         </p>
-        <button
-          onClick={start}
-          className="rounded-full bg-[#6d5cf7] px-10 py-4 text-lg font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5 active:scale-95"
-        >
-          {t("Пройти тест", "Тестти өтүү")}
-        </button>
+        {!authChecked ? (
+          <div className="mx-auto h-14 w-48 animate-pulse rounded-full bg-[#ece8fb]" />
+        ) : loggedIn ? (
+          <button
+            onClick={start}
+            className="rounded-full bg-[#6d5cf7] px-10 py-4 text-lg font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5 active:scale-95"
+          >
+            {t("Пройти тест", "Тестти өтүү")}
+          </button>
+        ) : (
+          <div className="mx-auto max-w-md rounded-[26px] border-2 border-[#e6e1f5] bg-white p-6 shadow-[0_12px_30px_rgba(25,21,57,.06)]">
+            <div className="text-3xl">🔐</div>
+            <h3 className="mt-2 font-display text-xl font-bold">
+              {t("Войдите, чтобы пройти тест", "Тестти өтүү үчүн кириңиз")}
+            </h3>
+            <p className="mt-2 text-[15px] text-[#5c5880]">
+              {t(
+                "Нужен бесплатный аккаунт — так результат сохранится и будет под рукой на всех устройствах.",
+                "Акысыз аккаунт керек — ошондо жыйынтык сакталып, бардык түзмөктө колуңузда болот.",
+              )}
+            </p>
+            <Link
+              href={loginHref}
+              onClick={() => pushEvent("career_login_required", {})}
+              className="mt-5 inline-flex rounded-full bg-[#6d5cf7] px-8 py-3.5 font-display font-bold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5 active:scale-95"
+            >
+              {t("Войти и пройти тест", "Кирип, тестти өтүү")}
+            </Link>
+          </div>
+        )}
       </div>
     );
   }

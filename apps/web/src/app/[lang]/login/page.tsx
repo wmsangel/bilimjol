@@ -15,14 +15,21 @@ const AVATARS: [string, string][] = [
 
 export default async function LoginPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ lang: string }>;
+  searchParams: Promise<{ next?: string }>;
 }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
   const dict = await getDictionary(lang);
   const t = (ru: string, ky: string) => (lang === "ky" ? ky : ru);
+
+  // Куда вернуть после входа: только локальный путь (защита от open-redirect).
+  const { next } = await searchParams;
+  const safeNext =
+    next && next.startsWith("/") && !next.startsWith("//") ? next : null;
 
   const benefits = [
     t("Прогресс гостя перенесётся в аккаунт", "Коноктун прогресси аккаунтка өтөт"),
@@ -95,7 +102,7 @@ export default async function LoginPage({
           <AccountForm
             locale={lang}
             labels={dict.auth}
-            meHref={`/${lang}/me`}
+            meHref={safeNext ?? `/${lang}/me`}
             guestHref={`/${lang}/play`}
           />
         </div>
