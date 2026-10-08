@@ -367,6 +367,47 @@ export function Landing({ lang }: { lang: Locale }) {
         </div>
       </section>
 
+      {/* СТАРШЕКЛАССНИКАМ — ОРТ + профориентация */}
+      <section className="px-5 pb-24 sm:px-16">
+        <h2 className={h2 + " text-center"}>{t("Старшеклассникам 8–11", "Жогорку класстарга 8–11")}</h2>
+        <p className="mx-auto mt-3 mb-10 max-w-2xl text-center text-lg text-[#5c5880]">
+          {t(
+            "Помогаем определиться с будущим и подготовиться к поступлению.",
+            "Келечекти аныктоого жана окууга тапшырууга даярданууга жардам беребиз.",
+          )}
+        </p>
+        <div className="mx-auto grid max-w-4xl gap-5 sm:grid-cols-2">
+          <Link
+            href={`/${lang}/test-na-proforientaciyu`}
+            className="group flex flex-col rounded-3xl bg-white p-8 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
+          >
+            <div className="mb-4 text-[44px]">🧭</div>
+            <h3 className="mb-2 font-display text-xl font-bold">{t("Тест на профориентацию", "Профориентация тести")}</h3>
+            <p className="flex-1 leading-[1.5] text-[#5c5880]">
+              {t(
+                "Кем стать? Методика RIASEC покажет склонности, профессии и предметы, которые стоит усилить.",
+                "Ким болуу керек? RIASEC методикасы жөндөмдөрдү, кесиптерди жана чыңдоо керек предметтерди көрсөтөт.",
+              )}
+            </p>
+            <span className="mt-4 font-extrabold text-[#6d5cf7] group-hover:underline">{t("Пройти тест →", "Тестти өтүү →")}</span>
+          </Link>
+          <Link
+            href={`/${lang}/podgotovka-k-ort`}
+            className="group flex flex-col rounded-3xl bg-white p-8 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
+          >
+            <div className="mb-4 text-[44px]">🎓</div>
+            <h3 className="mb-2 font-display text-xl font-bold">{t("Подготовка к ОРТ", "ЖРТга даярдык")}</h3>
+            <p className="flex-1 leading-[1.5] text-[#5c5880]">
+              {t(
+                "Бесплатный тренажёр в формате ОРТ: математика, аналогии и грамотность — на русском и кыргызском.",
+                "ЖРТ форматындагы акысыз тренажёр: математика, аналогиялар жана сабаттуулук — орусча жана кыргызча.",
+              )}
+            </p>
+            <span className="mt-4 font-extrabold text-[#6d5cf7] group-hover:underline">{t("Готовиться к ОРТ →", "ЖРТга даярдануу →")}</span>
+          </Link>
+        </div>
+      </section>
+
       {/* WHY (честная замена секции отзывов — без выдуманных отзывов) */}
       <section className="bg-[#191539] px-5 py-24 text-white sm:px-16">
         <h2 className={h2 + " mb-12 text-center"}>{t("Почему выбирают Bilimjol", "Эмне үчүн Bilimjolду тандашат")}</h2>

@@ -368,6 +368,37 @@ export default async function ClassPage({
         </div>
       </section>
 
+      {/* СТАРШЕКЛАССНИКАМ — профориентация + ОРТ (для 8–11) */}
+      {g >= 8 && (
+        <section className="px-5 pb-20 sm:px-16">
+          <h2 className="mb-6 text-center font-display text-2xl font-bold sm:text-3xl">
+            {t("Старшеклассникам", "Жогорку класстарга")}
+          </h2>
+          <div className="mx-auto grid max-w-[800px] gap-4 sm:grid-cols-2">
+            <Link
+              href={`/${lang}/test-na-proforientaciyu`}
+              className="group flex items-center gap-4 rounded-3xl bg-white p-6 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1"
+            >
+              <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#efecff] text-3xl">🧭</span>
+              <span className="min-w-0">
+                <span className="block font-display text-lg font-bold group-hover:text-[#6d5cf7]">{t("Тест на профориентацию", "Профориентация тести")}</span>
+                <span className="text-sm text-[#5c5880]">{t("Кем стать: склонности и профессии", "Ким болуу: жөндөм жана кесиптер")}</span>
+              </span>
+            </Link>
+            <Link
+              href={`/${lang}/podgotovka-k-ort`}
+              className="group flex items-center gap-4 rounded-3xl bg-white p-6 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1"
+            >
+              <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#fbf3e3] text-3xl">🎓</span>
+              <span className="min-w-0">
+                <span className="block font-display text-lg font-bold group-hover:text-[#6d5cf7]">{t("Подготовка к ОРТ", "ЖРТга даярдык")}</span>
+                <span className="text-sm text-[#5c5880]">{t("Пробный тест и тренажёр по математике", "Сыноо тест жана математика тренажёру")}</span>
+              </span>
+            </Link>
+          </div>
+        </section>
+      )}
+
       {/* СТАТЬИ ДЛЯ РОДИТЕЛЕЙ — внутренние ссылки на статьи (помогают их индексации) */}
       <section className="px-5 pb-20 sm:px-16">
         <h2 className="mb-6 text-center font-display text-2xl font-bold sm:text-3xl">

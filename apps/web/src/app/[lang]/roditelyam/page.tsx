@@ -231,6 +231,41 @@ export default async function ParentsLanding({
           </p>
         </section>
 
+        {/* Старшеклассникам */}
+        <section className="mt-14">
+          <h2 className="text-center font-display text-2xl font-extrabold">
+            {t("Если ребёнок в старших классах", "Эгер бала жогорку класста болсо")}
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-[#5c5880]">
+            {t(
+              "Помогите определиться с профессией и подготовиться к поступлению.",
+              "Кесипти тандоого жана окууга тапшырууга жардам бериңиз.",
+            )}
+          </p>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2">
+            <Link
+              href={`/${lang}/test-na-proforientaciyu`}
+              className="group flex items-center gap-4 rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm transition hover:-translate-y-1"
+            >
+              <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#efecff] text-3xl">🧭</span>
+              <span className="min-w-0">
+                <span className="block font-display text-lg font-bold group-hover:text-[#6d5cf7]">{t("Тест на профориентацию", "Профориентация тести")}</span>
+                <span className="text-sm text-[#5c5880]">{t("Склонности, профессии и предметы", "Жөндөм, кесиптер жана предметтер")}</span>
+              </span>
+            </Link>
+            <Link
+              href={`/${lang}/podgotovka-k-ort`}
+              className="group flex items-center gap-4 rounded-3xl border border-black/[.06] bg-white p-6 shadow-sm transition hover:-translate-y-1"
+            >
+              <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#fbf3e3] text-3xl">🎓</span>
+              <span className="min-w-0">
+                <span className="block font-display text-lg font-bold group-hover:text-[#6d5cf7]">{t("Подготовка к ОРТ", "ЖРТга даярдык")}</span>
+                <span className="text-sm text-[#5c5880]">{t("Пробный тест и тренажёр по математике", "Сыноо тест жана математика тренажёру")}</span>
+              </span>
+            </Link>
+          </div>
+        </section>
+
         {/* FAQ */}
         <Faq title={t("Частые вопросы", "Көп берилүүчү суроолор")} items={faq} />
 
