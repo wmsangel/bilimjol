@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
 <title>Bilimjol Roadmap</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -53,7 +54,7 @@
     color-scheme: dark;
   }
 
-  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); margin: 0; }
   * { box-sizing: border-box; }
   .wrap { max-width: 860px; margin: 0 auto; padding-inline: 18px; padding-block: 28px 56px; }
 
@@ -84,6 +85,7 @@
   .step-body { min-width: 0; flex: 1; }
   .step-title { font-weight: 700; font-size: 15px; }
   .step-note { color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 2px; }
+  .step-note code { background: var(--surface-2); padding: 1px 5px; border-radius: 5px; font-size: 12px; }
   .chip { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; letter-spacing: 0.3px; }
   .chip.next { background: var(--violet); color: #fff; }
   .chip.big { background: var(--gold-soft); color: var(--gold); }
@@ -106,7 +108,7 @@
 <div class="wrap">
   <header class="top">
     <div class="brand">Bilim<span class="jol">jol</span> <span class="tag">Roadmap</span></div>
-    <div class="updated">обновлено 06.10.2026</div>
+    <div class="updated">обновлено 08.10.2026</div>
   </header>
   <p class="lead">Живой план продукта. Источник правды — <code>research/ROADMAP.md</code> в репозитории; эта страница — витрина поверх него, переопубликовывается на тот же URL после каждой выполненной задачи.</p>
 
@@ -183,9 +185,15 @@
   </div>
 
   <h2>💡 Входящие идеи (копилка)</h2>
-  <p class="parking">Пусто — все текущие идеи переведены в план (роадмап и «Парковка» выше). Сюда падают новые идеи по ходу работы; как появятся — переносим в план.</p>
+  <div class="done">
+    <ul class="rows">
+      <li><span class="mark">▪</span><div class="step-body"><b>GSC-сигнал спроса:</b> первые реальные показы. Денежный интент «решение задач по математике [класс] онлайн бесплатно» (+ «онлайн примеры по математике») — кандидат в посадочные (К4) / тюнинг тайтлов class-страниц под «решать примеры … бесплатно». KY-показ «сандардын квадраттары» — hreflang работает; статья nauchit-vnimatelnosti получила показ. Действуем, когда накопятся позиции (сейчас CTR=0 при 1–3 показах — норма).</div><span class="date">08.10</span></li>
+    </ul>
+  </div>
 
   <footer>
     Источник правды — <code>research/ROADMAP.md</code> в репозитории. Детальный каталог задач — <code>research/PLAN.md</code>, сырой инбокс идей — <code>research/IDEAS.md</code>. Эта страница переопубликовывается на тот же URL после каждой выполненной задачи.
   </footer>
 </div>
+
+</body></html>
