@@ -98,6 +98,7 @@ export default async function CareerPage({
           locale={lang}
           classHref={`/${lang}/class`}
           ortHref={`/${lang}/podgotovka-k-ort`}
+          subscribeHref={`/${lang}/subscribe`}
         />
 
         <section className="mt-14">
