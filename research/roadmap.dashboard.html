@@ -1,205 +1,178 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
-<title>Bilimjol Roadmap</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" />
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bilimjol — дорожная карта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* Layout: single centered column; big-number status tiles, then A/B/C roadmap, done, ideas. */
-  :root {
-    --bg: #f4f2fb;
-    --surface: #ffffff;
-    --surface-2: #efeaff;
-    --ink: #191539;
-    --muted: #5c5880;
-    --line: #e6e1f5;
-    --violet: #6d5cf7;
-    --gold: #a9791f;
-    --gold-soft: #fbf3e3;
-    --good: #15803d;
-    --warn: #b45309;
-    --shadow: 0 8px 24px rgba(25, 21, 57, 0.06);
-    --font-display: "Comfortaa", system-ui, sans-serif;
-    --font-body: "Nunito", system-ui, -apple-system, sans-serif;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #0f0d1f;
-      --surface: #1a1730;
-      --surface-2: #241f3d;
-      --ink: #f2f0fb;
-      --muted: #a9a3c9;
-      --line: #2c2748;
-      --violet: #9d8cff;
-      --gold: #e6c079;
-      --gold-soft: #2a2412;
-      --good: #4ade80;
-      --warn: #fbbf24;
-      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-      color-scheme: dark;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #0f0d1f;
-    --surface: #1a1730;
-    --surface-2: #241f3d;
-    --ink: #f2f0fb;
-    --muted: #a9a3c9;
-    --line: #2c2748;
-    --violet: #9d8cff;
-    --gold: #e6c079;
-    --gold-soft: #2a2412;
-    --good: #4ade80;
-    --warn: #fbbf24;
-    --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-    color-scheme: dark;
-  }
-
-  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); margin: 0; }
-  * { box-sizing: border-box; }
-  .wrap { max-width: 860px; margin: 0 auto; padding-inline: 18px; padding-block: 28px 56px; }
-
-  header.top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-bottom: 6px; }
-  .brand { font-family: var(--font-display); font-weight: 700; font-size: clamp(26px, 6vw, 38px); letter-spacing: -0.5px; }
-  .brand .jol { color: var(--gold); }
-  .brand .tag { color: var(--muted); font-family: var(--font-body); font-weight: 800; font-size: 0.5em; letter-spacing: 0.5px; text-transform: uppercase; }
-  .updated { color: var(--muted); font-size: 13px; font-weight: 600; }
-  .lead { color: var(--muted); font-size: 14px; line-height: 1.55; margin: 6px 0 22px; max-width: 60ch; }
-  .lead code { background: var(--surface-2); padding: 1px 6px; border-radius: 6px; font-size: 12px; }
-
-  h2 { font-family: var(--font-display); font-weight: 700; font-size: 19px; margin: 32px 0 14px; display: flex; align-items: center; gap: 9px; }
-
-  /* status tiles */
-  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(116px, 1fr)); gap: 12px; }
-  .tile { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; box-shadow: var(--shadow); min-width: 0; }
-  .tile .v { font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1.05; font-variant-numeric: tabular-nums; }
-  .tile .v.sm { font-size: 17px; }
-  .tile .l { color: var(--muted); font-size: 12px; font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
-
-  /* roadmap blocks */
-  .block { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 6px 18px 14px; box-shadow: var(--shadow); margin-bottom: 14px; }
-  .block-h { font-weight: 800; font-size: 13px; letter-spacing: 0.6px; text-transform: uppercase; color: var(--violet); padding: 14px 0 4px; }
-  ol.steps { list-style: none; margin: 0; padding: 0; }
-  ol.steps li { display: flex; gap: 12px; align-items: flex-start; padding: 11px 0; border-top: 1px solid var(--line); }
-  ol.steps li:first-child { border-top: 0; }
-  .num { flex: none; width: 26px; height: 26px; border-radius: 9px; background: var(--surface-2); color: var(--violet); font-family: var(--font-display); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
-  .step-body { min-width: 0; flex: 1; }
-  .step-title { font-weight: 700; font-size: 15px; }
-  .step-note { color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 2px; }
-  .step-note code { background: var(--surface-2); padding: 1px 5px; border-radius: 5px; font-size: 12px; }
-  .chip { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 999px; margin-left: 6px; vertical-align: middle; letter-spacing: 0.3px; }
-  .chip.next { background: var(--violet); color: #fff; }
-  .chip.big { background: var(--gold-soft); color: var(--gold); }
-  .chip.done { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
-
-  /* lists (done / ideas / parking) */
-  ul.rows { list-style: none; margin: 0; padding: 0; }
-  ul.rows li { display: flex; gap: 10px; align-items: flex-start; padding: 9px 0; border-top: 1px solid var(--line); font-size: 14px; line-height: 1.5; }
-  ul.rows li:first-child { border-top: 0; }
-  ul.rows .mark { flex: none; }
-  ul.rows .date { color: var(--muted); font-size: 12px; font-weight: 700; white-space: nowrap; }
-  .done { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 4px 18px; box-shadow: var(--shadow); }
-  .ideas { background: var(--gold-soft); border: 1px solid var(--line); border-radius: 18px; padding: 4px 18px; }
-  .ideas li { border-top-color: color-mix(in srgb, var(--gold) 22%, transparent); }
-  .parking { color: var(--muted); font-size: 13px; line-height: 1.6; }
-  footer { margin-top: 34px; color: var(--muted); font-size: 12.5px; line-height: 1.6; border-top: 1px solid var(--line); padding-top: 16px; }
-  footer code { background: var(--surface-2); padding: 1px 6px; border-radius: 6px; }
+/* Графит: холодный нейтраль, IBM Plex, один акцент под сайт.
+   Светлая + тёмная тема. Одна читаемая колонка ≤860px. */
+:root{
+  --bg:#fbfbfc; --surface:#f4f5f8; --surface2:#eceef3;
+  --ink:#1b1e26; --muted:#6a6f7d; --line:#e6e8ee; --line2:#d6d9e2;
+  --accent:#4e8a5c; --accent-soft:color-mix(in srgb,var(--accent) 10%,transparent);
+  --good:#3f8f63; --warn:#9c7620; --bad:#b5494a;
+  --font-display:'IBM Plex Mono',ui-monospace,monospace;
+  --font-body:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14161b; --surface:#1b1e25; --surface2:#222630;
+  --ink:#e7e9ef; --muted:#959bab; --line:#282c35; --line2:#353a45;
+  --accent:#8fd1a0; /* ← тёмный вариант акцента, светлее основного */
+  --good:#6bbd8e; --warn:#d7ab5c; --bad:#e08383; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#14161b; --surface:#1b1e25; --surface2:#222630;
+  --ink:#e7e9ef; --muted:#959bab; --line:#282c35; --line2:#353a45;
+  --accent:#8fd1a0; /* ← тот же тёмный вариант акцента */
+  --good:#6bbd8e; --warn:#d7ab5c; --bad:#e08383; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);
+  font-size:18px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums}
+.wrap{max-width:860px;margin:0 auto;padding-inline:20px;padding-block:28px 64px}
+.kicker{font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);font-weight:500}
+h1{margin:10px 0 0;font-family:var(--font-display);font-weight:600;
+  font-size:clamp(32px,6vw,46px);line-height:1.05;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);font-size:16px;max-width:60ch;margin:10px 0 0}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:32px 0 40px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.tile .n{font-family:var(--font-mono);font-weight:600;font-size:27px;line-height:1;letter-spacing:-.02em}
+.tile .n.accent{color:var(--accent)}
+.tile .c{display:block;margin-top:8px;font-size:13px;color:var(--muted);line-height:1.35}
+section{margin-bottom:38px}
+.s-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;
+  padding-bottom:9px;border-bottom:1px solid var(--line)}
+.s-head h2{margin:0;font-family:var(--font-display);font-weight:600;font-size:21px;letter-spacing:-.01em}
+.s-head .count{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+.q{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:14px 4px;border-bottom:1px solid var(--line)}
+.q:last-child{border-bottom:none}
+.q .idx{font-family:var(--font-mono);font-weight:600;font-size:15px;color:var(--accent);padding-top:2px}
+.q .t{font-weight:600;font-size:17px}
+.q .d{color:var(--muted);font-size:15.5px;margin-top:3px}
+.q .tag{display:inline-block;margin-top:8px;font-family:var(--font-mono);font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+  background:var(--accent-soft);padding:3px 8px;border-radius:6px}
+.done,.ideas{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.done li,.ideas li{display:grid;grid-template-columns:22px 1fr;gap:12px;font-size:16.5px}
+.done .mk{color:var(--good);font-weight:700;font-family:var(--font-mono)}
+.ideas .bx{width:15px;height:15px;border:1.5px solid var(--line2);border-radius:4px;margin-top:5px}
+.note{color:var(--muted);font-size:14.5px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:15.5px;min-width:380px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:none}
+th{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;background:var(--surface)}
+.st{font-family:var(--font-mono);font-size:12px;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.st.on{color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent)}
+.st.wait{color:var(--warn);background:color-mix(in srgb,var(--warn) 16%,transparent)}
+.st.soon{color:var(--muted);background:var(--surface2)}
+td.num{font-family:var(--font-mono);text-align:right}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+@media(max-width:620px){body{font-size:17px}.tiles{grid-template-columns:repeat(2,1fr)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-
+</head>
+<body>
 <div class="wrap">
-  <header class="top">
-    <div class="brand">Bilim<span class="jol">jol</span> <span class="tag">Roadmap</span></div>
-    <div class="updated">обновлено 08.10.2026</div>
+  <header>
+    <span class="kicker">Дорожная карта · обновлено 09.10.2026</span>
+    <h1>Bilimjol</h1>
+    <p class="sub">Двуязычная (RU/KY) обучающая платформа для детей 0–11 классов в Кыргызстане. Эта страница — живой план: что сделано и что в очереди.</p>
   </header>
-  <p class="lead">Живой план продукта. Источник правды — <code>research/ROADMAP.md</code> в репозитории; эта страница — витрина поверх него, переопубликовывается на тот же URL после каждой выполненной задачи.</p>
 
   <div class="tiles">
-    <div class="tile"><div class="v">1249</div><div class="l">заданий</div></div>
-    <div class="tile"><div class="v">92</div><div class="l">темы</div></div>
-    <div class="tile"><div class="v">11</div><div class="l">игр</div></div>
-    <div class="tile"><div class="v">35</div><div class="l">статьи</div></div>
-    <div class="tile"><div class="v">11</div><div class="l">тестов</div></div>
-    <div class="tile"><div class="v">0–11</div><div class="l">классы</div></div>
-    <div class="tile"><div class="v sm">RU · KY</div><div class="l">языки</div></div>
-    <div class="tile"><div class="v sm">Paddle live</div><div class="l">$1.99 / $15.99</div></div>
+    <div class="tile"><span class="n">9</span><span class="c">визитов за 7 дней</span></div>
+    <div class="tile"><span class="n">40<span style="color:var(--muted)">/166</span></span><span class="c">страниц показывались в поиске</span></div>
+    <div class="tile"><span class="n accent">8</span><span class="c">задач в очереди</span></div>
+    <div class="tile"><span class="n">2</span><span class="c">кликов из поиска (28 д)</span></div>
   </div>
 
-  <h2>🗺 Ближайшие ~10 запусков</h2>
+  <section>
+    <div class="s-head"><h2>Очередь</h2><span class="count">по приоритету · 8</span></div>
+    <div class="q"><span class="idx">01</span><div>
+      <div class="t">Добить индексацию KY и тонких страниц</div>
+      <div class="d">126 из 166 URL sitemap ни разу не показывались в поиске (76%). Запросить индексацию ключевых KY-страниц в GSC и усилить внутренние ссылки на KY.</div>
+      <span class="tag">индексация</span></div></div>
+    <div class="q"><span class="idx">02</span><div>
+      <div class="t">Дотянуть CTR «Адаптации к школе» (KY)</div>
+      <div class="d">/ky/articles/adaptaciya-k-shkole на поз. 7 (4 показа, 0 кликов): meta description ~95→150 симв. с конкретикой, ужать title. Попутно со следующим пушем.</div>
+      <span class="tag">трафик</span></div></div>
+    <div class="q"><span class="idx">03</span><div>
+      <div class="t">Вычитать KY-словари игр носителем</div>
+      <div class="d">WordGame (деление на муундар), GroupGame и пр. — точность и корректность кыргызского.</div>
+      <span class="tag">баг</span></div></div>
+    <div class="q"><span class="idx">04</span><div>
+      <div class="t">Сделать свои предметы для старших классов ⚠️</div>
+      <div class="d">Вместо общего «Окр. мир» — Физика/Химия/Биология/История (маппинг класс→предметы, затем контент). Крупное, согласовать объём с владельцем.</div>
+      <span class="tag">контент</span></div></div>
+    <div class="q"><span class="idx">05</span><div>
+      <div class="t">Выйти на русскоязычную диаспору</div>
+      <div class="d">Локаль-таргетинг + ASO/копирайт под US/EU/СНГ; тот же RU-контент, Paddle USD уже работает, конкуренция ниже.</div>
+      <span class="tag">трафик</span></div></div>
+    <div class="q"><span class="idx">06</span><div>
+      <div class="t">Утвердить и внедрить ссылки на 24zdorovie</div>
+      <div class="d">Карта из 2 контекстных do-follow ссылок (из статей про экранное время и адаптацию) готова, ждёт ок владельца.</div>
+      <span class="tag">трафик</span></div></div>
+    <div class="q"><span class="idx">07</span><div>
+      <div class="t">Добавить годовую подписку + RUB-оверрайд</div>
+      <div class="d">Тариф на год со скидкой; проверить и включить показ ₽ для РФ-трафика в Paddle.</div>
+      <span class="tag">деньги</span></div></div>
+    <div class="q"><span class="idx">08</span><div>
+      <div class="t">Докрутить UX-полировку</div>
+      <div class="d">В5 типографика · В6 анимации · U-серия (крошки, пустые/ошибки, скорость, «что дальше»).</div>
+      <span class="tag">скорость</span></div></div>
+  </section>
 
-  <div class="block">
-    <div class="block-h">Блок A — закалка под запуск</div>
-    <ol class="steps">
-      <li><span class="num">1</span><div class="step-body"><div class="step-title">Правда цифр + статьи с главной<span class="chip done">✅ 30.09</span></div><div class="step-note">К1: «900+ заданий» → фактические 1249. Плюс блок «Свежие статьи» на <code>/ru</code> и <code>/ky</code> — главная пока не ссылается ни на одну статью (ускорит индексацию, особенно KY).</div></div></li>
-      <li><span class="num">2</span><div class="step-body"><div class="step-title">U8 — аналитика (GA4/GTM)<span class="chip done">✅ 30.09</span></div><div class="step-note">События: старт занятия, игры, тесты, клики пейвола, регистрация. Нужно до трафика, чтобы видеть, что популярно.</div></div></li>
-      <li><span class="num">3</span><div class="step-body"><div class="step-title">U9 — дожать письма<span class="chip next">next</span></div><div class="step-note">Resend-код готов; проверить welcome/премиум после <code>RESEND_API_KEY</code> (владелец) и закрыть гейт.</div></div></li>
-      <li><span class="num">4</span><div class="step-body"><div class="step-title">В4 — превью ссылки при пересылке (OG)<span class="chip done">✅ 03.10</span></div><div class="step-note">Каждая расшаренная ссылка должна выглядеть хорошо — важно для органического шеринга.</div></div></li>
-    </ol>
-  </div>
-
-  <div class="block">
-    <div class="block-h">Блок B — рост и SEO</div>
-    <ol class="steps">
-      <li><span class="num">5</span><div class="step-body"><div class="step-title">К2 + перелинковка<span class="chip done">✅ 03.10</span></div><div class="step-note">Тематические «похожие статьи» вместо кольца из 3 + ссылки статья↔игры/тесты.</div></div></li>
-      <li><span class="num">6</span><div class="step-body"><div class="step-title">К3 — свои URL у 92 тем<span class="chip big">⏸️ отложено</span></div><div class="step-note">По данным GSC 70% URL не в индексе — сначала индексируем имеющееся (K7), потом добавляем страницы. Вернуться позже.</div></div></li>
-    </ol>
-  </div>
-
-  <div class="block">
-    <div class="block-h">Блок C — глубина и новые магниты</div>
-    <ol class="steps">
-      <li><span class="num">7</span><div class="step-body"><div class="step-title">Н9 — мини-уроки 2–3 + пачка статей<span class="chip done">✅ 08.10</span></div><div class="step-note">16 explainers (что · как думать · пример) для классов 2–3 + 12 новых статей ×RU/KY под матем-спрос и погружение в сервис.</div></div></li>
-      <li><span class="num">8</span><div class="step-body"><div class="step-title">Н11 — пилот ОРТ<span class="chip done">✅ 08.10</span></div><div class="step-note">2 теста (пробный ОРТ 15 заданий + математика ОРТ) + посадочная <code>/podgotovka-k-ort</code> (ОРТ/ЖРТ, FAQ-разметка). Разводка: sitemap + баннер на /tests + CTA классов 10–11. Позже ЕГЭ.</div></div></li>
-      <li><span class="num">9</span><div class="step-body"><div class="step-title">Гардероб тематично (Claude Design)<span class="chip done">✅ 08.10</span></div><div class="step-note">3 новых набора: 🦸 Супергерой, 🧙 Волшебник, 🏴‍☠️ Пират (7 вещей инлайн-SVG). Выверено на всех 12 персонажах. Наборов стало 6; премиум открывает весь гардероб.</div></div></li>
-      <li><span class="num">10</span><div class="step-body"><div class="step-title">Профориентация — премиум-фича<span class="chip done">✅ 08.10</span></div><div class="step-note">RIASEC, 48 вопросов, 5-балльная шкала. Тест + ведущий тип + диаграмма — free (SEO-магнит); полный разбор (сочетание, вузы, сильные стороны/риски, план по предметам/ОРТ) — premium. Пейвол + CTA, разбор в списке преимуществ. Первая десятка закрыта 🎉</div></div></li>
-    </ol>
-  </div>
-
-  <h2>✅ Сделано</h2>
-  <div class="done">
-    <ul class="rows">
-      <li><span class="mark">✅</span><div class="step-body"><b>Разводка ОРТ + профориентации по сайту:</b> секция «Старшеклассникам 8–11» на главной (RU/KY), блок на класс-страницах 8–11 и на странице «Родителям» — плюс к баннерам на /tests и кросс-ссылкам. Старшие магниты видны оттуда, где о них логично говорить.</div><span class="date">08.10</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Профориентация → премиум-фича (углублено):</b> RIASEC доведён до серьёзного уровня — 48 вопросов, 5-балльная шкала, сильные стороны/зоны роста/вузы(КР)/ОРТ-предметы у каждого типа. Free: тест + ведущий тип + диаграмма (SEO-магнит). Premium: полный разбор (синтез сочетания, карточки, план по предметам/ОРТ) через getEntitlement; пейвол + CTA на /subscribe. Вход в тест — только для авторизованных (лид-ген): гейт логина + redirect-back (?next). Прогнано вживую (аноним→гейт, вход→старт, free без утечек, premium-отчёт).</div><span class="date">08.10</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Тест на профориентацию (RIASEC), базовая версия:</b> 6 типов, топ-3 профиль с диаграммой. Посадочная /test-na-proforientaciyu (RU/KY, FAQ-разметка), баннеры на /tests + кросс-ссылка с ОРТ.</div><span class="date">08.10</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Гардероб тематично (Claude Design):</b> 3 новых набора — 🦸 Супергерой (маска+плащ+костюм со звездой), 🧙 Волшебник (шляпа+мантия), 🏴‍☠️ Пират (шляпа с черепом+повязка). 7 вещей инлайн-SVG, fit-подгонка под все 12 персонажей. Наборов стало 6.</div><span class="date">08.10</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Н11 — пилот ОРТ:</b> тренажёр в формате Общереспубликанского тестирования — пробный ОРТ (математика + аналогии + грамотность RU/KY) и «Математика ОРТ». SEO-посадочная /podgotovka-k-ort (ОРТ/ЖРТ, FAQ-разметка), баннер на /tests и CTA классов 10–11. Новая аудитория — старшие.</div><span class="date">08.10</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Н9 + контент-пачка:</b> мини-уроки «разобраться в теме» для классов 2–3 (16 тем) + 12 новых статей ×RU/KY (решение задач/примеры по математике, матем. 2–3 кл., деление, текст, логика + 5 погружений в сервис). Статей 23→35.</div><span class="date">08.10</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Discovery-добор под KY:</b> hreflang-alternates в sitemap (134 URL) + класс→статья перелинковка — Google обнаруживает KY и получает ссылки на тонкие статьи.</div><span class="date">06.10</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>К2 — перелинковка:</b> тематические «похожие статьи» (у каждой 3 входящих) + статья→игра/тест.</div><span class="date">03.10</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>В4 + SEO-разметка:</b> OG-превью проверено (кириллица не режется) + JSON-LD Course/ItemList/Product.</div><span class="date">03.10</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>U8 — аналитика:</b> события воронки (старт, ответы, финиш урока, тесты, game_open×11, язык, кабинет, гардероб).</div><span class="date">30.09</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>К1 + «Свежие статьи»:</b> динамический счётчик заданий + 6 прямых ссылок на статьи с главной (было 0).</div><span class="date">30.09</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Paddle go-live</b> end-to-end: чекаут, вебхук (200), премиум активируется (П1).</div><span class="date">25.09</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Цены</b> → $ как основная + «≈ сом · примерно» везде.</div><span class="date">25.09</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Премиум открывает весь гардероб</b> (+ корректно после истечения).</div><span class="date">25.09</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Письма (U9, код):</b> Resend-модуль, welcome + «премиум активирован», RU/KY.</div><span class="date">25.09</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Игры: 5 → 11</b> (Продолжи ряд, Собери слово, Разложи по группам, Который час, Больше/меньше, Найди тень).</div><span class="date">25–28.09</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Н10:</b> маппинг игр по классам (2 на класс, 2-я премиум).</div><span class="date">28.09</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Мини-уроки</b> «разобраться в теме», классы 0–1 (Н9).</div><span class="date">25.09</span></li>
-      <li><span class="mark">✅</span><div class="step-body"><b>Визуальный прогон под запуск:</b> фикс overflow лендинга, cursor:pointer на всё кликабельное.</div><span class="date">25.09</span></li>
+  <section>
+    <div class="s-head"><h2>Сделано</h2><span class="count">за 2 недели</span></div>
+    <ul class="done">
+      <li><span class="mk">✓</span><span>Профориентация → премиум-фича: RIASEC (48 вопросов, шкала Ликерта), free-тизер + полный разбор в премиуме, вход в тест через гейт логина (лид-ген) с redirect-back.</span></li>
+      <li><span class="mk">✓</span><span>ОРТ и профориентация выведены на главную (секция «Старшеклассникам»), класс-страницы 8–11 и страницу «Родителям».</span></li>
+      <li><span class="mk">✓</span><span>Гардероб: 3 тематических набора (супергерой/волшебник/пират), 7 новых вещей инлайн-SVG — на всех 12 персонажах.</span></li>
+      <li><span class="mk">✓</span><span>Н11 — пилот ОРТ: пробный тест + «Математика ОРТ» + SEO-посадочная /podgotovka-k-ort с FAQ-разметкой.</span></li>
+      <li><span class="mk">✓</span><span>Н9 — мини-уроки классов 2–3 (16 тем) + 12 новых статей ×RU/KY; корпус статей 23→35.</span></li>
+      <li><span class="mk">✓</span><span>Discovery под KY: hreflang-alternates в sitemap + класс→статья перелинковка.</span></li>
+      <li><span class="mk">✓</span><span>К2 — тематические «похожие статьи» (теги) + ссылки статья→игра/тест.</span></li>
+      <li><span class="mk">✓</span><span>В4 — OG-превью проверено (кириллица) + schema Course/ItemList/Product.</span></li>
+      <li><span class="mk">✓</span><span>U8 — события воронки в GA4/GTM; К1 — правда цифр на главной + блок «Свежие статьи».</span></li>
     </ul>
-  </div>
+  </section>
 
-  <h2>🅿️ Парковка (бэклог плана)</h2>
-  <div class="ideas">
-    <ul class="rows">
-      <li><span class="mark">▪</span><div class="step-body">Свои предметы на каждый класс (старшие: Физика/Химия/Биология/История/География).</div></li>
-      <li><span class="mark">▪</span><div class="step-body">Экспансия на русскоязычную диаспору (US/EU/Израиль/Германия) + СНГ (KZ/UZ).</div></li>
-      <li><span class="mark">▪</span><div class="step-body">RUB-оверрайд в Paddle (для РФ-трафика; KGS не поддерживается).</div></li>
-      <li><span class="mark">▪</span><div class="step-body">Вынести смену персонажа из гардероба в отдельное место.</div></li>
-      <li><span class="mark">▪</span><div class="step-body">Контекстные do-follow ссылки на 24zdorovie (карта готова — ждёт ок владельца).</div></li>
+  <section>
+    <div class="s-head"><h2>Идеи</h2><span class="count">инбокс · не в работе</span></div>
+    <ul class="ideas">
+      <li><span class="bx"></span><span>Свои предметы для старших классов <span class="note">— Физика/Химия/Биология/История вместо общего «Окр. мир».</span></span></li>
+      <li><span class="bx"></span><span>Экспансия на русскоязычную диаспору + СНГ <span class="note">— тот же RU-контент, Paddle USD работает, конкуренция ниже.</span></span></li>
+      <li><span class="bx"></span><span>Годовая подписка со скидкой <span class="note">— рельс Paddle уже есть.</span></span></li>
+      <li><span class="bx"></span><span>RUB-оверрайд в Paddle <span class="note">— сначала проверить обслуживание РФ-покупателей.</span></span></li>
+      <li><span class="bx"></span><span>Расширить тесты <span class="note">— чтение/логика/окр. мир; заодно long-tail страницы.</span></span></li>
+      <li><span class="bx"></span><span>Вынести смену персонажа из гардероба <span class="note">— отдельная заметная точка.</span></span></li>
+      <li><span class="bx"></span><span>Контекстные ссылки на 24zdorovie <span class="note">— 2 do-follow из статей, ждёт ок владельца.</span></span></li>
     </ul>
-    <p class="parking">UX-полировка: В5 типографика · В6 анимации · U1–U7. SEO-добор: К4 посадочные · К5 цикл GSC · К6 пачка статей · К7 индексация KY · К8 FAQ-разметка. Контент/механика: Н1–Н8 (типы заданий, «Окр. мир», логика 5–11, олимпиада, раздробить темы, новые тесты, аудит качества).</p>
-  </div>
+  </section>
 
-  <h2>💡 Входящие идеи (копилка)</h2>
-  <div class="done">
-    <ul class="rows">
-      <li><span class="mark">▪</span><div class="step-body"><b>GSC-сигнал спроса:</b> первые реальные показы. Денежный интент «решение задач по математике [класс] онлайн бесплатно» (+ «онлайн примеры по математике») — кандидат в посадочные (К4) / тюнинг тайтлов class-страниц под «решать примеры … бесплатно». KY-показ «сандардын квадраттары» — hreflang работает; статья nauchit-vnimatelnosti получила показ. Действуем, когда накопятся позиции (сейчас CTR=0 при 1–3 показах — норма).</div><span class="date">08.10</span></li>
-    </ul>
-  </div>
+  <section>
+    <div class="s-head"><h2>Реклама и офферы</h2><span class="count">монетизация</span></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Канал</th><th>Статус</th><th class="num">Доход / мес</th></tr></thead>
+      <tbody>
+        <tr><td>Подписка Paddle (премиум)</td><td><span class="st on">активна</span></td><td class="num">—</td></tr>
+        <tr><td>AdSense</td><td><span class="st soon">нет</span></td><td class="num">—</td></tr>
+        <tr><td>Партнёрки / офферы</td><td><span class="st soon">нет</span></td><td class="num">—</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin-top:12px">Детский сайт — рекламу не ставим. Основной канал — премиум-подписка ($1.99/мес · $15.99/год, MoR Paddle). Трафик ещё ~0, поэтому доход «—».</p>
+  </section>
 
-  <footer>
-    Источник правды — <code>research/ROADMAP.md</code> в репозитории. Детальный каталог задач — <code>research/PLAN.md</code>, сырой инбокс идей — <code>research/IDEAS.md</code>. Эта страница переопубликовывается на тот же URL после каждой выполненной задачи.
-  </footer>
+  <footer>Витрина проекта. Обновляется вместе с планом (<code>research/ROADMAP.md</code>).</footer>
 </div>
-
-</body></html>
+</body>
+</html>
