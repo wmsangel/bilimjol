@@ -15,6 +15,18 @@ export interface Article {
   title: LocalizedText;
   excerpt: LocalizedText;
   sections: ArticleSection[];
+  /**
+   * Контекстная do-follow ссылка на тематически близкий внешний ресурс
+   * (напр. 24zdorovie), в теле статьи естественным анкором. Рендерится абзацем
+   * после секции с индексом `afterSection`.
+   */
+  externalRef?: {
+    url: string;
+    afterSection: number;
+    before: LocalizedText;
+    anchor: LocalizedText;
+    after: LocalizedText;
+  };
 }
 
 export const articles: Article[] = [
@@ -142,6 +154,22 @@ export const articles: Article[] = [
     excerpt: {
       ru: "Гаджет может быть инструментом развития, если задать правильные рамки.",
       ky: "Туура чектөө коюлса, гаджет өнүгүү куралы боло алат.",
+    },
+    externalRef: {
+      url: "https://24zdorovie.com",
+      afterSection: 1,
+      before: {
+        ru: "Экраны влияют не только на учёбу, но и на здоровье. ",
+        ky: "Экрандар окууга гана эмес, ден соолукка да таасир этет. ",
+      },
+      anchor: {
+        ru: "Как экраны влияют на сон и зрение",
+        ky: "Экран уйку менен көрүүгө кантип таасир этет",
+      },
+      after: {
+        ru: " — разбирают на 24zdorovie.",
+        ky: " — 24zdorovie сайтында.",
+      },
     },
     sections: [
       {
@@ -735,6 +763,22 @@ export const articles: Article[] = [
     excerpt: {
       ru: "Внимательность — не черта характера, а навык. Разбираем конкретные приёмы по возрасту и упражнения на каждый день.",
       ky: "Кунт коюу — мүнөз эмес, көндүм. Жашка жараша конкреттүү ыкмаларды жана күнүмдүк көнүгүүлөрдү карайбыз.",
+    },
+    externalRef: {
+      url: "https://24zdorovie.com",
+      afterSection: 1,
+      before: {
+        ru: "Внимание ребёнка сильно зависит от режима. ",
+        ky: "Баланын кунт коюусу режимге көп көз каранды. ",
+      },
+      anchor: {
+        ru: "Как сон, питание и режим дня влияют на концентрацию",
+        ky: "Уйку, тамактануу жана күн режими топтолууга кантип таасир этет",
+      },
+      after: {
+        ru: " — разбирают на 24zdorovie.",
+        ky: " — 24zdorovie сайтында.",
+      },
     },
     sections: [
       {

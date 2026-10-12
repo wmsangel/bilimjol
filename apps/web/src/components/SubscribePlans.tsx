@@ -209,6 +209,15 @@ export function SubscribePlans({
         <div className="mt-1 text-sm text-[#b9b3e6]">
           {approxLocal(plan)} · {t("примерно", "болжолдуу")}
         </div>
+        {plan === "annual" ? (
+          <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#e6c079]/20 px-3.5 py-1.5 text-sm font-extrabold text-[#e6c079]">
+            🎁 {t("≈ $1.33 в месяц · дешевле на 33%", "≈ айына $1.33 · 33% арзаныраак")}
+          </div>
+        ) : (
+          <div className="mt-3 text-sm font-semibold text-[#b9b3e6]">
+            {t("На годовом — дешевле на 33% ($1.33/мес)", "Жылдыкта — 33% арзаныраак ($1.33/ай)")}
+          </div>
+        )}
       </div>
 
       {/* Действие */}

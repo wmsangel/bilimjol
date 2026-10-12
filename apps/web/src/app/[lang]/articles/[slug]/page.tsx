@@ -157,6 +157,20 @@ export default async function ArticlePage({
                   </Link>
                 </aside>
               )}
+              {article.externalRef && article.externalRef.afterSection === i && (
+                <p className="mt-6 text-lg leading-8 text-[#2d2950]">
+                  {article.externalRef.before[lang]}
+                  <a
+                    href={article.externalRef.url}
+                    target="_blank"
+                    rel="noopener"
+                    className="font-bold text-[#6d5cf7] underline underline-offset-2 transition hover:text-[#4b3cc9]"
+                  >
+                    {article.externalRef.anchor[lang]}
+                  </a>
+                  {article.externalRef.after[lang]}
+                </p>
+              )}
             </Fragment>
           ))}
         </article>

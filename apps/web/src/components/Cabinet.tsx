@@ -232,8 +232,16 @@ export function Cabinet({
           </div>
           <div className="relative flex-1">
             <div className="text-[15px] font-bold text-[#d9d5f5]">{labels.greeting}</div>
-            <div className="mb-3.5 mt-1 font-display text-[26px] font-bold">{helper.name[locale]}</div>
-            <div className="mb-1.5 flex justify-between text-sm font-extrabold">
+            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="font-display text-[26px] font-bold">{helper.name[locale]}</span>
+              <button
+                onClick={changeHelper}
+                className="rounded-full bg-white/10 px-3 py-1 text-[13px] font-extrabold text-[#d9d5f5] ring-1 ring-white/20 transition hover:bg-white/20 hover:text-white"
+              >
+                🔄 {labels.changeHelper}
+              </button>
+            </div>
+            <div className="mb-1.5 mt-3.5 flex justify-between text-sm font-extrabold">
               <span>{labels.level} {level}</span>
               <span className="text-[#e6c079]">{inLevel}/{perLevel} ⭐</span>
             </div>
@@ -322,12 +330,11 @@ export function Cabinet({
           </div>
         </div>
 
-        {/* Мелочи: статус премиума + сменить героя / отчёт — друг под другом */}
+        {/* Мелочи: статус премиума + отчёт (смена героя — кнопкой у персонажа) */}
         <div className="flex flex-col items-center gap-2.5 text-sm font-semibold text-[#5c5880]">
           {email && premiumUntil && (
             <span className="rounded-full bg-[#fbf3e3] px-3 py-1 text-xs font-bold text-[#7a5a1e]">⭐ {labels.premiumActive} {fmtDate(premiumUntil)}</span>
           )}
-          <button onClick={changeHelper} className="hover:text-[#6d5cf7]">{labels.changeHelper}</button>
           <Link href={parentHref} onClick={() => pushEvent("cabinet_parent_report", {})} className="hover:text-[#6d5cf7]">📊 {accountLabels.parentReport}</Link>
         </div>
       </div>
