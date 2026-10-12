@@ -330,13 +330,12 @@ export function Cabinet({
           </div>
         </div>
 
-        {/* Мелочи: статус премиума + отчёт (смена героя — кнопкой у персонажа) */}
-        <div className="flex flex-col items-center gap-2.5 text-sm font-semibold text-[#5c5880]">
-          {email && premiumUntil && (
+        {/* Статус премиума (навигация — в сайдбаре, смена героя — у персонажа) */}
+        {email && premiumUntil && (
+          <div className="flex justify-center">
             <span className="rounded-full bg-[#fbf3e3] px-3 py-1 text-xs font-bold text-[#7a5a1e]">⭐ {labels.premiumActive} {fmtDate(premiumUntil)}</span>
-          )}
-          <Link href={parentHref} onClick={() => pushEvent("cabinet_parent_report", {})} className="hover:text-[#6d5cf7]">📊 {accountLabels.parentReport}</Link>
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Правый рельс */}
@@ -378,9 +377,9 @@ export function Cabinet({
           <div className="flex flex-col gap-2">
             {(
               [
-                { href: `/${locale}/play`, icon: "🎮", label: labels.nextPlay },
                 { href: `/${locale}/games`, icon: "🧩", label: labels.nextGames },
                 { href: `/${locale}/wardrobe`, icon: "👕", label: labels.nextWardrobe },
+                { href: `/${locale}/tests`, icon: "🎯", label: locale === "ky" ? "Тесттер" : "Тесты" },
               ] as const
             ).map((r) => (
               <Link
