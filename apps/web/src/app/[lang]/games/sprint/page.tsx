@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { SprintGame } from "@/components/SprintGame";
 import { getDictionary } from "../../dictionaries";
+import { GameOutro } from "@/components/GameOutro";
 
 export async function generateMetadata({
   params,
@@ -53,6 +54,7 @@ export default async function SprintPage({
         </div>
         <SprintGame labels={dict.games.sprint} homeHref={`/${lang}/games`} />
       </main>
+      <GameOutro lang={lang} currentSlug="/games/sprint" />
     </div>
   );
 }

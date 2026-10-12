@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { PatternGame } from "@/components/PatternGame";
 import { getDictionary } from "../../dictionaries";
+import { GameOutro } from "@/components/GameOutro";
 
 export async function generateMetadata({
   params,
@@ -58,6 +59,7 @@ export default async function PatternPage({
         </div>
         <PatternGame labels={dict.games.pattern} homeHref={`/${lang}/games`} />
       </main>
+      <GameOutro lang={lang} currentSlug="/games/pattern" />
     </div>
   );
 }

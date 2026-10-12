@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { TraceGame } from "@/components/TraceGame";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { getDictionary } from "../../dictionaries";
+import { GameOutro } from "@/components/GameOutro";
 
 export async function generateMetadata({
   params,
@@ -57,6 +58,7 @@ export default async function TracePage({
           locale={lang}
         />
       </main>
+      <GameOutro lang={lang} currentSlug="/games/trace" />
     </div>
   );
 }

@@ -1,24 +1,34 @@
 import Link from "next/link";
-import type { Locale } from "@izn-study/shared";
+import { tests, type Locale } from "@izn-study/shared";
+import { GAME_META } from "@/lib/classGames";
 
 const CONTACT = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "wmsangel@gmail.com";
 
 const T = {
   ru: {
     tagline: "Учиться — это интересно. На кыргызском и русском.",
-    sections: "Разделы", play: "Играть", tests: "Тесты", articles: "Материалы", subscribe: "Подписка",
+    sections: "Разделы", play: "Играть", games: "Игры", tests: "Тесты", articles: "Материалы", subscribe: "Подписка",
     parents: "Родителям", readiness: "Тест готовности", classes: "Классы",
+    ort: "Подготовка к ОРТ", career: "Профориентация",
+    popular: "Популярное",
     project: "Проект", about: "О проекте", privacy: "Конфиденциальность", terms: "Соглашение",
     contact: "Связаться", rights: "Все права защищены",
   },
   ky: {
     tagline: "Окуу — кызыктуу. Кыргызча жана орусча.",
-    sections: "Бөлүмдөр", play: "Ойноо", tests: "Тесттер", articles: "Материалдар", subscribe: "Жазылуу",
+    sections: "Бөлүмдөр", play: "Ойноо", games: "Оюндар", tests: "Тесттер", articles: "Материалдар", subscribe: "Жазылуу",
     parents: "Ата-энелерге", readiness: "Даярдык тести", classes: "Класстар",
+    ort: "ЖРТга даярдык", career: "Профориентация",
+    popular: "Популярдуу",
     project: "Долбоор", about: "Долбоор жөнүндө", privacy: "Купуялык", terms: "Келишим",
     contact: "Байланыш", rights: "Бардык укуктар корголгон",
   },
 };
+
+// Популярное — прямые ссылки на отдельные игры и тесты. Дают этим страницам
+// входящие с КАЖДОЙ страницы сайта (RU и KY) и помогают обходу тонких KY-URL.
+const POP_GAMES = ["bubbles", "build", "sprint"] as const;
+const POP_TESTS = ["add", "division"] as const;
 
 function Col({ title, links }: { title: string; links: [string, string][] }) {
   return (
@@ -39,9 +49,16 @@ function Col({ title, links }: { title: string; links: [string, string][] }) {
 
 export function SiteFooter({ lang }: { lang: Locale }) {
   const t = T[lang] ?? T.ru;
+  const popular: [string, string][] = [
+    ...POP_GAMES.map((id) => [GAME_META[id].title[lang], `/${lang}${GAME_META[id].slug}`] as [string, string]),
+    ...POP_TESTS.map((id) => {
+      const test = tests.find((x) => x.id === id);
+      return [test ? test.title[lang] : id, `/${lang}/tests/${id}`] as [string, string];
+    }),
+  ];
   return (
     <footer className="border-t border-[#e6e1ff] bg-white font-sans text-[#191539]">
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 py-12 sm:grid-cols-2 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+      <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 py-12 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
         <div>
           <div className="font-display text-xl font-bold tracking-tight">
             Bilim<span className="text-[#c9a04f]">jol</span>
@@ -53,13 +70,17 @@ export function SiteFooter({ lang }: { lang: Locale }) {
           links={[
             [t.play, `/${lang}/play`],
             [t.classes, `/${lang}/class`],
+            [t.games, `/${lang}/games`],
             [t.tests, `/${lang}/tests`],
             [t.articles, `/${lang}/articles`],
             [t.parents, `/${lang}/roditelyam`],
+            [t.ort, `/${lang}/podgotovka-k-ort`],
+            [t.career, `/${lang}/test-na-proforientaciyu`],
             [t.readiness, `/${lang}/gotovnost-k-shkole`],
             [t.subscribe, `/${lang}/subscribe`],
           ]}
         />
+        <Col title={t.popular} links={popular} />
         <Col
           title={t.project}
           links={[

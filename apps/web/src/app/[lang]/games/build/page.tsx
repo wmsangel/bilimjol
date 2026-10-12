@@ -9,6 +9,7 @@ import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { BuildGame } from "@/components/BuildGame";
 import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
+import { GameOutro } from "@/components/GameOutro";
 
 export async function generateMetadata({
   params,
@@ -61,6 +62,7 @@ export default async function BuildPage({
           <BuildGame labels={dict.games.build} homeHref={`/${lang}/games`} />
         </PremiumGate>
       </main>
+      <GameOutro lang={lang} currentSlug="/games/build" />
     </div>
   );
 }

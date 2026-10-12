@@ -9,6 +9,7 @@ import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { BubbleGame } from "@/components/BubbleGame";
 import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
+import { GameOutro } from "@/components/GameOutro";
 
 export async function generateMetadata({
   params,
@@ -61,6 +62,7 @@ export default async function BubblesPage({
           <BubbleGame labels={dict.games.bubbles} homeHref={`/${lang}/games`} />
         </PremiumGate>
       </main>
+      <GameOutro lang={lang} currentSlug="/games/bubbles" />
     </div>
   );
 }

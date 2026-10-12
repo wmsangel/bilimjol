@@ -9,6 +9,7 @@ import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { ClockGame } from "@/components/ClockGame";
 import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
+import { GameOutro } from "@/components/GameOutro";
 
 export async function generateMetadata({
   params,
@@ -66,6 +67,7 @@ export default async function ClockPage({
           <ClockGame labels={dict.games.clock} homeHref={`/${lang}/games`} />
         </PremiumGate>
       </main>
+      <GameOutro lang={lang} currentSlug="/games/clock" />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { WordGame } from "@/components/WordGame";
 import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
+import { GameOutro } from "@/components/GameOutro";
 
 export async function generateMetadata({
   params,
@@ -70,6 +71,7 @@ export default async function WordPage({
           />
         </PremiumGate>
       </main>
+      <GameOutro lang={lang} currentSlug="/games/word" />
     </div>
   );
 }

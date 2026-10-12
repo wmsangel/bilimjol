@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { CompareGame } from "@/components/CompareGame";
 import { getDictionary } from "../../dictionaries";
+import { GameOutro } from "@/components/GameOutro";
 
 export async function generateMetadata({
   params,
@@ -58,6 +59,7 @@ export default async function ComparePage({
         </div>
         <CompareGame labels={dict.games.compare} homeHref={`/${lang}/games`} />
       </main>
+      <GameOutro lang={lang} currentSlug="/games/compare" />
     </div>
   );
 }

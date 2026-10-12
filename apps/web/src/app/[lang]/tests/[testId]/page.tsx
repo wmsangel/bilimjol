@@ -6,6 +6,7 @@ import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { TestPlayer } from "@/components/TestPlayer";
+import { TestOutro } from "@/components/TestOutro";
 import { getDictionary } from "../../dictionaries";
 
 export function generateStaticParams() {
@@ -71,6 +72,7 @@ export default async function TestPage({
           }}
         />
       </main>
+      <TestOutro lang={lang} currentId={test.id} />
     </div>
   );
 }
