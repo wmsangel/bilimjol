@@ -8,7 +8,7 @@ const T = {
   ru: {
     tagline: "Учиться — это интересно. На кыргызском и русском.",
     sections: "Разделы", play: "Играть", games: "Игры", tests: "Тесты", articles: "Материалы", subscribe: "Подписка",
-    parents: "Родителям", readiness: "Тест готовности", classes: "Классы",
+    parents: "Родителям", readiness: "Тест готовности", classes: "Классы", math: "Математика онлайн",
     ort: "Подготовка к ОРТ", career: "Профориентация",
     popular: "Популярное",
     project: "Проект", about: "О проекте", privacy: "Конфиденциальность", terms: "Соглашение",
@@ -17,7 +17,7 @@ const T = {
   ky: {
     tagline: "Окуу — кызыктуу. Кыргызча жана орусча.",
     sections: "Бөлүмдөр", play: "Ойноо", games: "Оюндар", tests: "Тесттер", articles: "Материалдар", subscribe: "Жазылуу",
-    parents: "Ата-энелерге", readiness: "Даярдык тести", classes: "Класстар",
+    parents: "Ата-энелерге", readiness: "Даярдык тести", classes: "Класстар", math: "Математика онлайн",
     ort: "ЖРТга даярдык", career: "Профориентация",
     popular: "Популярдуу",
     project: "Долбоор", about: "Долбоор жөнүндө", privacy: "Купуялык", terms: "Келишим",
@@ -70,6 +70,7 @@ export function SiteFooter({ lang }: { lang: Locale }) {
           links={[
             [t.play, `/${lang}/play`],
             [t.classes, `/${lang}/class`],
+            [t.math, `/${lang}/matematika`],
             [t.games, `/${lang}/games`],
             [t.tests, `/${lang}/tests`],
             [t.articles, `/${lang}/articles`],

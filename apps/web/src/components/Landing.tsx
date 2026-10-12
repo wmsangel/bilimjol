@@ -536,8 +536,10 @@ export function Landing({ lang }: { lang: Locale }) {
           </div>
           <div className="flex flex-col gap-2.5 text-[15px]">
             <div className="mb-1 font-extrabold text-white">{t("Платформа", "Платформа")}</div>
-            <a href="#inside" className="hover:text-[#e6c079]">{t("Что внутри", "Ичинде эмне")}</a>
-            <a href="#how" className="hover:text-[#e6c079]">{t("Как работает", "Кантип иштейт")}</a>
+            <Link href={`/${lang}/matematika`} className="hover:text-[#e6c079]">{t("Математика онлайн", "Математика онлайн")}</Link>
+            <Link href={`/${lang}/class`} className="hover:text-[#e6c079]">{t("Классы", "Класстар")}</Link>
+            <Link href={`/${lang}/games`} className="hover:text-[#e6c079]">{t("Игры", "Оюндар")}</Link>
+            <Link href={`/${lang}/tests`} className="hover:text-[#e6c079]">{t("Тесты", "Тесттер")}</Link>
             <Link href={readyHref} className="hover:text-[#e6c079]">{t("Тест готовности", "Даярдык тести")}</Link>
           </div>
           <div className="flex flex-col gap-2.5 text-[15px]">
