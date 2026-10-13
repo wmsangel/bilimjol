@@ -54,7 +54,7 @@ export default async function ComparePage({
             {dict.games.compare.back}
           </Link>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">
-            ⚖️ {dict.games.compare.title}
+            <span aria-hidden="true">⚖️</span> {dict.games.compare.title}
           </h1>
         </div>
         <CompareGame labels={dict.games.compare} homeHref={`/${lang}/games`} />

@@ -48,7 +48,7 @@ export default async function TestsPage({
           href={`/${lang}/podgotovka-k-ort`}
           className="mt-6 flex items-center gap-4 rounded-[26px] bg-[#6d5cf7] p-5 text-white shadow-[0_8px_24px_rgba(25,21,57,.1)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.18)]"
         >
-          <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-white/20 text-3xl">
+          <span aria-hidden="true" className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-white/20 text-3xl">
             🎓
           </span>
           <div className="min-w-0">
@@ -67,7 +67,7 @@ export default async function TestsPage({
           href={`/${lang}/test-na-proforientaciyu`}
           className="mt-3 flex items-center gap-4 rounded-[26px] bg-white p-5 shadow-[0_8px_24px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
         >
-          <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#efecff] text-3xl">
+          <span aria-hidden="true" className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#efecff] text-3xl">
             🧭
           </span>
           <div className="min-w-0">

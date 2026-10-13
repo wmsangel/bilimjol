@@ -138,7 +138,7 @@ export function Wardrobe({
                         : "border-transparent hover:-translate-y-1 hover:border-[#b9b3e6]")
                   }
                 >
-                  <span className={"text-3xl " + (locked ? "opacity-40 grayscale" : "")}>
+                  <span aria-hidden="true" className={"text-3xl " + (locked ? "opacity-40 grayscale" : "")}>
                     {set.emoji}
                   </span>
                   <span className="min-w-0">
@@ -207,6 +207,7 @@ export function Wardrobe({
                       }
                     >
                       <span
+                        aria-hidden="true"
                         className={"block h-10 w-11 " + (locked ? "opacity-30 grayscale" : "")}
                         dangerouslySetInnerHTML={{ __html: wardrobeIcon(it.id) }}
                       />

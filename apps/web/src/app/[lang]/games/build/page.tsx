@@ -50,7 +50,7 @@ export default async function BuildPage({
             {dict.games.build.back}
           </Link>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">
-            🧮 {dict.games.build.title}
+            <span aria-hidden="true">🧮</span> {dict.games.build.title}
           </h1>
         </div>
         <PremiumGate

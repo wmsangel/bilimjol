@@ -40,7 +40,7 @@ export function ClassGames({ grade, lang }: { grade: number; lang: "ru" | "ky" }
               href={href}
               className="relative flex items-center gap-4 rounded-3xl bg-[#191539] p-5 text-white transition hover:brightness-125 sm:p-6"
             >
-              <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-white/10 text-2xl sm:h-14 sm:w-14 sm:text-3xl">
+              <div aria-hidden="true" className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-white/10 text-2xl sm:h-14 sm:w-14 sm:text-3xl">
                 {locked ? "🔒" : game.icon}
               </div>
               <div className="min-w-0">

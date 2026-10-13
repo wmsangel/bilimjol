@@ -54,7 +54,7 @@ export default async function ShadowPage({
             {dict.games.shadow.back}
           </Link>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">
-            🌑 {dict.games.shadow.title}
+            <span aria-hidden="true">🌑</span> {dict.games.shadow.title}
           </h1>
         </div>
         <ShadowGame labels={dict.games.shadow} homeHref={`/${lang}/games`} />

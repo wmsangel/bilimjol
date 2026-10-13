@@ -26,10 +26,11 @@ export function RewardModal({
       <Confetti />
       <div className="relative w-full max-w-sm rounded-[32px] bg-white p-8 text-center font-sans text-[#191539] shadow-[0_0_0_4px_#e6c079,0_30px_60px_rgba(0,0,0,.3)]">
         <p className="text-sm font-extrabold uppercase tracking-[1.4px] text-[#b08a3e]">
-          🎉 {t.title}
+          <span aria-hidden="true">🎉</span> {t.title}
         </p>
         <div className="mx-auto my-5 flex h-32 w-32 items-center justify-center rounded-3xl bg-[#fbf3e3]">
           <div
+            aria-hidden="true"
             className="h-24 w-24 [&>svg]:h-full [&>svg]:w-full"
             dangerouslySetInnerHTML={{ __html: wardrobeIcon(item.id) }}
           />
@@ -43,7 +44,7 @@ export function RewardModal({
             href={`/${locale}/wardrobe`}
             className="rounded-full bg-[#e6c079] px-6 py-3.5 text-lg font-extrabold text-[#191539] transition hover:-translate-y-0.5 active:scale-[.98]"
           >
-            👕 {t.wardrobe}
+            <span aria-hidden="true">👕</span> {t.wardrobe}
           </Link>
           <button
             onClick={onClose}

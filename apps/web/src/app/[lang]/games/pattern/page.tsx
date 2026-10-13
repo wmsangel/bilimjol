@@ -54,7 +54,7 @@ export default async function PatternPage({
             {dict.games.pattern.back}
           </Link>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">
-            🔁 {dict.games.pattern.title}
+            <span aria-hidden="true">🔁</span> {dict.games.pattern.title}
           </h1>
         </div>
         <PatternGame labels={dict.games.pattern} homeHref={`/${lang}/games`} />

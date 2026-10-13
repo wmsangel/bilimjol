@@ -139,7 +139,7 @@ export default async function GamesPage({
             className="group relative flex gap-5 overflow-hidden rounded-[28px] bg-[#191539] p-7 text-white transition hover:-translate-y-1 sm:items-center lg:col-span-1 lg:row-span-2 lg:flex-col lg:items-start lg:justify-between"
           >
             <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-[#6d5cf7] opacity-40 blur-[60px]" />
-            <div className="relative text-[72px] leading-none sm:text-[96px] lg:mt-2">
+            <div aria-hidden="true" className="relative text-[72px] leading-none sm:text-[96px] lg:mt-2">
               {featured.icon}
             </div>
             <div className="relative flex-1">
@@ -166,6 +166,7 @@ export default async function GamesPage({
               className="flex items-center gap-4 rounded-[26px] bg-white p-5 shadow-[0_8px_24px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)] lg:flex-col lg:items-start lg:gap-0 lg:p-6"
             >
               <span
+                aria-hidden="true"
                 className={
                   "flex h-14 w-14 flex-none items-center justify-center rounded-[18px] text-3xl lg:mb-3.5 lg:h-16 lg:w-16 lg:rounded-[20px] " +
                   iconBg[i % 2]

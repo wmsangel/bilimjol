@@ -119,7 +119,7 @@ export default async function ArticlePage({
         </Link>
 
         <article className="mt-6">
-          <div className="text-6xl">{article.emoji}</div>
+          <div className="text-6xl" aria-hidden="true">{article.emoji}</div>
           <h1 className="mt-4 font-display text-4xl font-bold leading-tight tracking-tight">
             {article.title[lang]}
           </h1>

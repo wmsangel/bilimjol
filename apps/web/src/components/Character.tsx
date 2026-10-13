@@ -67,6 +67,7 @@ export function Character({
   return (
     <div
       ref={ref}
+      aria-hidden="true"
       className={"izn-char " + className}
       style={{ width: sizePx, height: (sizePx * 232) / 220 }}
       dangerouslySetInnerHTML={{ __html: svg }}
