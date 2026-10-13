@@ -273,7 +273,7 @@ export function TraceGame({
               aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
               className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e6e1ff] text-base transition hover:bg-[#d9d5f5] active:scale-95"
             >
-              🔊
+              <span aria-hidden="true">🔊</span>
             </button>
           )}
           <span className="rounded-full bg-black/[.05] px-3 py-1">
@@ -291,6 +291,8 @@ export function TraceGame({
           ref={svgRef}
           viewBox="0 0 100 100"
           className="aspect-square w-full touch-none select-none"
+          role="img"
+          aria-label={labels.hint}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
@@ -395,7 +397,7 @@ export function TraceGame({
         {done && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[2rem] bg-white/70">
             <div className="text-center">
-              <div className="text-6xl">🎉</div>
+              <div className="text-6xl" aria-hidden="true">🎉</div>
               <p className="mt-2 font-display text-2xl font-extrabold">
                 {labels.done}
               </p>

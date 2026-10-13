@@ -73,7 +73,15 @@ function makeProblem(level: LevelId): Problem {
   return { hour, minutes, answer, options: shuffle([...set]) };
 }
 
-function ClockFace({ hour, minutes }: { hour: number; minutes: number }) {
+function ClockFace({
+  hour,
+  minutes,
+  locale,
+}: {
+  hour: number;
+  minutes: number;
+  locale: "ru" | "ky";
+}) {
   const hourAngle = ((hour % 12) * 30 + minutes * 0.5) * (Math.PI / 180);
   const minAngle = minutes * 6 * (Math.PI / 180);
   const hx = 100 + 46 * Math.sin(hourAngle);
@@ -82,7 +90,16 @@ function ClockFace({ hour, minutes }: { hour: number; minutes: number }) {
   const my = 100 - 72 * Math.cos(minAngle);
   const nums = Array.from({ length: 12 }, (_, i) => i + 1);
   return (
-    <svg viewBox="0 0 200 200" className="mx-auto h-48 w-48" role="img">
+    <svg
+      viewBox="0 0 200 200"
+      className="mx-auto h-48 w-48"
+      role="img"
+      aria-label={
+        locale === "ky"
+          ? `Саат ${hour}:${String(minutes).padStart(2, "0")}`
+          : `Часы ${hour}:${String(minutes).padStart(2, "0")}`
+      }
+    >
       <circle cx="100" cy="100" r="94" fill="#fff" stroke="#191539" strokeWidth="5" />
       {nums.map((n) => {
         const a = n * 30 * (Math.PI / 180);
@@ -133,9 +150,11 @@ function loadBest(): Record<string, number> {
 export function ClockGame({
   labels,
   homeHref,
+  locale = "ru",
 }: {
   labels: ClockLabels;
   homeHref: string;
+  locale?: "ru" | "ky";
 }) {
   const [level, setLevel] = useState<LevelId | null>(null);
   const [problem, setProblem] = useState<Problem | null>(null);
@@ -264,7 +283,7 @@ export function ClockGame({
                   : "border-black/[.06] bg-white")
             }
           >
-            <ClockFace hour={problem.hour} minutes={problem.minutes} />
+            <ClockFace hour={problem.hour} minutes={problem.minutes} locale={locale} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             {problem.options.map((opt) => (
@@ -291,7 +310,7 @@ export function ClockGame({
 
       {over && (
         <div className="rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl">
-          <div className="text-5xl">🕐</div>
+          <div className="text-5xl" aria-hidden="true">🕐</div>
           <h2 className="mt-3 font-display text-2xl font-extrabold">
             {labels.timeUp}
           </h2>

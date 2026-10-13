@@ -35,13 +35,13 @@ export default async function PlayPage({
 
       {/* Игровые кнопки: звук и быстрый доступ к гардеробу */}
       <div className="fixed bottom-4 right-4 z-30 flex items-center gap-1 rounded-full border border-black/[.06] bg-white/80 p-1.5 shadow-lg backdrop-blur-md">
-        <SoundToggle />
+        <SoundToggle locale={lang} />
         <Link
           href={`/${lang}/wardrobe`}
           aria-label="Гардероб"
           className="flex h-9 w-9 items-center justify-center rounded-full text-lg transition hover:bg-black/[.06] active:scale-95"
         >
-          👕
+          <span aria-hidden="true">👕</span>
         </Link>
       </div>
 
