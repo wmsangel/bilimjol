@@ -49,7 +49,7 @@ export default async function ArticlesPage({
           href={`/${lang}/gotovnost-k-shkole`}
           className="mt-8 flex items-center gap-4 overflow-hidden rounded-[26px] bg-[#191539] p-6 text-white transition hover:-translate-y-0.5"
         >
-          <span className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-white/15 text-3xl">
+          <span aria-hidden="true" className="flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-white/15 text-3xl">
             🎒
           </span>
           <span className="min-w-0 flex-1">

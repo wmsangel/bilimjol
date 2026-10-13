@@ -70,7 +70,7 @@ export default async function ReadinessPage({
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8">
         <div className="mb-8 text-center">
-          <div className="text-6xl">🎒</div>
+          <div className="text-6xl" aria-hidden="true">🎒</div>
           <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight">
             {dict.readiness.title}
           </h1>

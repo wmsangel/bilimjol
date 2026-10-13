@@ -55,7 +55,7 @@ export default async function WordPage({
             {dict.games.word.back}
           </Link>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">
-            🔤 {dict.games.word.title}
+            <span aria-hidden="true">🔤</span> {dict.games.word.title}
           </h1>
         </div>
         <PremiumGate

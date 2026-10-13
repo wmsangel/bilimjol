@@ -136,33 +136,33 @@ export function MobileMenu({
                 href={`/${lang}/me`}
                 className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
               >
-                📊 {labels.progress}
+                <span aria-hidden="true">📊</span> {labels.progress}
               </Link>
               <Link
                 href={`/${lang}/wardrobe`}
                 className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
               >
-                👕 {labels.wardrobe}
+                <span aria-hidden="true">👕</span> {labels.wardrobe}
               </Link>
               <Link
                 href={`/${lang}/parent`}
                 className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
               >
-                👨‍👩‍👧 {labels.report}
+                <span aria-hidden="true">👨‍👩‍👧</span> {labels.report}
               </Link>
               {isAdmin && (
                 <Link
                   href={`/${lang}/admin`}
                   className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
                 >
-                  🛠️ {labels.admin}
+                  <span aria-hidden="true">🛠️</span> {labels.admin}
                 </Link>
               )}
               <button
                 onClick={onLogout}
                 className={rowBase + " text-[#b42318] hover:bg-[#fef2f2]"}
               >
-                🚪 {labels.logout}
+                <span aria-hidden="true">🚪</span> {labels.logout}
               </button>
             </div>
           ) : (

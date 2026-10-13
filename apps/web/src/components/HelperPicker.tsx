@@ -94,7 +94,7 @@ export function HelperPicker({
               </span>
             )}
             {!unlocked && (
-              <span className="absolute right-2 top-2 text-[13px]">🔒</span>
+              <span className="absolute right-2 top-2 text-[13px]" aria-hidden="true">🔒</span>
             )}
           </button>
         );

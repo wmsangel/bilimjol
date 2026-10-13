@@ -722,7 +722,7 @@ export function TaskPlayer({
                   })}
                 </p>
                 {/* Рейтинг 0–3 звезды по доле верных */}
-                <div className="my-4 flex justify-center gap-1.5 text-4xl">
+                <div className="my-4 flex justify-center gap-1.5 text-4xl" aria-hidden="true">
                   {[0, 1, 2].map((i) => (
                     <span
                       key={i}
@@ -794,7 +794,7 @@ export function TaskPlayer({
                       }
                       className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#191539] px-6 py-2.5 font-bold text-white shadow-md transition hover:brightness-125 active:scale-[.98]"
                     >
-                      ✈️ {labels.subscribeCta}
+                      <span aria-hidden="true">✈️</span> {labels.subscribeCta}
                     </a>
                   </div>
                 )}
@@ -807,7 +807,7 @@ export function TaskPlayer({
                     onClick={restart}
                     className="rounded-full border-2 border-black/10 px-6 py-3.5 text-base font-bold transition hover:bg-black/[.04]"
                   >
-                    🔄 {labels.restart}
+                    <span aria-hidden="true">🔄</span> {labels.restart}
                   </button>
                   <Link
                     href={homeHref}
@@ -827,7 +827,7 @@ export function TaskPlayer({
                   aria-label={closeLabel}
                   className="flex h-11 w-11 flex-none items-center justify-center rounded-2xl bg-white text-lg font-extrabold text-[#5c5880] shadow-[0_4px_14px_rgba(25,21,57,.08)] transition hover:text-[#191539]"
                 >
-                  ✕
+                  <span aria-hidden="true">✕</span>
                 </button>
                 <div className="min-w-0 flex-1">
                   <div className="mb-1.5 flex items-center justify-between gap-3 text-[13px] font-extrabold text-[#5c5880] sm:text-sm">
@@ -847,7 +847,7 @@ export function TaskPlayer({
                   </div>
                 </div>
                 <span className="flex-none rounded-full bg-[#fbf3e3] px-3 py-2 text-sm font-extrabold text-[#7a5a1e] sm:px-4">
-                  ⭐ {earnedStars}
+                  <span aria-hidden="true">⭐</span> {earnedStars}
                 </span>
                 {speechSupported() && (
                   <button
@@ -856,7 +856,7 @@ export function TaskPlayer({
                     aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
                     className="hidden h-11 w-11 flex-none items-center justify-center rounded-2xl bg-white text-lg shadow-[0_4px_14px_rgba(25,21,57,.08)] transition hover:-translate-y-0.5 sm:flex"
                   >
-                    🔈
+                    <span aria-hidden="true">🔈</span>
                   </button>
                 )}
               </header>
@@ -909,7 +909,7 @@ export function TaskPlayer({
                         aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
                         className="flex h-14 w-14 flex-none items-center justify-center rounded-full bg-[#6d5cf7] text-2xl text-white shadow-[0_0_0_6px_#e6e1ff] transition active:scale-95"
                       >
-                        🔊
+                        <span aria-hidden="true">🔊</span>
                       </button>
                     )}
                     <div className="min-w-0 flex-1">
@@ -926,7 +926,7 @@ export function TaskPlayer({
                     </div>
                     {task.star && (
                       <span className="flex-none rounded-full bg-[#fbf3e3] px-3 py-1.5 text-xs font-extrabold text-[#7a5a1e]">
-                        ⭐ {labels.starBadge}
+                        <span aria-hidden="true">⭐</span> {labels.starBadge}
                       </span>
                     )}
                   </div>
@@ -1224,7 +1224,7 @@ export function TaskPlayer({
                             aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
                             className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-white/70 text-sm transition active:scale-95"
                           >
-                            🔊
+                            <span aria-hidden="true">🔊</span>
                           </button>
                         )}
                       </div>
@@ -1246,7 +1246,7 @@ export function TaskPlayer({
                       <div className="mt-4 rounded-2xl bg-[#f7f5ff] p-4">
                         <div className="mb-2 flex items-center justify-between gap-2">
                           <span className="font-display text-[15px] font-bold text-[#191539]">
-                            📖 {locale === "ky" ? "Тема боюнча" : "Разбор темы"}
+                            <span aria-hidden="true">📖</span> {locale === "ky" ? "Тема боюнча" : "Разбор темы"}
                           </span>
                           {speechSupported() && (
                             <button
@@ -1264,7 +1264,7 @@ export function TaskPlayer({
                               aria-label={locale === "ky" ? "Үнү менен угуу" : "Озвучить"}
                               className="flex h-7 w-7 flex-none items-center justify-center rounded-full bg-white text-sm transition active:scale-95"
                             >
-                              🔊
+                              <span aria-hidden="true">🔊</span>
                             </button>
                           )}
                         </div>
@@ -1290,7 +1290,7 @@ export function TaskPlayer({
                         onClick={() => setShowExplainer(true)}
                         className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-[#e6e1ff] bg-white py-3 text-[15px] font-extrabold text-[#6d5cf7] transition hover:bg-[#f7f5ff]"
                       >
-                        📖 {locale === "ky" ? "Теманы түшүнүү" : "Разобраться в теме"}
+                        <span aria-hidden="true">📖</span> {locale === "ky" ? "Теманы түшүнүү" : "Разобраться в теме"}
                       </button>
                     ))}
 

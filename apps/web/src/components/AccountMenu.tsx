@@ -120,23 +120,23 @@ export function AccountMenu({
             </div>
           )}
           <Link href={`/${lang}/me`} className={item} onClick={() => setOpen(false)}>
-            📊 {labels.progress}
+            <span aria-hidden="true">📊</span> {labels.progress}
           </Link>
           <Link href={`/${lang}/play`} className={item} onClick={() => setOpen(false)}>
-            🎮 {labels.play}
+            <span aria-hidden="true">🎮</span> {labels.play}
           </Link>
           <Link href={`/${lang}/wardrobe`} className={item} onClick={() => setOpen(false)}>
-            👕 {labels.wardrobe}
+            <span aria-hidden="true">👕</span> {labels.wardrobe}
           </Link>
           <Link href={`/${lang}/tests`} className={item} onClick={() => setOpen(false)}>
-            🎯 {labels.tests}
+            <span aria-hidden="true">🎯</span> {labels.tests}
           </Link>
           <Link
             href={`/${lang}/parent`}
             className={item}
             onClick={() => setOpen(false)}
           >
-            👨‍👩‍👧 {labels.report}
+            <span aria-hidden="true">👨‍👩‍👧</span> {labels.report}
           </Link>
           {isAdmin && (
             <Link
@@ -144,7 +144,7 @@ export function AccountMenu({
               className={item}
               onClick={() => setOpen(false)}
             >
-              🛠️ {labels.admin}
+              <span aria-hidden="true">🛠️</span> {labels.admin}
             </Link>
           )}
           <div className="my-1.5 h-px bg-[#efecff]" />
@@ -152,7 +152,7 @@ export function AccountMenu({
             onClick={onLogout}
             className={item + " text-[#b42318]"}
           >
-            🚪 {labels.logout}
+            <span aria-hidden="true">🚪</span> {labels.logout}
           </button>
         </div>
       )}

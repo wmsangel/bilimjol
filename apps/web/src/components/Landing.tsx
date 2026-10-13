@@ -11,6 +11,7 @@ import { tasks, articles } from "@izn-study/shared";
 function Mascot({ id, size }: { id: string; size: number }) {
   return (
     <span
+      aria-hidden="true"
       className="izn-char block"
       style={{ width: size, height: Math.round(size * 1.08), marginTop: size * 0.12 }}
       dangerouslySetInnerHTML={{ __html: buildCharacter(id) }}
@@ -162,7 +163,7 @@ export function Landing({ lang }: { lang: Locale }) {
         </div>
         <div className="relative mx-auto hidden h-[480px] w-[440px] lg:block">
           <div className="absolute left-1/2 top-1/2 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full shadow-[0_30px_80px_rgba(0,0,0,.35)]" style={{ background: "radial-gradient(circle at 40% 35%,#8577ff,#4a3dc4)" }} />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] text-[150px] leading-none">📖</div>
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[55%] text-[150px] leading-none" aria-hidden="true">📖</div>
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#e6c079] px-[18px] py-2 text-sm font-extrabold text-[#191539]">
             {t("книга-дорога к знаниям", "билимге китеп-жол")}
           </div>
@@ -183,7 +184,7 @@ export function Landing({ lang }: { lang: Locale }) {
           ["🔊", "#fbf3e3", "2", t("языка с озвучкой", "тил, үн менен")],
         ].map(([icon, bg, num, label], i) => (
           <div key={i} className="flex items-center gap-3 rounded-3xl bg-white p-4 shadow-[0_16px_40px_rgba(25,21,57,.1)] sm:gap-4 sm:p-7">
-            <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl text-2xl sm:h-14 sm:w-14 sm:rounded-[18px] sm:text-3xl" style={{ background: bg as string }}>{icon}</div>
+            <div aria-hidden="true" className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl text-2xl sm:h-14 sm:w-14 sm:rounded-[18px] sm:text-3xl" style={{ background: bg as string }}>{icon}</div>
             <div className="min-w-0">
               <div className="font-display text-2xl font-bold sm:text-[32px]">{num}</div>
               <div className="text-[13px] font-bold leading-tight text-[#5c5880] sm:text-sm">{label}</div>
@@ -203,7 +204,7 @@ export function Landing({ lang }: { lang: Locale }) {
             ["🤔", t("Непонятно, готов ли к школе", "Мектепке даярбы — түшүнүксүз"), t("Что ребёнок уже умеет, а над чем стоит поработать до первого сентября?", "Бала эмнени билет, биринчи сентябрга чейин эмнени иштеп чыгуу керек?")],
           ].map(([icon, title, body], i) => (
             <div key={i} className={card}>
-              <div className="mb-5 text-[52px]">{icon}</div>
+              <div className="mb-5 text-[52px]" aria-hidden="true">{icon}</div>
               <h3 className="mb-2.5 font-display text-[22px] leading-tight">{title}</h3>
               <p className="text-[17px] leading-[1.55] text-[#5c5880]">{body}</p>
             </div>
@@ -230,7 +231,7 @@ export function Landing({ lang }: { lang: Locale }) {
               ["🎓", "#f7ebd2", t("По классам 0–11", "0–11 класс боюнча"), t("Программа растёт вместе с ребёнком.", "Программа бала менен чогуу өсөт.")],
             ].map(([icon, bg, title, body], i) => (
               <div key={i} className="rounded-3xl bg-[#f7f5ff] p-7">
-                <div className="mb-5 flex h-[120px] items-center justify-center rounded-[18px] text-[56px]" style={{ background: bg as string }}>{icon}</div>
+                <div aria-hidden="true" className="mb-5 flex h-[120px] items-center justify-center rounded-[18px] text-[56px]" style={{ background: bg as string }}>{icon}</div>
                 <h3 className="mb-2 font-display text-xl">{title}</h3>
                 <p className="leading-[1.5] text-[#5c5880]">{body}</p>
               </div>
@@ -249,7 +250,7 @@ export function Landing({ lang }: { lang: Locale }) {
             ["🌍", t("Окружающий мир", "Айлана-чөйрө")], ["🏆", t("Олимпиада", "Олимпиада")],
           ].map(([icon, label], i) => (
             <div key={i} className="rounded-3xl bg-white px-5 py-7 text-center shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1">
-              <div className="mb-3 text-[44px]">{icon}</div>
+              <div className="mb-3 text-[44px]" aria-hidden="true">{icon}</div>
               <div className="font-display text-lg font-bold">{label}</div>
             </div>
           ))}
@@ -261,21 +262,21 @@ export function Landing({ lang }: { lang: Locale }) {
             ["🎈", t("Лови правильные", "Туурасын кар"), "/games/bubbles"], ["✏️", t("Обводилки", "Сызуучулар"), "/games/trace"],
           ].map(([icon, label, href], i) => (
             <Link key={i} href={`/${lang}${href}`} className="flex items-center gap-3 rounded-3xl bg-[#191539] p-5 text-white transition hover:brightness-125 sm:gap-4 sm:p-6">
-              <div className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-white/10 text-2xl sm:h-14 sm:w-14 sm:text-3xl">{icon}</div>
+              <div aria-hidden="true" className="flex h-12 w-12 flex-none items-center justify-center rounded-2xl bg-white/10 text-2xl sm:h-14 sm:w-14 sm:text-3xl">{icon}</div>
               <div className="min-w-0 font-display text-base font-bold leading-tight sm:text-lg">{label}</div>
             </Link>
           ))}
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Link href={`/${lang}/tests`} className="flex items-center gap-5 rounded-3xl bg-white p-8 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1">
-            <div className="flex-none text-5xl">📝</div>
+            <div className="flex-none text-5xl" aria-hidden="true">📝</div>
             <div className="min-w-0">
               <div className="mb-1.5 font-display text-xl font-bold">{t("Тесты-тренажёры", "Тест-тренажёрлор")}</div>
               <div className="text-[#5c5880]">{t("Закрепляют пройденное и показывают прогресс по теме.", "Өтүлгөндү бекемдеп, тема боюнча прогрессти көрсөтөт.")}</div>
             </div>
           </Link>
           <div className="flex items-center gap-5 rounded-3xl bg-[#e6c079] p-8">
-            <div className="flex-none text-5xl">🎒</div>
+            <div className="flex-none text-5xl" aria-hidden="true">🎒</div>
             <div className="min-w-0 flex-1">
               <div className="mb-1.5 font-display text-xl font-bold">{t("Тест готовности к школе", "Мектепке даярдык тести")}</div>
               <div className="text-[#3d3420]">{t("Узнайте за 15 минут, что ребёнок уже умеет.", "15 мүнөттө бала эмнени билерин билиңиз.")}</div>
@@ -305,7 +306,7 @@ export function Landing({ lang }: { lang: Locale }) {
                   ))}
                 </div>
               ) : (
-                <div className="mb-5 mt-4 text-[40px]">{emo}</div>
+                <div className="mb-5 mt-4 text-[40px]" aria-hidden="true">{emo}</div>
               )}
               <h3 className="mb-2 font-display text-[22px]">{title}</h3>
               <p className="text-[17px] leading-[1.5] text-[#5c5880]">{body}</p>
@@ -318,7 +319,7 @@ export function Landing({ lang }: { lang: Locale }) {
       <section id="parents" className="px-5 py-24 sm:px-16">
         <div className="grid items-start gap-14 lg:grid-cols-[.8fr_1.2fr]">
           <div>
-            <div className="mb-4 text-[56px]">🛡️</div>
+            <div className="mb-4 text-[56px]" aria-hidden="true">🛡️</div>
             <h2 className={h2 + " mb-4 leading-tight"}>{t("Спокойно за ребёнка", "Бала үчүн тынч")}</h2>
             <p className="text-lg leading-[1.6] text-[#5c5880]">{t("Мы создавали Bilimjol как родители — для места, где ребёнку безопасно, а взрослым понятно.", "Bilimjolду ата-эне катары жараттык — балага коопсуз, чоңдорго түшүнүктүү жер үчүн.")}</p>
           </div>
@@ -330,7 +331,7 @@ export function Landing({ lang }: { lang: Locale }) {
               ["📊", "#fbf3e3", t("Отчёт для родителей", "Ата-энелерге отчёт"), t("Что пройдено и где нужна помощь.", "Эмне өтүлдү жана кайда жардам керек.")],
             ].map(([icon, bg, title, body], i) => (
               <div key={i} className="flex gap-4 rounded-3xl bg-white p-6">
-                <div className="flex h-12 w-12 flex-none items-center justify-center rounded-[14px] text-2xl" style={{ background: bg as string }}>{icon}</div>
+                <div aria-hidden="true" className="flex h-12 w-12 flex-none items-center justify-center rounded-[14px] text-2xl" style={{ background: bg as string }}>{icon}</div>
                 <div>
                   <div className="mb-1 text-[17px] font-extrabold">{title}</div>
                   <div className="text-[15px] leading-[1.5] text-[#5c5880]">{body}</div>
@@ -338,7 +339,7 @@ export function Landing({ lang }: { lang: Locale }) {
               </div>
             ))}
             <div className="flex items-center gap-4 rounded-3xl bg-[#191539] p-6 text-white sm:col-span-2">
-              <div className="flex h-12 w-12 flex-none items-center justify-center rounded-[14px] bg-white/10 text-2xl">📲</div>
+              <div aria-hidden="true" className="flex h-12 w-12 flex-none items-center justify-center rounded-[14px] bg-white/10 text-2xl">📲</div>
               <div className="min-w-0">
                 <div className="mb-1 text-[17px] font-extrabold">{t("Работает в браузере и ставится на телефон", "Браузерде иштейт жана телефонго орнотулат")}</div>
                 <div className="text-[15px] leading-[1.5] text-[#d9d5f5]">{t("Как приложение (PWA) — без магазинов и лишних загрузок.", "Тиркеме катары (PWA) — дүкөнсүз жана ашыкча жүктөөсүз.")}</div>
@@ -359,7 +360,7 @@ export function Landing({ lang }: { lang: Locale }) {
             ["👩‍🏫", t("Учителям", "Мугалимдерге"), t("Как дополнение к урокам и домашним заданиям.", "Сабактарга жана үй тапшырмаларына кошумча.")],
           ].map(([icon, title, body], i) => (
             <div key={i} className="rounded-3xl bg-white p-8 shadow-[0_6px_18px_rgba(25,21,57,.06)]">
-              <div className="mb-4 text-[44px]">{icon}</div>
+              <div className="mb-4 text-[44px]" aria-hidden="true">{icon}</div>
               <h3 className="mb-2 font-display text-xl">{title}</h3>
               <p className="leading-[1.5] text-[#5c5880]">{body}</p>
             </div>
@@ -381,7 +382,7 @@ export function Landing({ lang }: { lang: Locale }) {
             href={`/${lang}/test-na-proforientaciyu`}
             className="group flex flex-col rounded-3xl bg-white p-8 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
           >
-            <div className="mb-4 text-[44px]">🧭</div>
+            <div className="mb-4 text-[44px]" aria-hidden="true">🧭</div>
             <h3 className="mb-2 font-display text-xl font-bold">{t("Тест на профориентацию", "Профориентация тести")}</h3>
             <p className="flex-1 leading-[1.5] text-[#5c5880]">
               {t(
@@ -395,7 +396,7 @@ export function Landing({ lang }: { lang: Locale }) {
             href={`/${lang}/podgotovka-k-ort`}
             className="group flex flex-col rounded-3xl bg-white p-8 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
           >
-            <div className="mb-4 text-[44px]">🎓</div>
+            <div className="mb-4 text-[44px]" aria-hidden="true">🎓</div>
             <h3 className="mb-2 font-display text-xl font-bold">{t("Подготовка к ОРТ", "ЖРТга даярдык")}</h3>
             <p className="flex-1 leading-[1.5] text-[#5c5880]">
               {t(
@@ -418,7 +419,7 @@ export function Landing({ lang }: { lang: Locale }) {
             ["🛡️", t("Спокойно и безопасно", "Тынч жана коопсуз"), t("Без сторонней рекламы и чужих ссылок, данные ребёнка не передаются третьим лицам.", "Бөтөн жарнаксыз жана бөтөн шилтемесиз, баланын маалыматы үчүнчү жактарга берилбейт.")],
           ].map(([icon, title, body], i) => (
             <div key={i} className="rounded-3xl bg-white/[.06] p-8">
-              <div className="mb-4 text-[44px]">{icon}</div>
+              <div className="mb-4 text-[44px]" aria-hidden="true">{icon}</div>
               <h3 className="mb-2 font-display text-xl font-bold">{title}</h3>
               <p className="leading-[1.55] text-[#d9d5f5]">{body}</p>
             </div>
@@ -518,7 +519,7 @@ export function Landing({ lang }: { lang: Locale }) {
           <div className="pointer-events-none absolute -bottom-[120px] -right-20 h-[320px] w-[320px] rounded-full bg-[#191539] opacity-35 blur-[70px]" />
           <div className="relative mb-5 flex items-center justify-center gap-3">
             <span className="flex h-16 w-16 items-end justify-center overflow-hidden rounded-full bg-white/95"><Mascot id="fox" size={60} /></span>
-            <span className="text-[52px]">⭐</span>
+            <span className="text-[52px]" aria-hidden="true">⭐</span>
             <span className="flex h-16 w-16 items-end justify-center overflow-hidden rounded-full bg-white/95"><Mascot id="panda" size={60} /></span>
           </div>
           <h2 className="relative font-display text-4xl font-bold sm:text-[56px]">{t("Попробуйте вместе с ребёнком", "Бала менен бирге сынап көрүңүз")}</h2>

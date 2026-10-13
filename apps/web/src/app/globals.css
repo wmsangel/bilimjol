@@ -38,6 +38,13 @@ body {
   select {
     cursor: pointer;
   }
+
+  /* Клавиатурный фокус: бренд-кольцо. Мышиный клик не меняет обычный вид.
+     Утилита outline-none (поля с focus:border) остаётся сильнее этого слоя. */
+  :focus-visible {
+    outline: 2px solid #6d5cf7;
+    outline-offset: 3px;
+  }
 }
 
 /* ---------- Анимации для детского интерфейса ---------- */

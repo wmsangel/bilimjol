@@ -219,8 +219,7 @@ export function Face({
       width={sizePx}
       height={sizePx}
       className="drop-shadow-lg"
-      role="img"
-      aria-label={helper.name.ru}
+      aria-hidden="true"
     >
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">

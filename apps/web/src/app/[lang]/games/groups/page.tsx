@@ -55,7 +55,7 @@ export default async function GroupsPage({
             {dict.games.groups.back}
           </Link>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">
-            🧺 {dict.games.groups.title}
+            <span aria-hidden="true">🧺</span> {dict.games.groups.title}
           </h1>
         </div>
         <PremiumGate

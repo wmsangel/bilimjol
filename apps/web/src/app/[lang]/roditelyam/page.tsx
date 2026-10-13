@@ -163,7 +163,7 @@ export default async function ParentsLanding({
       <main className="mx-auto w-full max-w-4xl flex-1 px-6 py-10">
         {/* Hero */}
         <section className="text-center">
-          <div className="text-6xl">👨‍👩‍👧</div>
+          <div className="text-6xl" aria-hidden="true">👨‍👩‍👧</div>
           <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">
             {t("Родителям", "Ата-энелерге")}
           </h1>

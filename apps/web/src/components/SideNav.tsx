@@ -58,7 +58,7 @@ export function SideNav({
                   : "text-[#5c5880] hover:bg-[#efecff]")
               }
             >
-              <span className="text-lg">{item.icon}</span>
+              <span className="text-lg" aria-hidden="true">{item.icon}</span>
               {item.label}
             </Link>
           );

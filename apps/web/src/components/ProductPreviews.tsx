@@ -104,7 +104,7 @@ export function DashboardPreview({
           ))}
         </div>
 
-        <div className="mt-5 flex justify-center gap-2 text-2xl">
+        <div className="mt-5 flex justify-center gap-2 text-2xl" aria-hidden="true">
           <span>👣</span>
           <span>⭐</span>
           <span>🔥</span>

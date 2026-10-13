@@ -55,7 +55,7 @@ export default async function ClockPage({
             {dict.games.clock.back}
           </Link>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">
-            🕐 {dict.games.clock.title}
+            <span aria-hidden="true">🕐</span> {dict.games.clock.title}
           </h1>
         </div>
         <PremiumGate
@@ -64,7 +64,7 @@ export default async function ClockPage({
           gameTitle={dict.games.clock.title}
           source="game_clock"
         >
-          <ClockGame labels={dict.games.clock} homeHref={`/${lang}/games`} />
+          <ClockGame labels={dict.games.clock} homeHref={`/${lang}/games`} locale={lang} />
         </PremiumGate>
       </main>
       <GameOutro lang={lang} currentSlug="/games/clock" />

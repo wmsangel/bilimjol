@@ -49,7 +49,7 @@ export default async function SprintPage({
             {dict.games.sprint.back}
           </Link>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">
-            ⚡ {dict.games.sprint.title}
+            <span aria-hidden="true">⚡</span> {dict.games.sprint.title}
           </h1>
         </div>
         <SprintGame labels={dict.games.sprint} homeHref={`/${lang}/games`} />

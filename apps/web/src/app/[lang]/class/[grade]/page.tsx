@@ -190,7 +190,7 @@ export default async function ClassPage({
           </div>
           <div className="relative hidden h-[380px] lg:block">
             <div className="absolute left-1/2 top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: "radial-gradient(circle at 40% 35%,#8577ff,#4a3dc4)" }} />
-            <div className="izn-char absolute bottom-4 left-1/2 h-[300px] w-[280px] -translate-x-1/2" dangerouslySetInnerHTML={{ __html: mascotSvg }} />
+            <div aria-hidden="true" className="izn-char absolute bottom-4 left-1/2 h-[300px] w-[280px] -translate-x-1/2" dangerouslySetInnerHTML={{ __html: mascotSvg }} />
             <div className="absolute right-2 top-2 rounded-[18px] bg-[#e6c079] px-4 py-3 text-[15px] font-extrabold text-[#191539] shadow-[0_12px_30px_rgba(0,0,0,.25)]">⭐ {t("+3 звезды за тему", "тема үчүн +3 жылдыз")}</div>
           </div>
         </div>
@@ -268,7 +268,7 @@ export default async function ClassPage({
         <div className="grid items-start gap-14 lg:grid-cols-[.85fr_1.15fr]">
           <div>
             <div className="izn-char mb-6 h-[120px] w-[120px] overflow-hidden rounded-full bg-white shadow-[0_12px_30px_rgba(25,21,57,.1)]">
-              <div className="izn-char h-[136px] w-[124px]" style={{ marginTop: 14, marginLeft: 0 }} dangerouslySetInnerHTML={{ __html: mascotSvg }} />
+              <div aria-hidden="true" className="izn-char h-[136px] w-[124px]" style={{ marginTop: 14, marginLeft: 0 }} dangerouslySetInnerHTML={{ __html: mascotSvg }} />
             </div>
             <h2 className="mb-4 font-display text-3xl font-bold leading-tight sm:text-[40px]">{skillsTitle}</h2>
             <p className="mb-7 text-lg leading-[1.6] text-[#5c5880]">{t("По 10–15 минут в день — без репетиторов и уговоров.", "Күнүнө 10–15 мүнөт — репетиторсуз жана көндүрүүсүз.")}</p>
@@ -353,7 +353,7 @@ export default async function ClassPage({
       <section className="px-5 pb-16 sm:px-16">
         <div className="relative overflow-hidden rounded-[32px] px-6 py-[72px] text-center text-white sm:px-16" style={{ background: "linear-gradient(135deg,#6d5cf7 0%,#4b3cc9 100%)" }}>
           <div className="pointer-events-none absolute -left-16 -top-20 h-[280px] w-[280px] rounded-full bg-[#e6c079] opacity-25 blur-[60px]" />
-          <div className="izn-char relative mx-auto mb-4 h-[92px] w-[84px] overflow-hidden" dangerouslySetInnerHTML={{ __html: mascotSvg }} />
+          <div aria-hidden="true" className="izn-char relative mx-auto mb-4 h-[92px] w-[84px] overflow-hidden" dangerouslySetInnerHTML={{ __html: mascotSvg }} />
           <h2 className="relative font-display text-3xl font-bold sm:text-5xl">{finalTitle}</h2>
           <p className="relative mb-8 mt-3.5 text-lg text-[#e6e1ff]">{t("Первые задания — бесплатно, без регистрации", "Биринчи тапшырмалар — акысыз, катталуусуз")}</p>
           <Link href={playHref} className="relative inline-block rounded-full bg-white px-10 py-5 text-lg font-extrabold text-[#6d5cf7] transition hover:-translate-y-0.5 hover:bg-[#e6c079] hover:text-[#191539]">{t("Начать бесплатно", "Акысыз баштоо")}</Link>
@@ -379,7 +379,7 @@ export default async function ClassPage({
               href={`/${lang}/test-na-proforientaciyu`}
               className="group flex items-center gap-4 rounded-3xl bg-white p-6 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1"
             >
-              <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#efecff] text-3xl">🧭</span>
+              <span aria-hidden="true" className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#efecff] text-3xl">🧭</span>
               <span className="min-w-0">
                 <span className="block font-display text-lg font-bold group-hover:text-[#6d5cf7]">{t("Тест на профориентацию", "Профориентация тести")}</span>
                 <span className="text-sm text-[#5c5880]">{t("Кем стать: склонности и профессии", "Ким болуу: жөндөм жана кесиптер")}</span>
@@ -389,7 +389,7 @@ export default async function ClassPage({
               href={`/${lang}/podgotovka-k-ort`}
               className="group flex items-center gap-4 rounded-3xl bg-white p-6 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1"
             >
-              <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#fbf3e3] text-3xl">🎓</span>
+              <span aria-hidden="true" className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] bg-[#fbf3e3] text-3xl">🎓</span>
               <span className="min-w-0">
                 <span className="block font-display text-lg font-bold group-hover:text-[#6d5cf7]">{t("Подготовка к ОРТ", "ЖРТга даярдык")}</span>
                 <span className="text-sm text-[#5c5880]">{t("Пробный тест и тренажёр по математике", "Сыноо тест жана математика тренажёру")}</span>

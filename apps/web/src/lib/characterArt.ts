@@ -446,7 +446,7 @@ export const WARDROBE: WardrobeItem[] = WARD_ORDER.map((k) => ({
   unlockAt: UNLOCK_AT[k] ?? 0,
 }));
 export function wardrobeIcon(k: string): string {
-  let s = '<svg viewBox="0 0 44 40">';
+  let s = '<svg viewBox="0 0 44 40" aria-hidden="true">';
   if (k === "cap") s += '<path d="M4 26 Q22 2 40 26 Q22 16 4 26z" fill="#EF4E5B"/><path d="M34 24 Q44 22 44 30 Q38 26 32 26z" fill="#D23A47"/>';
   else if (k === "kalpak") s += '<path d="M11 24 Q10 5 22 2 Q34 5 33 24 Q22 28 11 24z" fill="#F3F0E4"/><path d="M7 25 Q11 15 16 15 L20 22 L24 15 Q28 15 33 25 Q22 32 7 25z" fill="#26252E"/><path d="M20 22 L22 26 L24 22z" fill="#F3F0E4"/>';
   else if (k === "beanie") s += `<path d="M9 24 Q9 7 22 5 Q35 7 35 24 Q22 28 9 24z" fill="#E86A5C"/><path d="M7 22 Q22 32 37 22 Q35 28 22 30 Q9 28 7 22z" fill="${sh("#E86A5C", -22)}"/><circle cx="22" cy="4" r="3.4" fill="#F3E9D8"/>`;

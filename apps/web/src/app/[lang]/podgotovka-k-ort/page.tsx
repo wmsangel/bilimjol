@@ -147,7 +147,7 @@ export default async function OrtLandingPage({
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8 font-sans text-[#191539]">
         <div className="mb-8 text-center">
-          <div className="text-6xl">🎓</div>
+          <div className="text-6xl" aria-hidden="true">🎓</div>
           <h1 className="mt-3 font-display text-4xl font-extrabold tracking-tight">
             {t("Подготовка к ОРТ онлайн", "ЖРТга онлайн даярдык")}
           </h1>

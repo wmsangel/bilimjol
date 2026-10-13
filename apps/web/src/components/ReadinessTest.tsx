@@ -92,7 +92,7 @@ export function ReadinessTest({
     return (
       <div className="mx-auto w-full max-w-xl font-sans text-[#191539]">
         <div className="rounded-[32px] bg-white p-8 text-center shadow-[0_20px_50px_rgba(25,21,57,.08)]">
-          <div className="text-6xl">{BAND_EMOJI[key]}</div>
+          <div className="text-6xl" aria-hidden="true">{BAND_EMOJI[key]}</div>
           <p className="mt-3 text-xs font-extrabold uppercase tracking-[1.4px] text-[#5c5880]">
             {labels.resultTitle}
           </p>

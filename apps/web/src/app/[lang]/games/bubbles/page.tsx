@@ -50,7 +50,7 @@ export default async function BubblesPage({
             {dict.games.bubbles.back}
           </Link>
           <h1 className="mt-2 font-display text-3xl font-extrabold tracking-tight">
-            🎈 {dict.games.bubbles.title}
+            <span aria-hidden="true">🎈</span> {dict.games.bubbles.title}
           </h1>
         </div>
         <PremiumGate

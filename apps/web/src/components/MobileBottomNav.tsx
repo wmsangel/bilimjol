@@ -55,7 +55,7 @@ export function MobileBottomNav({
                   (active ? "text-[#6d5cf7]" : "text-[#5c5880]")
                 }
               >
-                <span className="text-xl leading-none">{t.icon}</span>
+                <span className="text-xl leading-none" aria-hidden="true">{t.icon}</span>
                 {t.label}
               </Link>
             );
