@@ -83,14 +83,14 @@ footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:v
 <body>
 <div class="wrap">
   <header>
-    <span class="kicker">Дорожная карта · обновлено 14.10.2026</span>
+    <span class="kicker">Дорожная карта · обновлено 15.10.2026</span>
     <h1>Bilimjol</h1>
     <p class="sub">Двуязычная (RU/KY) обучающая платформа для детей 0–11 классов в Кыргызстане. Эта страница — живой план: что сделано и что в очереди.</p>
   </header>
 
   <div class="tiles">
     <div class="tile"><span class="n">9</span><span class="c">визитов за 7 дней</span></div>
-    <div class="tile"><span class="n">42<span style="color:var(--muted)">/172</span></span><span class="c">страниц показывались в поиске</span></div>
+    <div class="tile"><span class="n">42<span style="color:var(--muted)">/184</span></span><span class="c">страниц показывались в поиске</span></div>
     <div class="tile"><span class="n accent">9</span><span class="c">задач в очереди</span></div>
     <div class="tile"><span class="n">4</span><span class="c">кликов из поиска (28 д)</span></div>
   </div>
@@ -102,8 +102,8 @@ footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:v
       <div class="d">Внутренние ссылки уже уплотнены (футер+сиблинги). Осталась ручная часть: Inspect URL → Request indexing для KY-игр/тестов/статей со статусом «URL неизвестен». За владельцем.</div>
       <span class="tag">индексация</span></div></div>
     <div class="q"><span class="idx">02</span><div>
-      <div class="t">Свои предметы для старших классов 6–11 ⚠️</div>
-      <div class="d">Полный объём: Физика/Химия/Биология/История/География вместо общего «Окр. мир». Фазами: тип Subject + маппинг класс→предметы + SEO-лендинги «предмет N класс» (К4/Н2), затем контент по предмету (Физика, Биология — первыми).</div>
+      <div class="t">Свои предметы 6–11 — контент (Фаза 2+)</div>
+      <div class="d">Фаза 1 сделана (тип Subject + переназначение тем 6–11 + лендинги /predmet/*). Осталось: нарастить контент по предметам (темы/задания/мини-уроки RU/KY), начиная с Физики и Биологии; добавить Историю с нуля; новые пары предмет×класс — в CURRICULUM и лендинги по мере контента.</div>
       <span class="tag">контент</span></div></div>
     <div class="q"><span class="idx">03</span><div>
       <div class="t">FAQ-разметка на ключевых страницах (К8)</div>
@@ -138,6 +138,8 @@ footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:v
   <section>
     <div class="s-head"><h2>Сделано</h2><span class="count">за 2 недели</span></div>
     <ul class="done">
+      <li><span class="mk">✓</span><span>Свои предметы 6–11, Фаза 1: старшие классы получили настоящие предметы вместо общего «Окр. мир». Subject расширен (geography/biology/physics/chemistry/history); темы 6–11 переназначены 1:1 по содержанию (6→География, 7→Биология, 8→Физика, 9→Химия, 10/11→Физика), id сохранены. Новые SEO-лендинги /predmet/&lt;slug&gt; (fizika-8-klass и т.п.) — 6 пар с контентом: H1 «предмет N класс» + программа класса + другие классы + профильный тест (география→Кыргызстан) + FAQ/Course JSON-LD. Карточка предмета на класс-странице ведёт на лендинг. +12 страниц в sitemap (hreflang).</span></li>
+      <li><span class="mk">✓</span><span>Cursor (батч 3), влито (PR #4): видимые хлебные крошки — компонент Breadcrumbs (видимый след + BreadcrumbList JSON-LD) на статьях, тестах и всех 11 играх; брендовая error.tsx (retry + на главную, двуязычная). Границы соблюдены, tsc/build/тесты зелёные.</span></li>
       <li><span class="mk">✓</span><span>Расширены тесты (Н6): 3 новых тренажёра ×RU/KY — «Логика и смекалка» (🧩), «Синонимы и антонимы» (📝), «Кыргызстан» (🏔️, сильный локальный запрос). Было 11 → 14 тестов; +6 индексируемых страниц в sitemap с hreflang. Пулы под защитой тестов целостности.</span></li>
       <li><span class="mk">✓</span><span>Cursor (батч 2), влито: тесты целостности контента (паритет ru/ky, уникальность, ссылки) + vitest в web и тесты lib (pricing/plural/classGames/seo/characterArt). shared 17 + web 15 тестов — сетка безопасности перед «своими предметами».</span></li>
       <li><span class="mk">✓</span><span>Параллельный агент (Cursor), проверено и влито: юнит-тесты чистых функций (vitest, 12 тестов) + a11y-проход apps/web (aria-label/aria-hidden, focus-visible, lang; часть U5). Всё зелёное.</span></li>
