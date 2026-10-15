@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Track } from "@/components/Track";
-import { JsonLd } from "@/components/JsonLd";
-import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { localizedAlternates } from "@/lib/seo";
 import { ClockGame } from "@/components/ClockGame";
 import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
@@ -39,14 +39,14 @@ export default async function ClockPage({
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
       <Track event="game_open" params={{ game: "clock", lang }} />
-      <JsonLd
-        data={breadcrumbJsonLd(lang, [
-          [dict.games.title, "/games"],
-          [dict.games.clock.title, "/games/clock"],
-        ])}
-      />
-
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
+        <Breadcrumbs
+          lang={lang}
+          items={[
+            [dict.account.play, "/play"],
+            [dict.games.clock.title, "/games/clock"],
+          ]}
+        />
         <div className="mb-6 text-center">
           <Link
             href={`/${lang}/games`}

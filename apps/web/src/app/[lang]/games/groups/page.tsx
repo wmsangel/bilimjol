@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Track } from "@/components/Track";
-import { JsonLd } from "@/components/JsonLd";
-import { localizedAlternates, breadcrumbJsonLd } from "@/lib/seo";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { localizedAlternates } from "@/lib/seo";
 import { GroupGame } from "@/components/GroupGame";
 import { PremiumGate } from "@/components/PremiumGate";
 import { getDictionary } from "../../dictionaries";
@@ -39,14 +39,14 @@ export default async function GroupsPage({
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
       <Track event="game_open" params={{ game: "groups", lang }} />
-      <JsonLd
-        data={breadcrumbJsonLd(lang, [
-          [dict.games.title, "/games"],
-          [dict.games.groups.title, "/games/groups"],
-        ])}
-      />
-
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-8">
+        <Breadcrumbs
+          lang={lang}
+          items={[
+            [dict.account.play, "/play"],
+            [dict.games.groups.title, "/games/groups"],
+          ]}
+        />
         <div className="mb-6 text-center">
           <Link
             href={`/${lang}/games`}

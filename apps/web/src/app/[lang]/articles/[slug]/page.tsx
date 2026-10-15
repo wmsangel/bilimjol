@@ -7,6 +7,7 @@ import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { localizedAlternates } from "@/lib/seo";
 import { GAME_META, type GameId } from "@/lib/classGames";
 import { getDictionary } from "../../dictionaries";
@@ -90,27 +91,19 @@ export default async function ArticlePage({
     publisher: { "@type": "Organization", name: "Bilimjol", url: SITE },
   };
 
-  const breadcrumb = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: dict.articles.title,
-        item: `${SITE}/${lang}/articles`,
-      },
-      { "@type": "ListItem", position: 2, name: article.title[lang], item: url },
-    ],
-  };
-
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <JsonLd data={jsonLd} />
-      <JsonLd data={breadcrumb} />
       <SiteHeader lang={lang} dict={dict} />
 
       <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-8 font-sans text-[#191539]">
+        <Breadcrumbs
+          lang={lang}
+          items={[
+            [dict.articles.nav, "/articles"],
+            [article.title[lang], `/articles/${slug}`],
+          ]}
+        />
         <Link
           href={`/${lang}/articles`}
           className="text-sm font-extrabold text-[#6d5cf7] hover:underline"
