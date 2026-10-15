@@ -8,8 +8,20 @@ import {
 } from "./topics";
 import type { Grade, Subject } from "./types";
 
-/** Фиксированный порядок предметов в UI — контракт subjectsForGrade / программы. */
-const SUBJECT_ORDER: Subject[] = ["logic", "math", "reading", "world", "olympiad"];
+/** Фиксированный порядок предметов в UI — контракт subjectsForGrade / программы.
+ *  Должен совпадать с SUBJECT_ORDER в topics.ts. */
+const SUBJECT_ORDER: Subject[] = [
+  "logic",
+  "math",
+  "reading",
+  "world",
+  "geography",
+  "biology",
+  "physics",
+  "chemistry",
+  "history",
+  "olympiad",
+];
 
 describe("getTopics", () => {
   it("фильтрует по subject и grade и сортирует по order", () => {

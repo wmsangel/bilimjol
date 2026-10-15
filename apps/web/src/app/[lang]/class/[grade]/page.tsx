@@ -8,6 +8,7 @@ import {
   subjectsForGrade,
   getTopics,
   subjectLabels,
+  subjectLandings,
   type Grade,
   type Subject,
 } from "@izn-study/shared";
@@ -21,8 +22,8 @@ import { ClassGames } from "@/components/ClassGames";
 import { groupForGrade, GRADE_ACCENT, GRADE_MASCOT } from "@/lib/classContent";
 import { getDictionary } from "../../dictionaries";
 
-const SUBJECT_ICON: Record<Subject, string> = { logic: "🧩", math: "🔢", reading: "📖", world: "🌍", olympiad: "🏆" };
-const SUBJECT_BG: Record<Subject, string> = { logic: "#efecff", math: "#fbf3e3", reading: "#efecff", world: "#fbf3e3", olympiad: "#efecff" };
+const SUBJECT_ICON: Record<Subject, string> = { logic: "🧩", math: "🔢", reading: "📖", world: "🌍", geography: "🗺️", biology: "🧬", physics: "⚛️", chemistry: "🧪", history: "🏛️", olympiad: "🏆" };
+const SUBJECT_BG: Record<Subject, string> = { logic: "#efecff", math: "#fbf3e3", reading: "#efecff", world: "#fbf3e3", geography: "#fbf3e3", biology: "#efecff", physics: "#fbf3e3", chemistry: "#efecff", history: "#fbf3e3", olympiad: "#efecff" };
 
 const parseGrade = (raw: string): Grade | null => {
   const n = Number(raw);
@@ -234,8 +235,9 @@ export default async function ClassPage({
             const copy = group.subjects[s];
             const topicCount = getTopics({ grade: g, subject: s }).length;
             const chips = copy ? copy.topics.map((c) => c[lang]) : getTopics({ grade: g, subject: s }).slice(0, 3).map((tp) => tp.title[lang]);
-            return (
-              <div key={s} className="flex gap-5 rounded-3xl bg-white p-7 shadow-[0_8px_24px_rgba(25,21,57,.06)]">
+            const landing = subjectLandings.find((l) => l.subject === s && l.grade === g);
+            const inner = (
+              <div className="flex flex-1 gap-5">
                 <div className="flex h-[72px] w-[72px] flex-none items-center justify-center rounded-[22px] text-[38px]" style={{ background: SUBJECT_BG[s] }}>{SUBJECT_ICON[s]}</div>
                 <div className="flex-1">
                   <div className="flex items-baseline justify-between gap-3">
@@ -248,7 +250,25 @@ export default async function ClassPage({
                       <span key={i} className="rounded-full bg-[#f7f5ff] px-3 py-1.5 text-sm font-bold">{c}</span>
                     ))}
                   </div>
+                  {landing && (
+                    <span className="mt-3 inline-block text-sm font-extrabold text-[#6d5cf7]">
+                      {t(`${copy ? copy.name[lang] : subjectLabels[s][lang]} ${g} класс →`, `${copy ? copy.name[lang] : subjectLabels[s][lang]} ${g}-класс →`)}
+                    </span>
+                  )}
                 </div>
+              </div>
+            );
+            return landing ? (
+              <Link
+                key={s}
+                href={`/${lang}/predmet/${landing.slug}`}
+                className="flex rounded-3xl bg-white p-7 shadow-[0_8px_24px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(25,21,57,.1)]"
+              >
+                {inner}
+              </Link>
+            ) : (
+              <div key={s} className="flex rounded-3xl bg-white p-7 shadow-[0_8px_24px_rgba(25,21,57,.06)]">
+                {inner}
               </div>
             );
           })}

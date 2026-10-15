@@ -740,7 +740,7 @@ const THIN_TOPUP: Task[] = [
     explanation: { ru: "«Книга» — предмет.", ky: "«Китеп» — зат." },
   },
   {
-    id: "g-world10-f", type: "single_choice", subject: "world", topic: "world10", grade: 10,
+    id: "g-world10-f", type: "single_choice", subject: "physics", topic: "world10", grade: 10,
     difficulty: 3, free: false,
     prompt: { ru: "У какой планеты есть яркие кольца?", ky: "Кайсы планетанын жаркыраган шакектери бар?" },
     options: [{ ru: "Сатурн", ky: "Сатурн" }, { ru: "Марс", ky: "Марс" }, { ru: "Меркурий", ky: "Меркурий" }],
@@ -748,7 +748,7 @@ const THIN_TOPUP: Task[] = [
     explanation: { ru: "У Сатурна яркие кольца из льда и камней.", ky: "Сатурндун муз менен таштан турган жаркыраган шакектери бар." },
   },
   {
-    id: "g-world11-e", type: "single_choice", subject: "world", topic: "world11", grade: 11,
+    id: "g-world11-e", type: "single_choice", subject: "physics", topic: "world11", grade: 11,
     difficulty: 3, free: false,
     prompt: { ru: "Какой газ преобладает в воздухе?", ky: "Абада кайсы газ басымдуулук кылат?" },
     options: [{ ru: "азот", ky: "азот" }, { ru: "кислород", ky: "кычкылтек" }, { ru: "водород", ky: "суутек" }],

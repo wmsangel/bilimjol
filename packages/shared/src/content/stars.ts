@@ -356,7 +356,7 @@ export const starTasks: Task[] = [
     explanation: { ru: "«Конец» — противоположность «начала».", ky: "«Аягы» — «башталышы» дегендин карама-каршысы." },
   },
   {
-    id: "star-world6", type: "single_choice", subject: "world", topic: "world6", grade: 6,
+    id: "star-world6", type: "single_choice", subject: "geography", topic: "world6", grade: 6,
     difficulty: 3, free: true, star: true,
     prompt: { ru: "На каком материке находится пустыня Сахара?", ky: "Сахара чөлү кайсы материкте жайгашкан?" },
     options: [{ ru: "Африка", ky: "Африка" }, { ru: "Азия", ky: "Азия" }, { ru: "Европа", ky: "Европа" }],
@@ -395,7 +395,7 @@ export const starTasks: Task[] = [
     explanation: { ru: "«Город» не связан с «горой» по смыслу.", ky: "«Шаар» «тоо» менен маанилеш эмес." },
   },
   {
-    id: "star-world7", type: "number_input", subject: "world", topic: "world7", grade: 7,
+    id: "star-world7", type: "number_input", subject: "biology", topic: "world7", grade: 7,
     difficulty: 3, free: true, star: true,
     prompt: { ru: "Сколько пар рёбер у человека?", ky: "Адамда канча жуп кабырга бар?" },
     answer: 12,
@@ -452,7 +452,7 @@ export const starTasks: Task[] = [
     explanation: { ru: "Три основы — три части сложного предложения.", ky: "Үч негиз — татаал сүйлөмдүн үч бөлүгү." },
   },
   {
-    id: "star-world8", type: "number_input", subject: "world", topic: "world8", grade: 8,
+    id: "star-world8", type: "number_input", subject: "physics", topic: "world8", grade: 8,
     difficulty: 3, free: true, star: true,
     prompt: { ru: "Сколько всего атомов в молекуле CO₂?", ky: "CO₂ молекуласында бардыгы канча атом бар?" },
     answer: 3,
@@ -503,7 +503,7 @@ export const starTasks: Task[] = [
     explanation: { ru: "C(4,2) = 6.", ky: "C(4,2) = 6." },
   },
   {
-    id: "star-world9", type: "number_input", subject: "world", topic: "world9", grade: 9,
+    id: "star-world9", type: "number_input", subject: "chemistry", topic: "world9", grade: 9,
     difficulty: 3, free: true, star: true,
     prompt: { ru: "Сколько протонов в атоме кислорода (номер 8)?", ky: "Кычкылтек атомунда канча протон бар (номери 8)?" },
     answer: 8,
@@ -552,7 +552,7 @@ export const starTasks: Task[] = [
     explanation: { ru: "Если бы A было истинно, B тоже было бы истинно. Значит A ложно.", ky: "A чын болсо, B да чын болмок. Демек A жалган." },
   },
   {
-    id: "star-world10", type: "number_input", subject: "world", topic: "world10", grade: 10,
+    id: "star-world10", type: "number_input", subject: "physics", topic: "world10", grade: 10,
     difficulty: 3, free: true, star: true,
     prompt: { ru: "Сколько планет-гигантов в Солнечной системе?", ky: "Күн системасында канча алп планета бар?" },
     answer: 4,
@@ -589,7 +589,7 @@ export const starTasks: Task[] = [
     explanation: { ru: "n(n−3)/2 = 8 × 5 / 2 = 20.", ky: "n(n−3)/2 = 8 × 5 / 2 = 20." },
   },
   {
-    id: "star-world11", type: "number_input", subject: "world", topic: "world11", grade: 11,
+    id: "star-world11", type: "number_input", subject: "physics", topic: "world11", grade: 11,
     difficulty: 3, free: true, star: true,
     prompt: { ru: "Сколько примерно минут свет идёт от Солнца до Земли?", ky: "Күндөн Жерге жарык болжол менен канча мүнөттө жетет?" },
     answer: 8,

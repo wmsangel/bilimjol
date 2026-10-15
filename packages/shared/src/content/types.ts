@@ -2,7 +2,17 @@
 
 export type Locale = "ru" | "ky";
 
-export type Subject = "logic" | "math" | "reading" | "world" | "olympiad";
+export type Subject =
+  | "logic"
+  | "math"
+  | "reading"
+  | "world"
+  | "geography"
+  | "biology"
+  | "physics"
+  | "chemistry"
+  | "history"
+  | "olympiad";
 
 /** Уровень сложности: 1 — лёгкий, 2 — средний, 3 — сложный. */
 export type Difficulty = 1 | 2 | 3;
@@ -83,13 +93,28 @@ export type Task =
 
 export type TaskType = Task["type"];
 
-export const SUBJECTS: readonly Subject[] = ["logic", "math", "reading", "world"] as const;
+export const SUBJECTS: readonly Subject[] = [
+  "logic",
+  "math",
+  "reading",
+  "world",
+  "geography",
+  "biology",
+  "physics",
+  "chemistry",
+  "history",
+] as const;
 
 export const subjectLabels: Record<Subject, LocalizedText> = {
   logic: { ru: "Логика", ky: "Логика" },
   math: { ru: "Математика", ky: "Математика" },
   reading: { ru: "Чтение", ky: "Окуу" },
   world: { ru: "Окружающий мир", ky: "Айлана-чөйрө" },
+  geography: { ru: "География", ky: "География" },
+  biology: { ru: "Биология", ky: "Биология" },
+  physics: { ru: "Физика", ky: "Физика" },
+  chemistry: { ru: "Химия", ky: "Химия" },
+  history: { ru: "История", ky: "Тарых" },
   olympiad: { ru: "Олимпиада", ky: "Олимпиада" },
 };
 

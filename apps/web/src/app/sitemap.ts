@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { articles, tests, GRADES } from "@izn-study/shared";
+import { articles, tests, GRADES, subjectLandings } from "@izn-study/shared";
 import { locales } from "@/i18n/config";
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://bilimjol.com";
@@ -54,6 +54,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${BASE}/${lang}${path}`,
         changeFrequency: "monthly",
         priority: 0.7,
+        alternates: alts(path),
+      });
+    }
+    for (const landing of subjectLandings) {
+      const path = `/predmet/${landing.slug}`;
+      entries.push({
+        url: `${BASE}/${lang}${path}`,
+        changeFrequency: "monthly",
+        priority: 0.6,
         alternates: alts(path),
       });
     }

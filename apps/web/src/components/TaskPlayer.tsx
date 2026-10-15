@@ -72,6 +72,11 @@ const SUBJECT_EMOJI: Record<Subject, string> = {
   math: "🔢",
   reading: "📖",
   world: "🌍",
+  geography: "🗺️",
+  biology: "🧬",
+  physics: "⚛️",
+  chemistry: "🧪",
+  history: "🏛️",
   olympiad: "🏆",
 };
 import { WARDROBE, type WardrobeItem } from "@/lib/characterArt";

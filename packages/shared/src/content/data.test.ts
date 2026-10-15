@@ -14,6 +14,11 @@ const SUBJECTS: readonly Subject[] = [
   "math",
   "reading",
   "world",
+  "geography",
+  "biology",
+  "physics",
+  "chemistry",
+  "history",
   "olympiad",
 ];
 

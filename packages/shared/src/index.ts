@@ -1,6 +1,7 @@
 export * from "./content/types";
 export * from "./content/tasks";
 export * from "./content/topics";
+export * from "./content/subjects";
 export * from "./content/explainers";
 export * from "./content/helpers";
 export * from "./content/articles";
