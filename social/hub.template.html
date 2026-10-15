@@ -49,6 +49,21 @@ h1{font-family:var(--mono);font-weight:600;font-size:22px;letter-spacing:-.01em}
 .progress{margin-top:18px;font-family:var(--mono);font-size:13px;color:var(--muted)}
 .progress b{color:var(--accent)}
 
+.onboard{margin-top:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:4px 16px}
+.onboard>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;padding:12px 0;font-family:var(--mono);font-weight:600;font-size:14px;color:var(--ink)}
+.onboard>summary::-webkit-details-marker{display:none}
+.onboard .arr{color:var(--accent);transition:.15s}
+.onboard[open] .arr{transform:rotate(90deg)}
+.ocount{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:500}
+.ogroup{margin:6px 0 16px}
+.ogroup h3{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+.oitem{display:flex;align-items:flex-start;gap:10px;padding:6px 0;font-size:15px}
+.oitem input{margin-top:3px;width:17px;height:17px;flex:none;accent-color:var(--accent);cursor:pointer}
+.oitem.on label{color:var(--muted);text-decoration:line-through}
+.oitem label{cursor:pointer}
+.oitem .hint{display:block;color:var(--muted);font-size:13px;margin-top:1px;text-decoration:none}
+.oitem code{font-family:var(--mono);font-size:12.5px;background:var(--surface2);padding:1px 5px;border-radius:5px}
+
 .day{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
 .day.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 .day.done{opacity:.6}
@@ -108,6 +123,11 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:v
     </ul>
   </div>
 
+  <details class="onboard" id="onboard">
+    <summary><span class="arr">▸</span> Онбординг — регистрация и настройка <span class="ocount" id="ocount"></span></summary>
+    <div id="onboardBody"></div>
+  </details>
+
   <div class="progress" id="progress"></div>
   <div id="days"></div>
 
@@ -122,6 +142,60 @@ let lang = "ru";
 let done = {};
 try { lang = localStorage.getItem("bj-social-lang") || "ru"; } catch(e){}
 try { done = JSON.parse(localStorage.getItem("bj-social-done")||"{}")||{}; } catch(e){}
+let odone = {};
+try { odone = JSON.parse(localStorage.getItem("bj-social-onboard")||"{}")||{}; } catch(e){}
+
+// Разовая регистрация и настройка по сетям (органика, без закупки).
+const ONBOARD = [
+  { group: "Instagram · @bilimjol", items: [
+    { id: "ig-name", label: "Имя профиля: <code>Bilimjol · учёба для детей 0–11</code>", hint: "поле Name ищется внутри IG — туда ключевые слова" },
+    { id: "ig-bio", label: "Описание (bio) + ссылка <code>bilimjol.com</code>", hint: "3 строки: что это · RU/KY · «Открыть 👇»" },
+    { id: "ig-avatar", label: "Аватар — ирбис на фиолетовом фоне", hint: "высокий контраст, без мелкого текста" },
+    { id: "ig-pro", label: "Переключить на профессиональный аккаунт", hint: "Настройки → тип аккаунта → «Создатель»; откроет статистику и планирование" },
+  ]},
+  { group: "Pinterest · приоритет", items: [
+    { id: "pin-acc", label: "Создать бизнес-аккаунт Pinterest", hint: "pinterest.com → Business — бесплатно" },
+    { id: "pin-claim", label: "Подтвердить сайт bilimjol.com (Claim website)", hint: "Настройки → Заявленные аккаунты; даёт аналитику и ссылку на пинах" },
+    { id: "pin-boards", label: "Создать доски: Математика детям · Готовность к школе · Подготовка к ОРТ · Профориентация", hint: "название + описание доски с ключевыми словами" },
+    { id: "pin-first", label: "Выложить первые пины из слайдов (вертикальные)", hint: "карусели/чек-листы → пины; описание с ключами, ссылка на страницу сайта" },
+  ]},
+  { group: "Telegram", items: [
+    { id: "tg-channel", label: "Создать канал (ops-напоминания или публичный)", hint: "имя/описание под поиск" },
+    { id: "tg-bot", label: "Создать бота через @BotFather → получить токен", hint: "/newbot → имя → токен вида 123456:ABC…" },
+    { id: "tg-admin", label: "Добавить бота в канал админом, узнать chat_id", hint: "chat_id — через @getidsbot или API getUpdates (вида -100…)" },
+    { id: "tg-config", label: "Заполнить <code>social/.telegram.json</code> и проверить", hint: "node scripts/telegram-daily.mjs → придёт «сегодня по плану»" },
+    { id: "tg-cron", label: "(опц.) Автозапуск раз в день — cron/launchd", hint: "пример в social/README.md" },
+  ]},
+  { group: "Опционально (RU)", items: [
+    { id: "dzen", label: "Дзен — создать канал на dzen.ru", hint: "поиск Яндекса, монетизируется; описание под ключи" },
+    { id: "threads", label: "Threads — подключить к аккаунту Instagram", hint: "бесплатный кросс-пост текста из IG" },
+    { id: "canva", label: "Canva — Brand Kit (цвета #6d5cf7 / #e6c079, шрифты Comfortaa/Nunito)", hint: "для текста-стикеров поверх сторис (кириллица)" },
+  ]},
+];
+
+function renderOnboard(){
+  const body = document.getElementById("onboardBody");
+  body.innerHTML = ONBOARD.map(g =>
+    '<div class="ogroup"><h3>'+g.group+'</h3>'+
+    g.items.map(it =>
+      '<div class="oitem'+(odone[it.id]?" on":"")+'"><input type="checkbox" id="o-'+it.id+'" data-oid="'+it.id+'" '+(odone[it.id]?"checked":"")+'>'+
+      '<label for="o-'+it.id+'">'+it.label+(it.hint?'<span class="hint">'+it.hint+'</span>':'')+'</label></div>'
+    ).join("")+'</div>'
+  ).join("");
+  body.querySelectorAll("input[data-oid]").forEach(cb => cb.addEventListener("change", e=>{
+    const id=e.target.dataset.oid;
+    if(e.target.checked) odone[id]=1; else delete odone[id];
+    try{ localStorage.setItem("bj-social-onboard", JSON.stringify(odone)); }catch(_){}
+    e.target.closest(".oitem").classList.toggle("on", e.target.checked);
+    updateOcount();
+  }));
+  updateOcount();
+}
+function updateOcount(){
+  const all = ONBOARD.reduce((n,g)=>n+g.items.length,0);
+  const d = Object.keys(odone).filter(k=>odone[k]).length;
+  document.getElementById("ocount").textContent = d+" / "+all+" готово";
+}
 
 const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 const SITE = "https://bilimjol.com";
@@ -196,5 +270,6 @@ document.getElementById("theme").addEventListener("click", ()=>{
 });
 try{ const t=localStorage.getItem("bj-social-theme"); if(t) document.documentElement.setAttribute("data-theme", t); }catch(_){}
 document.querySelectorAll("#lang button").forEach(x=>x.setAttribute("aria-pressed", x.dataset.l===lang?"true":"false"));
+renderOnboard();
 render();
 </script>
