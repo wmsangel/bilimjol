@@ -57,12 +57,12 @@ export function CareerTest({
   useEffect(() => {
     if (done && !premium && !paywallFired.current) {
       paywallFired.current = true;
-      pushEvent("career_paywall_view", {});
+      pushEvent("career_paywall_view", { item: "career" });
     }
   }, [done, premium]);
 
   function start() {
-    pushEvent("career_start", {});
+    pushEvent("career_start", { item: "career" });
     paywallFired.current = false;
     setStarted(true);
     setIndex(0);
@@ -127,7 +127,7 @@ export function CareerTest({
             </p>
             <Link
               href={loginHref}
-              onClick={() => pushEvent("career_login_required", {})}
+              onClick={() => pushEvent("career_login_required", { item: "career" })}
               className="mt-5 inline-flex rounded-full bg-[#6d5cf7] px-8 py-3.5 font-display font-bold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5 active:scale-95"
             >
               {t("Войти и пройти тест", "Кирип, тестти өтүү")}

@@ -165,7 +165,7 @@ export function Cabinet({
   const helper = getHelper(helperId);
 
   function changeHelper() {
-    pushEvent("cabinet_change_helper", {});
+    pushEvent("cabinet_change_helper", { item: "cabinet" });
     removeHelperId();
     router.push(playHref);
   }
@@ -251,7 +251,7 @@ export function Cabinet({
           </div>
           <Link
             href={playHref}
-            onClick={() => pushEvent("cabinet_continue", {})}
+            onClick={() => pushEvent("cabinet_continue", { item: "cabinet" })}
             className="relative w-full rounded-full bg-[#6d5cf7] px-6 py-4 text-center font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 xl:w-auto"
           >
             ▶ {labels.continue}
