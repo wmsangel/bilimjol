@@ -1,0 +1,12 @@
+{
+  "name": "bilimjol-social",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Генератор слайдов для соцсетей Bilimjol (satori + resvg)",
+  "scripts": { "slides": "node scripts/social-slides.mjs" },
+  "dependencies": {
+    "satori": "0.12.1",
+    "@resvg/resvg-js": "2.6.2"
+  }
+}

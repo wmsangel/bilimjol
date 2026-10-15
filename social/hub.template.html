@@ -1,0 +1,200 @@
+<title>Соцсети Bilimjol</title>
+<meta name="description" content="Контент-хаб соцсетей Bilimjol: готовые слайды, подписи RU/KY и хэштеги на каждый день недели.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Графит сети (IBM Plex, акцент из HUB.md #4e8a5c/#8fd1a0). Одна колонка ≤900px:
+   шапка с переключателями → карточки дней со слайдами, подписью и хэштегами. */
+:root{
+  --bg:#fbfbfc; --surface:#f4f5f8; --surface2:#eceef3;
+  --ink:#1b1e26; --muted:#6a6f7d; --line:#e6e8ee; --line2:#d6d9e2;
+  --accent:#4e8a5c; --accent-soft:color-mix(in srgb,var(--accent) 12%,transparent);
+  --ok:#3f8f63; --story:#9c7620;
+  --font:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --radius:14px;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14161b; --surface:#1b1e25; --surface2:#222630;
+  --ink:#e7e9ef; --muted:#959bab; --line:#282c35; --line2:#353a45;
+  --accent:#8fd1a0; --ok:#6bbd8e; --story:#d7ab5c; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#14161b; --surface:#1b1e25; --surface2:#222630;
+  --ink:#e7e9ef; --muted:#959bab; --line:#282c35; --line2:#353a45;
+  --accent:#8fd1a0; --ok:#6bbd8e; --story:#d7ab5c; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding-inline:16px;padding-block:0 60px}
+h1,h2,h3{margin:0}
+a{color:var(--accent)}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding-block:14px 12px}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:500}
+h1{font-family:var(--mono);font-weight:600;font-size:22px;letter-spacing:-.01em}
+.spacer{margin-left:auto}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:999px;overflow:hidden;font-family:var(--mono);font-size:13px}
+.seg button{border:0;background:transparent;color:var(--muted);padding:6px 14px;cursor:pointer;font-family:inherit;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.iconbtn{border:1px solid var(--line2);background:var(--surface);color:var(--muted);width:38px;height:34px;border-radius:999px;cursor:pointer;font-size:16px}
+
+.intro{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;color:var(--muted);font-size:14.5px}
+.intro b{color:var(--ink)}
+.intro ul{margin:8px 0 0;padding-left:18px}
+.intro li{margin:3px 0}
+
+.progress{margin-top:18px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.progress b{color:var(--accent)}
+
+.day{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.day.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.day.done{opacity:.6}
+.dhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dow{font-family:var(--mono);font-weight:600;font-size:15px;color:var(--ink)}
+.badge{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.badge.story{background:color-mix(in srgb,var(--story) 16%,transparent);color:var(--story)}
+.fmt{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.todaytag{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:600;letter-spacing:.06em}
+.pub{margin-left:auto;display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);user-select:none}
+.pub input{width:17px;height:17px;accent-color:var(--accent);cursor:pointer}
+
+.slides{display:flex;gap:10px;overflow-x:auto;padding:14px 2px 6px;scroll-snap-type:x mandatory}
+.slides img{height:320px;width:auto;border-radius:10px;border:1px solid var(--line);scroll-snap-align:start;background:var(--surface2)}
+.slides.story img{height:380px}
+.saveh{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:2px}
+
+.block{margin-top:12px}
+.blab{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.cap{white-space:pre-wrap;font-size:15.5px;color:var(--ink)}
+.tags{font-size:14px;color:var(--muted);word-break:break-word}
+.sticker{background:var(--surface2);border-radius:10px;padding:11px 13px;font-size:14.5px;color:var(--ink)}
+.copy{font-family:var(--mono);font-weight:600;font-size:11px;cursor:pointer;border:1px solid var(--line2);background:var(--surface);color:var(--accent);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.copy:hover{border-color:var(--accent)}
+.copy.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.go{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none}
+.go:hover{color:var(--accent)}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+@media(max-width:560px){.slides img{height:260px}.slides.story img{height:320px}}
+@media(prefers-reduced-motion:reduce){*{transition:none}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="row">
+      <div>
+        <div class="kicker">Контент-хаб · органика</div>
+        <h1>Соцсети · Bilimjol</h1>
+      </div>
+      <div class="spacer"></div>
+      <div class="seg" id="lang" role="group" aria-label="Язык">
+        <button data-l="ru" aria-pressed="true">RU</button>
+        <button data-l="ky" aria-pressed="false">KY</button>
+      </div>
+      <button class="iconbtn" id="theme" title="Тема" aria-label="Переключить тему">◐</button>
+    </div>
+  </header>
+
+  <div class="intro">
+    <b>Как пользоваться:</b> выбери день, скачай слайды и вставь готовый текст.
+    <ul>
+      <li><b>Слайды</b> — сохранить в полном качестве: долгий тап → «Сохранить в Фото» (телефон) или правый клик → «Сохранить картинку» (ПК). Кнопки «скачать» нет — песочница её блокирует.</li>
+      <li><b>Текст и хэштеги</b> — кнопкой «копировать». Ссылку в посте не ставим — ведём через ссылку в профиле.</li>
+      <li><b>Сторис</b> — слайд чистый: опрос/квиз/ссылку добавляй нативным стикером в Instagram (подсказка в карточке).</li>
+      <li><b>RU / KY</b> вверху — переключает текст, хэштеги и слайды. Отметка «опубликовано» и тема сохраняются в этом браузере.</li>
+    </ul>
+  </div>
+
+  <div class="progress" id="progress"></div>
+  <div id="days"></div>
+
+  <footer>Неделя 1 · 7 постов. Слайды рисует генератор <span style="font-family:var(--mono)">social/scripts/social-slides.mjs</span> из <span style="font-family:var(--mono)">social/posts.js</span> — правим данные и перегенерируем.</footer>
+</div>
+
+<script>
+const DATA = __DATA__;
+const DOW = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];
+const todayDow = DOW[new Date().getDay()];
+let lang = "ru";
+let done = {};
+try { lang = localStorage.getItem("bj-social-lang") || "ru"; } catch(e){}
+try { done = JSON.parse(localStorage.getItem("bj-social-done")||"{}")||{}; } catch(e){}
+
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const SITE = "https://bilimjol.com";
+
+function flash(btn){ const t=btn.textContent; btn.textContent="скопировано ✓"; btn.classList.add("ok"); setTimeout(()=>{btn.textContent=t;btn.classList.remove("ok");},1200); }
+async function copy(text, btn){
+  try{ await navigator.clipboard.writeText(text); flash(btn); }
+  catch(e){ const s=document.createElement("span"); s.textContent=text; s.style.cssText="position:fixed;opacity:0"; document.body.appendChild(s); const r=document.createRange(); r.selectNodeContents(s); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); try{document.execCommand("copy");flash(btn);}catch(_){} sel.removeAllRanges(); s.remove(); }
+}
+
+function render(){
+  const days = document.getElementById("days");
+  days.innerHTML = "";
+  for(const p of DATA){
+    const isDone = !!done[p.id];
+    const isToday = p.day === todayDow;
+    const files = p.slides[lang] || [];
+    const cap = p.caption[lang] || "";
+    const tags = p.hashtags[lang] || "";
+    const capFull = cap + (tags ? "\n\n"+tags : "");
+    const card = document.createElement("section");
+    card.className = "day" + (isDone?" done":"") + (isToday?" today":"");
+    card.innerHTML =
+      '<div class="dhead">'+
+        '<span class="dow">'+p.day+'</span>'+
+        '<span class="badge'+(p.format==="story"?" story":"")+'">'+esc(p.rubric)+'</span>'+
+        '<span class="fmt">'+(p.format==="carousel"?"карусель · "+files.length:(p.format==="story"?"сторис":"пост"))+'</span>'+
+        (isToday?'<span class="todaytag">● СЕГОДНЯ</span>':'')+
+        '<label class="pub"><input type="checkbox" data-id="'+p.id+'" '+(isDone?"checked":"")+'> опубликовано</label>'+
+      '</div>'+
+      '<div class="slides'+(p.format==="story"?" story":"")+'">'+
+        files.map(f=>'<img src="img/'+f+'" alt="слайд" loading="lazy">').join("")+
+      '</div>'+
+      '<div class="saveh">↑ сохранить: долгий тап по картинке → «Сохранить в Фото» (или правый клик на ПК)</div>'+
+      '<div class="block"><div class="blab">Подпись '+lang.toUpperCase()+'<button class="copy" data-copy="cap">копировать</button></div><div class="cap">'+esc(cap)+'</div></div>'+
+      (tags?'<div class="block"><div class="blab">Хэштеги<button class="copy" data-copy="tags">копировать</button></div><div class="tags">'+esc(tags)+'</div></div>':'')+
+      (p.sticker?'<div class="block"><div class="blab">Стикер в Instagram</div><div class="sticker">'+esc(p.sticker[lang])+'</div></div>':'')+
+      '<div class="btns">'+
+        (capFull?'<button class="copy" data-copy="full">Текст + хэштеги</button>':'')+
+        '<a class="go" href="'+SITE+'/'+lang+p.page+'" target="_blank" rel="noopener">ведёт на '+esc(p.page)+' ↗</a>'+
+      '</div>';
+    card.querySelector('[data-copy="cap"]')?.addEventListener("click", e=>copy(cap, e.target));
+    const tg = card.querySelector('[data-copy="tags"]'); if(tg) tg.addEventListener("click", e=>copy(tags, e.target));
+    const fl = card.querySelector('[data-copy="full"]'); if(fl) fl.addEventListener("click", e=>copy(capFull, e.target));
+    card.querySelector('input[type="checkbox"]').addEventListener("change", e=>{
+      if(e.target.checked) done[p.id]=1; else delete done[p.id];
+      try{ localStorage.setItem("bj-social-done", JSON.stringify(done)); }catch(_){}
+      card.classList.toggle("done", e.target.checked);
+      updateProgress();
+    });
+    days.appendChild(card);
+  }
+  updateProgress();
+}
+function updateProgress(){
+  const total = DATA.length, d = DATA.filter(p=>done[p.id]).length;
+  document.getElementById("progress").innerHTML = "Опубликовано <b>"+d+"</b> / "+total+" за неделю";
+}
+
+document.getElementById("lang").addEventListener("click", e=>{
+  const b = e.target.closest("button[data-l]"); if(!b) return;
+  lang = b.dataset.l;
+  document.querySelectorAll("#lang button").forEach(x=>x.setAttribute("aria-pressed", x===b?"true":"false"));
+  try{ localStorage.setItem("bj-social-lang", lang); }catch(_){}
+  render();
+});
+document.getElementById("theme").addEventListener("click", ()=>{
+  const cur = document.documentElement.getAttribute("data-theme");
+  const next = cur==="dark"?"light":(cur==="light"?"dark":(matchMedia("(prefers-color-scheme: dark)").matches?"light":"dark"));
+  document.documentElement.setAttribute("data-theme", next);
+  try{ localStorage.setItem("bj-social-theme", next); }catch(_){}
+});
+try{ const t=localStorage.getItem("bj-social-theme"); if(t) document.documentElement.setAttribute("data-theme", t); }catch(_){}
+document.querySelectorAll("#lang button").forEach(x=>x.setAttribute("aria-pressed", x.dataset.l===lang?"true":"false"));
+render();
+</script>
