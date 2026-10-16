@@ -178,6 +178,10 @@ export const topics: Topic[] = [
     title: { ru: "Площади фигур", ky: "Фигуралардын аянты" } },
   { id: "read9", subject: "reading", grade: 9, icon: "📖", difficulty: 3, order: 8,
     title: { ru: "Значение слов", ky: "Сөздөрдүн мааниси" } },
+  { id: "phys9-energy", subject: "physics", grade: 9, icon: "⚡", difficulty: 3, order: 9,
+    title: { ru: "Силы и энергия", ky: "Күчтөр жана энергия" } },
+  { id: "phys9-current", subject: "physics", grade: 9, icon: "🔌", difficulty: 3, order: 10,
+    title: { ru: "Электрический ток", ky: "Электр тогу" } },
 
   // ── 10 класс ──────────────────────────────────────────
   { id: "m10-calc", subject: "math", grade: 10, icon: "💯", difficulty: 3, order: 1,
