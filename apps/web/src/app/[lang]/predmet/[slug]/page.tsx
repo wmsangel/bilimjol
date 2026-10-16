@@ -100,7 +100,7 @@ export default async function SubjectLandingPage({
   const name = landing.title[lang];
   const grade = landing.grade;
   const klass = t(`${grade} класс`, `${grade}-класс`);
-  const taskCount = getTasks({ topic: landing.topicId }).length;
+  const taskCount = getTasks({ subject: landing.subject, grade: landing.grade }).length;
 
   const siblings = subjectLandings.filter(
     (l) => l.subject === landing.subject && l.slug !== slug,

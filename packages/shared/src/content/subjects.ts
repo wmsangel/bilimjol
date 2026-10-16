@@ -4,6 +4,7 @@
 // Контент по остальным предметам — следующими фазами.
 
 import type { Grade, LocalizedText, Subject } from "./types";
+import { subjectLabels } from "./types";
 import { topics } from "./topics";
 
 /** Предметы-науки старших классов (в дополнение к базовым logic/math/reading/world). */
@@ -55,19 +56,30 @@ function isSenior(s: Subject): s is SeniorSubject {
 }
 
 /**
- * Лендинги «<предмет> N класс» — по одному на каждую тему старшего предмета,
- * у которой есть задания. Порядок: по классу, затем по предмету.
+ * Лендинги «<предмет> N класс» — ОДИН на каждую пару предмет×класс, у которой
+ * есть хотя бы одна тема с заданиями (у пары может быть несколько тем — лендинг
+ * всё равно один). Заголовок — название предмета, а не темы. Порядок: по классу,
+ * затем по предмету.
  */
-export const subjectLandings: SubjectLanding[] = topics
-  .filter((t) => isSenior(t.subject) && t.grade >= 6)
-  .sort((a, b) => a.grade - b.grade || a.subject.localeCompare(b.subject))
-  .map((t) => ({
-    subject: t.subject,
-    grade: t.grade,
-    slug: `${subjectSlug[t.subject as SeniorSubject]}-${t.grade}-klass`,
-    topicId: t.id,
-    title: t.title,
-  }));
+export const subjectLandings: SubjectLanding[] = (() => {
+  const seen = new Set<string>();
+  return topics
+    .filter((t) => isSenior(t.subject) && t.grade >= 6)
+    .sort((a, b) => a.grade - b.grade || a.subject.localeCompare(b.subject))
+    .filter((t) => {
+      const key = `${t.subject}-${t.grade}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .map((t) => ({
+      subject: t.subject,
+      grade: t.grade,
+      slug: `${subjectSlug[t.subject as SeniorSubject]}-${t.grade}-klass`,
+      topicId: t.id,
+      title: subjectLabels[t.subject],
+    }));
+})();
 
 export function getSubjectLanding(slug: string): SubjectLanding | undefined {
   return subjectLandings.find((l) => l.slug === slug);

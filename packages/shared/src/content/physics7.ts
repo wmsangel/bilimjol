@@ -1,0 +1,130 @@
+// Физика, 7 класс (Фаза 2 «свои предметы»). Движение/скорость и масса/плотность/сила.
+// Базовые формулы школьной физики 7 класса; значения подобраны на целые ответы.
+import type { Task } from "./types";
+
+export const physics7Tasks: Task[] = [
+  // ── Движение и скорость ──
+  {
+    id: "phys7-move-a", type: "number_input", subject: "physics", topic: "phys7-move", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Тело прошло 60 км за 2 часа. Какова скорость (км/ч)?", ky: "Дене 60 км 2 саатта басты. Ылдамдык кандай (км/саат)?" },
+    answer: 30,
+    explanation: { ru: "Скорость = путь ÷ время = 60 ÷ 2 = 30 км/ч.", ky: "Ылдамдык = жол ÷ убакыт = 60 ÷ 2 = 30 км/саат." },
+  },
+  {
+    id: "phys7-move-b", type: "number_input", subject: "physics", topic: "phys7-move", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Скорость 5 м/с. Какой путь тело пройдёт за 10 секунд (м)?", ky: "Ылдамдык 5 м/с. Дене 10 секундда канча жол басат (м)?" },
+    answer: 50,
+    explanation: { ru: "Путь = скорость × время = 5 × 10 = 50 м.", ky: "Жол = ылдамдык × убакыт = 5 × 10 = 50 м." },
+  },
+  {
+    id: "phys7-move-c", type: "single_choice", subject: "physics", topic: "phys7-move", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Единица скорости в системе СИ?", ky: "СИ системасында ылдамдыктын бирдиги?" },
+    options: [{ ru: "м/с", ky: "м/с" }, { ru: "км/ч", ky: "км/саат" }, { ru: "метр", ky: "метр" }],
+    correctIndex: 0,
+    explanation: { ru: "В СИ скорость измеряют в метрах в секунду (м/с).", ky: "СИде ылдамдык метр секундуна (м/с) менен өлчөнөт." },
+  },
+  {
+    id: "phys7-move-d", type: "single_choice", subject: "physics", topic: "phys7-move", grade: 7,
+    difficulty: 2, free: true,
+    prompt: { ru: "Какой прибор показывает скорость автомобиля?", ky: "Унаанын ылдамдыгын кайсы прибор көрсөтөт?" },
+    options: [{ ru: "спидометр", ky: "спидометр" }, { ru: "термометр", ky: "термометр" }, { ru: "весы", ky: "таразы" }],
+    correctIndex: 0,
+    explanation: { ru: "Спидометр показывает скорость.", ky: "Спидометр ылдамдыкты көрсөтөт." },
+  },
+  {
+    id: "phys7-move-e", type: "number_input", subject: "physics", topic: "phys7-move", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Тело прошло 100 м за 20 с. Средняя скорость (м/с)?", ky: "Дене 100 м 20 секундда басты. Орточо ылдамдык (м/с)?" },
+    answer: 5,
+    explanation: { ru: "100 ÷ 20 = 5 м/с.", ky: "100 ÷ 20 = 5 м/с." },
+  },
+  {
+    id: "phys7-move-f", type: "single_choice", subject: "physics", topic: "phys7-move", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Движение с постоянной скоростью называют:", ky: "Туруктуу ылдамдыктагы кыймыл кандай аталат:" },
+    options: [{ ru: "равномерным", ky: "бир калыптуу" }, { ru: "ускоренным", ky: "ылдамдаган" }, { ru: "покоем", ky: "тынч абал" }],
+    correctIndex: 0,
+    explanation: { ru: "Если скорость не меняется — движение равномерное.", ky: "Ылдамдык өзгөрбөсө — кыймыл бир калыптуу." },
+  },
+  {
+    id: "phys7-move-g", type: "number_input", subject: "physics", topic: "phys7-move", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "72 км/ч — это сколько м/с?", ky: "72 км/саат — бул канча м/с?" },
+    answer: 20,
+    explanation: { ru: "Делим на 3,6: 72 ÷ 3,6 = 20 м/с.", ky: "3,6га бөлөбүз: 72 ÷ 3,6 = 20 м/с." },
+  },
+  {
+    id: "phys7-move-h", type: "number_input", subject: "physics", topic: "phys7-move", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Пешеход идёт со скоростью 5 км/ч. За сколько часов он пройдёт 15 км?", ky: "Жөө адам 5 км/саат ылдамдыкта барат. 15 км канча саатта басат?" },
+    answer: 3,
+    explanation: { ru: "Время = путь ÷ скорость = 15 ÷ 5 = 3 часа.", ky: "Убакыт = жол ÷ ылдамдык = 15 ÷ 5 = 3 саат." },
+  },
+
+  // ── Масса, плотность, сила ──
+  {
+    id: "phys7-force-a", type: "single_choice", subject: "physics", topic: "phys7-force", grade: 7,
+    difficulty: 2, free: true,
+    prompt: { ru: "Каким прибором измеряют массу?", ky: "Массаны кайсы прибор менен өлчөйт?" },
+    options: [{ ru: "весами", ky: "таразы менен" }, { ru: "линейкой", ky: "сызгыч менен" }, { ru: "часами", ky: "саат менен" }],
+    correctIndex: 0,
+    explanation: { ru: "Массу измеряют весами.", ky: "Массаны таразы менен өлчөйт." },
+  },
+  {
+    id: "phys7-force-b", type: "single_choice", subject: "physics", topic: "phys7-force", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Единица силы в системе СИ?", ky: "СИ системасында күчтүн бирдиги?" },
+    options: [{ ru: "ньютон", ky: "ньютон" }, { ru: "килограмм", ky: "килограмм" }, { ru: "метр", ky: "метр" }],
+    correctIndex: 0,
+    explanation: { ru: "Сила измеряется в ньютонах (Н).", ky: "Күч ньютондо (Н) өлчөнөт." },
+  },
+  {
+    id: "phys7-force-c", type: "number_input", subject: "physics", topic: "phys7-force", grade: 7,
+    difficulty: 2, free: true,
+    prompt: { ru: "Масса тела 3 кг. Сколько это граммов?", ky: "Дененин массасы 3 кг. Бул канча грамм?" },
+    answer: 3000,
+    explanation: { ru: "1 кг = 1000 г, значит 3 кг = 3000 г.", ky: "1 кг = 1000 г, демек 3 кг = 3000 г." },
+  },
+  {
+    id: "phys7-force-d", type: "single_choice", subject: "physics", topic: "phys7-force", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Плотность — это масса, делённая на …", ky: "Тыгыздык — бул массаны … бөлгөн" },
+    options: [{ ru: "объём", ky: "көлөмгө" }, { ru: "время", ky: "убакытка" }, { ru: "скорость", ky: "ылдамдыкка" }],
+    correctIndex: 0,
+    explanation: { ru: "Плотность = масса ÷ объём.", ky: "Тыгыздык = масса ÷ көлөм." },
+  },
+  {
+    id: "phys7-force-e", type: "single_choice", subject: "physics", topic: "phys7-force", grade: 7,
+    difficulty: 2, free: true,
+    prompt: { ru: "Куда направлена сила тяжести?", ky: "Оордук күчү кайда багытталган?" },
+    options: [{ ru: "вниз", ky: "ылдыйга" }, { ru: "вверх", ky: "өйдөгө" }, { ru: "вбок", ky: "капталга" }],
+    correctIndex: 0,
+    explanation: { ru: "Сила тяжести тянет тела вниз, к центру Земли.", ky: "Оордук күчү денелерди ылдыйга, Жердин борборуна тартат." },
+  },
+  {
+    id: "phys7-force-f", type: "single_choice", subject: "physics", topic: "phys7-force", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Каким прибором измеряют силу?", ky: "Күчтү кайсы прибор менен өлчөйт?" },
+    options: [{ ru: "динамометром", ky: "динамометр менен" }, { ru: "весами", ky: "таразы менен" }, { ru: "термометром", ky: "термометр менен" }],
+    correctIndex: 0,
+    explanation: { ru: "Силу измеряют динамометром.", ky: "Күчтү динамометр менен өлчөйт." },
+  },
+  {
+    id: "phys7-force-g", type: "number_input", subject: "physics", topic: "phys7-force", grade: 7,
+    difficulty: 3, free: true,
+    prompt: { ru: "Плотность воды 1000 кг/м³. Чему равна масса 3 м³ воды (кг)?", ky: "Суунун тыгыздыгы 1000 кг/м³. 3 м³ суунун массасы канча (кг)?" },
+    answer: 3000,
+    explanation: { ru: "Масса = плотность × объём = 1000 × 3 = 3000 кг.", ky: "Масса = тыгыздык × көлөм = 1000 × 3 = 3000 кг." },
+  },
+  {
+    id: "phys7-force-h", type: "single_choice", subject: "physics", topic: "phys7-force", grade: 7,
+    difficulty: 2, free: true,
+    prompt: { ru: "В чём измеряют массу в системе СИ?", ky: "СИ системасында массаны эмнеде өлчөйт?" },
+    options: [{ ru: "в килограммах", ky: "килограммда" }, { ru: "в ньютонах", ky: "ньютондо" }, { ru: "в метрах", ky: "метрде" }],
+    correctIndex: 0,
+    explanation: { ru: "Массу измеряют в килограммах (кг).", ky: "Массаны килограммда (кг) өлчөйт." },
+  },
+];

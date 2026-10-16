@@ -136,6 +136,10 @@ export const topics: Topic[] = [
     title: { ru: "Биология", ky: "Биология" } },
   { id: "m7-geo", subject: "math", grade: 7, icon: "📐", difficulty: 3, order: 6,
     title: { ru: "Периметр и площадь", ky: "Периметр жана аянт" } },
+  { id: "phys7-move", subject: "physics", grade: 7, icon: "🏃", difficulty: 3, order: 7,
+    title: { ru: "Движение и скорость", ky: "Кыймыл жана ылдамдык" } },
+  { id: "phys7-force", subject: "physics", grade: 7, icon: "🧲", difficulty: 3, order: 8,
+    title: { ru: "Масса, плотность, сила", ky: "Масса, тыгыздык, күч" } },
 
   // ── 8 класс ───────────────────────────────────────────
   { id: "m8-sqrt", subject: "math", grade: 8, icon: "📐", difficulty: 3, order: 1,
