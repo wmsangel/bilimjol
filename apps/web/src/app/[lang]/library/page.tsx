@@ -51,8 +51,8 @@ export default async function LibraryPage({
     {
       q: t("Учебники правда бесплатные?", "Окуу китептери чын эле акысызбы?"),
       a: t(
-        "Да. Мы ссылаемся на официальную электронную библиотеку Министерства просвещения Кыргызстана (kitep.edu.kg) — там все школьные учебники доступны бесплатно, на кыргызском, русском и узбекском.",
-        "Ооба. Биз Кыргызстандын Агартуу министрлигинин расмий электрондук китепканасына (kitep.edu.kg) шилтейбиз — ал жерде бардык мектеп окуу китептери акысыз, кыргызча, орусча жана өзбекче жеткиликтүү.",
+        "Да. Мы ссылаемся на официальные электронные библиотеки министерств образования: Кыргызстан (kitep.edu.kg) и Беларусь (e-padruchnik.adu.by) — там школьные учебники доступны бесплатно, в том числе на русском.",
+        "Ооба. Биз билим берүү министрликтеринин расмий электрондук китепканаларына шилтейбиз: Кыргызстан (kitep.edu.kg) жана Беларусь (e-padruchnik.adu.by) — ал жерде мектеп окуу китептери акысыз, орусча да.",
       ),
     },
     {
@@ -71,7 +71,6 @@ export default async function LibraryPage({
     },
   ];
 
-  const kg = LIBRARY_SOURCES[0];
   const cardLink =
     "flex items-center justify-between rounded-2xl bg-white px-4 py-3.5 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(25,21,57,.1)]";
 
@@ -97,37 +96,45 @@ export default async function LibraryPage({
           </p>
         </div>
 
-        {/* Учебники */}
+        {/* Учебники — по странам */}
         <section className="mt-6">
           <h2 className="font-display text-2xl font-bold">
-            {t("Учебники по классам", "Окуу китептери класстар боюнча")}
+            {t("Учебники по странам и классам", "Окуу китептери өлкө жана класс боюнча")}
           </h2>
-          <div className="mt-4 flex items-start gap-3 rounded-[22px] bg-white p-5 shadow-[0_8px_24px_rgba(25,21,57,.06)]">
-            <span className="text-3xl" aria-hidden="true">{kg.flag}</span>
-            <div className="min-w-0">
-              <div className="font-display text-lg font-bold">
-                {t("Кыргызстан", "Кыргызстан")} ·{" "}
-                <a href={kg.url} {...ext} className="text-[#6d5cf7] hover:underline">{kg.name}</a>
+          <div className="mt-4 flex flex-col gap-5">
+            {LIBRARY_SOURCES.map((src) => (
+              <div key={src.id}>
+                <div className="flex items-start gap-3 rounded-[22px] bg-white p-5 shadow-[0_8px_24px_rgba(25,21,57,.06)]">
+                  <span className="text-3xl" aria-hidden="true">{src.flag}</span>
+                  <div className="min-w-0">
+                    <div className="font-display text-lg font-bold">
+                      {src.country[lang]} ·{" "}
+                      <a href={src.url} {...ext} className="text-[#6d5cf7] hover:underline">{src.name} ↗</a>
+                    </div>
+                    <p className="mt-1 text-sm text-[#5c5880]">{src.note[lang]}</p>
+                  </div>
+                </div>
+                {src.hasGradeGrid && (
+                  <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    {KITEP_GRADES.map((g) => (
+                      <a key={g.grade} href={kitepGradeUrl(g.grade)} {...ext} className={cardLink}>
+                        <span className="font-display text-base font-bold">
+                          {t(`${g.grade} класс`, `${g.grade}-класс`)}
+                        </span>
+                        <span className="text-sm font-extrabold text-[#8f8aa8]">
+                          {g.subjects} {t("предм.", "предмет")} ↗
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
-              <p className="mt-1 text-sm text-[#5c5880]">{kg.note[lang]}</p>
-            </div>
-          </div>
-          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {KITEP_GRADES.map((g) => (
-              <a key={g.grade} href={kitepGradeUrl(g.grade)} {...ext} className={cardLink}>
-                <span className="font-display text-base font-bold">
-                  {t(`${g.grade} класс`, `${g.grade}-класс`)}
-                </span>
-                <span className="text-sm font-extrabold text-[#8f8aa8]">
-                  {g.subjects} {t("предм.", "предмет")} ↗
-                </span>
-              </a>
             ))}
           </div>
           <p className="mt-3 text-sm text-[#8f8aa8]">
             {t(
-              "Ссылки ведут на официальный источник — чтение бесплатно, на кыргызском, русском и узбекском.",
-              "Шилтемелер расмий булакка алып барат — окуу акысыз, кыргызча, орусча жана өзбекче.",
+              "Ссылки ведут на официальные бесплатные источники. Другие страны добавим по мере появления открытого доступа.",
+              "Шилтемелер расмий акысыз булактарга алып барат. Башка өлкөлөрдү ачык жетүү пайда болгон сайын кошобуз.",
             )}
           </p>
         </section>

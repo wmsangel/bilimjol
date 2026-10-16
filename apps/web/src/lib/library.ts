@@ -9,25 +9,42 @@ export type LocalizedText = { ru: string; ky: string };
 export const KITEP_BASE = "https://kitep.edu.kg";
 
 export interface LibrarySource {
+  id: string;
   country: LocalizedText;
   flag: string;
-  name: string; // kitep.edu.kg
+  name: string; // домен источника
   url: string;
   free: boolean;
   note: LocalizedText;
+  /** Если у источника есть разбивка по классам прямо у нас (сетка-ссылки). */
+  hasGradeGrid?: boolean;
 }
 
-/** Страны-источники. Пока один реально бесплатный официальный источник — КГ. */
+/** Страны-источники — только реально бесплатные официальные порталы. */
 export const LIBRARY_SOURCES: LibrarySource[] = [
   {
+    id: "kg",
     country: { ru: "Кыргызстан", ky: "Кыргызстан" },
     flag: "🇰🇬",
     name: "kitep.edu.kg",
     url: KITEP_BASE,
     free: true,
+    hasGradeGrid: true,
     note: {
       ru: "Электронная библиотека Министерства просвещения КР — все учебники бесплатно, на кыргызском, русском и узбекском.",
       ky: "КР Агартуу министрлигинин электрондук китепканасы — бардык окуу китептери акысыз, кыргызча, орусча жана өзбекче.",
+    },
+  },
+  {
+    id: "by",
+    country: { ru: "Беларусь", ky: "Беларусь" },
+    flag: "🇧🇾",
+    name: "e-padruchnik.adu.by",
+    url: "https://e-padruchnik.adu.by/",
+    free: true,
+    note: {
+      ru: "Электронные версии учебников Академии национального образования РБ — бесплатно скачать, с фильтром по классу, предмету и языку (белорусский, русский).",
+      ky: "Беларустун Улуттук билим берүү академиясынын электрондук окуу китептери — акысыз, класс, предмет жана тил боюнча чыпка менен (беларусча, орусча).",
     },
   },
 ];
