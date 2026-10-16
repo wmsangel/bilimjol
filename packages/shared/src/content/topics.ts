@@ -122,6 +122,10 @@ export const topics: Topic[] = [
     title: { ru: "Язык и слова", ky: "Тил жана сөздөр" } },
   { id: "world6", subject: "geography", grade: 6, icon: "🗺️", difficulty: 2, order: 6,
     title: { ru: "География", ky: "География" } },
+  { id: "bio6-life", subject: "biology", grade: 6, icon: "🌱", difficulty: 2, order: 7,
+    title: { ru: "Живая природа и царства", ky: "Жандуу жаратылыш жана падышалыктар" } },
+  { id: "bio6-plants", subject: "biology", grade: 6, icon: "🌿", difficulty: 3, order: 8,
+    title: { ru: "Растения", ky: "Өсүмдүктөр" } },
 
   // ── 7 класс ───────────────────────────────────────────
   { id: "m7-pow", subject: "math", grade: 7, icon: "🔼", difficulty: 3, order: 1,
