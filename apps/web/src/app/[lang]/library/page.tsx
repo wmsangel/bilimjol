@@ -15,6 +15,7 @@ import {
   kitepGradeUrl,
   SUMMER_READING,
 } from "@/lib/library";
+import { readerWorks } from "@/lib/library-reader";
 import { getDictionary } from "../dictionaries";
 
 export async function generateMetadata({
@@ -138,6 +139,37 @@ export default async function LibraryPage({
             )}
           </p>
         </section>
+
+        {/* Читать онлайн — тексты, размещённые у нас */}
+        {readerWorks.length > 0 && (
+          <section className="mt-12">
+            <h2 className="font-display text-2xl font-bold">
+              {t("Читать онлайн", "Онлайн окуу")}
+            </h2>
+            <p className="mt-2 text-[#5c5880]">
+              {t(
+                "Классика в общественном достоянии — прямо здесь, без перехода на другие сайты.",
+                "Коомдук менчиктеги классика — ушул жерде, башка сайттарга өтпөй.",
+              )}
+            </p>
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {readerWorks.map((w) => (
+                <Link
+                  key={w.slug}
+                  href={`/${lang}/library/read/${w.slug}`}
+                  className="rounded-2xl bg-white p-4 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(25,21,57,.1)]"
+                >
+                  <div className="font-display text-base font-bold text-[#191539]">{w.title}</div>
+                  <div className="mt-0.5 text-sm text-[#8f8aa8]">
+                    {w.author}
+                    {w.year ? ` · ${w.year}` : ""}
+                  </div>
+                  <p className="mt-1.5 text-sm text-[#5c5880]">{w.summary[lang]}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* На лето */}
         <section className="mt-12">
