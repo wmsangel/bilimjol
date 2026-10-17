@@ -84,6 +84,11 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
   border-radius:12px; display:block; margin:4px 0 6px}
 .vidnote{font-size:12.5px; line-height:1.4; color:var(--muted); background:var(--surface2);
   border-radius:8px; padding:7px 9px; margin:0 0 8px}
+.varlab{display:flex; align-items:center; gap:8px; justify-content:space-between;
+  font-weight:800; font-size:13px; color:var(--ink); margin:8px 0 5px}
+.webvar{font-size:12px; font-weight:700; color:#fff; background:var(--violet);
+  padding:4px 11px; border-radius:999px; text-decoration:none; white-space:nowrap}
+.webvar:hover{background:var(--violet-deep,#4a3bd4)}
 .check{margin-left:auto;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);user-select:none}
 .check input{width:17px;height:17px;accent-color:var(--violet);cursor:pointer}
 .pillar{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gold)}
@@ -409,19 +414,21 @@ const PLAN = [
 // Готовые анимированные сторис-видео (1080×1920, рендер из артефакта-плеера).
 // Ключ — «неделя|день». sticker — интерактив, который добавляется в самом Instagram
 // (у опроса/квиза/ссылки его НЕТ в видео: видео — только фон+вопрос, низ свободен под стикер).
+// idx — индекс сторис в артефакте-плеере (для «веб-варианта», #sN).
+const STORY_ART = "https://claude.ai/artifact/AwcsFkqKUbfyQmZgXs6Vh1";
 const STORY_MEDIA = {
-  "1|Вт": {video:"ig-stories/w1-vt.mp4",  sticker:"опрос"},
-  "1|Чт": {video:"ig-stories/w1-cht.mp4"},
-  "1|Сб": {video:"ig-stories/w1-sb.mp4",  sticker:"ссылка"},
-  "2|Вт": {video:"ig-stories/w2-vt.mp4",  sticker:"квиз"},
-  "2|Чт": {video:"ig-stories/w2-cht.mp4"},
-  "2|Сб": {video:"ig-stories/w2-sb.mp4",  sticker:"опрос"},
-  "3|Вт": {video:"ig-stories/w3-vt.mp4"},
-  "3|Чт": {video:"ig-stories/w3-cht.mp4"},
-  "3|Сб": {video:"ig-stories/w3-sb.mp4",  sticker:"ссылка"},
-  "4|Вт": {video:"ig-stories/w4-vt.mp4",  sticker:"опрос"},
-  "4|Чт": {video:"ig-stories/w4-cht.mp4"},
-  "4|Сб": {video:"ig-stories/w4-sb.mp4"},
+  "1|Вт": {idx:0,  video:"ig-stories/w1-vt.mp4",  sticker:"опрос"},
+  "1|Чт": {idx:1,  video:"ig-stories/w1-cht.mp4"},
+  "1|Сб": {idx:2,  video:"ig-stories/w1-sb.mp4",  sticker:"ссылку"},
+  "2|Вт": {idx:3,  video:"ig-stories/w2-vt.mp4",  sticker:"квиз"},
+  "2|Чт": {idx:4,  video:"ig-stories/w2-cht.mp4"},
+  "2|Сб": {idx:5,  video:"ig-stories/w2-sb.mp4",  sticker:"опрос"},
+  "3|Вт": {idx:6,  video:"ig-stories/w3-vt.mp4"},
+  "3|Чт": {idx:7,  video:"ig-stories/w3-cht.mp4"},
+  "3|Сб": {idx:8,  video:"ig-stories/w3-sb.mp4",  sticker:"ссылку"},
+  "4|Вт": {idx:9,  video:"ig-stories/w4-vt.mp4",  sticker:"опрос"},
+  "4|Чт": {idx:10, video:"ig-stories/w4-cht.mp4"},
+  "4|Сб": {idx:11, video:"ig-stories/w4-sb.mp4"},
 };
 const FMT = {reels:"Reels",carousel:"Карусель",post:"Пост",stories:"Stories"};
 const weeksEl = document.getElementById("weeks");
@@ -460,11 +467,15 @@ function render(filter){
       const isStory = p.f==="stories";
       const media = isStory ? STORY_MEDIA[p.w+"|"+p.d] : null;
       const vid = media
-        ? `<video class="vid" src="${media.video}" controls muted loop playsinline preload="metadata"></video>`+
-          `<div class="vidnote">🎬 Готовое видео 1080×1920.`+
-          (media.sticker
-            ? ` Интерактив НЕ в видео — добавь стикер «${media.sticker}» в Instagram (низ кадра свободен под него).`
-            : ` Публикуй как есть.`)+`</div>`
+        ? (media.sticker
+            ? `<div class="varlab">🌐 Веб-вариант — что добавить в IG`
+              + `<a class="webvar" href="${STORY_ART}#s${media.idx}" target="_blank" rel="noopener">открыть плеер ↗</a></div>`
+              + `<div class="vidnote">Показывает, как будет со стикером «${media.sticker}» — в нём видно, что создать инструментом Instagram.</div>`
+              + `<div class="varlab">🎬 MP4 — это публикуем</div>`
+              + `<video class="vid" src="${media.video}" controls muted loop playsinline preload="metadata"></video>`
+              + `<div class="vidnote">Чистое видео 1080×1920 без стикера — низ кадра свободен. Выложи его, затем добавь «${media.sticker}» нативным стикером в Instagram.</div>`
+            : `<video class="vid" src="${media.video}" controls muted loop playsinline preload="metadata"></video>`
+              + `<div class="vidnote">🎬 Готовое видео 1080×1920 — публикуй как есть.</div>`)
         : "";
       const card = document.createElement("article");
       card.className = "card" + (isDone?" done":"");
