@@ -1,0 +1,503 @@
+<title>Контент-план Bilimjol</title>
+<meta name="description" content="Месяц контента для Instagram @bilimjol: формат, визуал, подписи RU/KY и хэштеги на каждый день.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+/* Layout: липкая шапка с фильтром → 4 недели по 7 карточек-дней; карточка = формат+тема+визуал+подписи RU/KY+хэштеги с кнопками «копировать». */
+:root{
+  --bg:#f5f3ff; --surface:#ffffff; --surface2:#efecff;
+  --ink:#191539; --muted:#5c5880; --line:#e6e1ff;
+  --violet:#6d5cf7; --gold:#e6c079;
+  --reels:#d9456f; --carousel:#6d5cf7; --post:#2f9e7d; --stories:#d98a12;
+  --radius:18px;
+  --font-display:'Comfortaa',system-ui,sans-serif;
+  --font-body:'Nunito',system-ui,-apple-system,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141226; --surface:#1e1b38; --surface2:#2a2550;
+  --ink:#ece9ff; --muted:#a7a2cf; --line:#342e5a;
+  --violet:#a79aff; --gold:#e6c079;
+  --reels:#f07a9c; --carousel:#a79aff; --post:#5cc79e; --stories:#ecb34e;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#141226; --surface:#1e1b38; --surface2:#2a2550;
+  --ink:#ece9ff; --muted:#a7a2cf; --line:#342e5a;
+  --violet:#a79aff; --gold:#e6c079;
+  --reels:#f07a9c; --carousel:#a79aff; --post:#5cc79e; --stories:#ecb34e;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+h1,h2,h3{font-family:var(--font-display);margin:0;text-wrap:balance}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);
+  border-bottom:1px solid var(--line);padding-block:14px 10px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .mark{width:42px;height:42px;flex:none;border-radius:13px;display:grid;place-items:center;
+  font-size:24px;background:linear-gradient(135deg,var(--violet),var(--gold))}
+.brand h1{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.brand .sub{color:var(--muted);font-size:13px;font-weight:600}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.filters{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font-family:var(--font-body);font-weight:700;font-size:13px;cursor:pointer;
+  border:1.5px solid var(--line);background:var(--surface);color:var(--muted);
+  padding:6px 13px;border-radius:999px;transition:.15s;-webkit-tap-highlight-color:transparent}
+.chip:hover{border-color:var(--violet)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.progress{margin-left:auto;font-weight:800;font-size:13px;color:var(--muted);white-space:nowrap}
+.progress b{color:var(--violet)}
+
+.intro{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.intro summary{cursor:pointer;font-family:var(--font-display);font-weight:700;font-size:15px;list-style:none;display:flex;align-items:center;gap:8px}
+.intro summary::-webkit-details-marker{display:none}
+.intro summary::before{content:"▸";color:var(--violet);transition:.15s}
+.intro[open] summary::before{transform:rotate(90deg)}
+.intro .body{margin-top:12px;display:grid;gap:12px}
+.ref{display:grid;gap:6px}
+.ref .lab{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ref pre{margin:0;white-space:pre-wrap;font-family:var(--font-body);font-size:14px;background:var(--surface2);
+  border-radius:12px;padding:11px 13px;overflow-x:auto}
+.hint{color:var(--muted);font-size:13.5px}
+.hint code{background:var(--surface2);padding:1px 6px;border-radius:6px;font-size:12.5px}
+
+.week{margin-top:30px}
+.week h2{font-size:15px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;
+  padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;display:flex;flex-direction:column;gap:11px;min-width:0}
+.card.done{opacity:.55}
+.card .head{display:flex;align-items:center;gap:8px}
+.day{font-family:var(--font-display);font-weight:700;font-size:15px}
+.badge{font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;
+  padding:3px 9px;border-radius:999px;color:#fff}
+.badge.reels{background:var(--reels)} .badge.carousel{background:var(--carousel)}
+.badge.post{background:var(--post)} .badge.stories{background:var(--stories)}
+.check{margin-left:auto;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);user-select:none}
+.check input{width:17px;height:17px;accent-color:var(--violet);cursor:pointer}
+.pillar{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gold)}
+.topic{font-family:var(--font-display);font-weight:700;font-size:17px;line-height:1.3}
+
+.block{display:grid;gap:5px}
+.block .lab{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.block .txt{font-size:14px;white-space:pre-wrap;word-break:break-word}
+.block .txt.visual{color:var(--muted);font-style:normal}
+.copy{margin-left:auto;font-family:var(--font-body);font-weight:700;font-size:11px;cursor:pointer;
+  border:1.5px solid var(--line);background:var(--surface);color:var(--violet);
+  padding:3px 10px;border-radius:999px;transition:.15s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.copy:hover{border-color:var(--violet)}
+.copy.ok{background:var(--post);color:#fff;border-color:var(--post)}
+.tags{font-size:13px;color:var(--muted);word-break:break-word}
+details.cap{border-top:1px dashed var(--line);padding-top:9px}
+details.cap>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:7px;
+  font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+details.cap>summary::-webkit-details-marker{display:none}
+details.cap>summary .arr{color:var(--violet);transition:.15s}
+details.cap[open]>summary .arr{transform:rotate(90deg)}
+details.cap .txt{margin-top:7px}
+footer{margin-top:40px;color:var(--muted);font-size:13px;text-align:center}
+a{color:var(--violet)}
+@media(max-width:480px){.brand h1{font-size:19px}.grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">🐆</div>
+      <div>
+        <h1>Контент-план @bilimjol</h1>
+        <div class="sub">Instagram · месяц · RU/KY · органика</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="filters" id="filters" role="group" aria-label="Фильтр по формату">
+        <button class="chip" data-f="all" aria-pressed="true">Все</button>
+        <button class="chip" data-f="reels" aria-pressed="false"><span class="dot" style="background:var(--reels)"></span>Reels</button>
+        <button class="chip" data-f="carousel" aria-pressed="false"><span class="dot" style="background:var(--carousel)"></span>Карусель</button>
+        <button class="chip" data-f="post" aria-pressed="false"><span class="dot" style="background:var(--post)"></span>Пост</button>
+        <button class="chip" data-f="stories" aria-pressed="false"><span class="dot" style="background:var(--stories)"></span>Stories</button>
+      </div>
+      <div class="progress" id="progress">готово 0</div>
+    </div>
+  </header>
+
+  <details class="intro">
+    <summary>Шпаргалка: шапка профиля, как пользоваться, банк хэштегов</summary>
+    <div class="body">
+      <p class="hint">На каждый день — формат, что показать (<b>визуал</b>), готовая подпись на русском и кыргызском, хэштеги. Жми «копировать» и вставляй. Отметка «готово» сохраняется в этом браузере.</p>
+      <p class="hint"><b>Откуда картинки и видео:</b><br>• <b>Reels/видео</b> — готовые <b>слайды-кадры 9:16 готовлю я</b> (с маскотом-ирбисом). Ты собираешь их в CapCut: по порядку, ~2–2.5 сек на кадр, трендовый звук + переходы. Запись экрана не нужна.<br>• <b>Посты и карусели</b> — готовые обложки от меня, либо <b>промт для нейросети</b> (Ideogram / Bing / Google ImageFX — бесплатные), текст на картинку добавляй в Canva (нейросети путают кириллицу).<br>Нужны слайды под конкретный Reels или обложку — просто скажи какой день, пришлю пачкой.</p>
+      <div class="ref">
+        <div class="lab">Имя профиля (поле Name — ищется внутри IG) <button class="copy" data-copy="name">копировать</button></div>
+        <pre id="name">Bilimjol · учёба для детей 0–11</pre>
+      </div>
+      <div class="ref">
+        <div class="lab">Описание (bio) <button class="copy" data-copy="bio">копировать</button></div>
+        <pre id="bio">📚 Задания, игры и тесты для детей 0–11 класса
+🇰🇬 Орусча · кыргызча · акысыз баштоо
+👇 Открыть</pre>
+      </div>
+      <div class="ref">
+        <div class="lab">Ссылка в шапке</div>
+        <pre>https://bilimjol.com</pre>
+      </div>
+      <div class="ref">
+        <div class="lab">Банк хэштегов (бери 5–10, чередуй) <button class="copy" data-copy="bank">копировать</button></div>
+        <pre id="bank">#bilimjol #балдаргаокуу #окуу #математика #мектеп #баланыдаярдоо #кыргызстан #бишкек #детиучеба #подготовкакшколе #начальнаяшкола #окуучу</pre>
+      </div>
+      <p class="hint">Базовый стиль для промта картинки (вставляй в начало, маскот держи один и тот же): <code>Flat vector, rounded friendly shapes, kids-education style. Palette violet #6d5cf7, gold #e6c079, navy #191539, bg #f7f5ff. Mascot: cute cartoon snow leopard cub (irbis), grey-blue fur, soft dark rosette spots, big friendly eyes. Lots of negative space.</code></p>
+    </div>
+  </details>
+
+  <div id="weeks"></div>
+
+  <footer>Живой план. Отмечай «готово» по мере публикаций · приоритет — Reels · 3–4 поста + сторис в неделю.</footer>
+</div>
+
+<script>
+// ── Данные плана: 4 недели. Каждый день — формат, рубрика, тема, визуал,
+// копируемый «shot» (промт картинки или запись экрана), подписи RU/KY, хэштеги.
+// Источники — реальные разделы bilimjol.com. Stories — короткий текст на экран.
+const H = {
+  core:"#bilimjol #балдаргаокуу #окуу #кыргызстан #бишкек",
+  math:"#bilimjol #математика #детиучеба #подготовкакшколе #кыргызстан #бишкек #окуу",
+  parent:"#bilimjol #родителидети #воспитание #детиучеба #кыргызстан #бишкек #начальнаяшкола",
+  ky:"#bilimjol #балдаргаокуу #математика #мектеп #окуучу #кыргызстан #бишкек",
+  ort:"#bilimjol #орт #жрт #подготовкакорт #выпускник #кыргызстан #бишкек",
+};
+const PLAN = [
+ // ── Неделя 1: знакомство ──
+ {w:1,d:"Пн",f:"reels",pillar:"Продукт",topic:"Bilimjol за 20 секунд",
+  visual:"Запись экрана: быстрый тур по сайту — главная → игра → задание с разбором → переключение RU/KY.",
+  shotKind:"запись экрана",
+  shot:"Запись экрана (вертикально 9:16): 1) главная bilimjol.com; 2) открыть игру «Быстрый счёт», решить 2–3 примера; 3) открыть любое задание, показать кнопку «Разобраться в теме»; 4) переключить язык RU→KY. Хук-оверлей первые 2 сек: «Бесплатная учёба для детей 0–11». Субтитры в CapCut.",
+  ru:"Учёба для детей 0–11 класса — бесплатно и в браузере 📚\nЗадания с объяснением, игры на счёт и внимание, тесты. На русском и кыргызском.\nНачать — ссылка в шапке 👆",
+  ky:"Балдар үчүн окуу 0–11 класс — акысыз 📚\nТүшүндүрмөсү менен тапшырмалар, оюндар жана тесттер. Орусча жана кыргызча.\nБаштоо — профилдеги шилтеме 👆",
+  tags:"#bilimjol #балдаргаокуу #детиучеба #математика #кыргызстан #бишкек #окуу"},
+
+ {w:1,d:"Вт",f:"stories",pillar:"Вовлечение",topic:"Опрос: в каком классе ребёнок?",
+  visual:"Stories со стикером-опросом. Фон — фиолетовый, по центру ирбис.",
+  shotKind:"стикер",
+  shot:"Стикер «Опрос». Варианты: 0 (садик) / 1–4 / 5–8 / 9–11. На экране: «В каком классе ваш ребёнок?»",
+  ru:"В каком классе ваш ребёнок?",
+  ky:"Балаңыз канчанчы класста?",
+  tags:""},
+
+ {w:1,d:"Ср",f:"carousel",pillar:"Мини-урок",topic:"Как понятно объяснить деление",
+  visual:"Карусель 6 слайдов (4:5). Обложка — крупный хук, слайды 2–5 по шагу, слайд 6 — CTA.",
+  shotKind:"промт картинки",
+  shot:"Обложка-иллюстрация (промт для Ideogram/ImageFX): [базовый стиль] + the snow leopard cub sharing cookies between two plates, dividing equally, a few gold stars, portrait 4:5. Текст «Деление — это поровну» добавить в Canva поверх.",
+  ru:"Деление пугает? Объясните на печенье 🍪\nРазложить 12 печений на 3 тарелки поровну — это и есть 12 ÷ 3. Ребёнок видит результат руками, а не заучивает.\nЕщё мини-уроки и задания — на bilimjol.com (ссылка в шапке). Сохрани, чтобы не потерять 🔖",
+  ky:"Бөлүү кыйынбы? Печенье менен түшүндүрүңүз 🍪\n12 печениени 3 тарелкага тең бөлүү — бул 12 ÷ 3. Бала натыйжаны колу менен көрөт.\nДагы мини-сабактар — bilimjol.com",
+  tags:"#bilimjol #математика #деление #начальнаяшкола #детиучеба #кыргызстан #бишкек"},
+
+ {w:1,d:"Чт",f:"stories",pillar:"Вовлечение",topic:"Задачка за 10 секунд",
+  visual:"Stories: крупная задача + таймер-стикер. Ответ — на следующей сторис.",
+  shotKind:"стикер",
+  shot:"Слайд 1: «7 × 8 = ?» + стикер-таймер 10 сек. Слайд 2: «56 ✅ Проверь себя на bilimjol.com».",
+  ru:"7 × 8 = ?  (ответ через 10 сек)",
+  ky:"7 × 8 = ?  (жооп 10 секунддан кийин)",
+  tags:""},
+
+ {w:1,d:"Пт",f:"reels",pillar:"Продукт",topic:"60 секунд на примеры — сколько решишь?",
+  visual:"Запись экрана игры «Быстрый счёт» (sprint): счётчик, правильные ответы, звёзды.",
+  shotKind:"запись экрана",
+  shot:"Запись экрана игры «Быстрый счёт» 9:16: показать таймер и как летят примеры, 15–20 сек геймплея. Хук первые 2 сек: «Сколько примеров за 60 секунд?». В конце оверлей: «Твой рекорд? → bilimjol.com».",
+  ru:"Сколько примеров решит ваш ребёнок за 60 секунд? ⏱️\nИгра «Быстрый счёт» — тренирует устный счёт без зубрёжки. Бесплатно, прямо в браузере.\nПопробуйте — ссылка в шапке 👆",
+  ky:"Балаңыз 60 секундда канча мисал чыгарат? ⏱️\n«Тез эсеп» оюну — оозеки эсепти машыктырат. Акысыз.\nСынап көрүңүз — шилтеме профилде 👆",
+  tags:"#bilimjol #математика #устныйсчет #детиучеба #оюн #кыргызстан #бишкек"},
+
+ {w:1,d:"Сб",f:"stories",pillar:"Новинка",topic:"Тест «Кыргызстан»",
+  visual:"Stories: обложка теста + стикер-ссылка/«смахни вверх». Ирбис + флаг-мотив.",
+  shotKind:"стикер",
+  shot:"Скриншот теста «Кыргызстан» с сайта. Текст: «Новое: тест про Кыргызстан — география, природа, культура». Стикер-ссылка на /ru/tests/kyrgyzstan.",
+  ru:"Новое: тест «Кыргызстан» 🏔️\nГеография, природа, культура — 10 вопросов.",
+  ky:"Жаңы: «Кыргызстан» тести 🏔️\nГеография, жаратылыш, маданият — 10 суроо.",
+  tags:""},
+
+ {w:1,d:"Вс",f:"post",pillar:"Вовлечение · KY",topic:"Математикалык оюндар (KY)",
+  visual:"Пост-карусель 3 слайда со скриншотами 3 игр, подписи на кыргызском.",
+  shotKind:"запись экрана",
+  shot:"Скриншоты/короткие клипы 3 игр: «Тез эсеп», «Мисал түз», «Салыштыр». 3 слайда 4:5, названия игр по-кыргызски поверх в Canva.",
+  ru:"Математические игры на кыргызском — бесплатно 🎮\n3 игры на счёт и сравнение. Учиться на родном языке — легче и интереснее.\nИграть — ссылка в шапке.",
+  ky:"Математикалык оюндар кыргызча — акысыз 🎮\nЭсеп жана салыштырууга 3 оюн. Эне тилде окуу — оңой жана кызык.\nОйноо — профилдеги шилтеме.",
+  tags:"#bilimjol #математика #балдаргаокуу #оюн #мектеп #кыргызча #бишкек"},
+
+ // ── Неделя 2: польза + демо ──
+ {w:2,d:"Пн",f:"post",pillar:"Польза",topic:"5 минут в день > часа раз в неделю",
+  visual:"Пост-картинка: ирбис с календариком/галочками, крупная цифра «5 мин».",
+  shotKind:"промт картинки",
+  shot:"Промт (Ideogram/ImageFX): [базовый стиль] + the snow leopard cub ticking days on a small calendar, calm and happy, big number 5 and a clock, portrait 4:5. Текст «5 минут в день» — в Canva.",
+  ru:"5 минут каждый день работают лучше, чем час раз в неделю ⏳\nРегулярность важнее объёма: короткие занятия не утомляют и входят в привычку. Поставьте «учебные 5 минут» после завтрака.\nКороткие задания по классам — на bilimjol.com 👆",
+  ky:"Күнүнө 5 мүнөт — аптасына бир саатка караганда жакшыраак ⏳\nУзактык эмес, туруктуулук маанилүү. Эртең мененки тамактан кийин «5 мүнөт окуу» адатын киргизиңиз.\nКласстар боюнча кыска тапшырмалар — bilimjol.com",
+  tags:"#bilimjol #родителидети #воспитание #привычки #детиучеба #кыргызстан #бишкек"},
+
+ {w:2,d:"Вт",f:"stories",pillar:"Вовлечение",topic:"Квиз про память",
+  visual:"Stories со стикером-квизом (2 варианта).",
+  shotKind:"стикер",
+  shot:"Квиз-стикер: «Что лучше для памяти?» → «Зубрить всё сразу» / «Повторять по чуть-чуть». Правильный — второй. Пояснение на след. сторис.",
+  ru:"Что лучше для памяти: зубрить сразу или повторять по чуть-чуть?",
+  ky:"Эс тутум үчүн кайсынысы жакшы: баарын жаттоо же азыраактан кайталоо?",
+  tags:""},
+
+ {w:2,d:"Ср",f:"carousel",pillar:"Мини-урок",topic:"Решение задач по математике — по шагам",
+  visual:"Карусель 6 слайдов: условие → что известно → что найти → план → решение → ответ.",
+  shotKind:"промт картинки",
+  shot:"Обложка (промт): [базовый стиль] + the snow leopard cub as a calm detective with a magnifying glass over a word problem, portrait 4:5. Текст «Задачи по шагам» — в Canva. Слайды 2–6 — простые текстовые слайды в Canva.",
+  ru:"Ребёнок «не понимает задачи»? Дело не в математике, а в шагах 🔍\n1) что известно → 2) что найти → 3) план → 4) решение → 5) проверка. Разберите вслух одну задачу по этим шагам — дальше пойдёт сам.\nЗадачи по классам с разбором — bilimjol.com. Сохрани 🔖",
+  ky:"Бала «маселени түшүнбөйт»? Себеби математикада эмес, кадамдарда 🔍\n1) эмне белгилүү → 2) эмне табуу керек → 3) план → 4) чыгаруу → 5) текшерүү.\nКласстар боюнча маселелер — bilimjol.com",
+  tags:"#bilimjol #математика #решениезадач #начальнаяшкола #детиучеба #бишкек"},
+
+ {w:2,d:"Чт",f:"stories",pillar:"Вовлечение",topic:"Задачка за 10 секунд",
+  visual:"Stories: проценты. Ответ — на следующей сторис.",
+  shotKind:"стикер",
+  shot:"Слайд 1: «25% от 80 = ?» + таймер. Слайд 2: «20 ✅».",
+  ru:"25% от 80 = ?  (ответ через 10 сек)",
+  ky:"80дин 25%ы = ?  (жооп 10 секунддан кийин)",
+  tags:""},
+
+ {w:2,d:"Пт",f:"reels",pillar:"Продукт",topic:"Собери звёзды — одень героя",
+  visual:"Запись экрана: гардероб/маскот — как за звёзды открываются наряды для ирбиса.",
+  shotKind:"запись экрана",
+  shot:"Запись экрана раздела «Гардероб» 9:16: решить задание → получить звёзды → открыть наряд для ирбиса, переодеть героя. Хук: «За что дети любят Bilimjol». 15–20 сек.",
+  ru:"Мотивация, которая работает ⭐\nЗа решённые задания ребёнок получает звёзды и наряжает своего героя-ирбиса. Учёба превращается в игру — и хочется вернуться.\nПопробуйте — ссылка в шапке 👆",
+  ky:"Иштеген мотивация ⭐\nЧечилген тапшырмалар үчүн бала жылдыз алып, өзүнүн ирбис-каарманын кийиндирет. Окуу оюнга айланат.\nСынап көрүңүз — шилтеме профилде 👆",
+  tags:"#bilimjol #детиучеба #мотивация #оюн #балдаргаокуу #кыргызстан #бишкек"},
+
+ {w:2,d:"Сб",f:"stories",pillar:"Вовлечение",topic:"Опрос: что даётся труднее?",
+  visual:"Stories со стикером-опросом (3 варианта).",
+  shotKind:"стикер",
+  shot:"Опрос: «Что даётся труднее?» → Математика / Чтение / Логика. По ответам потом сделать пост.",
+  ru:"Что вашему ребёнку даётся труднее?",
+  ky:"Балаңызга эмне кыйыныраак?",
+  tags:""},
+
+ {w:2,d:"Вс",f:"reels",pillar:"Польза · KY",topic:"Баланы мектепке даярдоо (KY)",
+  visual:"Reels на кыргызском: 3 признака готовности к школе + демо теста готовности.",
+  shotKind:"запись экрана",
+  shot:"Запись экрана теста готовности к школе + оверлеи 3 признаков по-кыргызски. 9:16, субтитры.",
+  ru:"Готов ли ребёнок к школе? 3 признака (видео на кыргызском)\nБесплатный тест готовности — на bilimjol.com.",
+  ky:"Бала мектепке даярбы? 3 белги 🎒\nСанап билет, өзүн 10 мүнөт топтой алат, тамгаларды тааныйт. Текшерип көрүңүз — акысыз даярдык тести bilimjol.com сайтында.\nШилтеме профилде 👆",
+  tags:"#bilimjol #мектепкедаярдоо #баланыдаярдоо #окуучу #кыргызстан #бишкек"},
+
+ // ── Неделя 3: старшие классы, ОРТ, профтест ──
+ {w:3,d:"Пн",f:"post",pillar:"Польза",topic:"Профориентация: помочь подростку выбрать",
+  visual:"Пост-картинка: ирбис-подросток на развилке дорог/компас, тёплые тона.",
+  shotKind:"промт картинки",
+  shot:"Промт: [базовый стиль] + teen snow leopard looking at a signpost with different paths, a compass, hopeful mood, portrait 4:5. Текст «Кем стать?» — в Canva.",
+  ru:"«Кем стать?» — вопрос, который пугает подростков и родителей 🧭\nТест на профориентацию по методике RIASEC помогает увидеть склонности: к технике, людям, творчеству, анализу. Это не приговор, а повод для разговора.\nПройти тест — на bilimjol.com 👆",
+  ky:"«Ким болуу керек?» — өспүрүмдөрдү да, ата-энени да тынчсыздандырган суроо 🧭\nRIASEC методикасы боюнча профориентация тести жөндөмдөрдү көрсөтөт: техникага, адамдарга, чыгармачылыкка.\nТестти өтүү — bilimjol.com",
+  tags:"#bilimjol #профориентация #подросток #выборпрофессии #родители #кыргызстан #бишкек"},
+
+ {w:3,d:"Вт",f:"stories",pillar:"Вовлечение",topic:"Логика за 10 секунд",
+  visual:"Stories: числовой ряд. Ответ — на следующей сторис.",
+  shotKind:"стикер",
+  shot:"Слайд 1: «2, 6, 18, 54, … что дальше?» + таймер. Слайд 2: «162 (×3) ✅».",
+  ru:"2, 6, 18, 54, … что дальше?",
+  ky:"2, 6, 18, 54, … андан ары эмне?",
+  tags:""},
+
+ {w:3,d:"Ср",f:"carousel",pillar:"Польза",topic:"Готовимся к ОРТ: с чего начать",
+  visual:"Карусель 6 слайдов: формат ОРТ → математика → аналогии → грамотность → план → старт.",
+  shotKind:"промт картинки",
+  shot:"Обложка (промт): [базовый стиль] + teen snow leopard confidently holding a test sheet and pencil, calm focus, portrait 4:5. Текст «ОРТ: с чего начать» — в Canva.",
+  ru:"До ОРТ ещё есть время — и это главный ресурс 🎓\nНачните с пробного теста, чтобы увидеть слабые места, потом — математика и аналогии понемногу каждый день. Паника не нужна, нужен план.\nПробный ОРТ и тренажёр — бесплатно на bilimjol.com. Сохрани 🔖",
+  ky:"ЖРТга чейин убакыт бар — бул эң негизги ресурс 🎓\nСынама тесттен баштаңыз, анан математика менен аналогияларды күн сайын азыраактан.\nСынама ЖРТ жана тренажёр — акысыз bilimjol.com",
+  tags:"#bilimjol #орт #жрт #подготовкакорт #выпускник #кыргызстан #бишкек"},
+
+ {w:3,d:"Чт",f:"stories",pillar:"Вовлечение",topic:"ОРТ-задачка за 10 секунд",
+  visual:"Stories: проценты уровня ОРТ. Ответ — следующей сторис.",
+  shotKind:"стикер",
+  shot:"Слайд 1: «15% от 200 = ?» + таймер. Слайд 2: «30 ✅ Готовься к ОРТ на bilimjol.com».",
+  ru:"ОРТ: 15% от 200 = ?",
+  ky:"ЖРТ: 200дүн 15%ы = ?",
+  tags:""},
+
+ {w:3,d:"Пт",f:"reels",pillar:"Продукт",topic:"Физика, химия, биология — 6–11",
+  visual:"Запись экрана: страница класса 8 → карточка «Физика» → лендинг «Физика 8 класс».",
+  shotKind:"запись экрана",
+  shot:"Запись экрана 9:16: открыть /ru/class/8 → нажать карточку «Физика» → показать лендинг «Физика 8 класс» с заданиями и разбором. Хук: «Теперь и для старших классов». 15 сек.",
+  ru:"Физика, химия, биология, география — теперь отдельно для 6–11 классов 🔬\nЗадания с разбором по программе каждого класса, на русском и кыргызском. Удобно готовиться к конкретному предмету.\nОткрыть свой класс — bilimjol.com 👆",
+  ky:"Физика, химия, биология, география — эми 6–11-класстар үчүн өзүнчө 🔬\nАр бир класстын программасы боюнча түшүндүрмөлүү тапшырмалар, орусча жана кыргызча.\nӨз классыңды ачуу — bilimjol.com 👆",
+  tags:"#bilimjol #физика #химия #биология #старшиеклассы #детиучеба #кыргызстан #бишкек"},
+
+ {w:3,d:"Сб",f:"stories",pillar:"Новинка",topic:"Свои предметы для старших",
+  visual:"Stories: скриншот лендинга предмета + стикер-ссылка.",
+  shotKind:"стикер",
+  shot:"Скриншот «Физика 8 класс». Текст: «Новое: отдельные предметы 6–11 — физика, химия, биология, география». Стикер-ссылка.",
+  ru:"Новое: свои предметы для 6–11 классов 📘",
+  ky:"Жаңы: 6–11-класстар үчүн өзүнчө предметтер 📘",
+  tags:""},
+
+ {w:3,d:"Вс",f:"post",pillar:"Польза · KY",topic:"ЖРТ — акысыз сынама тест (KY)",
+  visual:"Пост на кыргызском: обложка про пробный ОРТ/ЖРТ.",
+  shotKind:"промт картинки",
+  shot:"Промт: [базовый стиль] + teen snow leopard with a pencil and test paper, confident, portrait 4:5. Текст «ЖРТ — акысыз сынама» — в Canva.",
+  ru:"Пробный ОРТ бесплатно — на кыргызском (пост на KY).",
+  ky:"ЖРТга акысыз даярданыңыз 🎓\nСынама тест: математика, аналогиялар, сабаттуулук. Начар жерлериңди көрүп, план түз.\nАкысыз — bilimjol.com. Шилтеме профилде 👆",
+  tags:"#bilimjol #жрт #орт #выпускник #окуучу #кыргызстан #бишкек"},
+
+ // ── Неделя 4: внимание, чтение, родителям ──
+ {w:4,d:"Пн",f:"post",pillar:"Польза",topic:"Экранное время с пользой",
+  visual:"Пост-картинка: ирбис и ребёнок с планшетом, тёплый вечерний свет.",
+  shotKind:"промт картинки",
+  shot:"Промт: [базовый стиль] + the snow leopard cub and a child using a tablet together in warm evening light, calm cozy mood, portrait 4:5. Текст «Экран — с пользой» — в Canva.",
+  ru:"Экран не враг — вопрос в том, что на экране 📱\nЗамените 10 минут листания на 10 минут заданий: тот же экран, но ребёнок думает, а не потребляет. Договоритесь о «полезных минутах».\nЗадания и игры по возрасту — bilimjol.com 👆",
+  ky:"Экран душман эмес — маселе экранда эмне бар экенинде 📱\n10 мүнөт бекер скроллдун ордуна — 10 мүнөт тапшырма.\nЖаш боюнча тапшырмалар жана оюндар — bilimjol.com",
+  tags:"#bilimjol #экранноевремя #родителидети #воспитание #детиучеба #бишкек"},
+
+ {w:4,d:"Вт",f:"stories",pillar:"Вовлечение",topic:"Опрос: экранное время",
+  visual:"Stories со стикером-опросом.",
+  shotKind:"стикер",
+  shot:"Опрос: «Сколько ребёнок за экраном в день?» → до 1 ч / 1–2 ч / больше.",
+  ru:"Сколько времени ребёнок за экраном в день?",
+  ky:"Бала күнүнө канча убакыт экрандын алдында?",
+  tags:""},
+
+ {w:4,d:"Ср",f:"carousel",pillar:"Мини-урок",topic:"Синонимы и антонимы — играем со словами",
+  visual:"Карусель 5 слайдов: пары слов (близкое/противоположное), последний — CTA.",
+  shotKind:"промт картинки",
+  shot:"Обложка (промт): [базовый стиль] + the snow leopard cub juggling word bubbles, playful, portrait 4:5. Текст «Синонимы и антонимы» — в Canva. Слайды с парами слов — в Canva.",
+  ru:"Богатый словарь — это не про зубрёжку, а про игру 💬\nСпросите: «Скажи по-другому» (синоним) и «Скажи наоборот» (антоним). 5 минут в машине или за ужином — и речь становится точнее.\nТренажёр «Синонимы и антонимы» — на bilimjol.com. Сохрани 🔖",
+  ky:"Бай сөздүк — жаттоо эмес, оюн 💬\n«Башкача айт» (синоним) жана «тескерисинче айт» (антоним) деп сураңыз. 5 мүнөт — кеп тактыкка ээ болот.\n«Синонимдер жана антонимдер» тренажёру — bilimjol.com",
+  tags:"#bilimjol #чтение #словарныйзапас #русскийязык #детиучеба #бишкек"},
+
+ {w:4,d:"Чт",f:"stories",pillar:"Вовлечение",topic:"Слово-перевёртыш за 10 секунд",
+  visual:"Stories: антоним. Ответ — следующей сторис.",
+  shotKind:"стикер",
+  shot:"Слайд 1: «Антоним к слову “щедрый”?» + таймер. Слайд 2: «жадный ✅».",
+  ru:"Антоним к слову «щедрый»?",
+  ky:"«Айкөл» сөзүнүн антоними?",
+  tags:""},
+
+ {w:4,d:"Пт",f:"reels",pillar:"Продукт",topic:"3 игры на внимание за минуту",
+  visual:"Запись экрана: быстрые нарезки 3 игр на внимание (пузырьки/узор/тень).",
+  shotKind:"запись экрана",
+  shot:"Запись экрана 9:16: по 4–5 сек из игр «Пузырьки», «Узор», «Тень». Хук: «Прокачай внимание за 1 минуту». Динамичный монтаж, субтитры.",
+  ru:"Внимание тренируется как мышца 🧠\n3 коротких игры — на концентрацию, память и наблюдательность. По минуте в день заметно помогают на уроках.\nИграть бесплатно — ссылка в шапке 👆",
+  ky:"Көңүл буруу булчуң сыяктуу машыгат 🧠\nКонцентрацияга, эс тутумга жана байкагычтыкка 3 кыска оюн. Күнүнө бир мүнөт — сабакта жардам берет.\nАкысыз ойноо — шилтеме профилде 👆",
+  tags:"#bilimjol #внимание #память #развитиедетей #оюн #кыргызстан #бишкек"},
+
+ {w:4,d:"Сб",f:"stories",pillar:"Вовлечение",topic:"Сохрани мини-урок",
+  visual:"Stories: напоминание сохранить полезный пост + стикер-ссылка на карусель недели.",
+  shotKind:"стикер",
+  shot:"Репост карусели недели в Stories + текст «Сохрани — пригодится для занятий». Стикер-ссылка на пост.",
+  ru:"Сохрани мини-урок — пригодится для занятий 🔖",
+  ky:"Мини-сабакты сактап кой — сабакка керек болот 🔖",
+  tags:""},
+
+ {w:4,d:"Вс",f:"post",pillar:"Вовлечение · KY",topic:"Балдар үчүн окуу оюндары (KY)",
+  visual:"Пост-карусель на кыргызском: подборка обучающих игр.",
+  shotKind:"запись экрана",
+  shot:"Скриншоты 3–4 игр, названия по-кыргызски в Canva. Карусель 4:5.",
+  ru:"Подборка обучающих игр на кыргызском (пост на KY).",
+  ky:"Балдар үчүн окуу оюндары — акысыз 🎮\nЭсеп, көңүл буруу, логика жана сөздөр. Эне тилде — кызыгыраак.\nОйноо — профилдеги шилтеме 👆",
+  tags:"#bilimjol #балдаргаокуу #оюн #окуу #мектеп #кыргызча #бишкек"},
+];
+
+const FMT = {reels:"Reels",carousel:"Карусель",post:"Пост",stories:"Stories"};
+const weeksEl = document.getElementById("weeks");
+const KEY = "bilimjol-ig-plan-done";
+let done = {};
+try { done = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e) { done = {}; }
+const idOf = (p,i) => `w${p.w}-${p.d}-${i}`;
+
+function saveDone(){ try{ localStorage.setItem(KEY, JSON.stringify(done)); }catch(e){} }
+
+function block(lab, text, kind){
+  if(!text) return "";
+  const safe = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return `<div class="block"><div class="lab">${lab}${kind?` · ${kind}`:""}<button class="copy" type="button" data-text="${encodeURIComponent(text)}">копировать</button></div><div class="txt${lab==='Визуал'?' visual':''}">${safe}</div></div>`;
+}
+function cap(lab, text){
+  if(!text) return "";
+  const safe = text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return `<details class="cap"><summary><span class="arr">▸</span>${lab}<button class="copy" type="button" data-text="${encodeURIComponent(text)}">копировать</button></summary><div class="txt">${safe}</div></details>`;
+}
+
+function render(filter){
+  weeksEl.innerHTML = "";
+  for(let w=1; w<=4; w++){
+    const items = PLAN.map((p,i)=>({p,i})).filter(x=>x.p.w===w && (filter==="all"||x.p.f===filter));
+    if(!items.length) continue;
+    const sec = document.createElement("section");
+    sec.className = "week";
+    const titles = {1:"Неделя 1 · знакомство",2:"Неделя 2 · польза и демо",3:"Неделя 3 · старшие классы · ОРТ",4:"Неделя 4 · внимание и чтение"};
+    sec.innerHTML = `<h2>${titles[w]}</h2>`;
+    const grid = document.createElement("div");
+    grid.className = "grid";
+    for(const {p,i} of items){
+      const id = idOf(p,i);
+      const isDone = !!done[id];
+      const isStory = p.f==="stories";
+      const card = document.createElement("article");
+      card.className = "card" + (isDone?" done":"");
+      card.innerHTML =
+        `<div class="head"><span class="day">${p.d}</span>`+
+        `<span class="badge ${p.f}">${FMT[p.f]}</span>`+
+        `<label class="check"><input type="checkbox" ${isDone?"checked":""} data-id="${id}"> готово</label></div>`+
+        `<div class="pillar">${p.pillar}</div>`+
+        `<div class="topic">${p.topic}</div>`+
+        block("Визуал", p.visual)+
+        block(isStory?"На экран":"Что снять", p.shot, p.shotKind)+
+        (isStory
+          ? block("Текст RU", p.ru) + block("Текст KY", p.ky)
+          : cap("Подпись RU", p.ru) + cap("Подпись KY", p.ky))+
+        (p.tags?`<div class="block"><div class="lab">Хэштеги<button class="copy" type="button" data-text="${encodeURIComponent(p.tags)}">копировать</button></div><div class="tags">${p.tags}</div></div>`:"");
+      grid.appendChild(card);
+    }
+    sec.appendChild(grid);
+    weeksEl.appendChild(sec);
+  }
+  updateProgress();
+}
+
+function updateProgress(){
+  const total = PLAN.filter(p=>p.f!=="stories").length;
+  const d = PLAN.filter((p,i)=>p.f!=="stories" && done[idOf(p,i)]).length;
+  document.getElementById("progress").innerHTML = `постов готово <b>${d}</b> / ${total}`;
+}
+
+// копирование (банк/шапка — по id; карточки — по data-text)
+function flash(btn){ const t=btn.textContent; btn.textContent="скопировано ✓"; btn.classList.add("ok");
+  setTimeout(()=>{btn.textContent=t; btn.classList.remove("ok");},1200); }
+async function copyText(txt, btn){
+  try{ await navigator.clipboard.writeText(txt); flash(btn); }
+  catch(e){
+    const r=document.createRange(), s=document.createElement("span");
+    s.textContent=txt; s.style.position="fixed"; s.style.opacity="0"; document.body.appendChild(s);
+    r.selectNodeContents(s); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    try{ document.execCommand("copy"); flash(btn);}catch(_){}
+    sel.removeAllRanges(); s.remove();
+  }
+}
+
+document.addEventListener("click", (e)=>{
+  const btn = e.target.closest(".copy");
+  if(btn){
+    if(btn.dataset.text){ copyText(decodeURIComponent(btn.dataset.text), btn); }
+    else if(btn.dataset.copy){ const el=document.getElementById(btn.dataset.copy); if(el) copyText(el.textContent, btn); }
+    return;
+  }
+  const chip = e.target.closest(".chip");
+  if(chip){
+    document.querySelectorAll("#filters .chip").forEach(c=>c.setAttribute("aria-pressed", c===chip?"true":"false"));
+    render(chip.dataset.f);
+  }
+});
+document.addEventListener("change", (e)=>{
+  const cb = e.target.closest('input[type="checkbox"][data-id]');
+  if(!cb) return;
+  if(cb.checked) done[cb.dataset.id]=1; else delete done[cb.dataset.id];
+  saveDone();
+  cb.closest(".card").classList.toggle("done", cb.checked);
+  updateProgress();
+});
+
+render("all");
+</script>
