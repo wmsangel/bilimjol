@@ -89,6 +89,9 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .webvar{font-size:12px; font-weight:700; color:#fff; background:var(--violet);
   padding:4px 11px; border-radius:999px; text-decoration:none; white-space:nowrap}
 .webvar:hover{background:var(--violet-deep,#4a3bd4)}
+.dl{display:inline-flex; align-items:center; gap:6px; margin:0 0 8px; font-size:13px; font-weight:800;
+  color:#fff; background:var(--post,#2f9e7d); padding:7px 14px; border-radius:10px; text-decoration:none}
+.dl:hover{filter:brightness(1.06)}
 .check{margin-left:auto;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);user-select:none}
 .check input{width:17px;height:17px;accent-color:var(--violet);cursor:pointer}
 .pillar{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gold)}
@@ -466,6 +469,7 @@ function render(filter){
       const isDone = !!done[id];
       const isStory = p.f==="stories";
       const media = isStory ? STORY_MEDIA[p.w+"|"+p.d] : null;
+      const dl = media ? `<a class="dl" href="${media.video}" download>⬇ Скачать видео</a>` : "";
       const vid = media
         ? (media.sticker
             ? `<div class="varlab">🌐 Веб-вариант — что добавить в IG`
@@ -473,8 +477,10 @@ function render(filter){
               + `<div class="vidnote">Показывает, как будет со стикером «${media.sticker}» — в нём видно, что создать инструментом Instagram.</div>`
               + `<div class="varlab">🎬 MP4 — это публикуем</div>`
               + `<video class="vid" src="${media.video}" controls muted loop playsinline preload="metadata"></video>`
+              + dl
               + `<div class="vidnote">Чистое видео 1080×1920 без стикера — низ кадра свободен. Выложи его, затем добавь «${media.sticker}» нативным стикером в Instagram.</div>`
             : `<video class="vid" src="${media.video}" controls muted loop playsinline preload="metadata"></video>`
+              + dl
               + `<div class="vidnote">🎬 Готовое видео 1080×1920 — публикуй как есть.</div>`)
         : "";
       const card = document.createElement("article");
