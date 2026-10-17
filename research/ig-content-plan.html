@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Контент-план Bilimjol</title>
 <meta name="description" content="Месяц контента для Instagram @bilimjol: формат, визуал, подписи RU/KY и хэштеги на каждый день.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -78,6 +80,10 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
   padding:3px 9px;border-radius:999px;color:#fff}
 .badge.reels{background:var(--reels)} .badge.carousel{background:var(--carousel)}
 .badge.post{background:var(--post)} .badge.stories{background:var(--stories)}
+.vid{width:100%; aspect-ratio:9/16; max-height:52vh; object-fit:contain; background:#0e0b1c;
+  border-radius:12px; display:block; margin:4px 0 6px}
+.vidnote{font-size:12.5px; line-height:1.4; color:var(--muted); background:var(--surface2);
+  border-radius:8px; padding:7px 9px; margin:0 0 8px}
 .check{margin-left:auto;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:700;color:var(--muted);user-select:none}
 .check input{width:17px;height:17px;accent-color:var(--violet);cursor:pointer}
 .pillar{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gold)}
@@ -400,6 +406,23 @@ const PLAN = [
   tags:"#bilimjol #балдаргаокуу #оюн #окуу #мектеп #кыргызча #бишкек"},
 ];
 
+// Готовые анимированные сторис-видео (1080×1920, рендер из артефакта-плеера).
+// Ключ — «неделя|день». sticker — интерактив, который добавляется в самом Instagram
+// (у опроса/квиза/ссылки его НЕТ в видео: видео — только фон+вопрос, низ свободен под стикер).
+const STORY_MEDIA = {
+  "1|Вт": {video:"ig-stories/w1-vt.mp4",  sticker:"опрос"},
+  "1|Чт": {video:"ig-stories/w1-cht.mp4"},
+  "1|Сб": {video:"ig-stories/w1-sb.mp4",  sticker:"ссылка"},
+  "2|Вт": {video:"ig-stories/w2-vt.mp4",  sticker:"квиз"},
+  "2|Чт": {video:"ig-stories/w2-cht.mp4"},
+  "2|Сб": {video:"ig-stories/w2-sb.mp4",  sticker:"опрос"},
+  "3|Вт": {video:"ig-stories/w3-vt.mp4"},
+  "3|Чт": {video:"ig-stories/w3-cht.mp4"},
+  "3|Сб": {video:"ig-stories/w3-sb.mp4",  sticker:"ссылка"},
+  "4|Вт": {video:"ig-stories/w4-vt.mp4",  sticker:"опрос"},
+  "4|Чт": {video:"ig-stories/w4-cht.mp4"},
+  "4|Сб": {video:"ig-stories/w4-sb.mp4"},
+};
 const FMT = {reels:"Reels",carousel:"Карусель",post:"Пост",stories:"Stories"};
 const weeksEl = document.getElementById("weeks");
 const KEY = "bilimjol-ig-plan-done";
@@ -435,6 +458,14 @@ function render(filter){
       const id = idOf(p,i);
       const isDone = !!done[id];
       const isStory = p.f==="stories";
+      const media = isStory ? STORY_MEDIA[p.w+"|"+p.d] : null;
+      const vid = media
+        ? `<video class="vid" src="${media.video}" controls muted loop playsinline preload="metadata"></video>`+
+          `<div class="vidnote">🎬 Готовое видео 1080×1920.`+
+          (media.sticker
+            ? ` Интерактив НЕ в видео — добавь стикер «${media.sticker}» в Instagram (низ кадра свободен под него).`
+            : ` Публикуй как есть.`)+`</div>`
+        : "";
       const card = document.createElement("article");
       card.className = "card" + (isDone?" done":"");
       card.innerHTML =
@@ -443,6 +474,7 @@ function render(filter){
         `<label class="check"><input type="checkbox" ${isDone?"checked":""} data-id="${id}"> готово</label></div>`+
         `<div class="pillar">${p.pillar}</div>`+
         `<div class="topic">${p.topic}</div>`+
+        vid+
         block("Визуал", p.visual)+
         block(isStory?"На экран":"Что снять", p.shot, p.shotKind)+
         (isStory
