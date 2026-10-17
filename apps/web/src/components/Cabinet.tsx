@@ -274,8 +274,8 @@ export function Cabinet({
           </div>
         </div>
 
-        {/* Цель + неделя | Достижения */}
-        <div className="grid items-start gap-4 md:grid-cols-2">
+        {/* Цель + неделя, затем Достижения — в стопку на всю ширину левой колонки */}
+        <div className="flex flex-col gap-4">
           <div className={card}>
             <div className="mb-2.5 flex justify-between text-sm font-extrabold">
               <span>{labels.daily}</span>
@@ -313,7 +313,7 @@ export function Cabinet({
 
           <div className={card}>
             <div className="mb-3 text-sm font-extrabold">{labels.achievementsTitle}</div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
               {shownAchievements.map((a) => (
                 <div
                   key={a.id}

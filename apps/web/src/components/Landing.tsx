@@ -409,6 +409,28 @@ export function Landing({ lang }: { lang: Locale }) {
         </div>
       </section>
 
+      {/* БИБЛИОТЕКА */}
+      <section className="px-5 pb-24 sm:px-16">
+        <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 rounded-[32px] bg-[#6d5cf7] p-8 text-center text-white sm:flex-row sm:p-12 sm:text-left">
+          <div className="text-6xl" aria-hidden="true">📚</div>
+          <div className="flex-1">
+            <h2 className="font-display text-3xl font-extrabold">{t("Бесплатная библиотека", "Акысыз китепкана")}</h2>
+            <p className="mt-3 text-lg text-white/85">
+              {t(
+                "Школьные учебники по классам (Кыргызстан, Беларусь) из официальных источников и книги «на лето» — всё бесплатно, в одном месте.",
+                "Класстар боюнча мектеп окуу китептери (Кыргызстан, Беларусь) расмий булактардан жана «жайга» китептер — баары акысыз, бир жерде.",
+              )}
+            </p>
+          </div>
+          <Link
+            href={`/${lang}/library`}
+            className="whitespace-nowrap rounded-full bg-white px-8 py-4 font-display font-bold text-[#6d5cf7] transition hover:scale-105"
+          >
+            {t("Открыть библиотеку →", "Китепкананы ачуу →")}
+          </Link>
+        </div>
+      </section>
+
       {/* WHY (честная замена секции отзывов — без выдуманных отзывов) */}
       <section className="bg-[#191539] px-5 py-24 text-white sm:px-16">
         <h2 className={h2 + " mb-12 text-center"}>{t("Почему выбирают Bilimjol", "Эмне үчүн Bilimjolду тандашат")}</h2>
