@@ -202,6 +202,12 @@ export default async function MathLandingPage({
               </Link>
             ))}
           </div>
+          <Link
+            href={`/${lang}/matematika/igry`}
+            className="mt-4 inline-flex font-bold text-[#6d5cf7] hover:underline"
+          >
+            {t("Все математические игры →", "Бардык математикалык оюндар →")}
+          </Link>
         </section>
 
         <div className="mt-12 rounded-[28px] bg-[#6d5cf7] p-7 text-center text-white">
