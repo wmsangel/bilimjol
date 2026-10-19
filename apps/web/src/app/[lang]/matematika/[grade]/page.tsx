@@ -182,6 +182,17 @@ export default async function MathGradePage({
           )}
         </div>
 
+        {g >= 7 && (
+          <p className="mb-8 text-center">
+            <Link
+              href={`/${lang}/algebra/${g}`}
+              className="inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-bold text-[#6d5cf7] shadow-[0_6px_18px_rgba(25,21,57,.06)] hover:underline"
+            >
+              {t(`Готовитесь по алгебре? Алгебра ${g} класс →`, `Алгебрага даярданасызбы? ${klass} алгебра →`)}
+            </Link>
+          </p>
+        )}
+
         {topicNames.length > 0 && (
           <section className="mt-6 rounded-[26px] bg-white p-6 shadow-[0_8px_24px_rgba(25,21,57,.06)]">
             <h2 className="font-display text-xl font-bold">
