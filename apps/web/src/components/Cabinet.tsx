@@ -216,11 +216,9 @@ export function Cabinet({
   const card = "rounded-3xl bg-white p-6 shadow-[0_8px_24px_rgba(25,21,57,.06)]";
 
   return (
-    <div className="mx-auto grid w-full max-w-6xl items-start gap-6 font-sans text-[#191539] lg:grid-cols-[minmax(0,1fr)_340px]">
-      {/* Левая колонка */}
-      <div className="flex flex-col gap-4">
-        {/* Тёмная hero-карточка */}
-        <div className="relative flex flex-col gap-5 overflow-hidden rounded-[28px] bg-[#191539] p-6 text-white xl:flex-row xl:items-center xl:gap-6">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 font-sans text-[#191539]">
+      {/* Тёмная hero-карточка — на всю ширину сверху */}
+      <div className="relative flex flex-col gap-5 overflow-hidden rounded-[28px] bg-[#191539] p-6 text-white md:flex-row md:items-center md:gap-7">
           <div className="pointer-events-none absolute right-[-60px] top-[-80px] h-[260px] w-[260px] rounded-full bg-[#6d5cf7] opacity-40 blur-[60px]" />
           <div
             className={
@@ -232,16 +230,14 @@ export function Cabinet({
           </div>
           <div className="relative min-w-0 flex-1">
             <div className="text-[15px] font-bold text-[#d9d5f5]">{labels.greeting}</div>
-            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="font-display text-[26px] font-bold">{helper.name[locale]}</span>
-              <button
-                onClick={changeHelper}
-                className="rounded-full bg-white/10 px-3 py-1 text-[13px] font-extrabold text-[#d9d5f5] ring-1 ring-white/20 transition hover:bg-white/20 hover:text-white"
-              >
-                🔄 {labels.changeHelper}
-              </button>
-            </div>
-            <div className="mb-1.5 mt-3.5 flex justify-between text-sm font-extrabold">
+            <div className="mt-0.5 font-display text-[26px] font-bold leading-tight">{helper.name[locale]}</div>
+            <button
+              onClick={changeHelper}
+              className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[13px] font-extrabold text-[#d9d5f5] ring-1 ring-white/20 transition hover:bg-white/20 hover:text-white"
+            >
+              🔄 {labels.changeHelper}
+            </button>
+            <div className="mb-1.5 mt-4 flex justify-between text-sm font-extrabold">
               <span>{labels.level} {level}</span>
               <span className="text-[#e6c079]">{inLevel}/{perLevel} ⭐</span>
             </div>
@@ -252,14 +248,17 @@ export function Cabinet({
           <Link
             href={playHref}
             onClick={() => pushEvent("cabinet_continue", { item: "cabinet" })}
-            className="relative w-full flex-none rounded-full bg-[#6d5cf7] px-6 py-4 text-center font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 xl:w-auto"
+            className="relative w-full flex-none rounded-full bg-[#6d5cf7] px-7 py-4 text-center font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 md:w-auto"
           >
             ▶ {labels.continue}
           </Link>
         </div>
 
-        {/* Плитки: звёзды, серия, пройдено */}
-        <div className="grid grid-cols-3 gap-3">
+        {/* Ниже — две колонки */}
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+          <div className="flex flex-col gap-4">
+            {/* Плитки: звёзды, серия, пройдено */}
+            <div className="grid grid-cols-3 gap-3">
           <div className="rounded-[22px] bg-[#fbf3e3] p-4 text-[#7a5a1e]">
             <div className="font-display text-[30px] font-bold leading-none">{spendable}</div>
             <div className="mt-1 text-sm font-extrabold">⭐ {labels.stars}</div>
@@ -313,7 +312,7 @@ export function Cabinet({
 
           <div className={card}>
             <div className="mb-3 text-sm font-extrabold">{labels.achievementsTitle}</div>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+            <div className="grid grid-cols-3 gap-2.5 sm:max-w-[480px]">
               {shownAchievements.map((a) => (
                 <div
                   key={a.id}
@@ -411,6 +410,7 @@ export function Cabinet({
             </Link>
           </div>
         )}
+      </div>
       </div>
     </div>
   );
