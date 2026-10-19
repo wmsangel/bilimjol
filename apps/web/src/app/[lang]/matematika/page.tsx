@@ -167,6 +167,25 @@ export default async function MathLandingPage({
 
         <section className="mt-12">
           <h2 className="font-display text-2xl font-bold">
+            {t("Справочники", "Маалымдама")}
+          </h2>
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <Link href={`/${lang}/matematika/kvadraty`} className={cardLink}>
+              <span className="flex-none text-2xl">🔼</span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold">
+                  {t("Квадраты чисел — таблица", "Сандардын квадраттары — таблица")}
+                </span>
+                <span className="block truncate text-xs text-[#8f8aa8]">
+                  {t("1²–20² и тренажёр", "1²–20² жана тренажёр")}
+                </span>
+              </span>
+            </Link>
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="font-display text-2xl font-bold">
             {t("Математические игры", "Математикалык оюндар")}
           </h2>
           <p className="mt-2 text-[#5c5880]">
