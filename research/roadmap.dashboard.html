@@ -100,9 +100,9 @@ footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:v
     <p class="note" style="margin:-4px 0 14px">Тег исполнителя: <b>→сам</b> (этот чат) · <b>→cursor</b> (отдельная подписка, механика) · <b>→гибрид</b> (образец мой, тираж — Cursor) · <b>→владелец</b> (ручное вне кода).</p>
     <div style="margin:14px 0 8px;font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:600">Окно 20.10 – 02.11</div>
     <div class="q"><span class="idx">01</span><div>
-      <div class="t">Фикс воронки подписки — убрать стену логина перед оплатой</div>
-      <div class="d">Сигнал 18.10: 1 человек 5 раз жал «подписаться» с игрового пейвола (premium), оплат 0; гость на /subscribe видит «Войти», а не оплату. Сделать: гостевой чекаут / логин в 1 шаг. Отдельно — проверить go-live Paddle (домен+env).</div>
-      <span class="tag">деньги</span> <span class="tag" style="background:transparent;color:var(--muted);border:1px solid var(--line2)">→сам · →владелец</span> <span class="tag" style="background:transparent;color:var(--warn);border:1px solid var(--line2)">до 24.10</span></div></div>
+      <div class="t">Фикс воронки подписки — гостевой чекаут (одобрено)</div>
+      <div class="d">Сигнал 18.10: 1 человек 5 раз жал «подписаться», оплат 0; гость на /subscribe видит «Войти». Владелец одобрил (19.10): оплата БЕЗ регистрации, аккаунт по email после оплаты (Paddle-вебхук). Выплаты настроены; домен — проверить тест-проходом чекаута.</div>
+      <span class="tag">деньги</span> <span class="tag" style="background:transparent;color:var(--muted);border:1px solid var(--line2)">→сам</span> <span class="tag" style="background:transparent;color:var(--warn);border:1px solid var(--line2)">до 24.10</span></div></div>
     <div class="q"><span class="idx">02</span><div>
       <div class="t">ОРТ — докрутить мету под точные запросы</div>
       <div class="d">/podgotovka-k-ort: показы есть, кликов 0 (GSC). title/description/H1 под «подготовка к орт», «онлайн подготовка к орт».</div>
@@ -129,12 +129,12 @@ footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:v
       <span class="tag">контент</span> <span class="tag" style="background:transparent;color:var(--muted);border:1px solid var(--line2)">→сам</span> <span class="tag" style="background:transparent;color:var(--warn);border:1px solid var(--line2)">до 02.11</span></div></div>
     <div class="q"><span class="idx">08</span><div>
       <div class="t">Вычитать KY-словари игр носителем</div>
-      <div class="d">WordGame (деление на муундар), GroupGame и пр. — точность кыргызского. Я подготовлю списки слов.</div>
-      <span class="tag">баг</span> <span class="tag" style="background:transparent;color:var(--muted);border:1px solid var(--line2)">→владелец</span> <span class="tag" style="background:transparent;color:var(--warn);border:1px solid var(--line2)">до 29.10</span></div></div>
+      <div class="d">WordGame (деление на муундар), GroupGame и пр. — точность кыргызского. Отложено владельцем (19.10). Я подготовлю списки слов.</div>
+      <span class="tag">баг</span> <span class="tag" style="background:transparent;color:var(--muted);border:1px solid var(--line2)">→владелец</span> <span class="tag" style="background:transparent;color:var(--muted);border:1px solid var(--line2)">до 09.11</span></div></div>
     <div class="q"><span class="idx">09</span><div>
-      <div class="t">RUB-оверрайд в Paddle</div>
-      <div class="d">Показывать ₽ РФ-трафику; сначала проверить, обслуживает ли Paddle покупателей из РФ (вопрос владельцу).</div>
-      <span class="tag">деньги</span> <span class="tag" style="background:transparent;color:var(--muted);border:1px solid var(--line2)">→сам</span> <span class="tag" style="background:transparent;color:var(--warn);border:1px solid var(--line2)">до 02.11</span></div></div>
+      <div class="t">Запросить индексацию новых лендингов в GSC</div>
+      <div class="d">Матем/алгебра/квадраты/игры/контакты: Inspect URL → Request indexing (блокер №1). Через Chrome, где владелец залогинен; жду слова владельца (действие в его GSC). Прим.: RUB-оверрайд отклонён — Paddle не обслуживает РФ (санкции).</div>
+      <span class="tag">индексация</span> <span class="tag" style="background:transparent;color:var(--muted);border:1px solid var(--line2)">→сам/→владелец</span> <span class="tag" style="background:transparent;color:var(--warn);border:1px solid var(--line2)">до 23.10</span></div></div>
 
     <div style="margin:22px 0 8px;font-family:var(--font-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600">Окно 03.11 – 16.11</div>
     <div class="q"><span class="idx">10</span><div>
