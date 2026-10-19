@@ -573,6 +573,10 @@ export function Landing({ lang }: { lang: Locale }) {
           </div>
           <div className="flex flex-col gap-2.5 text-[15px]">
             <div className="mb-1 font-extrabold text-white">{t("Контакты", "Байланыш")}</div>
+            <Link href={`/${lang}/contact`} className="hover:text-[#e6c079]">{t("Контакты", "Байланыш")}</Link>
+            <Link href={`/${lang}/about`} className="hover:text-[#e6c079]">{t("О проекте", "Долбоор жөнүндө")}</Link>
+            <Link href={`/${lang}/privacy`} className="hover:text-[#e6c079]">{t("Конфиденциальность", "Купуялык")}</Link>
+            <Link href={`/${lang}/terms`} className="hover:text-[#e6c079]">{t("Соглашение", "Келишим")}</Link>
             <a href="mailto:wmsangel@gmail.com" className="text-[#e6c079] hover:underline">wmsangel@gmail.com</a>
             <div className="mt-1.5 flex gap-2">
               <Link href="/ru" className="rounded-lg bg-white px-2.5 py-1 text-[13px] font-extrabold text-[#191539]">RU</Link>

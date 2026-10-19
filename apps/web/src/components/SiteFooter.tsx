@@ -87,6 +87,7 @@ export function SiteFooter({ lang }: { lang: Locale }) {
           title={t.project}
           links={[
             [t.about, `/${lang}/about`],
+            [t.contact, `/${lang}/contact`],
             [t.privacy, `/${lang}/privacy`],
             [t.terms, `/${lang}/terms`],
           ]}
