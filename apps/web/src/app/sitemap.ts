@@ -58,6 +58,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         alternates: alts(path),
       });
     }
+    for (const g of GRADES) {
+      const path = `/matematika/${g}`;
+      entries.push({
+        url: `${BASE}/${lang}${path}`,
+        changeFrequency: "monthly",
+        priority: 0.6,
+        alternates: alts(path),
+      });
+    }
     for (const landing of subjectLandings) {
       const path = `/predmet/${landing.slug}`;
       entries.push({

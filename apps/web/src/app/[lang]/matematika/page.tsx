@@ -94,7 +94,7 @@ export default async function MathLandingPage({
       <JsonLd
         data={itemListJsonLd(
           lang,
-          GRADES.map((g) => [`${t("Математика", "Математика")} — ${classLabel(g)}`, `/class/${g}`] as [string, string]),
+          GRADES.map((g) => [`${t("Математика", "Математика")} — ${classLabel(g)}`, `/matematika/${g}`] as [string, string]),
         )}
       />
       <SiteHeader lang={lang} dict={dict} />
@@ -133,7 +133,7 @@ export default async function MathLandingPage({
             {GRADES.map((g) => (
               <Link
                 key={g}
-                href={`/${lang}/class/${g}`}
+                href={`/${lang}/matematika/${g}`}
                 className="group flex items-center justify-between rounded-2xl bg-white px-4 py-3.5 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(25,21,57,.1)]"
               >
                 <span className="font-display text-base font-bold group-hover:text-[#6d5cf7]">
