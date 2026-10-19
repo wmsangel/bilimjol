@@ -216,7 +216,7 @@ export function Cabinet({
   const card = "rounded-3xl bg-white p-6 shadow-[0_8px_24px_rgba(25,21,57,.06)]";
 
   return (
-    <div className="mx-auto grid w-full max-w-5xl items-start gap-6 font-sans text-[#191539] lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div className="mx-auto grid w-full max-w-6xl items-start gap-6 font-sans text-[#191539] lg:grid-cols-[minmax(0,1fr)_340px]">
       {/* Левая колонка */}
       <div className="flex flex-col gap-4">
         {/* Тёмная hero-карточка */}
@@ -230,7 +230,7 @@ export function Cabinet({
           >
             <Mascot helper={helper} mood="idle" size="md" />
           </div>
-          <div className="relative flex-1">
+          <div className="relative min-w-0 flex-1">
             <div className="text-[15px] font-bold text-[#d9d5f5]">{labels.greeting}</div>
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
               <span className="font-display text-[26px] font-bold">{helper.name[locale]}</span>
@@ -252,7 +252,7 @@ export function Cabinet({
           <Link
             href={playHref}
             onClick={() => pushEvent("cabinet_continue", { item: "cabinet" })}
-            className="relative w-full rounded-full bg-[#6d5cf7] px-6 py-4 text-center font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 xl:w-auto"
+            className="relative w-full flex-none rounded-full bg-[#6d5cf7] px-6 py-4 text-center font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 xl:w-auto"
           >
             ▶ {labels.continue}
           </Link>

@@ -35,7 +35,7 @@ export default async function AccountLayout({
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
       <SiteHeader lang={lang} dict={dict} />
 
-      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-6 pb-12 pt-6 md:flex-row">
+      <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 px-6 pb-12 pt-6 md:flex-row">
         <aside className="md:w-56 md:flex-shrink-0">
           <SideNav
             items={items}
