@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { tasks, GRADES, subjectsForGrade } from "@izn-study/shared";
 import { isLocale } from "@/i18n/config";
 import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ClassOpenLink } from "@/components/OpenTracker";
 import { localizedAlternates, itemListJsonLd } from "@/lib/seo";
 import { pluralRu } from "@/lib/plural";
 import { gradeBadge } from "@/lib/classContent";
@@ -61,9 +61,10 @@ export default async function ClassIndexPage({
             const subjectCount = subjectsForGrade(g).length;
             const taskCount = tasks.filter((task) => task.grade === g).length;
             return (
-              <Link
+              <ClassOpenLink
                 key={g}
                 href={`/${lang}/class/${g}`}
+                placement="menu"
                 className="flex items-center gap-4 rounded-3xl border border-black/[.06] bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               >
                 {g === 0 ? (
@@ -89,7 +90,7 @@ export default async function ClassIndexPage({
                     )}
                   </span>
                 </span>
-              </Link>
+              </ClassOpenLink>
             );
           })}
         </div>

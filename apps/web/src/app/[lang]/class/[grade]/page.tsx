@@ -19,6 +19,7 @@ import { localizedAlternates, breadcrumbJsonLd, faqJsonLd, courseJsonLd } from "
 import { pluralRu } from "@/lib/plural";
 import { buildCharacter } from "@/lib/characterArt";
 import { ClassGames } from "@/components/ClassGames";
+import { GradeOpenTracker, ClassOpenLink } from "@/components/OpenTracker";
 import { groupForGrade, GRADE_ACCENT, GRADE_MASCOT } from "@/lib/classContent";
 import { getDictionary } from "../../dictionaries";
 
@@ -202,12 +203,13 @@ export default async function ClassPage({
         <div className="whitespace-nowrap text-sm font-extrabold text-[#5c5880]">{t("Выберите класс:", "Классты тандаңыз:")}</div>
         <div className="grid flex-1 grid-cols-4 gap-1.5 sm:grid-cols-6 lg:grid-cols-12">
           {GRADES.map((x) => (
-            <Link key={x} href={`/${lang}/class/${x}`} className={"whitespace-nowrap rounded-full px-2.5 py-2 text-center text-[13px] font-extrabold transition hover:shadow-[0_0_0_2px_#e6c079] " + (x === g ? "bg-[#6d5cf7] text-white" : "bg-[#f7f5ff] text-[#191539]")}>
+            <ClassOpenLink key={x} href={`/${lang}/class/${x}`} placement="switcher" className={"whitespace-nowrap rounded-full px-2.5 py-2 text-center text-[13px] font-extrabold transition hover:shadow-[0_0_0_2px_#e6c079] " + (x === g ? "bg-[#6d5cf7] text-white" : "bg-[#f7f5ff] text-[#191539]")}>
               {x === 0 ? t("Подгот.", "Даярдык") : x}
-            </Link>
+            </ClassOpenLink>
           ))}
         </div>
       </section>
+      <GradeOpenTracker grade={g} lang={lang} />
 
       {/* WHY */}
       <section className="px-5 pb-10 pt-24 sm:px-16">

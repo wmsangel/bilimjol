@@ -14,6 +14,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
+import { ClassOpenLink } from "@/components/OpenTracker";
 import { localizedAlternates, faqJsonLd, courseJsonLd } from "@/lib/seo";
 import { getDictionary } from "../../dictionaries";
 
@@ -165,12 +166,13 @@ export default async function MathGradePage({
               `${klass} математикадан маселелерди жана мисалдарды онлайн, акысыз чыгарыңыз — ар бир жоопко түшүндүрмө менен.`,
             )}
           </p>
-          <Link
+          <ClassOpenLink
             href={`/${lang}/class/${g}`}
+            placement="landing"
             className="mt-6 inline-flex rounded-full bg-[#6d5cf7] px-8 py-4 text-lg font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5"
           >
             {t("Начать бесплатно", "Акысыз баштоо")}
-          </Link>
+          </ClassOpenLink>
           {taskCount > 0 && (
             <p className="mt-3 text-sm font-bold text-[#8f8aa8]">
               {taskCount}{" "}
@@ -208,12 +210,13 @@ export default async function MathGradePage({
                 </span>
               ))}
             </div>
-            <Link
+            <ClassOpenLink
               href={`/${lang}/class/${g}`}
+              placement="landing"
               className="mt-4 inline-flex font-bold text-[#6d5cf7] hover:underline"
             >
               {t(`Все задания за ${klassZa} →`, `${klass} бардык тапшырмалар →`)}
-            </Link>
+            </ClassOpenLink>
           </section>
         )}
 

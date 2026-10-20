@@ -14,6 +14,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Faq } from "@/components/Faq";
 import { JsonLd } from "@/components/JsonLd";
+import { SubjectOpenTracker, ClassOpenLink } from "@/components/OpenTracker";
 import { localizedAlternates, faqJsonLd, courseJsonLd } from "@/lib/seo";
 import { getDictionary } from "../../dictionaries";
 
@@ -141,6 +142,7 @@ export default async function SubjectLandingPage({
 
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff]">
+      <SubjectOpenTracker grade={grade} subject={landing.subject} lang={lang} />
       <JsonLd data={faqJsonLd(faq)} />
       <JsonLd
         data={courseJsonLd(lang, {
@@ -170,12 +172,13 @@ export default async function SubjectLandingPage({
           <p className="mx-auto mt-4 max-w-xl text-lg text-[#5c5880]">
             {copy?.lead[lang] ?? `${name}, ${klass}`}
           </p>
-          <Link
+          <ClassOpenLink
             href={`/${lang}/class/${grade}`}
+            placement="landing"
             className="mt-6 inline-flex rounded-full bg-[#6d5cf7] px-8 py-4 text-lg font-extrabold text-white shadow-[0_12px_30px_rgba(109,92,247,.35)] transition hover:-translate-y-0.5"
           >
             {t("Начать бесплатно", "Акысыз баштоо")}
-          </Link>
+          </ClassOpenLink>
           {taskCount > 0 && (
             <p className="mt-3 text-sm font-bold text-[#8f8aa8]">
               {taskCount}{" "}
@@ -202,12 +205,13 @@ export default async function SubjectLandingPage({
               `Тапшырмалар ${klass} жалпы программасына кирет — класс барагында математика, логика жана окуу менен бирге ачылат.`,
             )}
           </p>
-          <Link
+          <ClassOpenLink
             href={`/${lang}/class/${grade}`}
+            placement="landing"
             className="mt-4 inline-flex font-bold text-[#6d5cf7] hover:underline"
           >
             {t(`Программа за ${klass} →`, `${klass} программасы →`)}
-          </Link>
+          </ClassOpenLink>
         </section>
 
         {siblings.length > 0 && (
