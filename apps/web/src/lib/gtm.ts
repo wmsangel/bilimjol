@@ -21,11 +21,9 @@ const ITEM_FROM: readonly string[] = [
   "grade",
 ];
 
-export function pushEvent(
-  event: string,
-  params: Record<string, DataLayerValue> = {},
-): void {
-  if (typeof window === "undefined") return;
+function withItem(
+  params: Record<string, DataLayerValue>,
+): Record<string, DataLayerValue> {
   const out: Record<string, DataLayerValue> = { ...params };
   if (out.item == null) {
     for (const key of ITEM_FROM) {
@@ -35,9 +33,31 @@ export function pushEvent(
       }
     }
   }
+  return out;
+}
+
+export function pushEvent(
+  event: string,
+  params: Record<string, DataLayerValue> = {},
+): void {
+  if (typeof window === "undefined") return;
   const w = window as unknown as { dataLayer?: Record<string, unknown>[] };
   w.dataLayer = w.dataLayer || [];
-  w.dataLayer.push({ event, ...out });
+  w.dataLayer.push({ event, ...withItem(params) });
+}
+
+// Отправка события НАПРЯМУЮ в GA4 через gtag. Нужна для событий, у которых нет
+// отдельного тега в GTM-контейнере (grade_open, subject_open): `dataLayer.push(
+// {event})` для них GTM в GA4 не форвардит. gtag('event', …) GA4-тег обрабатывает
+// сам. ВАЖНО: НЕ заводить в GTM отдельный GA4-тег на эти события — будет дубль.
+export function sendGa4Event(
+  event: string,
+  params: Record<string, DataLayerValue> = {},
+): void {
+  if (typeof window === "undefined") return;
+  const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+  if (typeof w.gtag !== "function") return;
+  w.gtag("event", event, withItem(params));
 }
 
 // ISO-4217 валюта по коду страны — для value/currency в Meta Pixel и GA4.

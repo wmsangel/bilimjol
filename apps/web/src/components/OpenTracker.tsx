@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { pushEvent } from "@/lib/gtm";
+import { sendGa4Event } from "@/lib/gtm";
 
 // Аналитика «открыл класс / предмет». Событие шлётся ОДИН раз на открытие
 // (гард в sessionStorage на сессию+ключ), без дублей при перерисовке и возврате
@@ -63,7 +63,7 @@ export function ClassOpenLink({
 export function GradeOpenTracker({ grade, lang }: { grade: number; lang: string }) {
   useEffect(() => {
     fireOnce(`bj:go:${grade}`, () =>
-      pushEvent("grade_open", { grade, placement: readPlacement(), lang }),
+      sendGa4Event("grade_open", { grade, placement: readPlacement(), lang }),
     );
   }, [grade, lang]);
   return null;
@@ -81,7 +81,7 @@ export function SubjectOpenTracker({
 }) {
   useEffect(() => {
     fireOnce(`bj:so:${grade}:${subject}`, () =>
-      pushEvent("subject_open", { grade, subject, lang }),
+      sendGa4Event("subject_open", { grade, subject, lang }),
     );
   }, [grade, subject, lang]);
   return null;
