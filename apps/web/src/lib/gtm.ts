@@ -50,14 +50,25 @@ export function pushEvent(
 // отдельного тега в GTM-контейнере (grade_open, subject_open): `dataLayer.push(
 // {event})` для них GTM в GA4 не форвардит. gtag('event', …) GA4-тег обрабатывает
 // сам. ВАЖНО: НЕ заводить в GTM отдельный GA4-тег на эти события — будет дубль.
+//
+// Команду кладём прямо в dataLayer объектом arguments (как это делает канонический
+// gtag-стаб), а не вызываем window.gtag. Причина: скрипт gtag.js подключён
+// afterInteractive, то есть window.gtag появляется ПОЗЖЕ первого useEffect. Если
+// ждать готовности gtag, ранние события (grade_open на маунте страницы класса)
+// теряются молча. А так команда ложится в очередь и обрабатывается, когда gtag.js
+// загрузится — ровно как gtag('js')/gtag('config') из ga-init.
 export function sendGa4Event(
   event: string,
   params: Record<string, DataLayerValue> = {},
 ): void {
   if (typeof window === "undefined") return;
-  const w = window as unknown as { gtag?: (...a: unknown[]) => void };
-  if (typeof w.gtag !== "function") return;
-  w.gtag("event", event, withItem(params));
+  const w = window as unknown as { dataLayer?: unknown[] };
+  w.dataLayer = w.dataLayer || [];
+  const gtag = function () {
+    // eslint-disable-next-line prefer-rest-params
+    (w.dataLayer as unknown[]).push(arguments);
+  } as (...args: unknown[]) => void;
+  gtag("event", event, withItem(params));
 }
 
 // ISO-4217 валюта по коду страны — для value/currency в Meta Pixel и GA4.

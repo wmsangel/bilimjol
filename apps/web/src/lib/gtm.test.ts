@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { pushEvent } from "./gtm";
+import { pushEvent, sendGa4Event } from "./gtm";
 
 // Сетевое соглашение: у каждого кастомного события должен быть параметр `item`.
 describe("pushEvent · item", () => {
@@ -46,5 +46,33 @@ describe("pushEvent · item", () => {
     expect(e.correct).toBe(true);
     expect(e.grade).toBe(1);
     expect(e.item).toBe("add");
+  });
+});
+
+// Прямая отправка в GA4: команда кладётся в dataLayer в формате gtag (arguments),
+// без зависимости от window.gtag — тот подключается afterInteractive и на момент
+// первого useEffect ещё не определён (иначе ранние события теряются молча).
+describe("sendGa4Event · gtag-команда в dataLayer", () => {
+  beforeEach(() => {
+    (globalThis as unknown as { window?: unknown }).window = globalThis;
+    (globalThis as unknown as { dataLayer?: unknown[] }).dataLayer = [];
+  });
+  afterEach(() => {
+    delete (globalThis as unknown as { window?: unknown }).window;
+    delete (globalThis as unknown as { dataLayer?: unknown[] }).dataLayer;
+  });
+
+  it("толкает ['event', name, params] даже без window.gtag", () => {
+    // window.gtag намеренно не определён — как в момент маунта страницы класса.
+    sendGa4Event("grade_open", { grade: 9, placement: "menu", lang: "ru" });
+    const dl = (globalThis as unknown as { dataLayer: unknown[] }).dataLayer;
+    expect(dl).toHaveLength(1);
+    const cmd = dl[0] as IArguments;
+    expect(cmd[0]).toBe("event");
+    expect(cmd[1]).toBe("grade_open");
+    expect((cmd[2] as Record<string, unknown>).grade).toBe(9);
+    expect((cmd[2] as Record<string, unknown>).placement).toBe("menu");
+    // item выводится из grade по тому же правилу, что и в pushEvent.
+    expect((cmd[2] as Record<string, unknown>).item).toBe("9");
   });
 });
