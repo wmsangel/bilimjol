@@ -371,6 +371,54 @@ export default async function ClassPage({
         </div>
       </section>
 
+      {/* RELATED LANDINGS: математика/алгебра за этот класс.
+          Внутренняя перелинковка на SEO-лендинги /matematika/[grade] и
+          /algebra/[grade] (g≥7) из страницы класса — это ядро сайта, лучше
+          всего проиндексированное, поэтому даёт лендингам сильную входящую
+          ссылку (иначе они достижимы только из sitemap/футера → орфаны в GSC). */}
+      <section className="px-5 pb-24 sm:px-16">
+        <div className="mx-auto max-w-[860px]">
+          <h2 className="mb-5 font-display text-[22px] font-bold">
+            {t("Задачи с разбором по программе", "Программа боюнча талдоо менен маселелер")}
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Link
+              href={`/${lang}/matematika/${g}`}
+              className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(25,21,57,.1)]"
+            >
+              <span className="flex-none text-2xl" aria-hidden="true">🔢</span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold">
+                  {t(
+                    g === 0 ? "Математика для подготовки к школе" : `Математика за ${g} класс`,
+                    g === 0 ? "Мектепке даярдык математикасы" : `${g}-класс математика`,
+                  )}
+                </span>
+                <span className="block truncate text-xs text-[#8f8aa8]">
+                  {t("задачи и примеры с разбором", "маселелер жана мисалдар — талдоо менен")}
+                </span>
+              </span>
+            </Link>
+            {g >= 7 && (
+              <Link
+                href={`/${lang}/algebra/${g}`}
+                className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(25,21,57,.1)]"
+              >
+                <span className="flex-none text-2xl" aria-hidden="true">📐</span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-bold">
+                    {t(`Алгебра ${g} класс`, `${g}-класс алгебра`)}
+                  </span>
+                  <span className="block truncate text-xs text-[#8f8aa8]">
+                    {t("разбор тем по алгебре", "алгебра темаларынын талдоосу")}
+                  </span>
+                </span>
+              </Link>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* FINAL CTA + other grades */}
       <section className="px-5 pb-16 sm:px-16">
         <div className="relative overflow-hidden rounded-[32px] px-6 py-[72px] text-center text-white sm:px-16" style={{ background: "linear-gradient(135deg,#6d5cf7 0%,#4b3cc9 100%)" }}>
