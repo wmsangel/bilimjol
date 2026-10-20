@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { pushEvent, sendGa4Event } from "./gtm";
 
 // Сетевое соглашение: у каждого кастомного события должен быть параметр `item`.
@@ -49,30 +49,51 @@ describe("pushEvent · item", () => {
   });
 });
 
-// Прямая отправка в GA4: команда кладётся в dataLayer в формате gtag (arguments),
-// без зависимости от window.gtag — тот подключается afterInteractive и на момент
-// первого useEffect ещё не определён (иначе ранние события теряются молча).
-describe("sendGa4Event · gtag-команда в dataLayer", () => {
+// Прямая отправка в GA4 через window.gtag. gtag подключается afterInteractive,
+// поэтому на момент первого useEffect его может ещё не быть — тогда ждём его
+// появления (иначе событие встанет в очередь раньше gtag('config') и отбросится).
+describe("sendGa4Event · прямой вызов gtag", () => {
+  type GtagArgs = [string, string, Record<string, unknown>];
+  const calls: GtagArgs[] = [];
   beforeEach(() => {
+    calls.length = 0;
     (globalThis as unknown as { window?: unknown }).window = globalThis;
-    (globalThis as unknown as { dataLayer?: unknown[] }).dataLayer = [];
   });
   afterEach(() => {
     delete (globalThis as unknown as { window?: unknown }).window;
-    delete (globalThis as unknown as { dataLayer?: unknown[] }).dataLayer;
+    delete (globalThis as unknown as { gtag?: unknown }).gtag;
+    vi.useRealTimers();
   });
 
-  it("толкает ['event', name, params] даже без window.gtag", () => {
-    // window.gtag намеренно не определён — как в момент маунта страницы класса.
+  const setGtag = () => {
+    (globalThis as unknown as { gtag: (...a: unknown[]) => void }).gtag = (
+      ...a: unknown[]
+    ) => {
+      calls.push(a as GtagArgs);
+    };
+  };
+
+  it("шлёт событие сразу, если window.gtag уже готов (+ item из grade)", () => {
+    setGtag();
     sendGa4Event("grade_open", { grade: 9, placement: "menu", lang: "ru" });
-    const dl = (globalThis as unknown as { dataLayer: unknown[] }).dataLayer;
-    expect(dl).toHaveLength(1);
-    const cmd = dl[0] as IArguments;
-    expect(cmd[0]).toBe("event");
-    expect(cmd[1]).toBe("grade_open");
-    expect((cmd[2] as Record<string, unknown>).grade).toBe(9);
-    expect((cmd[2] as Record<string, unknown>).placement).toBe("menu");
-    // item выводится из grade по тому же правилу, что и в pushEvent.
-    expect((cmd[2] as Record<string, unknown>).item).toBe("9");
+    expect(calls).toHaveLength(1);
+    expect(calls[0][0]).toBe("event");
+    expect(calls[0][1]).toBe("grade_open");
+    expect(calls[0][2].grade).toBe(9);
+    expect(calls[0][2].placement).toBe("menu");
+    expect(calls[0][2].item).toBe("9"); // то же правило, что в pushEvent
+  });
+
+  it("ждёт появления window.gtag и шлёт после него", () => {
+    vi.useFakeTimers();
+    sendGa4Event("subject_open", { grade: 7, subject: "math", lang: "ky" });
+    expect(calls).toHaveLength(0); // gtag ещё нет — ничего не ушло
+    vi.advanceTimersByTime(600);
+    expect(calls).toHaveLength(0); // всё ещё ждём
+    setGtag();
+    vi.advanceTimersByTime(200);
+    expect(calls).toHaveLength(1);
+    expect(calls[0][1]).toBe("subject_open");
+    expect(calls[0][2].subject).toBe("math");
   });
 });

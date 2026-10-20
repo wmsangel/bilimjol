@@ -51,24 +51,37 @@ export function pushEvent(
 // {event})` для них GTM в GA4 не форвардит. gtag('event', …) GA4-тег обрабатывает
 // сам. ВАЖНО: НЕ заводить в GTM отдельный GA4-тег на эти события — будет дубль.
 //
-// Команду кладём прямо в dataLayer объектом arguments (как это делает канонический
-// gtag-стаб), а не вызываем window.gtag. Причина: скрипт gtag.js подключён
-// afterInteractive, то есть window.gtag появляется ПОЗЖЕ первого useEffect. Если
-// ждать готовности gtag, ранние события (grade_open на маунте страницы класса)
-// теряются молча. А так команда ложится в очередь и обрабатывается, когда gtag.js
-// загрузится — ровно как gtag('js')/gtag('config') из ga-init.
+// Тонкость с порядком загрузки: и gtag/js, и ga-init (где объявляется window.gtag
+// и сразу идёт gtag('config', …)) подключены afterInteractive, то есть window.gtag
+// появляется ПОЗЖЕ первого useEffect. Слать «вслепую» в dataLayer нельзя: команда
+// встанет в очередь РАНЬШЕ gtag('config'), и gtag.js такое событие отбросит.
+// Поэтому ждём появления window.gtag (к этому моменту config уже в очереди) и
+// только затем шлём. Если gtag так и не появился (аналитика заблокирована) —
+// тихо сдаёмся через ~20 с.
+const GTAG_WAIT_MS = 200;
+const GTAG_WAIT_MAX = 100; // 100 × 200мс ≈ 20с
+
 export function sendGa4Event(
   event: string,
   params: Record<string, DataLayerValue> = {},
 ): void {
   if (typeof window === "undefined") return;
-  const w = window as unknown as { dataLayer?: unknown[] };
-  w.dataLayer = w.dataLayer || [];
-  const gtag = function () {
-    // eslint-disable-next-line prefer-rest-params
-    (w.dataLayer as unknown[]).push(arguments);
-  } as (...args: unknown[]) => void;
-  gtag("event", event, withItem(params));
+  const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+  const payload = withItem(params);
+  const fire = () => w.gtag?.("event", event, payload);
+  if (typeof w.gtag === "function") {
+    fire();
+    return;
+  }
+  let tries = 0;
+  const id = setInterval(() => {
+    if (typeof w.gtag === "function") {
+      clearInterval(id);
+      fire();
+    } else if (++tries >= GTAG_WAIT_MAX) {
+      clearInterval(id);
+    }
+  }, GTAG_WAIT_MS);
 }
 
 // ISO-4217 валюта по коду страны — для value/currency в Meta Pixel и GA4.
