@@ -13,7 +13,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  return { alternates: localizedAlternates(lang, "/play") };
+  const ky = lang === "ky";
+  return {
+    title: ky
+      ? "Онлайн машыгуу — балдар үчүн тапшырмалар | Bilimjol"
+      : "Заниматься онлайн — задания для детей | Bilimjol",
+    description: ky
+      ? "Математика, логика, окуу жана башка предметтер боюнча тапшырмаларды онлайн иштеңиз — акысыз жана катталуусуз. Мектепке даярдыктан 11-класска чейин."
+      : "Решайте задания по математике, логике, чтению и другим предметам онлайн — бесплатно и без регистрации. Для детей от подготовки к школе до 11 класса.",
+    alternates: localizedAlternates(lang, "/play"),
+  };
 }
 import { TaskPlayer } from "@/components/TaskPlayer";
 import { SiteHeader } from "@/components/SiteHeader";
