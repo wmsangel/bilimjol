@@ -163,6 +163,12 @@ export default async function MathLandingPage({
               </Link>
             ))}
           </div>
+          <Link
+            href={`/${lang}/matematika/primery`}
+            className="mt-4 inline-flex font-bold text-[#6d5cf7] hover:underline"
+          >
+            {t("Решать примеры онлайн →", "Мисалдарды онлайн чыгаруу →")}
+          </Link>
         </section>
 
         <section className="mt-12">

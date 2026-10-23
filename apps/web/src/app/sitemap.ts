@@ -18,7 +18,7 @@ function alts(path: string): { languages: Record<string, string> } {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const publicRoutes = ["", "/play", "/games", "/games/memory", "/games/build", "/games/sprint", "/games/bubbles", "/games/trace", "/games/pattern", "/games/word", "/games/groups", "/games/clock", "/games/compare", "/games/shadow", "/gotovnost-k-shkole", "/podgotovka-k-ort", "/test-na-proforientaciyu", "/matematika", "/matematika/kvadraty", "/matematika/igry", "/library", "/roditelyam", "/class", "/articles", "/tests", "/subscribe", "/about", "/contact", "/privacy", "/terms"];
+  const publicRoutes = ["", "/play", "/games", "/games/memory", "/games/build", "/games/sprint", "/games/bubbles", "/games/trace", "/games/pattern", "/games/word", "/games/groups", "/games/clock", "/games/compare", "/games/shadow", "/gotovnost-k-shkole", "/podgotovka-k-ort", "/test-na-proforientaciyu", "/matematika", "/matematika/kvadraty", "/matematika/igry", "/matematika/primery", "/library", "/roditelyam", "/class", "/articles", "/tests", "/subscribe", "/about", "/contact", "/privacy", "/terms"];
   const entries: MetadataRoute.Sitemap = [];
 
   for (const lang of locales) {
