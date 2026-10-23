@@ -9,7 +9,7 @@ import { createHash, randomBytes } from "node:crypto";
 import type { User } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { MailService } from "../mail/mail.service";
-import type { LoginDto, RegisterDto } from "./dto";
+import type { GuestDto, LoginDto, RegisterDto, SetPasswordDto } from "./dto";
 
 @Injectable()
 export class AuthService {
@@ -22,6 +22,11 @@ export class AuthService {
   private readonly accessSecret = process.env.JWT_ACCESS_SECRET ?? "dev-access";
   private readonly accessTtl = Number(process.env.JWT_ACCESS_TTL ?? 900);
   private readonly refreshTtl = Number(process.env.JWT_REFRESH_TTL ?? 2_592_000);
+  // Токен set-password — подписанный JWT (без таблицы в БД). Отдельный секрет,
+  // чтобы ссылка из письма не пересекалась с access-токенами; по умолчанию —
+  // access-секрет, срок 7 дней.
+  private readonly setpwSecret = process.env.JWT_SETPW_SECRET ?? this.accessSecret;
+  private readonly setpwTtl = process.env.JWT_SETPW_TTL ?? "7d";
 
   private sha(value: string): string {
     return createHash("sha256").update(value).digest("hex");
@@ -71,6 +76,68 @@ export class AuthService {
     });
     // Welcome-письмо — fire-and-forget, не блокируем регистрацию.
     void this.mail.sendWelcome({ email: user.email, locale: user.locale });
+    const tokens = await this.issueTokens(user.id, device);
+    return { user: this.publicUser(user), ...tokens };
+  }
+
+  /**
+   * Гостевой старт оплаты без обязательной регистрации: по одному email создаём
+   * беспарольный аккаунт (passwordHash — случайный, войти паролем нельзя) и сразу
+   * логиним, чтобы дальше открыть чекаут как залогиненный пользователь (вебхук
+   * линкует подписку по userId — как у обычных юзеров). Ссылку «задать пароль»
+   * шлём письмом, чтобы человек мог вернуться в аккаунт позже. Если email уже
+   * занят — просим войти (не трогаем чужой аккаунт).
+   */
+  async guestStart(dto: GuestDto, device?: string) {
+    const email = dto.email.trim();
+    const exists = await this.prisma.user.findUnique({ where: { email } });
+    if (exists) {
+      throw new ConflictException("У этого email уже есть аккаунт — войдите");
+    }
+    // Случайный, заведомо неугадываемый пароль: вход паролем недоступен, пока
+    // человек не задаст свой по ссылке из письма.
+    const passwordHash = await bcrypt.hash(randomBytes(32).toString("hex"), 10);
+    const user = await this.prisma.user.create({
+      data: { email, passwordHash, locale: dto.locale ?? "ru" },
+    });
+    const setpwToken = await this.issueSetPasswordToken(user.id);
+    const setpwUrl = this.setPasswordUrl(user.locale, setpwToken);
+    void this.mail.sendSetPassword({ email: user.email, locale: user.locale }, setpwUrl);
+    const tokens = await this.issueTokens(user.id, device);
+    return { user: this.publicUser(user), ...tokens };
+  }
+
+  private issueSetPasswordToken(userId: string): Promise<string> {
+    return this.jwt.signAsync(
+      { sub: userId, purpose: "setpw" },
+      { secret: this.setpwSecret, expiresIn: this.setpwTtl },
+    );
+  }
+
+  private setPasswordUrl(locale: string, token: string): string {
+    const site = (process.env.WEB_ORIGIN ?? "https://bilimjol.com")
+      .split(",")[0]
+      .trim()
+      .replace(/\/$/, "");
+    const l = locale === "ky" ? "ky" : "ru";
+    return `${site}/${l}/set-password?token=${encodeURIComponent(token)}`;
+  }
+
+  /** Установка пароля по токену из письма: валидируем JWT, пишем хеш, логиним. */
+  async setPassword(dto: SetPasswordDto, device?: string) {
+    let payload: { sub?: string; purpose?: string };
+    try {
+      payload = await this.jwt.verifyAsync(dto.token, { secret: this.setpwSecret });
+    } catch {
+      throw new UnauthorizedException("Ссылка недействительна или устарела");
+    }
+    if (payload.purpose !== "setpw" || !payload.sub) {
+      throw new UnauthorizedException("Ссылка недействительна");
+    }
+    const user = await this.prisma.user.findUnique({ where: { id: payload.sub } });
+    if (!user) throw new UnauthorizedException("Пользователь не найден");
+    const passwordHash = await bcrypt.hash(dto.password, 10);
+    await this.prisma.user.update({ where: { id: user.id }, data: { passwordHash } });
     const tokens = await this.issueTokens(user.id, device);
     return { user: this.publicUser(user), ...tokens };
   }

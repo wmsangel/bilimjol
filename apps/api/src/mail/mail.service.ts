@@ -49,6 +49,18 @@ export class MailService {
     await this.send(user.email, c.subject, layout(l, c.heading, c.body, c.cta, `${this.site}/${l}/play`));
   }
 
+  // Ссылка «задать пароль» — для гостевого аккаунта, созданного при оплате без
+  // регистрации. По ней человек задаёт пароль и входит в аккаунт позже. url уже
+  // собран вызывающим (содержит токен).
+  async sendSetPassword(
+    user: { email: string; locale: string },
+    url: string,
+  ): Promise<void> {
+    const l: Locale = user.locale === "ky" ? "ky" : "ru";
+    const c = SETPW[l];
+    await this.send(user.email, c.subject, layout(l, c.heading, c.body, c.cta, url));
+  }
+
   async sendPremiumActivated(
     user: { email: string; locale: string },
     until: Date,
@@ -93,6 +105,21 @@ const PREMIUM: Record<Locale, { subject: string; heading: string; body: string; 
     heading: "Премиум иштетилди 🎉",
     body: "Жазылганыңыз үчүн рахмат! Эми бардык предметтер, класстар жана миңдеген тапшырма бөгөттөөсүз, тесттер жана ата-энелер үчүн отчёт ачык. Жазылуу {date} чейин күчүндө. Жакшы окууларды!",
     cta: "Сабактарга өтүү",
+  },
+};
+
+const SETPW: Record<Locale, { subject: string; heading: string; body: string; cta: string }> = {
+  ru: {
+    subject: "Задайте пароль для входа — Bilimjol",
+    heading: "Ваш аккаунт создан",
+    body: "Мы создали аккаунт по вашему email. Задайте пароль, чтобы входить и возвращаться к занятиям на любом устройстве. Ссылка действует 7 дней.",
+    cta: "Задать пароль",
+  },
+  ky: {
+    subject: "Кирүү үчүн сырсөз коюңуз — Bilimjol",
+    heading: "Аккаунтуңуз түзүлдү",
+    body: "Биз сиздин email боюнча аккаунт түздүк. Каалаган түзмөктөн кирип, сабактарга кайтуу үчүн сырсөз коюңуз. Шилтеме 7 күн иштейт.",
+    cta: "Сырсөз коюу",
   },
 };
 

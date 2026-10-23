@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getEntitlement, isLoggedIn, loadAuth } from "@/lib/api";
+import { ApiError, getEntitlement, guestStart, isLoggedIn, loadAuth } from "@/lib/api";
 import { pushEvent } from "@/lib/gtm";
 import { loadLastGrade } from "@/lib/prefs";
 import { PADDLE_PLANS, openPaddleCheckout, type PlanKey } from "@/lib/paddle";
@@ -91,6 +91,8 @@ export function SubscribePlans({
   const [plan, setPlan] = useState<PlanKey>("monthly");
   const [paying, setPaying] = useState(false);
   const [checkoutFailed, setCheckoutFailed] = useState(false);
+  const [guestEmail, setGuestEmail] = useState("");
+  const [guestError, setGuestError] = useState<string | null>(null);
   // Праздничный экран — только при активации ИМЕННО в этой сессии (после оплаты),
   // а не при обычном заходе на страницу с уже активной подпиской.
   const [celebrate, setCelebrate] = useState(false);
@@ -168,6 +170,56 @@ export function SubscribePlans({
     setPaying(false);
   }
 
+  // Гостевой путь: оплата без обязательной регистрации. По одному email создаём
+  // беспарольный аккаунт (и логинимся), затем открываем обычный чекаут. Доступ —
+  // сразу на этом устройстве; ссылку «задать пароль» присылаем письмом.
+  async function handleGuestPay() {
+    const em = guestEmail.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) {
+      setGuestError(t("Введите корректный email", "Туура email жазыңыз"));
+      return;
+    }
+    setGuestError(null);
+    setCheckoutFailed(false);
+    setPaying(true);
+    pushEvent("subscribe_click", {
+      grade: loadLastGrade(),
+      plan: selected.key,
+      price: selected.key === "annual" ? 15.99 : 1.99,
+      currency: "USD",
+      source: "subscribe_guest",
+    });
+    try {
+      const auth = await guestStart(em, locale);
+      setUserId(auth.user.id);
+      setEmail(auth.user.email);
+      // Аккаунт создан и залогинен — дальше ведём себя как обычный пользователь.
+      setStatus("available");
+      await openPaddleCheckout({
+        priceId: selected.priceId,
+        userId: auth.user.id,
+        email: auth.user.email,
+        locale,
+        onComplete: () => pollEntitlement(),
+      });
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 409) {
+        setGuestError(
+          t(
+            "У этого email уже есть аккаунт — войдите.",
+            "Бул email'де аккаунт бар — кириңиз.",
+          ),
+        );
+      } else {
+        setCheckoutFailed(true);
+        setGuestError(
+          t("Не удалось начать оплату", "Төлөмдү баштоо мүмкүн болбоду"),
+        );
+      }
+    }
+    setPaying(false);
+  }
+
   const primaryBtn =
     "flex w-full items-center justify-center gap-2 rounded-full bg-[#6d5cf7] px-6 py-4 text-center text-lg font-extrabold text-white shadow-[0_0_0_3px_#e6c079] transition hover:-translate-y-0.5 active:scale-[.99] disabled:cursor-wait disabled:opacity-60 disabled:hover:translate-y-0";
 
@@ -227,9 +279,42 @@ export function SubscribePlans({
         )}
 
         {status === "guest" && (
-          <Link href={loginHref} className={primaryBtn}>
-            {labels.ctaLogin}
-          </Link>
+          <div>
+            <input
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              value={guestEmail}
+              onChange={(e) => {
+                setGuestEmail(e.target.value);
+                if (guestError) setGuestError(null);
+              }}
+              placeholder={t("Ваш email", "Сиздин email")}
+              className="mb-3 w-full rounded-full border border-white/15 bg-white/[.06] px-5 py-3.5 text-base text-white outline-none placeholder:text-[#9a96c8] focus:border-[#e6c079]"
+            />
+            <button onClick={handleGuestPay} disabled={paying} className={primaryBtn}>
+              {paying
+                ? t("Открываем оплату…", "Төлөм ачылууда…")
+                : t("Оформить подписку", "Жазылууну тариздөө")}
+            </button>
+            {guestError && (
+              <p className="mt-2 text-center text-sm font-semibold text-[#f3a9a9]">
+                {guestError}
+              </p>
+            )}
+            <p className="mt-3 text-center text-sm text-[#b9b3e6]">
+              {t(
+                "Оплата без регистрации — аккаунт создадим по вашему email.",
+                "Катталуусуз төлөм — аккаунтту email боюнча түзөбүз.",
+              )}
+            </p>
+            <Link
+              href={loginHref}
+              className="mt-2 block text-center text-sm font-semibold text-[#b9b3e6] transition hover:text-white"
+            >
+              {t("Уже есть аккаунт? Войти", "Аккаунтуңуз барбы? Кирүү")}
+            </Link>
+          </div>
         )}
 
         {status === "available" && (

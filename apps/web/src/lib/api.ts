@@ -156,6 +156,27 @@ export async function login(email: string, password: string) {
   return data;
 }
 
+/** Гостевой старт оплаты: создаёт беспарольный аккаунт по email и логинит.
+ *  Бросает ApiError(409), если email уже занят — тогда предлагаем войти. */
+export async function guestStart(email: string, locale: string) {
+  const data = await request<AuthState>("/auth/guest", {
+    method: "POST",
+    body: JSON.stringify({ email, locale }),
+  });
+  saveAuth(data);
+  return data;
+}
+
+/** Установка пароля по токену из письма (set-password-ссылка) — логинит. */
+export async function setPassword(token: string, password: string) {
+  const data = await request<AuthState>("/auth/set-password", {
+    method: "POST",
+    body: JSON.stringify({ token, password }),
+  });
+  saveAuth(data);
+  return data;
+}
+
 export async function logout() {
   const auth = loadAuth();
   if (auth) {

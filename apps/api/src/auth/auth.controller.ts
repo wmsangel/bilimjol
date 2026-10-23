@@ -5,12 +5,16 @@ import { AuthService } from "./auth.service";
 import { CurrentUser } from "./current-user.decorator";
 import { JwtAuthGuard } from "./jwt-auth.guard";
 import {
+  guestSchema,
   loginSchema,
   refreshSchema,
   registerSchema,
+  setPasswordSchema,
+  type GuestDto,
   type LoginDto,
   type RefreshDto,
   type RegisterDto,
+  type SetPasswordDto,
 } from "./dto";
 
 // Rate-limit на всю группу auth (защита от брутфорса/спама).
@@ -29,6 +33,20 @@ export class AuthController {
   @Post("login")
   login(@Body(new ZodValidationPipe(loginSchema)) dto: LoginDto) {
     return this.auth.login(dto);
+  }
+
+  // Гостевой старт оплаты: создаёт беспарольный аккаунт по email и логинит.
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post("guest")
+  guest(@Body(new ZodValidationPipe(guestSchema)) dto: GuestDto) {
+    return this.auth.guestStart(dto);
+  }
+
+  // Установка пароля по ссылке из письма.
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
+  @Post("set-password")
+  setPassword(@Body(new ZodValidationPipe(setPasswordSchema)) dto: SetPasswordDto) {
+    return this.auth.setPassword(dto);
   }
 
   @Post("refresh")
