@@ -24,7 +24,6 @@ import { POSTS } from "../posts.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "out");
-const HUB_URL = "https://claude.ai/artifact/QwGJEyVayjhTPxMx4Drc84";
 const DOW = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
 function config() {
@@ -49,25 +48,20 @@ function slidesFor(id, lang) {
 
 const fmtName = (f) => (f === "carousel" ? "карусель" : f === "story" ? "сторис" : "пост");
 
-function captionBlock(post, lang) {
-  const line = (l) => {
-    const cap = post.caption?.[l] ?? "";
-    const tags = post.hashtags?.[l] ?? "";
-    return [cap, tags].filter(Boolean).join("\n\n");
-  };
-  const parts = [];
-  parts.push(`📅 ${post.day} · ${post.rubric} · ${fmtName(post.format)}`);
-  parts.push(`🔗 Ведёт на: bilimjol.com/ru${post.page}`);
-  if (post.sticker?.ru) parts.push(`🎯 Стикер (добавить в IG): ${post.sticker[lang] || post.sticker.ru}`);
-  parts.push("— — — ПОДПИСЬ RU (скопировать) — — —");
-  parts.push(line("ru"));
-  const ky = line("ky");
-  if (ky) {
-    parts.push("— — — ПОДПИСЬ KY — — —");
-    parts.push(ky);
-  }
-  parts.push(`Хаб со всеми слайдами: ${HUB_URL}`);
-  return parts.filter(Boolean).join("\n\n");
+// Чистая подпись для копипаста: ТОЛЬКО текст поста + хэштеги, без служебного.
+// Это сообщение копируешь целиком и вставляешь в Instagram.
+function cleanCaption(post, lang) {
+  const cap = (post.caption?.[lang] ?? "").trim();
+  const tags = (post.hashtags?.[lang] ?? "").trim();
+  return [cap, tags].filter(Boolean).join("\n\n");
+}
+
+// Служебная подпись к МЕДИА (день, формат, ссылка, стикер) — она под фото/видео,
+// в копипаст-сообщение НЕ попадает.
+function mediaInfo(post, lang) {
+  const parts = [`📅 ${post.day} · ${fmtName(post.format)} → bilimjol.com/ru${post.page}`];
+  if (post.sticker) parts.push(`🎯 Стикер в IG: ${post.sticker[lang] || post.sticker.ru}`);
+  return parts.join("\n\n");
 }
 
 async function tg(bot, method, form) {
@@ -130,24 +124,28 @@ if (!post) {
   process.exit(0);
 }
 
-const mediaLangs = lang === "both" ? ["ru", "ky"] : [lang === "ky" ? "ky" : "ru"];
-const header = `📅 ${post.day} · ${post.rubric} · ${fmtName(post.format)}`;
+const primary = lang === "ky" ? "ky" : "ru";
+const mediaLangs = lang === "both" ? ["ru", "ky"] : [primary];
+const info = mediaInfo(post, primary);
 const video = post.video ? join(ROOT, post.video) : null;
+// Служебную инфу вешаем ТОЛЬКО на первое вложение; остальные — без подписи.
+let infoUsed = false;
+const nextCaption = () => (infoUsed ? "" : ((infoUsed = true), info));
 
 try {
-  // 1) Медиа (короткая подпись-заголовок).
+  // 1) Медиа. Контекст (день/ссылка/стикер) — подписью под первым вложением.
   if (video && existsSync(video)) {
-    await sendVideo(bot, chat, video, header);
+    await sendVideo(bot, chat, video, nextCaption());
   }
   for (const l of mediaLangs) {
     const slides = slidesFor(post.id, l);
     if (!slides.length) continue;
-    const head = mediaLangs.length > 1 ? `${header} · ${l.toUpperCase()}` : header;
-    if (slides.length > 1) await sendAlbum(bot, chat, slides, head);
-    else await sendPhoto(bot, chat, slides[0], head);
+    if (slides.length > 1) await sendAlbum(bot, chat, slides, nextCaption());
+    else await sendPhoto(bot, chat, slides[0], nextCaption());
   }
-  // 2) Полный текст подписи с тегами — отдельным сообщением (копипаст).
-  await sendText(bot, chat, captionBlock(post, lang === "ky" ? "ky" : "ru"));
+  // 2) ОТДЕЛЬНОЕ сообщение — только текст поста + хэштеги. Копируешь целиком.
+  const caption = cleanCaption(post, primary);
+  if (caption) await sendText(bot, chat, caption);
   console.log(`Отправлено в Telegram: ${today} · ${post.rubric} (${post.id})`);
 } catch (e) {
   console.error("Telegram ошибка:", e.message);
