@@ -51,6 +51,8 @@ export const POSTS = [
   {
     id: "zadachka-mult", week: 1, day: "Вт", format: "story", rubric: "Сторис",
     page: "/tests/mult-table",
+    // Готовый анимированный ролик для сторис (чистый, под нативный стикер).
+    video: "../research/ig-stories/w1-vt.mp4",
     slides: [
       { type: "story", theme: "violet",
         kicker: { ru: "Задачка за 10 секунд", ky: "10 секундда маселе" },
@@ -144,6 +146,8 @@ export const POSTS = [
   {
     id: "opros-predmet", week: 1, day: "Сб", format: "story", rubric: "Сторис",
     page: "/class/5",
+    // Готовый анимированный ролик для сторис (чистый, под нативный стикер).
+    video: "../research/ig-stories/w1-sb.mp4",
     slides: [
       { type: "story", theme: "light",
         kicker: { ru: "Вопрос родителям", ky: "Ата-энеге суроо" },
