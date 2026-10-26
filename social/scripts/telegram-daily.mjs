@@ -111,8 +111,58 @@ async function sendText(bot, chat, text) {
   await tg(bot, "sendMessage", form);
 }
 
+async function sendDocument(bot, chat, path, caption) {
+  const form = new FormData();
+  form.append("chat_id", chat);
+  form.append("document", fileBlob(path), basename(path));
+  if (caption) form.append("caption", caption);
+  await tg(bot, "sendDocument", form);
+}
+
+// Полное оформление профиля Instagram (флаг --profile) — каждый пункт отдельным
+// сообщением: аватар (документ без сжатия + превью), имя/username, bio RU/KY,
+// ссылка с UTM, тип/категория, обложки «Актуального» (файлы + названия),
+// контакты, что закрепить, чек-лист. Источник — social/profile/profile.json + PNG.
+async function sendProfile(bot, chat) {
+  const dir = join(ROOT, "profile");
+  const d = JSON.parse(readFileSync(join(dir, "profile.json"), "utf8"));
+  const f = (name) => join(dir, name);
+
+  await sendText(bot, chat, "📸 Оформление профиля Instagram — bilimjol\nКаждое ниже — отдельным сообщением: файлы скачиваешь, тексты копируешь.");
+
+  await sendText(bot, chat, "1️⃣ Аватар — 1080×1080, маскот в центре. Ниже оригинал (без сжатия) и превью.");
+  await sendDocument(bot, chat, f("avatar.png"), "avatar.png — поставь как фото профиля");
+  await sendPhoto(bot, chat, f("avatar.png"), "");
+
+  await sendText(bot, chat, `2️⃣ Имя профиля (≤30, с ключевым словом):\n${d.name}\n\nВарианты @username (возьми свободный):\n${d.usernames.join("   ")}`);
+
+  await sendText(bot, chat, `3️⃣ Bio (≤150) — RU:\n${d.bio.ru}`);
+  await sendText(bot, chat, `Bio (≤150) — KY:\n${d.bio.ky}`);
+
+  await sendText(bot, chat, `4️⃣ Ссылка в профиле (с UTM):\n${d.link}`);
+
+  await sendText(bot, chat, `5️⃣ Тип аккаунта: ${d.account.type}\n${d.account.typeNote}\nКатегория: ${d.account.category}`);
+
+  await sendText(bot, chat, `6️⃣ Обложки «Актуального» — ${d.covers.length} шт, 1080×1920, БЕЗ текста (круг обрежет). Ниже файлы, в подписи — название темы.`);
+  for (const c of d.covers) {
+    await sendDocument(bot, chat, f(c.file), `Актуальное: ${c.name}`);
+  }
+
+  await sendText(bot, chat, `7️⃣ Контакты:\n${d.contacts}`);
+
+  await sendText(bot, chat, `8️⃣ Закрепить 3 поста (⋯ → «Закрепить в профиле»):\n— ${d.pins.join("\n— ")}`);
+
+  await sendText(bot, chat, `9️⃣ Чек-лист «что нажать»:\n${d.checklist.join("\n")}`);
+
+  console.log(`Профиль отправлен в Telegram: аватар + ${d.covers.length} обложек + текстовый комплект.`);
+}
+
 // ─── main ───
 const { bot, chat, lang } = config();
+if (process.argv.includes("--profile")) {
+  await sendProfile(bot, chat);
+  process.exit(0);
+}
 const arg = process.argv[2];
 const today = DOW[new Date().getDay()];
 const post = arg
