@@ -174,6 +174,14 @@ if (!post) {
   process.exit(0);
 }
 
+// На автозапуске (без явного id) в бот шлём ТОЛЬКО сторис: посты/карусели/видео
+// публикуются автопостером через Chrome, а сторис владелец грузит руками (через
+// веб их не загрузить). Ручной запуск с id — шлёт любой формат (для теста).
+if (!arg && post.format !== "story") {
+  console.log(`Сегодня формат «${post.format}» — в бот идут только сторис, пропуск.`);
+  process.exit(0);
+}
+
 const primary = lang === "ky" ? "ky" : "ru";
 const mediaLangs = lang === "both" ? ["ru", "ky"] : [primary];
 const info = mediaInfo(post, primary);
