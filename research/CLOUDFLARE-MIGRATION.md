@@ -1,8 +1,11 @@
 # Переезд bilimjol.com с Vercel на Cloudflare Workers
 
-**Статус на 02.11.2026: ветка `cf-migration`, собрано и полностью проверено на
-локальном workerd (`cf:preview`). Воркер НЕ задеплоен, домен НЕ тронут.**
-bilimjol.com по-прежнему отдаёт Vercel.
+**Статус на 02.11.2026: воркер `bilimjol` ЗАДЕПЛОЕН, маршрутов нет, домен НЕ тронут.**
+Version ID `982afccb-063b-4d86-a2f8-8b5afb12a987`, `No targets deployed`, старт 15 мс.
+Залит с ветки `cf-migration` локальной сборкой после полной проверки на workerd
+(`cf:preview`). bilimjol.com по-прежнему отдаёт Vercel — ни один адрес на воркер не
+смотрит (`workers_dev:false`, временного URL нет, как у izntools). Осталось: DNS +
+Always Use HTTPS (ниже).
 
 Подход — `@opennextjs/cloudflare`, как у calclumen (`~/Sites/calc-tools`), costtrek
 (`~/Sites/worldtime`) и izntools. Не статический экспорт: middleware (локаль-редирект),
