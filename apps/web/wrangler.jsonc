@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "bilimjol",
+  // Отключаем публичное зеркало *.workers.dev и preview-URL: прод отдаётся только
+  // через кастомный домен bilimjol.com. Иначе bilimjol.ocrsnip.workers.dev стал бы
+  // поверхностью дубля контента и «левой» аналитики (аудит privacy 2026-10-31).
+  "workers_dev": false,
+  "preview_urls": false,
+  "compatibility_date": "2025-03-25",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Самоссылка (name должен совпадать с "name" выше) — нужно OpenNext.
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "bilimjol"
+    }
+  ]
+  // Боевой домен (bilimjol.com) привязывается к воркеру как Custom Domain в
+  // дашборде Cloudflare (Workers → bilimjol → Domains & Routes), не через route
+  // в wrangler: дашборд атомарно заменяет старую apex-запись Vercel, а wrangler
+  // её удалить не может (ошибка 100117, на ней спотыкался calclumen).
+}

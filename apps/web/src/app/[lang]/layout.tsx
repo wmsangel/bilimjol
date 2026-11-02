@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Nunito, Comfortaa } from "next/font/google";
 import { notFound } from "next/navigation";
 import Script from "next/script";
-import { Analytics } from "@vercel/analytics/next";
 import "../globals.css";
 import { locales, isLocale } from "@/i18n/config";
 import { getDictionary } from "./dictionaries";
@@ -202,7 +201,6 @@ export default async function RootLayout({
             />
           </div>
         </noscript>
-        <Analytics />
         {/* Cloudflare Web Analytics — маячок без кук и без согласия; сайт идёт мимо прокси, поэтому вставляется руками */}
         <Script
           id="cf-beacon"

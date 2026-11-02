@@ -8,25 +8,29 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@izn-study/shared": "workspace:*",
-    "@vercel/analytics": "^2.0.1",
-    "next": "16.3.0",
+    "next": "^16.3.8",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.15",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.0",
+    "eslint-config-next": "^16.3.8",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "3.2.4"
+    "vitest": "3.2.4",
+    "wrangler": "^4.152.0"
   },
   "packageManager": "pnpm@10.34.5"
 }

@@ -1,0 +1,9 @@
+# На Cloudflare файлы из public/ и _next/static отдаёт ассет-хендлер, который
+# НЕ доходит до воркера, поэтому headers() из next.config.ts к ним не применяется.
+# Дублируем здесь базовые security-заголовки (прежде всего HSTS: Vercel отдавал
+# его сам, на CF он иначе пропадёт). HTML и роуты заголовки получают из воркера.
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
