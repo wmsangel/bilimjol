@@ -1,11 +1,19 @@
 # Переезд bilimjol.com с Vercel на Cloudflare Workers
 
-**Статус на 02.11.2026: воркер `bilimjol` ЗАДЕПЛОЕН, маршрутов нет, домен НЕ тронут.**
-Version ID `982afccb-063b-4d86-a2f8-8b5afb12a987`, `No targets deployed`, старт 15 мс.
-Залит с ветки `cf-migration` локальной сборкой после полной проверки на workerd
-(`cf:preview`). bilimjol.com по-прежнему отдаёт Vercel — ни один адрес на воркер не
-смотрит (`workers_dev:false`, временного URL нет, как у izntools). Осталось: DNS +
-Always Use HTTPS (ниже).
+**Статус на 02.11.2026: ПЕРЕКЛЮЧЕНО, bilimjol.com В ПРОДЕ НА WORKERS.**
+Воркер `bilimjol` (Version `982afccb`) обслуживает apex и www как Custom Domains
+(zone bilimjol.com, Production). `server: cloudflare`, все ключевые роуты 200, OG
+рендерится в рантайме, API в бандле только Railway (0 localhost), HSTS/CSP на HTML и
+статике, аналитика с consent-гейтом стартует на боевом хосте. Vercel-записи (apex+www
+CNAME на vercel-dns) удалены вручную в дашборде; email-записи (rsend/send/DKIM) целы.
+
+ОСТАЛОСЬ:
+- **Always Use HTTPS** — пока ВЫКЛ: `http://bilimjol.com/ru` отдаёт 200 без редиректа
+  на https (HSTS-заголовок шлём, но первый http-заход обслуживается). Включает
+  диспетчер: SSL/TLS → Edge Certificates → Always Use HTTPS.
+- Ветка `cf-migration` НЕ смёржена в main (ждёт решения владельца — push соберёт Vercel).
+- www отдаёт 200 с canonical на apex; при желании строгого 301 www→apex — Redirect Rule.
+- Через неделю: `vercel git disconnect`.
 
 Подход — `@opennextjs/cloudflare`, как у calclumen (`~/Sites/calc-tools`), costtrek
 (`~/Sites/worldtime`) и izntools. Не статический экспорт: middleware (локаль-редирект),
