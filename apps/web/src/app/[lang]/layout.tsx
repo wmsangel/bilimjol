@@ -96,10 +96,8 @@ export default async function RootLayout({
   var host=location.hostname;
   if(host!=='bilimjol.com'&&host!=='www.bilimjol.com')return;
 
-  // EEA/UK/CH — часовые пояса для гейта Метрики (серверного CF-заголовка нет: сайт идёт мимо прокси)
-  var eeaTz=['Europe/Vienna','Europe/Brussels','Europe/Sofia','Europe/Zagreb','Europe/Prague','Europe/Copenhagen','Europe/Tallinn','Europe/Helsinki','Europe/Mariehamn','Europe/Paris','Europe/Berlin','Europe/Busingen','Europe/Athens','Europe/Budapest','Europe/Dublin','Europe/Rome','Europe/Riga','Europe/Vilnius','Europe/Luxembourg','Europe/Malta','Europe/Amsterdam','Europe/Warsaw','Europe/Lisbon','Europe/Bucharest','Europe/Bratislava','Europe/Ljubljana','Europe/Madrid','Europe/Stockholm','Europe/Oslo','Europe/London','Europe/Zurich','Europe/Vaduz','Europe/Nicosia','Asia/Nicosia','Atlantic/Reykjavik','Atlantic/Azores','Atlantic/Madeira','Atlantic/Canary','Africa/Ceuta','Europe/Gibraltar','Europe/Guernsey','Europe/Jersey','Europe/Isle_of_Man'];
-  var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
-  var inEea=eeaTz.indexOf(tz)!==-1;
+  // EEA/UK/CH — коды стран (для Consent Mode и для гейта Метрики по /cdn-cgi/trace)
+  var eea=['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'];
 
   window.dataLayer=window.dataLayer||[];
   function gtag(){dataLayer.push(arguments);}
@@ -108,7 +106,7 @@ export default async function RootLayout({
 
   // Consent Mode v2 (до загрузки тегов). Google определяет регион сам по IP.
   gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'});
-  gtag('consent','default',{region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'],ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+  gtag('consent','default',{region:eea,ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
 
   // GA4 (gtag) — для событий (grade_open/subject_open и т. п.). page_view
   // отправляет GTM, поэтому здесь send_page_view:false — без двойного подсчёта.
@@ -118,11 +116,16 @@ export default async function RootLayout({
   // Google Tag Manager
   (function(w,d,s,l,i){w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s);j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');
 
-  // Яндекс.Метрика — не грузим в EEA/UK/CH (баннера согласия нет)
-  if(!inEea){
+  // Яндекс.Метрика — не грузим в EEA/UK/CH. Страну берём из Cloudflare
+  // (/cdn-cgi/trace, сайт теперь за CF-прокси). Не удалось определить — не грузим.
+  function loadYM(){
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<e.scripts.length;j++){if(e.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}','ym');
     ym(${YM_ID},'init',{ssr:true,webvisor:false,clickmap:true,ecommerce:"dataLayer",accurateTrackBounce:true,trackLinks:true});
   }
+  fetch('/cdn-cgi/trace').then(function(r){return r.text();}).then(function(t){
+    var m=t.match(/loc=([A-Z]{2})/);
+    if(m&&eea.indexOf(m[1])===-1)loadYM();
+  }).catch(function(){});
 }());`}
         </Script>
         {META_PIXEL_ID ? (

@@ -17,7 +17,19 @@ function getLocale(request: NextRequest): string {
 }
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const url = request.nextUrl;
+  const host = (request.headers.get("host") ?? url.host).toLowerCase();
+
+  // www → корневой домен, 301, с сохранением пути и query. На Vercel этот
+  // редирект делала платформа; на Cloudflare www привязан к тому же воркеру,
+  // поэтому канонизацию делаем здесь.
+  if (host === "www.bilimjol.com") {
+    const dest = url.clone();
+    dest.host = "bilimjol.com";
+    return NextResponse.redirect(dest, 301);
+  }
+
+  const { pathname } = url;
 
   const hasLocale = locales.some(
     (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
@@ -25,16 +37,17 @@ export function proxy(request: NextRequest) {
   if (hasLocale) return;
 
   const locale = getLocale(request);
-  request.nextUrl.pathname = `/${locale}${pathname}`;
-  return NextResponse.redirect(request.nextUrl);
+  url.pathname = `/${locale}${pathname}`;
+  return NextResponse.redirect(url);
 }
 
 export const config = {
-  // Пропускаем внутренние пути Next, API, метадата-иконки, файлы с расширением
-  // И уже-локализованные пути (ru/ky) — им редирект не нужен, middleware не
-  // вызывается (экономия Edge Requests). Срабатывает лишь на корне «/» и путях
-  // без локали, где нужен редирект. При добавлении локали — обновить список ниже.
+  // Широкий матчер: редирект www→apex должен ловиться на всех «страничных» путях,
+  // поэтому сюда попадают и уже локализованные ru/ky (локаль-редирект ниже сам их
+  // пропускает — на воркере лишних расходов нет, в отличие от Edge Requests на
+  // Vercel). Исключены внутренние пути Next, API, метадата-иконки, sitemap/robots
+  // и файлы с расширением — им middleware не нужно.
   matcher: [
-    "/((?!_next|api|icon|apple-icon|opengraph-image|sitemap|robots|ru(?:/|$)|ky(?:/|$)|.*\\.).*)",
+    "/((?!_next|api|icon|apple-icon|opengraph-image|sitemap|robots|.*\\.).*)",
   ],
 };
