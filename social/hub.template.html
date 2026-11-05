@@ -64,6 +64,8 @@ h1{font-family:var(--mono);font-weight:600;font-size:22px;letter-spacing:-.01em}
 .oitem .hint{display:block;color:var(--muted);font-size:13px;margin-top:1px;text-decoration:none}
 .oitem code{font-family:var(--mono);font-size:12.5px;background:var(--surface2);padding:1px 5px;border-radius:5px}
 
+.week{margin-top:30px;display:flex;align-items:baseline;gap:10px;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.week .now{color:var(--accent)}
 .day{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
 .day.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 .day.done{opacity:.6}
@@ -80,6 +82,13 @@ h1{font-family:var(--mono);font-weight:600;font-size:22px;letter-spacing:-.01em}
 .slides img{height:320px;width:auto;border-radius:10px;border:1px solid var(--line);scroll-snap-align:start;background:var(--surface2)}
 .slides.story img{height:380px}
 .saveh{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:2px}
+.vidwrap{margin-top:12px}
+.stvid{width:auto;max-width:100%;height:380px;max-height:60vh;aspect-ratio:9/16;object-fit:contain;background:#0e0b1c;border-radius:10px;border:1px solid var(--line);display:block}
+.varlab{display:flex;align-items:center;gap:10px;justify-content:space-between;font-weight:600;font-size:13.5px;color:var(--ink);margin:10px 0 5px}
+.webvar{font-family:var(--mono);font-size:12px;font-weight:600;color:#fff;background:var(--accent);padding:4px 11px;border-radius:999px;text-decoration:none;white-space:nowrap}
+.webvar:hover{filter:brightness(1.08)}
+.stnote{font-size:13px;line-height:1.4;color:var(--muted);background:var(--surface2);border-radius:8px;padding:7px 10px}
+@media(max-width:560px){.stvid{height:320px}}
 
 .block{margin-top:12px}
 .blab{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
@@ -118,7 +127,7 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:v
     <ul>
       <li><b>Слайды</b> — сохранить в полном качестве: долгий тап → «Сохранить в Фото» (телефон) или правый клик → «Сохранить картинку» (ПК). Кнопки «скачать» нет — песочница её блокирует.</li>
       <li><b>Текст и хэштеги</b> — кнопкой «копировать». Ссылку в посте не ставим — ведём через ссылку в профиле.</li>
-      <li><b>Сторис</b> — слайд чистый: опрос/квиз/ссылку добавляй нативным стикером в Instagram (подсказка в карточке).</li>
+      <li><b>Сторис</b> — готовое анимированное видео (1080×1920). Скачать: <b>⋮ в плеере → «Скачать»</b> (кнопки-скачивания нет — песочница её блокирует, как и у слайдов). У интерактивных есть «веб-вариант» (показывает опрос/квиз, что добавить) и чистый MP4 с местом под нативный стикер Instagram.</li>
       <li><b>RU / KY</b> вверху — переключает текст, хэштеги и слайды. Отметка «опубликовано» и тема сохраняются в этом браузере.</li>
     </ul>
   </div>
@@ -131,11 +140,13 @@ footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);color:v
   <div class="progress" id="progress"></div>
   <div id="days"></div>
 
-  <footer>Неделя 1 · 7 постов. Слайды рисует генератор <span style="font-family:var(--mono)">social/scripts/social-slides.mjs</span> из <span style="font-family:var(--mono)">social/posts.js</span> — правим данные и перегенерируем.</footer>
+  <footer><span id="foot"></span> Слайды рисует генератор <span style="font-family:var(--mono)">social/scripts/social-slides.mjs</span> из <span style="font-family:var(--mono)">social/posts.js</span> — правим данные и перегенерируем.</footer>
 </div>
 
 <script>
 const DATA = __DATA__;
+// Журнал ленты (social/ig-posted.json) на момент сборки хаба: эти посты уже вышли.
+const POSTED = __POSTED__;
 const DOW = ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"];
 const todayDow = DOW[new Date().getDay()];
 let lang = "ru";
@@ -206,12 +217,29 @@ async function copy(text, btn){
   catch(e){ const s=document.createElement("span"); s.textContent=text; s.style.cssText="position:fixed;opacity:0"; document.body.appendChild(s); const r=document.createRange(); r.selectNodeContents(s); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); try{document.execCommand("copy");flash(btn);}catch(_){} sel.removeAllRanges(); s.remove(); }
 }
 
+const isDoneId = id => !!done[id] || !!POSTED[id];
+// Активная неделя — самая ранняя с невышедшим постом ленты (то же правило, что в plan.js).
+function activeWeek(){
+  const weeks = [...new Set(DATA.map(p=>p.week))].sort((a,b)=>a-b);
+  const w = weeks.find(w => DATA.some(p => p.week===w && p.format!=="story" && !isDoneId(p.id)));
+  return w ?? weeks[weeks.length-1];
+}
+
 function render(){
   const days = document.getElementById("days");
   days.innerHTML = "";
+  const active = activeWeek();
+  let shownWeek = null;
   for(const p of DATA){
-    const isDone = !!done[p.id];
-    const isToday = p.day === todayDow;
+    if(p.week !== shownWeek){
+      shownWeek = p.week;
+      const h = document.createElement("h2");
+      h.className = "week";
+      h.innerHTML = "Неделя "+p.week+(p.week===active?' <span class="now">● текущая</span>':"");
+      days.appendChild(h);
+    }
+    const isDone = isDoneId(p.id);
+    const isToday = p.day === todayDow && p.week === active;
     const files = p.slides[lang] || [];
     const cap = p.caption[lang] || "";
     const tags = p.hashtags[lang] || "";
@@ -226,13 +254,19 @@ function render(){
         (isToday?'<span class="todaytag">● СЕГОДНЯ</span>':'')+
         '<label class="pub"><input type="checkbox" data-id="'+p.id+'" '+(isDone?"checked":"")+'> опубликовано</label>'+
       '</div>'+
-      '<div class="slides'+(p.format==="story"?" story":"")+'">'+
-        files.map(f=>'<img src="img/'+f+'" alt="слайд" loading="lazy">').join("")+
-      '</div>'+
-      '<div class="saveh">↑ сохранить: долгий тап по картинке → «Сохранить в Фото» (или правый клик на ПК)</div>'+
+      (p.video
+        ? '<div class="vidwrap">'+
+            (p.webUrl?'<div class="varlab">🌐 Веб-вариант — что добавить в IG<a class="webvar" href="'+p.webUrl+'" target="_blank" rel="noopener">открыть плеер ↗</a></div><div class="stnote">Показывает интерактив вживую — видно, что создать стикером в Instagram.</div><div class="varlab">🎬 MP4 — это публикуем</div>':'')+
+            '<video class="stvid" src="'+p.video+'" controls muted loop playsinline preload="metadata"></video>'+
+            '<div class="saveh">↑ Скачать: ⋮ в плеере → «Скачать» (или правый клик → «Сохранить видео»). '+(p.webUrl?'Низ кадра свободен под нативный стикер.':'Таймер и ответ уже в видео — публикуй как есть.')+'</div>'+
+          '</div>'
+        : '<div class="slides'+(p.format==="story"?" story":"")+'">'+
+            files.map(f=>'<img src="img/'+f+'" alt="слайд" loading="lazy">').join("")+
+          '</div>'+
+          '<div class="saveh">↑ сохранить: долгий тап по картинке → «Сохранить в Фото» (или правый клик на ПК)</div>')+
       '<div class="block"><div class="blab">Подпись '+lang.toUpperCase()+'<button class="copy" data-copy="cap">копировать</button></div><div class="cap">'+esc(cap)+'</div></div>'+
       (tags?'<div class="block"><div class="blab">Хэштеги<button class="copy" data-copy="tags">копировать</button></div><div class="tags">'+esc(tags)+'</div></div>':'')+
-      (p.sticker?'<div class="block"><div class="blab">Стикер в Instagram</div><div class="sticker">'+esc(p.sticker[lang])+'</div></div>':'')+
+      ((p.sticker && !(p.video && !p.webUrl))?'<div class="block"><div class="blab">Стикер в Instagram</div><div class="sticker">'+esc(p.sticker[lang])+'</div></div>':'')+
       '<div class="btns">'+
         (capFull?'<button class="copy" data-copy="full">Текст + хэштеги</button>':'')+
         '<a class="go" href="'+SITE+'/'+lang+p.page+'" target="_blank" rel="noopener">ведёт на '+esc(p.page)+' ↗</a>'+
@@ -243,16 +277,17 @@ function render(){
     card.querySelector('input[type="checkbox"]').addEventListener("change", e=>{
       if(e.target.checked) done[p.id]=1; else delete done[p.id];
       try{ localStorage.setItem("bj-social-done", JSON.stringify(done)); }catch(_){}
-      card.classList.toggle("done", e.target.checked);
-      updateProgress();
+      render();
     });
     days.appendChild(card);
   }
   updateProgress();
 }
 function updateProgress(){
-  const total = DATA.length, d = DATA.filter(p=>done[p.id]).length;
-  document.getElementById("progress").innerHTML = "Опубликовано <b>"+d+"</b> / "+total+" за неделю";
+  const total = DATA.length, d = DATA.filter(p=>isDoneId(p.id)).length;
+  const weeks = new Set(DATA.map(p=>p.week)).size;
+  document.getElementById("progress").innerHTML = "Опубликовано <b>"+d+"</b> / "+total+" · недель в плане: "+weeks;
+  document.getElementById("foot").textContent = "Недель: "+weeks+" · постов: "+total+".";
 }
 
 document.getElementById("lang").addEventListener("click", e=>{

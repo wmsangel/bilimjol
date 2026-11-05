@@ -3,7 +3,8 @@
  * само медиа (картинка / карусель / видео) + отдельным сообщением подпись с
  * хэштегами, чтобы просто скопировать и выложить. Реклама не маркируется (органика).
  *
- * Источник плана — posts.js (по дню недели). Картинки берутся из out/ (сгенерить:
+ * Источник плана — posts.js (день недели внутри активной недели, см. plan.js).
+ * Картинки берутся из out/ (сгенерить:
  * node scripts/social-slides.mjs). Видео — опциональное поле `video` у поста
  * (путь относительно social/, напр. "../research/ig-stories/w1-vt.mp4").
  *
@@ -21,10 +22,10 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { POSTS } from "../posts.js";
+import { DOW, readPosted, postForDay } from "../plan.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "out");
-const DOW = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
 function config() {
   let c = {};
@@ -165,9 +166,10 @@ if (process.argv.includes("--profile")) {
 }
 const arg = process.argv[2];
 const today = DOW[new Date().getDay()];
+// Без id — пост активной недели на сегодня (правило недель — в plan.js).
 const post = arg
   ? POSTS.find((p) => p.id === arg)
-  : POSTS.find((p) => p.day === today);
+  : postForDay(today, readPosted()).post;
 
 if (!post) {
   console.log(arg ? `Пост «${arg}» не найден.` : `На ${today} поста в плане нет — выходной.`);

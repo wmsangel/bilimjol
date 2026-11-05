@@ -206,7 +206,11 @@ const manifest = [];
 let total = 0;
 for (const post of chosen) {
   const fmtName = fmtOf(post);
-  const entry = { id: post.id, week: post.week, day: post.day, format: post.format, rubric: post.rubric, page: post.page, caption: post.caption, hashtags: post.hashtags, sticker: post.sticker ?? null, slides: {} };
+  const entry = { id: post.id, week: post.week, day: post.day, format: post.format, rubric: post.rubric, page: post.page,
+    // Хаб показывает ролик сторис из vid/<id>.mp4 (публикуется рядом со страницей).
+    ...(post.video ? { video: `vid/${post.id}.mp4`, videoSrc: post.video } : {}),
+    ...(post.webUrl ? { webUrl: post.webUrl } : {}),
+    caption: post.caption, hashtags: post.hashtags, sticker: post.sticker ?? null, slides: {} };
   for (const L of LANGS) {
     const files = [];
     for (let i = 0; i < post.slides.length; i++) {
