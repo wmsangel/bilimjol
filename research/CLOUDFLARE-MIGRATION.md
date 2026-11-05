@@ -1,19 +1,22 @@
 # Переезд bilimjol.com с Vercel на Cloudflare Workers
 
-**Статус на 02.11.2026: ПЕРЕКЛЮЧЕНО, bilimjol.com В ПРОДЕ НА WORKERS.**
-Воркер `bilimjol` (Version `982afccb`) обслуживает apex и www как Custom Domains
-(zone bilimjol.com, Production). `server: cloudflare`, все ключевые роуты 200, OG
-рендерится в рантайме, API в бандле только Railway (0 localhost), HSTS/CSP на HTML и
-статике, аналитика с consent-гейтом стартует на боевом хосте. Vercel-записи (apex+www
-CNAME на vercel-dns) удалены вручную в дашборде; email-записи (rsend/send/DKIM) целы.
+**Статус на 05.11.2026: ПЕРЕЕЗД ЗАВЕРШЁН. bilimjol.com В ПРОДЕ НА WORKERS.**
+Воркер `bilimjol` (Version `cd0c5c61`) обслуживает apex и www как Custom Domains
+(zone bilimjol.com, Production). `server: cloudflare`, все роуты 200, OG рендерится в
+рантайме, API в бандле только Railway (0 localhost), HSTS/CSP на HTML и статике,
+аналитика с consent-гейтом стартует на боевом хосте. Vercel-записи (apex+www CNAME на
+vercel-dns) удалены; email-записи (rsend/send/DKIM) целы.
 
-ОСТАЛОСЬ:
-- **Always Use HTTPS** — пока ВЫКЛ: `http://bilimjol.com/ru` отдаёт 200 без редиректа
-  на https (HSTS-заголовок шлём, но первый http-заход обслуживается). Включает
-  диспетчер: SSL/TLS → Edge Certificates → Always Use HTTPS.
-- Ветка `cf-migration` НЕ смёржена в main (ждёт решения владельца — push соберёт Vercel).
-- www отдаёт 200 с canonical на apex; при желании строгого 301 www→apex — Redirect Rule.
-- Через неделю: `vercel git disconnect`.
+ЗАКРЫТО ПОЛНОСТЬЮ:
+- **Always Use HTTPS** включён → `http://bilimjol.com/ru` отдаёт **301** на https.
+- **www → apex 301** (с путём и query) — в `proxy.ts` воркера (не Redirect Rule).
+- **Яндекс.Метрика по CF-гео**: страна из `/cdn-cgi/trace` (сайт теперь за CF-прокси),
+  не по часовым поясам. KG → грузится; EEA/UK/CH → нет; страна неизвестна → нет.
+- **privacy**: хостинг веб — Cloudflare; убран Vercel Analytics (сервис снят).
+- `cf-migration` смёржена в main, main запушен.
+- **`vercel git disconnect`** выполнен (05.11): push в репо больше НЕ собирает Vercel.
+  Проект `bilimjol` в Vercel (scope izn1) пока не удалён — откат через DNS возможен;
+  удаление проекта — за владельцем.
 
 Подход — `@opennextjs/cloudflare`, как у calclumen (`~/Sites/calc-tools`), costtrek
 (`~/Sites/worldtime`) и izntools. Не статический экспорт: middleware (локаль-редирект),
