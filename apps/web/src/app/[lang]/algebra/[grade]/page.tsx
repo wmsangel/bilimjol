@@ -188,6 +188,22 @@ export default async function AlgebraGradePage({
           </section>
         )}
 
+        {g === 7 && (
+          <p className="mt-5 text-sm text-[#5c5880]">
+            {t("Пригодится: ", "Пайдалуу: ")}
+            <Link
+              href={`/${lang}/matematika/kvadraty`}
+              className="font-bold text-[#6d5cf7] hover:underline"
+            >
+              {t("таблица квадратов чисел", "сандардын квадраттарынын таблицасы")}
+            </Link>
+            {t(
+              " — опора для степеней и формул сокращённого умножения.",
+              " — даражалар жана кыскача көбөйтүү формулалары үчүн таяныч.",
+            )}
+          </p>
+        )}
+
         <section className="mt-10">
           <h2 className="font-display text-2xl font-bold">
             {t("Алгебра — другие классы", "Алгебра — башка класстар")}

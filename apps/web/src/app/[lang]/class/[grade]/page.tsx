@@ -415,6 +415,22 @@ export default async function ClassPage({
                 </span>
               </Link>
             )}
+            {g === 8 && (
+              <Link
+                href={`/${lang}/matematika/kvadraty`}
+                className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-[0_6px_18px_rgba(25,21,57,.06)] transition hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(25,21,57,.1)]"
+              >
+                <span className="flex-none text-2xl" aria-hidden="true">√</span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-bold">
+                    {t("Квадраты чисел от 1 до 20", "Сандардын квадраттары 1ден 20га")}
+                  </span>
+                  <span className="block truncate text-xs text-[#8f8aa8]">
+                    {t("таблица и тренажёр — для корней и Пифагора", "таблица жана тренажёр — тамырлар жана Пифагор үчүн")}
+                  </span>
+                </span>
+              </Link>
+            )}
           </div>
         </div>
       </section>
