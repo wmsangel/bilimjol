@@ -36,6 +36,33 @@ export class BillingService {
     };
   }
 
+  /**
+   * Сводка подписки для кабинета (/me). Берём самую свежую строку пользователя
+   * (активную или нет), чтобы показать статус и дату продления/окончания.
+   * Запрос всегда ограничен userId — чужую подписку увидеть нельзя.
+   */
+  async subscription(userId: string) {
+    const sub = await this.prisma.subscription.findFirst({
+      where: { userId },
+      orderBy: { currentPeriodEnd: "desc" },
+    });
+    if (!sub) {
+      return { hasSubscription: false as const };
+    }
+    const active =
+      sub.status === "active" && sub.currentPeriodEnd > new Date();
+    return {
+      hasSubscription: true as const,
+      status: active ? "active" : sub.status, // active | canceled | expired
+      active,
+      plan: sub.plan,
+      provider: sub.provider,
+      currentPeriodEnd: sub.currentPeriodEnd,
+      // true, если подписка отменена и доработает до конца оплаченного периода.
+      cancelAtPeriodEnd: sub.status === "canceled" && active,
+    };
+  }
+
   async checkout(userId: string, plan: string, providerId: string) {
     const provider = providers[providerId];
     if (!provider) throw new BadRequestException("Неизвестный провайдер");

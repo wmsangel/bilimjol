@@ -238,6 +238,23 @@ export function getEntitlement() {
   return request<Entitlement>("/billing/entitlement", { method: "GET" });
 }
 
+// Сводка подписки для кабинета (статус, дата продления/окончания).
+export type SubscriptionInfo =
+  | { hasSubscription: false }
+  | {
+      hasSubscription: true;
+      status: string; // active | canceled | expired
+      active: boolean;
+      plan: string;
+      provider: string;
+      currentPeriodEnd: string;
+      cancelAtPeriodEnd: boolean;
+    };
+
+export function getSubscription() {
+  return request<SubscriptionInfo>("/billing/subscription", { method: "GET" });
+}
+
 export function checkout(plan = "monthly", provider = "dev") {
   return request<{ premium: boolean; until: string | null; redirectUrl: string | null }>(
     "/billing/checkout",

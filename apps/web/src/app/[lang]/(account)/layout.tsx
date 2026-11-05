@@ -27,6 +27,7 @@ export default async function AccountLayout({
     { href: `/${lang}/tests`, label: dict.tests.nav, icon: "🎯" },
     { href: `/${lang}/library`, label: lang === "ky" ? "Китепкана" : "Библиотека", icon: "📚" },
     { href: `/${lang}/parent`, label: dict.account.report, icon: "👨‍👩‍👧" },
+    { href: `/${lang}/billing`, label: lang === "ky" ? "Жазылуу" : "Подписка", icon: "💳" },
     { href: `/${lang}/settings`, label: lang === "ky" ? "Жөндөөлөр" : "Настройки", icon: "⚙️" },
     { href: `/${lang}/admin`, label: dict.admin.title, icon: "🛠️", adminOnly: true },
   ];

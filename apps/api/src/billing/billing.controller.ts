@@ -15,6 +15,11 @@ export class BillingController {
     return this.billing.entitlement(userId);
   }
 
+  @Get("subscription")
+  subscription(@CurrentUser() userId: string) {
+    return this.billing.subscription(userId);
+  }
+
   @Post("checkout")
   checkout(
     @CurrentUser() userId: string,
