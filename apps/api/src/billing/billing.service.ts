@@ -6,6 +6,13 @@ import {
 import { PrismaService } from "../prisma/prisma.service";
 import { MailService } from "../mail/mail.service";
 import { providers } from "./providers";
+import {
+  paddleConfigured,
+  listTransactions,
+  cancelSubscription,
+  updatePaymentMethodTransaction,
+  type PaddleTransaction,
+} from "./paddle-api";
 
 const PLAN_DAYS: Record<string, number> = { monthly: 30 };
 
@@ -47,7 +54,7 @@ export class BillingService {
       orderBy: { currentPeriodEnd: "desc" },
     });
     if (!sub) {
-      return { hasSubscription: false as const };
+      return { hasSubscription: false as const, managementEnabled: false };
     }
     const active =
       sub.status === "active" && sub.currentPeriodEnd > new Date();
@@ -60,7 +67,63 @@ export class BillingService {
       currentPeriodEnd: sub.currentPeriodEnd,
       // true, если подписка отменена и доработает до конца оплаченного периода.
       cancelAtPeriodEnd: sub.status === "canceled" && active,
+      // Управление (история/отмена/карта) доступно, только когда задан серверный
+      // Paddle API-ключ И это paddle-подписка с внешним id.
+      managementEnabled:
+        paddleConfigured() &&
+        sub.provider === "paddle" &&
+        !!sub.externalId,
     };
+  }
+
+  /** Paddle-подписка пользователя с внешним id (самая свежая). Всегда по userId. */
+  private async paddleSub(userId: string) {
+    return this.prisma.subscription.findFirst({
+      where: { userId, provider: "paddle", externalId: { not: null } },
+      orderBy: { currentPeriodEnd: "desc" },
+    });
+  }
+
+  /** История списаний по подписке пользователя (read-only). */
+  async transactions(
+    userId: string,
+  ): Promise<{ enabled: boolean; items: PaddleTransaction[] }> {
+    if (!paddleConfigured()) return { enabled: false, items: [] };
+    const sub = await this.paddleSub(userId);
+    if (!sub?.externalId) return { enabled: true, items: [] };
+    const items = await listTransactions(sub.externalId);
+    return { enabled: true, items };
+  }
+
+  /** Отмена подписки пользователя (в конце оплаченного периода). */
+  async cancel(userId: string) {
+    if (!paddleConfigured()) {
+      throw new BadRequestException("Управление подпиской недоступно");
+    }
+    const sub = await this.paddleSub(userId);
+    if (!sub?.externalId) {
+      throw new BadRequestException("Активная подписка не найдена");
+    }
+    await cancelSubscription(sub.externalId);
+    // Локально помечаем отменённой; вебхук subscription.canceled подтвердит.
+    await this.prisma.subscription.update({
+      where: { id: sub.id },
+      data: { status: "canceled" },
+    });
+    return { ok: true, cancelAtPeriodEnd: true, until: sub.currentPeriodEnd };
+  }
+
+  /** Транзакция смены способа оплаты (веб завершает её в Paddle.js). */
+  async paymentMethodUpdate(userId: string): Promise<{ transactionId: string }> {
+    if (!paddleConfigured()) {
+      throw new BadRequestException("Управление подпиской недоступно");
+    }
+    const sub = await this.paddleSub(userId);
+    if (!sub?.externalId) {
+      throw new BadRequestException("Активная подписка не найдена");
+    }
+    const transactionId = await updatePaymentMethodTransaction(sub.externalId);
+    return { transactionId };
   }
 
   async checkout(userId: string, plan: string, providerId: string) {

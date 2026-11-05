@@ -20,6 +20,21 @@ export class BillingController {
     return this.billing.subscription(userId);
   }
 
+  @Get("transactions")
+  transactions(@CurrentUser() userId: string) {
+    return this.billing.transactions(userId);
+  }
+
+  @Post("cancel")
+  cancel(@CurrentUser() userId: string) {
+    return this.billing.cancel(userId);
+  }
+
+  @Post("payment-method")
+  paymentMethod(@CurrentUser() userId: string) {
+    return this.billing.paymentMethodUpdate(userId);
+  }
+
   @Post("checkout")
   checkout(
     @CurrentUser() userId: string,

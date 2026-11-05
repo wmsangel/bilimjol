@@ -239,8 +239,10 @@ export function getEntitlement() {
 }
 
 // Сводка подписки для кабинета (статус, дата продления/окончания).
+// managementEnabled=true, когда задан серверный Paddle API-ключ → доступны
+// история списаний, отмена и смена карты.
 export type SubscriptionInfo =
-  | { hasSubscription: false }
+  | { hasSubscription: false; managementEnabled: boolean }
   | {
       hasSubscription: true;
       status: string; // active | canceled | expired
@@ -249,10 +251,39 @@ export type SubscriptionInfo =
       provider: string;
       currentPeriodEnd: string;
       cancelAtPeriodEnd: boolean;
+      managementEnabled: boolean;
     };
 
 export function getSubscription() {
   return request<SubscriptionInfo>("/billing/subscription", { method: "GET" });
+}
+
+export interface BillingTransaction {
+  id: string;
+  date: string | null;
+  status: string;
+  amount: string | null;
+  currency: string | null;
+}
+
+export function getTransactions() {
+  return request<{ enabled: boolean; items: BillingTransaction[] }>(
+    "/billing/transactions",
+    { method: "GET" },
+  );
+}
+
+export function cancelSubscription() {
+  return request<{ ok: boolean; cancelAtPeriodEnd: boolean; until: string }>(
+    "/billing/cancel",
+    { method: "POST" },
+  );
+}
+
+export function startPaymentMethodUpdate() {
+  return request<{ transactionId: string }>("/billing/payment-method", {
+    method: "POST",
+  });
 }
 
 export function checkout(plan = "monthly", provider = "dev") {

@@ -73,6 +73,27 @@ function loadPaddle(): Promise<any> {
  * Открывает оверлей-чекаут Paddle. Бросает, если Paddle не удалось загрузить —
  * вызывающий должен показать запасной путь (написать администратору).
  */
+/**
+ * Открывает Paddle-чекаут по готовой транзакции (смена способа оплаты).
+ * transactionId приходит с сервера (update-payment-method-transaction).
+ */
+export async function openPaddleTransaction(opts: {
+  transactionId: string;
+  locale?: string;
+  onComplete?: () => void;
+}): Promise<void> {
+  onCompleteCb = opts.onComplete ?? null;
+  const P = await loadPaddle();
+  P.Checkout.open({
+    transactionId: opts.transactionId,
+    settings: {
+      displayMode: "overlay",
+      theme: "light",
+      locale: opts.locale === "ky" ? "ru" : opts.locale || "ru",
+    },
+  });
+}
+
 export async function openPaddleCheckout(opts: {
   priceId: string;
   userId?: string;
