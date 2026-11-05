@@ -8,7 +8,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { localizedAlternates } from "@/lib/seo";
+import { Faq } from "@/components/Faq";
+import { localizedAlternates, faqJsonLd } from "@/lib/seo";
 import { GAME_META, type GameId } from "@/lib/classGames";
 import { getDictionary } from "../../dictionaries";
 
@@ -66,6 +67,11 @@ export default async function ArticlePage({
   const dict = await getDictionary(lang);
   // Похожие статьи — по тегам (с добором кольцом для покрытия всего корпуса).
   const related = getRelatedArticles(slug, 3);
+  // Частые вопросы — видимый блок + FAQPage JSON-LD (только если заполнены).
+  const faqItems = (article.faq ?? []).map((f) => ({
+    q: f.q[lang],
+    a: f.a[lang],
+  }));
   const url = `${SITE}/${lang}/articles/${slug}`;
 
   // Перелинковка на игру/тест по основному тегу статьи.
@@ -238,6 +244,16 @@ export default async function ArticlePage({
               )}
             </div>
           </section>
+        )}
+
+        {faqItems.length > 0 && (
+          <>
+            <JsonLd data={faqJsonLd(faqItems)} />
+            <Faq
+              title={lang === "ky" ? "Көп берилүүчү суроолор" : "Частые вопросы"}
+              items={faqItems}
+            />
+          </>
         )}
 
         {related.length > 0 && (
