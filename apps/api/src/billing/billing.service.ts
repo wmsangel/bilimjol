@@ -35,6 +35,15 @@ export class BillingService {
   }
 
   async entitlement(userId: string) {
+    // Админам (сотрудникам) премиум доступен всегда — их нельзя упирать в пейвол,
+    // даже если платной подписки нет или она истекла.
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (user?.role === "admin") {
+      return { premium: true, until: null, plan: "admin" };
+    }
     const sub = await this.activeSub(userId);
     return {
       premium: !!sub,

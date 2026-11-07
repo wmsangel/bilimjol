@@ -34,7 +34,7 @@ function matches(row: Record<string, unknown>, where: Record<string, unknown>) {
   });
 }
 
-function makePrisma(subs: Sub[]) {
+function makePrisma(subs: Sub[], userRole = "user") {
   const store = subs.slice();
   let seq = store.length;
   return {
@@ -60,7 +60,7 @@ function makePrisma(subs: Sub[]) {
       }),
     },
     user: {
-      findUnique: vi.fn(async () => ({ email: "a@b.c", locale: "ru" })),
+      findUnique: vi.fn(async () => ({ email: "a@b.c", locale: "ru", role: userRole })),
     },
     __store: store,
   };
@@ -79,6 +79,33 @@ function service(prisma: any) {
 beforeEach(() => {
   vi.clearAllMocks();
   paddle.paddleConfigured.mockReturnValue(true);
+});
+
+describe("entitlement()", () => {
+  it("админ получает премиум даже без активной подписки", async () => {
+    const prisma = makePrisma([], "admin");
+    const res: any = await service(prisma).entitlement("u1");
+    expect(res.premium).toBe(true);
+    expect(res.plan).toBe("admin");
+  });
+
+  it("обычный пользователь с активной подпиской — премиум", async () => {
+    const prisma = makePrisma(
+      [{ id: "s1", userId: "u1", plan: "monthly", status: "active", provider: "paddle", externalId: "sub_1", currentPeriodEnd: future() }],
+      "user",
+    );
+    const res: any = await service(prisma).entitlement("u1");
+    expect(res.premium).toBe(true);
+  });
+
+  it("обычный пользователь с истёкшей подпиской — не премиум", async () => {
+    const prisma = makePrisma(
+      [{ id: "s1", userId: "u1", plan: "monthly", status: "active", provider: "paddle", externalId: "sub_1", currentPeriodEnd: new Date(Date.now() - 1000) }],
+      "user",
+    );
+    const res: any = await service(prisma).entitlement("u1");
+    expect(res.premium).toBe(false);
+  });
 });
 
 describe("subscription()", () => {
