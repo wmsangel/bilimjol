@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   adminDeleteUser,
   adminGrantPremium,
@@ -11,6 +12,7 @@ import {
   getAdminUserDetail,
   getAdminUsers,
   isLoggedIn,
+  loadAuth,
   type AdminChildDetail,
   type AdminStats,
   type AdminUser,
@@ -70,9 +72,9 @@ export function AdminPanel({
   loginHref: string;
   children?: React.ReactNode;
 }) {
+  const router = useRouter();
   const [loaded, setLoaded] = useState(false);
   const [logged, setLogged] = useState(false);
-  const [forbidden, setForbidden] = useState(false);
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -148,6 +150,13 @@ export function AdminPanel({
       setLoaded(true);
       return;
     }
+    // Не-админа на админ-страницу не пускаем — сразу уводим на главную
+    // (сервер всё равно вернёт 403, это лишь чище для UX). Держим скелетон,
+    // пока идёт редирект, чтобы не мелькала разметка админки.
+    if (loadAuth()?.user.role !== "admin") {
+      router.replace(`/${locale}`);
+      return;
+    }
     setLogged(true);
     (async () => {
       try {
@@ -155,12 +164,17 @@ export function AdminPanel({
         setStats(s);
         setUsers(u);
       } catch (e) {
-        if (e instanceof ApiError && e.status === 403) setForbidden(true);
+        // Бэкстоп: если сервер всё же ответил 403 (роль в токене не админ) —
+        // тоже уводим на главную, не показывая разметку админки.
+        if (e instanceof ApiError && e.status === 403) {
+          router.replace(`/${locale}`);
+          return;
+        }
       } finally {
         setLoaded(true);
       }
     })();
-  }, []);
+  }, [router, locale]);
 
   if (!loaded) {
     return (
@@ -168,12 +182,10 @@ export function AdminPanel({
     );
   }
 
-  if (!logged || forbidden) {
+  if (!logged) {
     return (
       <div className="mx-auto w-full max-w-md rounded-[2rem] border border-black/[.06] bg-white p-8 text-center shadow-xl">
-        <p className="text-[#5c5880]">
-          {forbidden ? labels.forbidden : labels.loginPrompt}
-        </p>
+        <p className="text-[#5c5880]">{labels.loginPrompt}</p>
         {!logged && (
           <Link
             href={loginHref}
