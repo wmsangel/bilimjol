@@ -124,12 +124,18 @@ const SETPW: Record<Locale, { subject: string; heading: string; body: string; ct
 };
 
 // ─── Брендовый HTML-каркас (inline-стили — для совместимости с почтовиками) ───
+// Почтовый адрес оператора (ИП) — в подвале транзакционных писем, как принято
+// в сети (требование почтовиков к легитимности; без ИНН).
+const OPERATOR_ADDRESS =
+  "ИП Загородный И. Н. · Dzhal-29 microdistrict, building 7, Bishkek, Kyrgyz Republic";
+
 function layout(locale: Locale, heading: string, body: string, cta: string, ctaHref: string): string {
   const year = new Date().getFullYear();
-  const footer =
+  const reason =
     locale === "ky"
       ? `Сиз bilimjol.com'да катталгандыктан бул кат келди.`
       : `Вы получили это письмо, потому что зарегистрировались на bilimjol.com.`;
+  const footer = `${reason}<br>${OPERATOR_ADDRESS}`;
   return `<!doctype html>
 <html lang="${locale}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
