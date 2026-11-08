@@ -67,13 +67,14 @@ function makePrisma(subs: Sub[], userRole = "user") {
 }
 
 const mail = { sendPremiumActivated: vi.fn() };
+const notify = { notify: vi.fn(), configured: vi.fn(() => false) };
 
 function future(days = 30): Date {
   return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 }
 
 function service(prisma: any) {
-  return new BillingService(prisma as any, mail as any);
+  return new BillingService(prisma as any, mail as any, notify as any);
 }
 
 beforeEach(() => {
@@ -169,6 +170,30 @@ describe("handlePaddleEvent()", () => {
     const prisma = makePrisma([]);
     await service(prisma).handlePaddleEvent({ event_type: "subscription.activated", data: { id: "sub_x", status: "active" } });
     expect(prisma.__store.length).toBe(0);
+  });
+});
+
+describe("оповещения владельцу (Telegram)", () => {
+  it("оплата новой подписки → notify вызван", async () => {
+    const prisma = makePrisma([]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.activated",
+      data: { id: "sub_7", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: [] },
+    });
+    expect(notify.notify).toHaveBeenCalled();
+    expect(String(notify.notify.mock.calls[0][0])).toContain("Оплата");
+  });
+
+  it("отмена подписки → notify вызван", async () => {
+    const prisma = makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "active", provider: "paddle", externalId: "sub_7", currentPeriodEnd: future() },
+    ]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.canceled",
+      data: { id: "sub_7", status: "canceled", custom_data: { userId: "u1" }, items: [] },
+    });
+    expect(notify.notify).toHaveBeenCalled();
+    expect(String(notify.notify.mock.calls[0][0])).toContain("Отмена");
   });
 });
 

@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { MailService } from "../mail/mail.service";
+import { TelegramNotifyService } from "../notify/telegram-notify.service";
 import { providers } from "./providers";
 import {
   paddleConfigured,
@@ -25,6 +26,7 @@ export class BillingService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly mail: MailService,
+    private readonly notify: TelegramNotifyService,
   ) {}
 
   private activeSub(userId: string) {
@@ -225,8 +227,22 @@ export class BillingService {
         });
         if (user) {
           void this.mail.sendPremiumActivated(user, currentPeriodEnd);
+          void this.notify.notify(
+            `💳 Оплата подписки\n${user.email}\n${plan}, до ${currentPeriodEnd.toLocaleDateString("ru-RU")}`,
+          );
         }
       }
+    }
+
+    // Отмена подписки → оповещение владельцу (по событию subscription.canceled).
+    if (type === "subscription.canceled") {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { email: true },
+      });
+      void this.notify.notify(
+        `⚠️ Отмена подписки\n${user?.email ?? userId}`,
+      );
     }
   }
 }

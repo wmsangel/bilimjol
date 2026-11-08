@@ -9,6 +9,7 @@ import { createHash, randomBytes } from "node:crypto";
 import type { User } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { MailService } from "../mail/mail.service";
+import { TelegramNotifyService } from "../notify/telegram-notify.service";
 import type { GuestDto, LoginDto, RegisterDto, SetPasswordDto } from "./dto";
 
 @Injectable()
@@ -17,6 +18,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
     private readonly mail: MailService,
+    private readonly notify: TelegramNotifyService,
   ) {}
 
   private readonly accessSecret = process.env.JWT_ACCESS_SECRET ?? "dev-access";
@@ -76,6 +78,9 @@ export class AuthService {
     });
     // Welcome-письмо — fire-and-forget, не блокируем регистрацию.
     void this.mail.sendWelcome({ email: user.email, locale: user.locale });
+    void this.notify.notify(
+      `🆕 Новая регистрация\n${user.email}${user.country ? ` · ${user.country}` : ""}`,
+    );
     const tokens = await this.issueTokens(user.id, device);
     return { user: this.publicUser(user), ...tokens };
   }
@@ -103,6 +108,9 @@ export class AuthService {
     const setpwToken = await this.issueSetPasswordToken(user.id);
     const setpwUrl = this.setPasswordUrl(user.locale, setpwToken);
     void this.mail.sendSetPassword({ email: user.email, locale: user.locale }, setpwUrl);
+    void this.notify.notify(
+      `🆕 Гостевой старт (оплата без регистрации)\n${user.email}`,
+    );
     const tokens = await this.issueTokens(user.id, device);
     return { user: this.publicUser(user), ...tokens };
   }
