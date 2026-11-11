@@ -79,13 +79,20 @@ export async function listTransactions(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const res = (await paddleFetch(`/transactions?${q.toString()}`)) as any;
   const data: any[] = Array.isArray(res?.data) ? res.data : [];
-  return data.map((tx) => ({
-    id: String(tx.id ?? ""),
-    date: tx.billed_at ?? tx.created_at ?? null,
-    status: String(tx.status ?? ""),
-    amount: tx.details?.totals?.grand_total ?? null,
-    currency: tx.details?.totals?.currency_code ?? tx.currency_code ?? null,
-  }));
+  return (
+    data
+      .map((tx) => ({
+        id: String(tx.id ?? ""),
+        date: tx.billed_at ?? tx.created_at ?? null,
+        status: String(tx.status ?? ""),
+        amount: tx.details?.totals?.grand_total ?? null,
+        currency: tx.details?.totals?.currency_code ?? tx.currency_code ?? null,
+      }))
+      // «История списаний» — только реальные состоявшиеся платежи. Отсекаем
+      // служебные транзакции на 0.00 (например, смена карты — origin
+      // subscription_payment_method_change, статус ready) и незавершённые.
+      .filter((tx) => tx.status === "completed" && Number(tx.amount) > 0)
+  );
 }
 
 /** Отмена подписки в конце оплаченного периода (доступ доживает до currentPeriodEnd). */
