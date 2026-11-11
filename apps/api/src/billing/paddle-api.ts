@@ -11,6 +11,11 @@ function apiKey(): string {
   return process.env.PADDLE_API_KEY?.trim() ?? "";
 }
 
+export interface PaddleApiError extends Error {
+  status?: number;
+  code?: string;
+}
+
 /** true, если серверный Paddle API-ключ задан — тогда доступны история/отмена/карта. */
 export function paddleConfigured(): boolean {
   return apiKey().length > 0;
@@ -43,8 +48,13 @@ async function paddleFetch(
     console.error(
       `[paddle] ${init?.method ?? "GET"} ${path} → ${res.status}: ${text.slice(0, 400)}`,
     );
-    // Наружу тело не тащим — оно может содержать служебные детали.
-    throw new Error(`Paddle API ${res.status} на ${path}`);
+    // Наружу тело не тащим, но статус и код ошибки прикрепляем — чтобы вызывающий
+    // мог отличить, например, «уже запланированную отмену» от реальной ошибки.
+    const err = new Error(`Paddle API ${res.status} на ${path}`) as PaddleApiError;
+    err.status = res.status;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    err.code = (json as any)?.error?.code;
+    throw err;
   }
   return json;
 }
@@ -80,10 +90,20 @@ export async function listTransactions(
 
 /** Отмена подписки в конце оплаченного периода (доступ доживает до currentPeriodEnd). */
 export async function cancelSubscription(subscriptionId: string): Promise<void> {
-  await paddleFetch(`/subscriptions/${subscriptionId}/cancel`, {
-    method: "POST",
-    body: { effective_from: "next_billing_period" },
-  });
+  try {
+    await paddleFetch(`/subscriptions/${subscriptionId}/cancel`, {
+      method: "POST",
+      body: { effective_from: "next_billing_period" },
+    });
+  } catch (e) {
+    // Отмена уже запланирована (повторный клик / рассинхрон локального статуса) —
+    // это не ошибка: подписка и так отменяется. Считаем успехом (идемпотентность),
+    // чтобы вызывающий привёл локальный статус к "canceled".
+    if ((e as PaddleApiError)?.code === "subscription_locked_pending_changes") {
+      return;
+    }
+    throw e;
+  }
 }
 
 /**

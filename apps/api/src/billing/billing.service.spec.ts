@@ -30,6 +30,9 @@ function matches(row: Record<string, unknown>, where: Record<string, unknown>) {
     if (v && typeof v === "object" && "not" in (v as object)) {
       return row[k] != null && row[k] !== (v as { not: unknown }).not;
     }
+    if (v && typeof v === "object" && "in" in (v as object)) {
+      return (v as { in: unknown[] }).in.includes(row[k]);
+    }
     return row[k] === v;
   });
 }
@@ -107,6 +110,15 @@ describe("entitlement()", () => {
     const res: any = await service(prisma).entitlement("u1");
     expect(res.premium).toBe(false);
   });
+
+  it("отменённая подписка в пределах периода — премиум сохраняется до конца", async () => {
+    const prisma = makePrisma(
+      [{ id: "s1", userId: "u1", plan: "monthly", status: "canceled", provider: "paddle", externalId: "sub_1", currentPeriodEnd: future() }],
+      "user",
+    );
+    const res: any = await service(prisma).entitlement("u1");
+    expect(res.premium).toBe(true);
+  });
 });
 
 describe("subscription()", () => {
@@ -127,6 +139,26 @@ describe("subscription()", () => {
     ]);
     const res: any = await service(prisma).subscription("u2");
     expect(res.hasSubscription).toBe(false);
+  });
+
+  it("отменённая подписка в пределах периода → Активна + cancelAtPeriodEnd", async () => {
+    const prisma = makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "canceled", provider: "paddle", externalId: "sub_1", currentPeriodEnd: future() },
+    ]);
+    const res: any = await service(prisma).subscription("u1");
+    expect(res.active).toBe(true);
+    expect(res.cancelAtPeriodEnd).toBe(true);
+    expect(res.status).toBe("canceled");
+    expect(res.managementEnabled).toBe(true);
+  });
+
+  it("отменённая подписка после конца периода → Неактивна", async () => {
+    const prisma = makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "canceled", provider: "paddle", externalId: "sub_1", currentPeriodEnd: new Date(Date.now() - 1000) },
+    ]);
+    const res: any = await service(prisma).subscription("u1");
+    expect(res.active).toBe(false);
+    expect(res.cancelAtPeriodEnd).toBe(false);
   });
 
   it("managementEnabled=false без Paddle-ключа", async () => {
@@ -189,6 +221,24 @@ describe("handlePaddleEvent()", () => {
     await service(prisma).handlePaddleEvent({
       event_type: "subscription.canceled",
       data: { id: "sub_9", status: "canceled", custom_data: { userId: "u1" }, items: [] },
+    });
+    expect(prisma.__store[0].status).toBe("canceled");
+  });
+
+  it("subscription.updated со scheduled_change=cancel → статус canceled (не затирается в active)", async () => {
+    const prisma = makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "active", provider: "paddle", externalId: "sub_9", currentPeriodEnd: future() },
+    ]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.updated",
+      data: {
+        id: "sub_9",
+        status: "active",
+        scheduled_change: { action: "cancel" },
+        custom_data: { userId: "u1" },
+        current_billing_period: { ends_at: future().toISOString() },
+        items: [],
+      },
     });
     expect(prisma.__store[0].status).toBe("canceled");
   });

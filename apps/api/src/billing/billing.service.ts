@@ -30,8 +30,14 @@ export class BillingService {
   ) {}
 
   private activeSub(userId: string) {
+    // «canceled» с будущей датой — это отмена в конце периода: доступ ещё
+    // действует (не продлевается). Поэтому премиум сохраняется до конца срока.
     return this.prisma.subscription.findFirst({
-      where: { userId, status: "active", currentPeriodEnd: { gt: new Date() } },
+      where: {
+        userId,
+        status: { in: ["active", "canceled"] },
+        currentPeriodEnd: { gt: new Date() },
+      },
       orderBy: { currentPeriodEnd: "desc" },
     });
   }
@@ -64,9 +70,13 @@ export class BillingService {
       where: { userId },
       orderBy: { currentPeriodEnd: "desc" },
     });
-    const active = sub
-      ? sub.status === "active" && sub.currentPeriodEnd > new Date()
-      : false;
+    // Доступ действует, пока не вышел оплаченный период — и для «active», и для
+    // «canceled» (отмена в конце периода: доступ доживает до currentPeriodEnd).
+    const withinPeriod = sub ? sub.currentPeriodEnd > new Date() : false;
+    const active =
+      withinPeriod &&
+      (sub!.status === "active" || sub!.status === "canceled");
+    const cancelAtPeriodEnd = !!sub && sub.status === "canceled" && withinPeriod;
 
     // Если действующей подписки нет, но пользователь — админ, кабинет не должен
     // противоречить реальному доступу: entitlement() выдаёт админам премиум всегда,
@@ -97,13 +107,13 @@ export class BillingService {
     }
     return {
       hasSubscription: true as const,
-      status: active ? "active" : sub.status, // active | canceled | expired
+      status: cancelAtPeriodEnd ? "canceled" : active ? "active" : sub.status,
       active,
       plan: sub.plan,
       provider: sub.provider,
       currentPeriodEnd: sub.currentPeriodEnd,
       // true, если подписка отменена и доработает до конца оплаченного периода.
-      cancelAtPeriodEnd: sub.status === "canceled" && active,
+      cancelAtPeriodEnd,
       // Управление (история/отмена/карта) доступно, только когда задан серверный
       // Paddle API-ключ И это paddle-подписка с внешним id.
       managementEnabled:
@@ -219,6 +229,10 @@ export class BillingService {
 
     const status: string = data.status ?? "";
     const active = status === "active" || status === "trialing";
+    // Отмена в конце периода: Paddle держит статус active, но ставит
+    // scheduled_change.action="cancel". Это НЕ должно затирать отметку отмены —
+    // иначе кабинет снова покажет «Активна», хотя подписка уже отменяется.
+    const scheduledCancel = data.scheduled_change?.action === "cancel";
     const endsAt: string | undefined =
       data.current_billing_period?.ends_at ?? data.next_billed_at ?? undefined;
     const currentPeriodEnd = endsAt
@@ -234,7 +248,7 @@ export class BillingService {
       where: { provider: "paddle", externalId },
     });
     const values = {
-      status: active ? "active" : "canceled",
+      status: scheduledCancel ? "canceled" : active ? "active" : "canceled",
       currentPeriodEnd,
       plan,
     };
