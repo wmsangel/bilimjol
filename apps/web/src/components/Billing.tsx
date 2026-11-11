@@ -36,6 +36,7 @@ const card = "rounded-[24px] bg-white p-6 shadow-[0_8px_24px_rgba(25,21,57,.06)]
 const PLAN_LABEL: Record<string, { ru: string; ky: string }> = {
   monthly: { ru: "Помесячная", ky: "Айлык" },
   annual: { ru: "Годовая", ky: "Жылдык" },
+  admin: { ru: "Доступ администратора", ky: "Администратор мүмкүнчүлүгү" },
 };
 
 export function Billing({
@@ -151,7 +152,7 @@ export function Billing({
   }
 
   const planLabel = PLAN_LABEL[sub.plan]?.[locale] ?? sub.plan;
-  const end = fmtDate(sub.currentPeriodEnd, locale);
+  const end = sub.currentPeriodEnd ? fmtDate(sub.currentPeriodEnd, locale) : null;
   const canManage = sub.managementEnabled;
   const canCancel = canManage && sub.active && !sub.cancelAtPeriodEnd;
 
@@ -186,13 +187,17 @@ export function Billing({
           </div>
           <div className="flex items-center justify-between py-3">
             <dt className="text-[#5c5880]">
-              {sub.cancelAtPeriodEnd
-                ? t("Доступ до", "Жеткиликтүү")
-                : sub.active
-                  ? t("Продлится", "Узартылат")
-                  : t("Закончилась", "Аяктады")}
+              {!end
+                ? t("Доступ", "Мүмкүнчүлүк")
+                : sub.cancelAtPeriodEnd
+                  ? t("Доступ до", "Жеткиликтүү")
+                  : sub.active
+                    ? t("Продлится", "Узартылат")
+                    : t("Закончилась", "Аяктады")}
             </dt>
-            <dd className="font-bold">{end}</dd>
+            <dd className="font-bold">
+              {end ?? t("Бессрочно", "Мөөнөтсүз")}
+            </dd>
           </div>
         </dl>
 

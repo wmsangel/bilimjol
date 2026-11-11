@@ -64,11 +64,37 @@ export class BillingService {
       where: { userId },
       orderBy: { currentPeriodEnd: "desc" },
     });
+    const active = sub
+      ? sub.status === "active" && sub.currentPeriodEnd > new Date()
+      : false;
+
+    // Если действующей подписки нет, но пользователь — админ, кабинет не должен
+    // противоречить реальному доступу: entitlement() выдаёт админам премиум всегда,
+    // поэтому показываем служебный доступ как активный и бессрочный. Если же у
+    // админа есть реальная активная подписка (напр. Paddle), ниже покажем именно её
+    // — чтобы можно было тестировать управление (история/отмена/карта).
+    if (!active) {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { role: true },
+      });
+      if (user?.role === "admin") {
+        return {
+          hasSubscription: true as const,
+          status: "active",
+          active: true,
+          plan: "admin",
+          provider: "admin",
+          currentPeriodEnd: null,
+          cancelAtPeriodEnd: false,
+          managementEnabled: false,
+        };
+      }
+    }
+
     if (!sub) {
       return { hasSubscription: false as const, managementEnabled: false };
     }
-    const active =
-      sub.status === "active" && sub.currentPeriodEnd > new Date();
     return {
       hasSubscription: true as const,
       status: active ? "active" : sub.status, // active | canceled | expired

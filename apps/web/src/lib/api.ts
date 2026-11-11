@@ -249,7 +249,7 @@ export type SubscriptionInfo =
       active: boolean;
       plan: string;
       provider: string;
-      currentPeriodEnd: string;
+      currentPeriodEnd: string | null; // null — бессрочный служебный доступ (админ)
       cancelAtPeriodEnd: boolean;
       managementEnabled: boolean;
     };

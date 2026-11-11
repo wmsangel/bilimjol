@@ -137,6 +137,39 @@ describe("subscription()", () => {
     const res: any = await service(prisma).subscription("u1");
     expect(res.managementEnabled).toBe(false);
   });
+
+  it("админ без подписки → активный служебный доступ, бессрочно", async () => {
+    const prisma = makePrisma([], "admin");
+    const res: any = await service(prisma).subscription("admin1");
+    expect(res.hasSubscription).toBe(true);
+    expect(res.active).toBe(true);
+    expect(res.plan).toBe("admin");
+    expect(res.currentPeriodEnd).toBeNull();
+    expect(res.managementEnabled).toBe(false);
+  });
+
+  it("админ с ИСТЁКШЕЙ dev-подпиской → показываем активный служебный доступ (кейс владельца)", async () => {
+    const prisma = makePrisma(
+      [{ id: "s1", userId: "admin1", plan: "monthly", status: "active", provider: "dev", externalId: null, currentPeriodEnd: new Date(Date.now() - 1000) }],
+      "admin",
+    );
+    const res: any = await service(prisma).subscription("admin1");
+    expect(res.active).toBe(true);
+    expect(res.plan).toBe("admin");
+    expect(res.currentPeriodEnd).toBeNull();
+  });
+
+  it("админ с реальной активной Paddle-подпиской → показываем её (управление доступно)", async () => {
+    const prisma = makePrisma(
+      [{ id: "s1", userId: "admin1", plan: "monthly", status: "active", provider: "paddle", externalId: "sub_1", currentPeriodEnd: future() }],
+      "admin",
+    );
+    const res: any = await service(prisma).subscription("admin1");
+    expect(res.active).toBe(true);
+    expect(res.plan).toBe("monthly");
+    expect(res.provider).toBe("paddle");
+    expect(res.managementEnabled).toBe(true);
+  });
 });
 
 describe("handlePaddleEvent()", () => {
