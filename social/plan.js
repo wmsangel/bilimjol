@@ -35,6 +35,20 @@ export function activeWeek(posted = {}, posts = POSTS) {
 }
 
 /**
+ * Сторис на день недели `day` — для ежедневной рассылки в бот.
+ * Берём из САМОЙ ПОЗДНЕЙ недели, где на этот день стоит сторис, независимо от
+ * публикации ленты. Так сторис выходят каждый день (неделя 3+ — набор фича-сторис,
+ * по одной на каждый день). Нет сторис на этот день ни в одной неделе → null.
+ */
+export function storyForDay(day, posts = POSTS) {
+  for (const w of weeks(posts).slice().reverse()) {
+    const p = posts.find((x) => x.week === w && x.day === day && !isFeed(x));
+    if (p) return p;
+  }
+  return null;
+}
+
+/**
  * Пост на день недели `day` ("Пн".."Вс").
  * Возвращает { post, week, action, reason }:
  *   action "publish" — пост ленты, ещё не в журнале → публиковать;

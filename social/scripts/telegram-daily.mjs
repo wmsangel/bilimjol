@@ -22,7 +22,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { POSTS } from "../posts.js";
-import { DOW, readPosted, postForDay } from "../plan.js";
+import { DOW, storyForDay } from "../plan.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "out");
@@ -166,21 +166,15 @@ if (process.argv.includes("--profile")) {
 }
 const arg = process.argv[2];
 const today = DOW[new Date().getDay()];
-// Без id — пост активной недели на сегодня (правило недель — в plan.js).
+// Без id — сторис дня из последней недели (storyForDay), шлём КАЖДЫЙ день.
+// Посты/карусели ленты публикуются автопостером через Chrome отдельно; сторис
+// грузит владелец (через веб их не загрузить). Ручной запуск с id — любой формат.
 const post = arg
   ? POSTS.find((p) => p.id === arg)
-  : postForDay(today, readPosted()).post;
+  : storyForDay(today);
 
 if (!post) {
-  console.log(arg ? `Пост «${arg}» не найден.` : `На ${today} поста в плане нет — выходной.`);
-  process.exit(0);
-}
-
-// На автозапуске (без явного id) в бот шлём ТОЛЬКО сторис: посты/карусели/видео
-// публикуются автопостером через Chrome, а сторис владелец грузит руками (через
-// веб их не загрузить). Ручной запуск с id — шлёт любой формат (для теста).
-if (!arg && post.format !== "story") {
-  console.log(`Сегодня формат «${post.format}» — в бот идут только сторис, пропуск.`);
+  console.log(arg ? `Пост «${arg}» не найден.` : `На ${today} сторис в плане нет.`);
   process.exit(0);
 }
 
