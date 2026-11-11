@@ -94,10 +94,11 @@ export async function cancelSubscription(subscriptionId: string): Promise<void> 
 export async function updatePaymentMethodTransaction(
   subscriptionId: string,
 ): Promise<string> {
+  // Paddle: этот эндпоинт — GET (возвращает готовую транзакцию для смены карты),
+  // а не POST. POST отдавал 405 method_not_allowed.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const res = (await paddleFetch(
     `/subscriptions/${subscriptionId}/update-payment-method-transaction`,
-    { method: "POST" },
   )) as any;
   const id = res?.data?.id;
   if (!id) throw new Error("Paddle не вернул transaction id");
