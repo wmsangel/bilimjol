@@ -40,6 +40,8 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: HeaderDict }) {
     wardrobe: "Гардероб",
     tests: dict.tests.nav,
     report: dict.account.report,
+    subscription: lang === "ky" ? "Жазылуу" : "Подписка",
+    settings: lang === "ky" ? "Жөндөөлөр" : "Настройки",
     admin: dict.admin.title,
     logout: dict.auth.logout,
   };

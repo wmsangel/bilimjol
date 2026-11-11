@@ -13,6 +13,8 @@ export interface AccountMenuLabels {
   wardrobe: string;
   tests: string;
   report: string;
+  subscription: string;
+  settings: string;
   admin: string;
   logout: string;
 }
@@ -137,6 +139,20 @@ export function AccountMenu({
             onClick={() => setOpen(false)}
           >
             <span aria-hidden="true">👨‍👩‍👧</span> {labels.report}
+          </Link>
+          <Link
+            href={`/${lang}/billing`}
+            className={item}
+            onClick={() => setOpen(false)}
+          >
+            <span aria-hidden="true">💳</span> {labels.subscription}
+          </Link>
+          <Link
+            href={`/${lang}/settings`}
+            className={item}
+            onClick={() => setOpen(false)}
+          >
+            <span aria-hidden="true">⚙️</span> {labels.settings}
           </Link>
           {isAdmin && (
             <Link

@@ -38,7 +38,12 @@ async function paddleFetch(
     /* не-JSON ответ оставляем null */
   }
   if (!res.ok) {
-    // Не тащим тело ошибки наружу — оно может содержать служебные детали.
+    // В лог (сервер) кладём статус и тело — чтобы диагностировать причину
+    // (403 = нет прав у ключа, 404 = не та среда/подписка, 400 = статус/payload).
+    console.error(
+      `[paddle] ${init?.method ?? "GET"} ${path} → ${res.status}: ${text.slice(0, 400)}`,
+    );
+    // Наружу тело не тащим — оно может содержать служебные детали.
     throw new Error(`Paddle API ${res.status} на ${path}`);
   }
   return json;

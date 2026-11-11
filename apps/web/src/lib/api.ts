@@ -115,7 +115,10 @@ async function request<T>(
   const res = await fetch(`${BASE}${path}`, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
+      // Content-Type ставим только при наличии тела: Fastify отклоняет пустое
+      // тело с content-type application/json (ломало POST без тела — отмену и
+      // смену карты).
+      ...(options.body != null ? { "Content-Type": "application/json" } : {}),
       ...(auth ? { Authorization: `Bearer ${auth.accessToken}` } : {}),
       ...(options.headers ?? {}),
     },

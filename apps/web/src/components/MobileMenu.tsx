@@ -14,6 +14,8 @@ export interface MobileMenuLabels {
   wardrobe: string;
   tests: string;
   report: string;
+  subscription: string;
+  settings: string;
   admin: string;
   logout: string;
   menu: string;
@@ -149,6 +151,18 @@ export function MobileMenu({
                 className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
               >
                 <span aria-hidden="true">👨‍👩‍👧</span> {labels.report}
+              </Link>
+              <Link
+                href={`/${lang}/billing`}
+                className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
+              >
+                <span aria-hidden="true">💳</span> {labels.subscription}
+              </Link>
+              <Link
+                href={`/${lang}/settings`}
+                className={rowBase + " text-[#191539] hover:bg-[#f7f5ff]"}
+              >
+                <span aria-hidden="true">⚙️</span> {labels.settings}
               </Link>
               {isAdmin && (
                 <Link
