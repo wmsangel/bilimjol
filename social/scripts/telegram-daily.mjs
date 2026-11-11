@@ -22,6 +22,7 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { POSTS } from "../posts.js";
+import { REELS } from "../reels.js";
 import { DOW, storyForDay } from "../plan.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -63,6 +64,18 @@ function mediaInfo(post, lang) {
   const parts = [`📅 ${post.day} · ${fmtName(post.format)} → bilimjol.com/ru${post.page}`];
   if (post.sticker) parts.push(`🎯 Стикер в IG: ${post.sticker[lang] || post.sticker.ru}`);
   return parts.join("\n\n");
+}
+
+// Рилс (видео) дня — по дню недели из reels.js. Отдельный трек от сторис/ленты.
+const reelForDay = (day) => REELS.find((r) => r.day === day) ?? null;
+const reelPath = (id, lang) => join(OUT, "reels", `${id}-${lang}.mp4`);
+
+// Подпись к рилсу для копипаста (вопрос + призыв + хэштеги).
+function reelCaption(r, lang) {
+  const q = r.question?.[lang] ?? r.question?.ru ?? "";
+  const cta = r.cta?.[lang] ?? r.cta?.ru ?? "";
+  const tags = "#bilimjol #математика #задачка #детиучеба #родителидети #кыргызстан #бишкек";
+  return `Решите быстрее, чем ребёнок? 🧠\n\n${q} — ответ в видео.\n\n${cta}, бесплатно — ссылка в профиле.\n\n${tags}`;
 }
 
 async function tg(bot, method, form) {
@@ -166,41 +179,62 @@ if (process.argv.includes("--profile")) {
 }
 const arg = process.argv[2];
 const today = DOW[new Date().getDay()];
-// Без id — сторис дня из последней недели (storyForDay), шлём КАЖДЫЙ день.
-// Посты/карусели ленты публикуются автопостером через Chrome отдельно; сторис
-// грузит владелец (через веб их не загрузить). Ручной запуск с id — любой формат.
-const post = arg
-  ? POSTS.find((p) => p.id === arg)
-  : storyForDay(today);
+const primary = lang === "ky" ? "ky" : "ru";
 
-if (!post) {
-  console.log(arg ? `Пост «${arg}» не найден.` : `На ${today} сторис в плане нет.`);
-  process.exit(0);
+// Отправка рилса (видео + подпись для копипаста).
+async function sendReelFor(r) {
+  const mp4 = reelPath(r.id, primary);
+  if (!existsSync(mp4)) {
+    console.log(`Рилс ${r.id}: нет файла (сгенерить: node scripts/social-reels.mjs).`);
+    return;
+  }
+  await sendVideo(bot, chat, mp4, `🎬 Рилс дня · ${r.day} → bilimjol.com/ru${r.page}`);
+  await sendText(bot, chat, reelCaption(r, primary));
+  console.log(`Отправлен рилс: ${r.day} (${r.id})`);
 }
 
-const primary = lang === "ky" ? "ky" : "ru";
+// Ручной запуск с id: сначала ищем среди рилсов (reels.js), затем среди постов.
+if (arg) {
+  const reel = REELS.find((r) => r.id === arg);
+  if (reel) {
+    try { await sendReelFor(reel); } catch (e) { console.error("Telegram ошибка:", e.message); process.exit(1); }
+    process.exit(0);
+  }
+}
+
+// Сторис дня (без id — storyForDay, каждый день). Ручной id — пост по id (тест).
+const post = arg ? POSTS.find((p) => p.id === arg) : storyForDay(today);
 const mediaLangs = lang === "both" ? ["ru", "ky"] : [primary];
-const info = mediaInfo(post, primary);
-const video = post.video ? join(ROOT, post.video) : null;
-// Служебную инфу вешаем ТОЛЬКО на первое вложение; остальные — без подписи.
-let infoUsed = false;
-const nextCaption = () => (infoUsed ? "" : ((infoUsed = true), info));
 
 try {
-  // 1) Медиа. Контекст (день/ссылка/стикер) — подписью под первым вложением.
-  if (video && existsSync(video)) {
-    await sendVideo(bot, chat, video, nextCaption());
+  // 1) Сторис/пост дня: медиа + контекст (день/ссылка/стикер) под первым вложением.
+  if (post) {
+    const info = mediaInfo(post, primary);
+    const video = post.video ? join(ROOT, post.video) : null;
+    let infoUsed = false;
+    const nextCaption = () => (infoUsed ? "" : ((infoUsed = true), info));
+    if (video && existsSync(video)) await sendVideo(bot, chat, video, nextCaption());
+    for (const l of mediaLangs) {
+      const slides = slidesFor(post.id, l);
+      if (!slides.length) continue;
+      if (slides.length > 1) await sendAlbum(bot, chat, slides, nextCaption());
+      else await sendPhoto(bot, chat, slides[0], nextCaption());
+    }
+    const caption = cleanCaption(post, primary);
+    if (caption) await sendText(bot, chat, caption);
+    console.log(`Отправлено: ${today} · ${post.rubric} (${post.id})`);
+  } else if (arg) {
+    console.log(`«${arg}» не найден ни в reels.js, ни в posts.js.`);
+  } else {
+    console.log(`На ${today} сторис нет.`);
   }
-  for (const l of mediaLangs) {
-    const slides = slidesFor(post.id, l);
-    if (!slides.length) continue;
-    if (slides.length > 1) await sendAlbum(bot, chat, slides, nextCaption());
-    else await sendPhoto(bot, chat, slides[0], nextCaption());
+
+  // 2) На автозапуске (без id) — ещё и рилс дня (отдельный трек).
+  if (!arg) {
+    const reel = reelForDay(today);
+    if (reel) await sendReelFor(reel);
+    else console.log(`На ${today} рилса нет.`);
   }
-  // 2) ОТДЕЛЬНОЕ сообщение — только текст поста + хэштеги. Копируешь целиком.
-  const caption = cleanCaption(post, primary);
-  if (caption) await sendText(bot, chat, caption);
-  console.log(`Отправлено в Telegram: ${today} · ${post.rubric} (${post.id})`);
 } catch (e) {
   console.error("Telegram ошибка:", e.message);
   process.exit(1);
