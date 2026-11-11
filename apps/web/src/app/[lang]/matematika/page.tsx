@@ -187,6 +187,17 @@ export default async function MathLandingPage({
                 </span>
               </span>
             </Link>
+            <Link href={`/${lang}/matematika/tablica-umnozheniya`} className={cardLink}>
+              <span className="flex-none text-2xl">✖️</span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold">
+                  {t("Таблица умножения", "Көбөйтүү таблицасы")}
+                </span>
+                <span className="block truncate text-xs text-[#8f8aa8]">
+                  {t("1×1 … 10×10 и тренажёр", "1×1 … 10×10 жана тренажёр")}
+                </span>
+              </span>
+            </Link>
           </div>
         </section>
 
