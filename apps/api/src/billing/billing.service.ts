@@ -21,6 +21,24 @@ const PLAN_DAYS: Record<string, number> = { monthly: 30 };
 // мог бы дёрнуть /billing/checkout напрямую). Разрешаем только с явным флагом.
 const DEV_CHECKOUT_ALLOWED = process.env.ALLOW_DEV_CHECKOUT === "1";
 
+// Свои price_id Paddle. Paddle-аккаунт в сети ОБЩИЙ, и его destination шлёт в наш
+// вебхук ВСЕ subscription.*-события (подписанные нашим секретом) — в т.ч. по чужим
+// проектам. Поэтому обрабатываем только события со своими price_id. Набор задаётся
+// PADDLE_PRICE_IDS (через запятую); ПУСТАЯ строка = ничего не подходит (fail-safe:
+// при пустом наборе лучше не принять ничего, чем принять чужое).
+const DEFAULT_PRICE_IDS = [
+  "pri_01m3bx11sxnp35sth25ptm90ds", // monthly
+  "pri_01m3bx124svzmzasfd2mct47h0", // annual
+];
+export function ownPriceIds(): Set<string> {
+  const raw = process.env.PADDLE_PRICE_IDS;
+  const list =
+    raw !== undefined
+      ? raw.split(",").map((s) => s.trim()).filter(Boolean)
+      : DEFAULT_PRICE_IDS;
+  return new Set(list);
+}
+
 @Injectable()
 export class BillingService {
   constructor(
@@ -217,6 +235,21 @@ export class BillingService {
    * ведём строку Subscription (provider="paddle"), из которой считается премиум.
    * Пользователь ищется по custom_data.userId, переданному при чекауте.
    */
+  /**
+   * Принадлежит ли событие нашему проекту. Общий Paddle-аккаунт сети → фильтруем
+   * по своим price_id. Уже существующая у нас подписка (externalId) — тоже наша
+   * (её price проверили при создании). Пустой набор price_id = ничего не наше.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private ownsEvent(data: any, existing: unknown): boolean {
+    if (existing) return true;
+    const ids = ownPriceIds();
+    if (ids.size === 0) return false;
+    const items = Array.isArray(data?.items) ? data.items : [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return items.some((it: any) => it?.price?.id && ids.has(it.price.id));
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async handlePaddleEvent(event: any): Promise<void> {
     const type: string = event?.event_type ?? "";
@@ -247,6 +280,12 @@ export class BillingService {
     const existing = await this.prisma.subscription.findFirst({
       where: { provider: "paddle", externalId },
     });
+
+    // Принадлежность (общий Paddle-аккаунт сети): обрабатываем только СВОИ
+    // подписки. Проверка ДО чтения данных покупателя (email) и ДО записи —
+    // чужое событие молча игнорируем, не плодя строк и писем по чужим покупкам.
+    if (!this.ownsEvent(data, existing)) return;
+
     const values = {
       status: scheduledCancel ? "canceled" : active ? "active" : "canceled",
       currentPeriodEnd,

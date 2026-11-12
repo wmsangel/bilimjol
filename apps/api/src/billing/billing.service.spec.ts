@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
 // Мокаем серверный Paddle-клиент — тесты не делают реальных вызовов к Paddle.
 // vi.hoisted — чтобы объект был доступен в поднятом вверх vi.mock.
@@ -75,6 +75,11 @@ const notify = { notify: vi.fn(), configured: vi.fn(() => false) };
 function future(days = 30): Date {
   return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
 }
+
+// Свой price_id (из DEFAULT_PRICE_IDS в сервисе) — чтобы события проходили фильтр
+// принадлежности. items с ним = «наша» подписка.
+const OWN_PID = "pri_01m3bx11sxnp35sth25ptm90ds";
+const OWN_ITEMS = [{ price: { id: OWN_PID } }];
 
 function service(prisma: any) {
   return new BillingService(prisma as any, mail as any, notify as any);
@@ -209,7 +214,7 @@ describe("handlePaddleEvent()", () => {
     const prisma = makePrisma([]);
     await service(prisma).handlePaddleEvent({
       event_type: "subscription.activated",
-      data: { id: "sub_9", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: [] },
+      data: { id: "sub_9", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: OWN_ITEMS },
     });
     expect(prisma.__store[0]).toMatchObject({ userId: "u1", provider: "paddle", externalId: "sub_9", status: "active" });
   });
@@ -261,7 +266,7 @@ describe("оповещения владельцу (Telegram)", () => {
     const prisma = makePrisma([]);
     await service(prisma).handlePaddleEvent({
       event_type: "subscription.activated",
-      data: { id: "sub_7", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: [] },
+      data: { id: "sub_7", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: OWN_ITEMS },
     });
     expect(notify.notify).toHaveBeenCalled();
     expect(String(notify.notify.mock.calls[0][0])).toContain("Оплата");
@@ -271,7 +276,7 @@ describe("оповещения владельцу (Telegram)", () => {
     const prisma = makePrisma([]);
     await service(prisma).handlePaddleEvent({
       event_type: "subscription.activated",
-      data: { id: "sub_8", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: [] },
+      data: { id: "sub_8", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: OWN_ITEMS },
     });
     expect(mail.sendPremiumActivated).toHaveBeenCalled();
   });
@@ -286,6 +291,56 @@ describe("оповещения владельцу (Telegram)", () => {
     });
     expect(notify.notify).toHaveBeenCalled();
     expect(String(notify.notify.mock.calls[0][0])).toContain("Отмена");
+  });
+});
+
+describe("принадлежность события (общий Paddle-аккаунт сети)", () => {
+  const savedEnv = process.env.PADDLE_PRICE_IDS;
+  afterEach(() => {
+    if (savedEnv === undefined) delete process.env.PADDLE_PRICE_IDS;
+    else process.env.PADDLE_PRICE_IDS = savedEnv;
+  });
+
+  it("пустая конфигурация price_id → ничего не подходит (fail-safe)", async () => {
+    process.env.PADDLE_PRICE_IDS = "";
+    const prisma = makePrisma([]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.activated",
+      data: { id: "sub_x", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: OWN_ITEMS },
+    });
+    expect(prisma.__store.length).toBe(0);
+  });
+
+  it("чужой price_id → игнор ДО чтения данных покупателя (нет строки, нет писем)", async () => {
+    const prisma = makePrisma([]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.activated",
+      data: { id: "sub_foreign", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: [{ price: { id: "pri_other_project_foreign" } }] },
+    });
+    expect(prisma.__store.length).toBe(0);
+    expect(mail.sendPremiumActivated).not.toHaveBeenCalled();
+    expect(notify.notify).not.toHaveBeenCalled();
+    expect(prisma.user.findUnique).not.toHaveBeenCalled();
+  });
+
+  it("свой price_id → подписка создаётся", async () => {
+    const prisma = makePrisma([]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.activated",
+      data: { id: "sub_own", status: "active", custom_data: { userId: "u1" }, current_billing_period: { ends_at: future().toISOString() }, items: OWN_ITEMS },
+    });
+    expect(prisma.__store.length).toBe(1);
+  });
+
+  it("событие по уже существующей нашей подписке проходит без price_id (апдейт/отмена)", async () => {
+    const prisma = makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "active", provider: "paddle", externalId: "sub_known", currentPeriodEnd: future() },
+    ]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.canceled",
+      data: { id: "sub_known", status: "canceled", custom_data: { userId: "u1" }, items: [] },
+    });
+    expect(prisma.__store[0].status).toBe("canceled");
   });
 });
 
