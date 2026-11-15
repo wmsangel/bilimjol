@@ -49,8 +49,8 @@ export async function generateMetadata({
   const article = getArticle(slug);
   if (!isLocale(lang) || !article) return {};
   return {
-    title: `${article.title[lang]} — Bilimjol`,
-    description: article.excerpt[lang],
+    title: article.metaTitle?.[lang] ?? `${article.title[lang]} — Bilimjol`,
+    description: article.metaDescription?.[lang] ?? article.excerpt[lang],
     alternates: localizedAlternates(lang, `/articles/${slug}`),
   };
 }
