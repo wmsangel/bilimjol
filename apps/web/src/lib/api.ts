@@ -86,15 +86,21 @@ export function saveChildId(id: string) {
   window.localStorage.setItem(CHILD_KEY, id);
 }
 
-async function tryRefresh(): Promise<boolean> {
+async function doRefresh(): Promise<boolean> {
   const auth = loadAuth();
-  if (!auth) return false;
+  if (!auth?.refreshToken) return false;
+  const usedToken = auth.refreshToken;
   const res = await fetch(`${BASE}/auth/refresh`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refreshToken: auth.refreshToken }),
+    body: JSON.stringify({ refreshToken: usedToken }),
   });
   if (!res.ok) {
+    // Защита от кросс-таб гонки: другой контекст (вкладка) мог уже обновить
+    // токен по ротации — тогда в общем localStorage лежит ДРУГОЙ refresh-токен.
+    // Не роняем сессию, если токен уже сменился не нами.
+    const now = loadAuth();
+    if (now && now.refreshToken !== usedToken) return true;
     clearAuth();
     return false;
   }
@@ -104,6 +110,21 @@ async function tryRefresh(): Promise<boolean> {
   };
   saveAuth({ ...auth, ...data });
   return true;
+}
+
+// Single-flight. Сервер ротирует refresh-токен (одноразовый: /auth/refresh
+// ревокает старый и выдаёт новый). Когда access-токен истекает, страница шлёт
+// несколько запросов разом — все получают 401 и зовут refresh. Без общей блокировки
+// параллельные вызовы уходят со СТАРЫМ токеном: первый его ревокает, остальные
+// падают → clearAuth → пользователя выкидывает. Делаем ОДИН refresh на всех ждущих.
+let refreshInFlight: Promise<boolean> | null = null;
+async function tryRefresh(): Promise<boolean> {
+  if (!refreshInFlight) {
+    refreshInFlight = doRefresh().finally(() => {
+      refreshInFlight = null;
+    });
+  }
+  return refreshInFlight;
 }
 
 async function request<T>(
