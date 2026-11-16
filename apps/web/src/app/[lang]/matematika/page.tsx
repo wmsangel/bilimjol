@@ -198,6 +198,17 @@ export default async function MathLandingPage({
                 </span>
               </span>
             </Link>
+            <Link href={`/${lang}/matematika/logika-dlya-detej`} className={cardLink}>
+              <span className="flex-none text-2xl">🧩</span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold">
+                  {t("Логика для детей 5–6 лет", "5–6 жашка логика")}
+                </span>
+                <span className="block truncate text-xs text-[#8f8aa8]">
+                  {t("задания и игры для дошкольников", "мектепке чейинкилерге тапшырма жана оюн")}
+                </span>
+              </span>
+            </Link>
           </div>
         </section>
 
