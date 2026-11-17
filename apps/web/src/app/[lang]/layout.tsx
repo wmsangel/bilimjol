@@ -96,11 +96,6 @@ export default async function RootLayout({
   var host=location.hostname;
   if(host!=='bilimjol.com'&&host!=='www.bilimjol.com')return;
 
-  // Google AdSense — ТОЛЬКО скрипт верификации владения сайтом (pub-5535516142831006).
-  // Рекламные блоки не ставим до одобрения. Сайт child-directed → после одобрения
-  // реклама только неперсонализированная (ad_personalization уже denied в Consent Mode).
-  var ad=document.createElement('script');ad.async=true;ad.crossOrigin='anonymous';ad.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5535516142831006';document.head.appendChild(ad);
-
   // EEA/UK/CH — коды стран (для Consent Mode и для гейта Метрики по /cdn-cgi/trace)
   var eea=['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'];
 
