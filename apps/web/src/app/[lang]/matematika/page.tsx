@@ -209,6 +209,17 @@ export default async function MathLandingPage({
                 </span>
               </span>
             </Link>
+            <Link href={`/${lang}/matematika/rabochie-listy`} className={cardLink}>
+              <span className="flex-none text-2xl">🖨️</span>
+              <span className="min-w-0">
+                <span className="block text-sm font-bold">
+                  {t("Рабочие листы для печати", "Басып чыгаруучу барактар")}
+                </span>
+                <span className="block truncate text-xs text-[#8f8aa8]">
+                  {t("примеры с ответами, PDF", "жооптору менен мисалдар, PDF")}
+                </span>
+              </span>
+            </Link>
           </div>
         </section>
 
