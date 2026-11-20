@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { tests, type Locale } from "@izn-study/shared";
 import { GAME_META } from "@/lib/classGames";
+import { StudioCredit } from "@/components/StudioCredit";
 
 const CONTACT = process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "wmsangel@gmail.com";
 
@@ -103,8 +104,10 @@ export function SiteFooter({ lang }: { lang: Locale }) {
         </div>
       </div>
       <div className="border-t border-[#efecff]">
-        <div className="mx-auto max-w-6xl px-6 py-5 text-xs text-[#5c5880]">
-          © {new Date().getFullYear()} Bilimjol · {t.rights}
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-2 gap-y-1 px-6 py-5 text-xs text-[#5c5880]">
+          <span>© {new Date().getFullYear()} Bilimjol · {t.rights}</span>
+          <span aria-hidden="true" className="text-[#c9c4e0]">·</span>
+          <StudioCredit lang={lang} />
         </div>
       </div>
     </footer>
