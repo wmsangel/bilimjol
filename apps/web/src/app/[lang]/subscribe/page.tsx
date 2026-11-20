@@ -6,6 +6,7 @@ import { localizedAlternates, productJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { SubscribePlans } from "@/components/SubscribePlans";
+import { Faq } from "@/components/Faq";
 import { getDictionary } from "../dictionaries";
 
 export async function generateMetadata({
@@ -32,6 +33,38 @@ export default async function SubscribePage({
   if (!isLocale(lang)) notFound();
   const dict = await getDictionary(lang);
   const s = dict.subscribe;
+  const t = (ru: string, ky: string) => (lang === "ky" ? ky : ru);
+
+  const faq = [
+    {
+      q: t("Как оплатить из Кыргызстана?", "Кыргызстандан кантип төлөйм?"),
+      a: t(
+        "Если карта не проходит онлайн, можно оплатить по QR-коду — напишите нам в Telegram @izagorodnyi, пришлём QR и включим доступ вручную. Онлайн-оплата идёт через Paddle (Visa/Mastercard).",
+        "Эгер карта онлайн өтпөй жатса, QR-код менен төлөсө болот — Telegram @izagorodnyi дарегине жазыңыз, QR жөнөтүп, кирүүнү кол менен күйгүзөбүз. Онлайн төлөм Paddle аркылуу (Visa/Mastercard).",
+      ),
+    },
+    {
+      q: t("А если ребёнку не понравится?", "Эгер балага жакпай калса?"),
+      a: t(
+        "Есть 7 дней на возврат: если не подошло — напишите нам, вернём деньги через Paddle. Плюс большую часть заданий можно попробовать бесплатно до оплаты.",
+        "Кайтарууга 7 күн бар: туура келбесе — бизге жазыңыз, Paddle аркылуу акчаны кайтарабыз. Ошондой эле тапшырмалардын көбүн төлөөдөн мурда акысыз сынап көрсө болот.",
+      ),
+    },
+    {
+      q: t("Подписка на одного ребёнка или на всю семью?", "Жазылуу бир балагабы же бүт үй-бүлөгөбү?"),
+      a: t(
+        "Одна подписка открывает все задания в аккаунте — заниматься могут несколько детей по очереди на одном устройстве или на разных, войдя в тот же аккаунт.",
+        "Бир жазылуу аккаунттагы бардык тапшырмаларды ачат — бир нече бала кезекпе-кезек бир түзмөктө же ошол эле аккаунтка кирип, башка түзмөктө иштесе болот.",
+      ),
+    },
+    {
+      q: t("Как отменить подписку?", "Жазылууну кантип токтотом?"),
+      a: t(
+        "В любой момент в личном кабинете (раздел «Подписка») — одной кнопкой, без звонков и писем. Доступ остаётся до конца оплаченного периода.",
+        "Каалаган убакта жеке кабинетте («Жазылуу» бөлүмү) — бир баскыч менен, чалуусуз, катсыз. Кирүү төлөнгөн мөөнөттүн аягына чейин сакталат.",
+      ),
+    },
+  ];
 
   return (
     <div className="flex flex-1 flex-col bg-[#f7f5ff] font-sans text-[#191539]">
@@ -86,6 +119,10 @@ export default async function SubscribePage({
               </Link>
             </div>
           </div>
+        </div>
+
+        <div className="mx-auto max-w-2xl">
+          <Faq title={t("Частые вопросы", "Көп берилүүчү суроолор")} items={faq} />
         </div>
       </main>
     </div>

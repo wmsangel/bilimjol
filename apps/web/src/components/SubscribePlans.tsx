@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ApiError, getEntitlement, guestStart, isLoggedIn, loadAuth } from "@/lib/api";
-import { pushEvent } from "@/lib/gtm";
+import { pushEvent, sendGa4Event } from "@/lib/gtm";
 import { loadLastGrade } from "@/lib/prefs";
 import { PADDLE_PLANS, openPaddleCheckout, type PlanKey } from "@/lib/paddle";
 import { approxLocal } from "@/lib/pricing";
@@ -164,8 +164,12 @@ export function SubscribePlans({
         locale,
         onComplete: () => pollEntitlement(),
       });
+      // Оверлей Paddle открылся — отдельное событие воронки (checkout_open),
+      // чтобы видеть, сколько доходит до самой оплаты (а не только клика).
+      sendGa4Event("checkout_open", { plan: selected.key, source: "subscribe_page" });
     } catch {
       setCheckoutFailed(true);
+      sendGa4Event("checkout_error", { plan: selected.key, source: "subscribe_page" });
     }
     setPaying(false);
   }
@@ -202,6 +206,7 @@ export function SubscribePlans({
         locale,
         onComplete: () => pollEntitlement(),
       });
+      sendGa4Event("checkout_open", { plan: selected.key, source: "subscribe_guest" });
     } catch (e) {
       if (e instanceof ApiError && e.status === 409) {
         setGuestError(
@@ -212,6 +217,7 @@ export function SubscribePlans({
         );
       } else {
         setCheckoutFailed(true);
+        sendGa4Event("checkout_error", { plan: selected.key, source: "subscribe_guest" });
         setGuestError(
           t("Не удалось начать оплату", "Төлөмдү баштоо мүмкүн болбоду"),
         );
@@ -400,6 +406,51 @@ export function SubscribePlans({
             ))}
           </div>
         </>
+      )}
+
+      {/* Блок доверия — пока подписка не активна. Главное для КГ-аудитории:
+          оплата по QR через Telegram (карты КГ часто не проходят в Paddle). */}
+      {status !== "active" && (
+        <ul className="relative mt-6 space-y-2.5 border-t border-white/10 pt-5 text-sm text-[#d9d5f5]">
+          <li className="flex items-start gap-2.5">
+            <span className="flex-none">🇰🇬</span>
+            <span>
+              {t("Оплата из Кыргызстана", "Кыргызстандан төлөм")} —{" "}
+              {t("по QR-коду:", "QR-код менен:")}{" "}
+              <a
+                href={ADMIN_TG}
+                target="_blank"
+                rel="noopener"
+                onClick={() => sendGa4Event("qr_contact_click", { source: "subscribe_trust" })}
+                className="font-bold text-[#e6c079] underline underline-offset-2 transition hover:text-white"
+              >
+                {t("напишите нам в Telegram", "Telegram'га жазыңыз")}
+              </a>
+              .
+            </span>
+          </li>
+          <li className="flex items-start gap-2.5">
+            <span className="flex-none">🔄</span>
+            <span>
+              {t("Отменить можно в любой момент в ", "Каалаган убакта ")}
+              <Link
+                href={`/${locale}/billing`}
+                className="font-bold text-[#e6c079] underline underline-offset-2 transition hover:text-white"
+              >
+                {t("личном кабинете", "жеке кабинеттен")}
+              </Link>
+              {t(" — без звонков и писем.", " токтотсо болот — чалуусуз, катсыз.")}
+            </span>
+          </li>
+          <li className="flex items-start gap-2.5">
+            <span className="flex-none">🔒</span>
+            <span>{t("Безопасная оплата через Paddle — данные карты не храним.", "Paddle аркылуу коопсуз төлөм — картанын маалыматын сактабайбыз.")}</span>
+          </li>
+          <li className="flex items-start gap-2.5">
+            <span className="flex-none">↩️</span>
+            <span>{t("7 дней на возврат — вернём деньги, если не подошло.", "Кайтарууга 7 күн — туура келбесе, акчаны кайтарабыз.")}</span>
+          </li>
+        </ul>
       )}
 
       <p className="relative mt-5 text-center text-sm text-[#b9b3e6]">
