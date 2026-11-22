@@ -36,14 +36,31 @@ function withItem(
   return out;
 }
 
+// Сетевой маячок без куки (izn-beacon, b.izntools.com). Дублирует события в
+// Cloudflare Analytics Engine для ВСЕХ посетителей (GA4 ловит только принявших
+// куки). Очередь iznTrackQ обязательна: события на SPA уходят при гидрации,
+// раньше загрузки b.js, и без очереди теряются. Маячок шлёт только с хостов сети
+// (с localhost/preview Worker отвечает 403), поэтому гейт на хост не нужен.
+function iznBeacon(event: string, payload: Record<string, DataLayerValue>): void {
+  if (typeof window === "undefined") return;
+  const w = window as unknown as {
+    iznTrack?: (e: string, p?: Record<string, unknown>) => void;
+    iznTrackQ?: unknown[];
+  };
+  if (typeof w.iznTrack === "function") w.iznTrack(event, payload);
+  else (w.iznTrackQ = w.iznTrackQ || []).push([event, payload]);
+}
+
 export function pushEvent(
   event: string,
   params: Record<string, DataLayerValue> = {},
 ): void {
   if (typeof window === "undefined") return;
+  const payload = withItem(params);
   const w = window as unknown as { dataLayer?: Record<string, unknown>[] };
   w.dataLayer = w.dataLayer || [];
-  w.dataLayer.push({ event, ...withItem(params) });
+  w.dataLayer.push({ event, ...payload });
+  iznBeacon(event, payload);
 }
 
 // Отправка события НАПРЯМУЮ в GA4 через gtag. Нужна для событий, у которых нет
@@ -68,6 +85,7 @@ export function sendGa4Event(
   if (typeof window === "undefined") return;
   const w = window as unknown as { gtag?: (...a: unknown[]) => void };
   const payload = withItem(params);
+  iznBeacon(event, payload);
   const fire = () => w.gtag?.("event", event, payload);
   if (typeof w.gtag === "function") {
     fire();

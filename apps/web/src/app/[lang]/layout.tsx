@@ -211,6 +211,14 @@ export default async function RootLayout({
           src="https://static.cloudflareinsights.com/beacon.min.js"
           data-cf-beacon={'{"token": "b7369430f6c04d69a5910f34ac6e2395"}'}
         />
+        {/* Сетевой маячок событий без куки (izn-beacon). Считает действия для ВСЕХ
+            посетителей (не только принявших куки в GA4). Вызовы — через iznBeacon()
+            в src/lib/gtm.ts, рядом с gtag. Шлёт только с хостов сети (localhost → 403). */}
+        <Script
+          id="izn-beacon"
+          strategy="afterInteractive"
+          src="https://b.izntools.com/b.js"
+        />
       </body>
     </html>
   );
