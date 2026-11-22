@@ -6,6 +6,7 @@ import { localizedAlternates, productJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { SubscribePlans } from "@/components/SubscribePlans";
+import { PremiumPeek } from "@/components/PremiumPeek";
 import { Faq } from "@/components/Faq";
 import { getDictionary } from "../dictionaries";
 
@@ -100,10 +101,12 @@ export default async function SubscribePage({
                 </div>
               ))}
             </div>
+
+            <PremiumPeek lang={lang} plansHref="#plans" />
           </div>
 
           {/* Правая колонка: тарифная карточка */}
-          <div className="lg:sticky lg:top-6">
+          <div id="plans" className="scroll-mt-6 lg:sticky lg:top-6">
             <SubscribePlans
               labels={s}
               locale={lang}
