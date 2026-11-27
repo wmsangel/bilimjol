@@ -30,6 +30,11 @@ export async function resumeSubscriptionFlow(opts: {
   source: string;
   /** Подписка снова активна — обновить экран. */
   onActive: () => void;
+  /**
+   * Открыт новый чекаут: сервер уже выровнял подписку по Paddle (она закрыта,
+   * доступ мог закончиться) — перечитать состояние, не дожидаясь оплаты.
+   */
+  onCheckoutOpened?: () => void;
 }): Promise<"resumed" | "checkout"> {
   sendGa4Event("cta_click", { placement: "subscription-resume", item: opts.source });
   const res = await resumeSubscription();
@@ -65,5 +70,6 @@ export async function resumeSubscriptionFlow(opts: {
     },
   });
   sendGa4Event("checkout_open", { plan: selected.key, source: "subscription-resume" });
+  opts.onCheckoutOpened?.();
   return "checkout";
 }

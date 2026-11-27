@@ -109,6 +109,7 @@ export function Billing({
         plan,
         source: "billing",
         onActive: () => void load(),
+        onCheckoutOpened: () => void load(),
       });
     } catch {
       setError(
@@ -313,14 +314,15 @@ export function Billing({
         {/* Управление (только когда задан серверный Paddle-ключ) */}
         {canManage && (
           <div className="mt-5 flex flex-wrap gap-3">
-            <button
+            {/* Смена карты имеет смысл только у действующей подписки. */}
+            {sub.active && <button
               type="button"
               disabled={busy}
               onClick={onChangeCard}
               className="rounded-full border-2 border-[#6d5cf7] px-5 py-2.5 text-sm font-extrabold text-[#6d5cf7] transition hover:bg-[#f1eefe] disabled:opacity-50"
             >
               {t("Сменить карту", "Картаны алмаштыруу")}
-            </button>
+            </button>}
             {canCancel &&
               (confirmCancel ? (
                 <span className="inline-flex items-center gap-2">

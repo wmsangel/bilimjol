@@ -464,12 +464,41 @@ describe("resume() — возобновление отменённой подп�
     expect(prisma.__store[0].status).toBe("active");
   });
 
-  it("в Paddle подписка окончательно отменена → mode checkout, Paddle не трогаем, локальную строку не меняем", async () => {
+  it("в Paddle подписка окончательно отменена → mode checkout, Paddle не трогаем", async () => {
     paddle.getSubscriptionState.mockResolvedValueOnce({ status: "canceled", scheduledAction: null, periodEnd: null, canceledAt: new Date().toISOString() });
     const prisma = canceledLocal();
     const res = await service(prisma).resume("u1");
     expect(res.mode).toBe("checkout");
     expect(paddle.removeScheduledChange).not.toHaveBeenCalled();
+  });
+
+  it("закрыта в Paddle раньше локального конца доступа («лишний месяц») → доступ выравнивается по дате отмены, премиум снимается", async () => {
+    const canceledAt = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000); // отменена 2 дня назад
+    paddle.getSubscriptionState.mockResolvedValueOnce({ status: "canceled", scheduledAction: null, periodEnd: null, canceledAt: canceledAt.toISOString() });
+    const prisma = canceledLocal(); // локально «доступ ещё 10 дней»
+    const res = await service(prisma).resume("u1");
+    expect(res.mode).toBe("checkout");
+    expect(+prisma.__store[0].currentPeriodEnd).toBe(+canceledAt);
+    expect(prisma.__store[0].status).toBe("canceled");
+    const ent: any = await service(prisma).entitlement("u1");
+    expect(ent.premium).toBe(false);
+    const info: any = await service(prisma).subscription("u1");
+    expect(info.active).toBe(false);
+    expect(info.cancelAtPeriodEnd).toBe(false);
+  });
+
+  it("дата отмены в Paddle позже локального конца доступа → локальную строку не продлеваем", async () => {
+    paddle.getSubscriptionState.mockResolvedValueOnce({ status: "canceled", scheduledAction: null, periodEnd: null, canceledAt: future(20).toISOString() });
+    const prisma = canceledLocal();
+    await service(prisma).resume("u1");
+    expect(prisma.subscription.update).not.toHaveBeenCalled();
+  });
+
+  it("Paddle не прислал дату отмены → локальную строку не трогаем", async () => {
+    paddle.getSubscriptionState.mockResolvedValueOnce({ status: "canceled", scheduledAction: null, periodEnd: null, canceledAt: null });
+    const prisma = canceledLocal();
+    const res = await service(prisma).resume("u1");
+    expect(res.mode).toBe("checkout");
     expect(prisma.subscription.update).not.toHaveBeenCalled();
   });
 

@@ -187,7 +187,8 @@ export class BillingService {
    *    снимаем запланированную отмену, денег не списываем, график прежний
    *    (mode "resumed");
    *  - подписка в Paddle уже окончательно canceled → вернуть её нельзя, нужен
-   *    новый чекаут (mode "checkout", его открывает веб).
+   *    новый чекаут (mode "checkout", его открывает веб); локальный конец доступа
+   *    при этом выравнивается по моменту отмены в Paddle.
    * past_due/paused автоматически не трогаем: там живая подписка с долгом, второй
    * чекаут дал бы двойное списание.
    */
@@ -217,6 +218,20 @@ export class BillingService {
     }
 
     if (remote.status === "canceled") {
+      // Подписка в Paddle уже закрыта. Выравниваем локальную строку по Paddle:
+      // доступ не может длиться дольше момента отмены (старые строки могли
+      // получить лишний месяц из-за прежней ошибки вебхука). Раньше — не трогаем.
+      const canceledAt = remote.canceledAt ? new Date(remote.canceledAt) : null;
+      if (
+        canceledAt &&
+        !Number.isNaN(+canceledAt) &&
+        canceledAt < sub.currentPeriodEnd
+      ) {
+        await this.prisma.subscription.update({
+          where: { id: sub.id },
+          data: { status: "canceled", currentPeriodEnd: canceledAt },
+        });
+      }
       return { ok: true, mode: "checkout", until: null };
     }
 

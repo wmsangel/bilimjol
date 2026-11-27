@@ -166,6 +166,20 @@ export function SubscribePlans({
           setCanceling(false);
           setResumed(true);
         },
+        // Подписка в Paddle оказалась закрытой: сервер выровнял доступ. Если
+        // премиума больше нет — показываем обычную карточку оформления.
+        onCheckoutOpened: () => {
+          getEntitlement()
+            .then((e) => {
+              if (!e.premium) {
+                setCanceling(false);
+                setStatus("available");
+              } else {
+                setUntil(e.until);
+              }
+            })
+            .catch(() => undefined);
+        },
       });
     } catch {
       setResumeError(true);
