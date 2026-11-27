@@ -6,7 +6,8 @@ import { localizedAlternates, productJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/SiteHeader";
 import { JsonLd } from "@/components/JsonLd";
 import { SubscribePlans } from "@/components/SubscribePlans";
-import { PremiumPeek } from "@/components/PremiumPeek";
+import { SubscribeBenefits } from "@/components/SubscribeBenefits";
+import { premiumStats } from "@/lib/premiumStats";
 import { Faq } from "@/components/Faq";
 import { getDictionary } from "../dictionaries";
 
@@ -35,6 +36,7 @@ export default async function SubscribePage({
   const dict = await getDictionary(lang);
   const s = dict.subscribe;
   const t = (ru: string, ky: string) => (lang === "ky" ? ky : ru);
+  const st = premiumStats();
 
   const faq = [
     {
@@ -78,9 +80,12 @@ export default async function SubscribePage({
       />
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
-        <div className="grid items-start gap-10 lg:grid-cols-[1fr_420px]">
-          {/* Левая колонка: описание + выгоды */}
-          <div>
+        {/* Сетка из трёх блоков. На телефоне порядок: цифры → карточка оплаты →
+            подробности (кнопка оплаты не должна уезжать на четвёртый экран). На
+            десктопе: слева цифры и подробности, справа липкая карточка. */}
+        <div className="grid gap-x-10 gap-y-8 lg:grid-cols-[1fr_420px] lg:gap-y-0">
+          {/* Слева сверху: заголовок + «что прибавится» */}
+          <div className="lg:col-start-1 lg:row-start-1">
             <span className="inline-block rounded-full bg-[#fbf3e3] px-3.5 py-1.5 text-sm font-extrabold text-[#7a5a1e]">
               ⭐ Premium
             </span>
@@ -88,25 +93,18 @@ export default async function SubscribePage({
               {s.title}
             </h1>
             <p className="mt-3 max-w-xl text-lg leading-relaxed text-[#5c5880]">
-              {s.subtitle}
+              {t(
+                `Все ${st.totalTasks} заданий и ${st.totalGames} игр без блокировок — одной подпиской. Отмена в любой момент.`,
+                `Бардык ${st.totalTasks} тапшырма жана ${st.totalGames} оюн бөгөтсүз — бир жазылуу менен. Каалаган убакта токтотсо болот.`,
+              )}
             </p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              {s.benefits.map((b) => (
-                <div
-                  key={b}
-                  className="flex items-start gap-3 rounded-[20px] bg-white p-4 text-[15px] font-bold shadow-[0_8px_24px_rgba(25,21,57,.05)]"
-                >
-                  <span className="font-extrabold text-[#6d5cf7]">✓</span>
-                  <span>{b}</span>
-                </div>
-              ))}
-            </div>
 
-            <PremiumPeek lang={lang} plansHref="#plans" />
+            <SubscribeBenefits lang={lang} part="stats" />
           </div>
 
-          {/* Правая колонка: тарифная карточка */}
-          <div id="plans" className="scroll-mt-6 lg:sticky lg:top-6">
+          {/* Тарифная карточка: на десктопе — правая колонка на всю высоту, липкая */}
+          <div id="plans" className="scroll-mt-20 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+            <div className="lg:sticky lg:top-6">
             <SubscribePlans
               labels={s}
               locale={lang}
@@ -121,6 +119,12 @@ export default async function SubscribePage({
                 {s.back}
               </Link>
             </div>
+            </div>
+          </div>
+
+          {/* Слева снизу: сравнение, годовой тариф, страны и способы оплаты */}
+          <div className="lg:col-start-1 lg:row-start-2">
+            <SubscribeBenefits lang={lang} part="details" />
           </div>
         </div>
 

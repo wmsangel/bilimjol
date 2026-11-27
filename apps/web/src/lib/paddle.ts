@@ -2,6 +2,8 @@
 // только когда пользователь реально открывает оплату. Client-side token
 // публичный, его место в коде/публичном env.
 
+import { sendGa4Event } from "@/lib/gtm";
+
 const CLIENT_TOKEN =
   process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN ?? "live_52deec23f0e08b3924d37cb3525";
 const PADDLE_ENV = process.env.NEXT_PUBLIC_PADDLE_ENV ?? "production";
@@ -34,6 +36,36 @@ export const PADDLE_PLANS: {
 ];
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+// Шаги внутри оверлея Paddle → событие воронки checkout_step{item}. Нужны, чтобы
+// видеть, ГДЕ уходят после открытия чекаута (не загрузился / не выбрали способ /
+// платёж отклонён / закрыли). Персональных данных не шлём: только шаг, тип
+// способа оплаты (card, paypal…) и код ошибки. Email, имя, адрес из события НЕ берём.
+const CHECKOUT_STEPS: Record<string, string> = {
+  "checkout.loaded": "loaded",
+  "checkout.customer.created": "customer_created",
+  "checkout.payment.selected": "payment_selected",
+  "checkout.payment.initiated": "payment_initiated",
+  "checkout.payment.failed": "payment_failed",
+  "checkout.error": "error",
+  "checkout.warning": "warning",
+  "checkout.closed": "closed",
+  "checkout.completed": "completed",
+};
+
+export function trackCheckoutStep(ev: any): void {
+  const name: string = ev?.name ?? ev?.type ?? "";
+  const step = CHECKOUT_STEPS[name];
+  if (!step) return;
+  const method = ev?.data?.payment?.method_details?.type;
+  const code = ev?.code ?? ev?.error?.code ?? ev?.data?.error?.code;
+  sendGa4Event("checkout_step", {
+    item: step,
+    ...(typeof method === "string" ? { method: method.slice(0, 30) } : {}),
+    ...(typeof code === "string" ? { code: code.slice(0, 40) } : {}),
+  });
+}
+
 let loading: Promise<any> | null = null;
 let onCompleteCb: (() => void) | null = null;
 
@@ -52,6 +84,7 @@ function loadPaddle(): Promise<any> {
         P.Initialize({
           token: CLIENT_TOKEN,
           eventCallback: (ev: any) => {
+            trackCheckoutStep(ev);
             if (ev?.name === "checkout.completed") onCompleteCb?.();
           },
         });

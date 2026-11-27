@@ -9,10 +9,8 @@ import { loadLastGrade } from "@/lib/prefs";
 import { PADDLE_PLANS, openPaddleCheckout, type PlanKey } from "@/lib/paddle";
 import { approxLocal } from "@/lib/pricing";
 
-// Запасной путь: если оплата картой недоступна (домен ещё на апруве / Paddle не
-// загрузился) — написать администратору. Переопределяется env.
-const ADMIN_TG =
-  process.env.NEXT_PUBLIC_ADMIN_TELEGRAM ?? "https://t.me/izagorodnyi";
+import { ADMIN_TG } from "@/lib/contacts";
+import { PLAN_EVENT } from "@/components/SubscribeCtas";
 
 export interface SubscribeLabels {
   benefits: string[];
@@ -111,6 +109,7 @@ export function SubscribePlans({
     setEmail(auth?.user.email ?? null);
     setUserId(auth?.user.id ?? null);
     pushEvent("view_subscribe", { grade: loadLastGrade(), lang: locale });
+    sendGa4Event("tool_opened", { tool: "subscription", item: "subscription" });
 
     if (!isLoggedIn()) {
       setStatus("guest");
@@ -136,6 +135,16 @@ export function SubscribePlans({
       })
       .catch(() => setStatus("available"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Призывы на странице («годовой — $1.33/мес» и т. п.) выбирают тариф в карточке.
+  useEffect(() => {
+    const onPlan = (e: Event) => {
+      const p = (e as CustomEvent<string>).detail;
+      if (p === "monthly" || p === "annual") setPlan(p);
+    };
+    window.addEventListener(PLAN_EVENT, onPlan);
+    return () => window.removeEventListener(PLAN_EVENT, onPlan);
   }, []);
 
   // «Возобновить подписку»: сервер либо снимает запланированную отмену (без

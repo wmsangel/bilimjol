@@ -14,10 +14,23 @@ export const PRICE = {
  * Суммы округлены и всегда идут с пометкой «примерно» (курс плавает).
  * TODO: когда в Paddle заведём RUB-оверрайд — синхронизировать суммы.
  */
+// Приблизительные суммы в сомах (ориентир, курс плавает).
+export const APPROX_KGS = { monthly: 175, annual: 1400 } as const;
+
 export function approxLocal(plan: "monthly" | "annual", country?: string | null): string {
   const rub = country?.toUpperCase() === "RU";
-  if (plan === "annual") return rub ? "≈ 1500 ₽" : "≈ 1400 сом";
-  return rub ? "≈ 190 ₽" : "≈ 175 сом";
+  if (plan === "annual") return rub ? "≈ 1500 ₽" : `≈ ${APPROX_KGS.annual} сом`;
+  return rub ? "≈ 190 ₽" : `≈ ${APPROX_KGS.monthly} сом`;
+}
+
+/** Годовой тариф в пересчёте на месяц, USD (15.99 / 12 → "1.33"). */
+export function annualPerMonthUsd(): string {
+  return (PRICE.annual.usd / 12).toFixed(2);
+}
+
+/** Годовой тариф в пересчёте на день, в сомах (≈ 1400 / 365 → 4). */
+export function annualPerDayKgs(): number {
+  return Math.round(APPROX_KGS.annual / 365);
 }
 
 /** Короткий алиас для месячной цены (лендинг). */
