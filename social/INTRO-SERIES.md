@@ -111,7 +111,6 @@
 - Скрипт `scripts/intro-reels.mjs`: ролик 1080×1920 из реального мобильного скриншота прода
   (прокрутка в «телефоне» + подписи) → `out/intro/<id>-<lang>.mp4`. Готовы: `intro-about`,
   `intro-subjects` (RU+KY), по 13,6 с, h264+aac. Остальные темы — добавлять в `REELS`.
-- ffmpeg на этой машине требует `DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/Cellar/x265/4.2/lib`
-  (brew обновил x265 до 4.3, ffmpeg собран под 4.2; чинится `brew reinstall ffmpeg`).
-- Публикация: Chrome 27.11 был залогинен в личный аккаунт, не в @bilimjol → ABORT по AUTOPOST.
-  Нужен Switch accounts → @bilimjol (владелец).
+- ffmpeg починен `brew reinstall ffmpeg` (27.11), обход переменной окружения больше не нужен.
+- Публикация 27.11: Chrome был в личном аккаунте → ABORT; по решению владельца файлы и подписи
+  отправлены ему в Telegram (ops-бот), выкладывает сам.
