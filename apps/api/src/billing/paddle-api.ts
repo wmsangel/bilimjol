@@ -91,8 +91,51 @@ export async function listTransactions(
       // «История списаний» — только реальные состоявшиеся платежи. Отсекаем
       // служебные транзакции на 0.00 (например, смена карты — origin
       // subscription_payment_method_change, статус ready) и незавершённые.
-      .filter((tx) => tx.status === "completed" && Number(tx.amount) > 0)
+      // «paid» — деньги уже списаны, Paddle ещё не довёл транзакцию до completed:
+      // показываем тоже, иначе свежее списание временно пропадает из истории.
+      .filter(
+        (tx) =>
+          (tx.status === "completed" || tx.status === "paid") &&
+          Number(tx.amount) > 0,
+      )
   );
+}
+
+export interface PaddleSubscriptionState {
+  /** active | trialing | past_due | paused | canceled */
+  status: string;
+  /** Запланированное изменение: "cancel" | "pause" | "resume" | null. */
+  scheduledAction: string | null;
+  /** Конец текущего оплаченного периода (null у canceled/paused). */
+  periodEnd: string | null;
+  canceledAt: string | null;
+}
+
+/** Текущее состояние подписки в Paddle (источник истины для «возобновить»). */
+export async function getSubscriptionState(
+  subscriptionId: string,
+): Promise<PaddleSubscriptionState> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const res = (await paddleFetch(`/subscriptions/${subscriptionId}`)) as any;
+  const d = res?.data ?? {};
+  return {
+    status: String(d.status ?? ""),
+    scheduledAction: d.scheduled_change?.action ?? null,
+    periodEnd: d.current_billing_period?.ends_at ?? d.next_billed_at ?? null,
+    canceledAt: d.canceled_at ?? null,
+  };
+}
+
+/**
+ * Снять запланированную отмену (подписка ещё active, отмена стояла на конец
+ * периода). Paddle: PATCH /subscriptions/{id} с scheduled_change: null.
+ * Денег не списывает — следующее списание пройдёт по прежнему графику.
+ */
+export async function removeScheduledChange(subscriptionId: string): Promise<void> {
+  await paddleFetch(`/subscriptions/${subscriptionId}`, {
+    method: "PATCH",
+    body: { scheduled_change: null },
+  });
 }
 
 /** Отмена подписки в конце оплаченного периода (доступ доживает до currentPeriodEnd). */

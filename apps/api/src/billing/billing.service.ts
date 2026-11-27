@@ -12,6 +12,8 @@ import {
   listTransactions,
   cancelSubscription,
   updatePaymentMethodTransaction,
+  getSubscriptionState,
+  removeScheduledChange,
   type PaddleTransaction,
 } from "./paddle-api";
 
@@ -178,6 +180,51 @@ export class BillingService {
     return { ok: true, cancelAtPeriodEnd: true, until: sub.currentPeriodEnd };
   }
 
+  /**
+   * Возобновление отменённой подписки. Локальный статус «canceled» с будущей датой
+   * бывает двух видов, и различить их может только Paddle:
+   *  - отмена ЗАПЛАНИРОВАНА на конец периода (в Paddle подписка ещё active) →
+   *    снимаем запланированную отмену, денег не списываем, график прежний
+   *    (mode "resumed");
+   *  - подписка в Paddle уже окончательно canceled → вернуть её нельзя, нужен
+   *    новый чекаут (mode "checkout", его открывает веб).
+   * past_due/paused автоматически не трогаем: там живая подписка с долгом, второй
+   * чекаут дал бы двойное списание.
+   */
+  async resume(
+    userId: string,
+  ): Promise<{ ok: true; mode: "resumed" | "checkout"; until: Date | null }> {
+    if (!paddleConfigured()) {
+      throw new BadRequestException("Управление подпиской недоступно");
+    }
+    const sub = await this.paddleSub(userId);
+    if (!sub?.externalId) {
+      throw new BadRequestException("Подписка не найдена");
+    }
+    const remote = await getSubscriptionState(sub.externalId);
+
+    if (remote.status === "active" || remote.status === "trialing") {
+      if (remote.scheduledAction === "cancel") {
+        await removeScheduledChange(sub.externalId);
+      }
+      const until = remote.periodEnd ? new Date(remote.periodEnd) : sub.currentPeriodEnd;
+      // Локально сразу активна; вебхук subscription.updated подтвердит.
+      await this.prisma.subscription.update({
+        where: { id: sub.id },
+        data: { status: "active", currentPeriodEnd: until },
+      });
+      return { ok: true, mode: "resumed", until };
+    }
+
+    if (remote.status === "canceled") {
+      return { ok: true, mode: "checkout", until: null };
+    }
+
+    throw new BadRequestException(
+      "Подписку нельзя возобновить автоматически — обновите карту или напишите нам",
+    );
+  }
+
   /** Транзакция смены способа оплаты (веб завершает её в Paddle.js). */
   async paymentMethodUpdate(userId: string): Promise<{ transactionId: string }> {
     if (!paddleConfigured()) {
@@ -268,9 +315,6 @@ export class BillingService {
     const scheduledCancel = data.scheduled_change?.action === "cancel";
     const endsAt: string | undefined =
       data.current_billing_period?.ends_at ?? data.next_billed_at ?? undefined;
-    const currentPeriodEnd = endsAt
-      ? new Date(endsAt)
-      : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
     const item = Array.isArray(data.items) ? data.items[0] : undefined;
     const plan: string =
@@ -280,6 +324,25 @@ export class BillingService {
     const existing = await this.prisma.subscription.findFirst({
       where: { provider: "paddle", externalId },
     });
+
+    // Конец оплаченного периода. У окончательно отменённой (и приостановленной)
+    // подписки Paddle обнуляет current_billing_period и next_billed_at. Раньше в
+    // этом случае подставлялось «сейчас + 30 дней» — и при финальной отмене
+    // пользователь получал лишний бесплатный месяц («Доступ до …» без списания).
+    // Теперь у неактивной подписки доступ НЕ продлевается: берём момент отмены,
+    // но не позже уже известного конца периода.
+    let currentPeriodEnd: Date;
+    if (endsAt) {
+      currentPeriodEnd = new Date(endsAt);
+    } else if (active) {
+      currentPeriodEnd =
+        existing?.currentPeriodEnd ?? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    } else {
+      const endedRaw: string | undefined = data.canceled_at ?? data.paused_at ?? undefined;
+      const ended = endedRaw ? new Date(endedRaw) : new Date();
+      currentPeriodEnd =
+        existing && existing.currentPeriodEnd < ended ? existing.currentPeriodEnd : ended;
+    }
 
     // Принадлежность (общий Paddle-аккаунт сети): обрабатываем только СВОИ
     // подписки. Проверка ДО чтения данных покупателя (email) и ДО записи —

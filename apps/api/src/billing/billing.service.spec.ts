@@ -7,6 +7,13 @@ const paddle = vi.hoisted(() => ({
   listTransactions: vi.fn(async () => []),
   cancelSubscription: vi.fn(async () => undefined),
   updatePaymentMethodTransaction: vi.fn(async () => "txn_test"),
+  getSubscriptionState: vi.fn(async () => ({
+    status: "active",
+    scheduledAction: null as string | null,
+    periodEnd: null as string | null,
+    canceledAt: null as string | null,
+  })),
+  removeScheduledChange: vi.fn(async () => undefined),
 }));
 vi.mock("./paddle-api", () => paddle);
 
@@ -370,5 +377,120 @@ describe("cancel() — изоляция и вызов Paddle", () => {
     ]);
     await expect(service(prisma).cancel("u1")).rejects.toThrow();
     expect(paddle.cancelSubscription).not.toHaveBeenCalled();
+  });
+});
+
+describe("handlePaddleEvent() — конец периода при финальной отмене", () => {
+  it("финальная отмена без периода НЕ продлевает доступ на 30 дней (баг «Доступ до 25.12»)", async () => {
+    const periodEnd = new Date(Date.now() - 60_000); // период только что закончился
+    const prisma = makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "canceled", provider: "paddle", externalId: "sub_9", currentPeriodEnd: periodEnd },
+    ]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.canceled",
+      // Так Paddle присылает отменённую подписку: периода и next_billed_at нет.
+      data: { id: "sub_9", status: "canceled", canceled_at: new Date().toISOString(), current_billing_period: null, next_billed_at: null, custom_data: { userId: "u1" }, items: [] },
+    });
+    expect(prisma.__store[0].status).toBe("canceled");
+    expect(+prisma.__store[0].currentPeriodEnd).toBeLessThanOrEqual(Date.now());
+    const ent: any = await service(prisma).entitlement("u1");
+    expect(ent.premium).toBe(false);
+  });
+
+  it("немедленная отмена посреди периода → доступ заканчивается в момент отмены", async () => {
+    const prisma = makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "active", provider: "paddle", externalId: "sub_9", currentPeriodEnd: future(20) },
+    ]);
+    const canceledAt = new Date();
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.canceled",
+      data: { id: "sub_9", status: "canceled", canceled_at: canceledAt.toISOString(), custom_data: { userId: "u1" }, items: [] },
+    });
+    expect(+prisma.__store[0].currentPeriodEnd).toBe(+canceledAt);
+  });
+
+  it("запланированная отмена (active + scheduled_change) сохраняет доступ до конца периода", async () => {
+    const end = future(10);
+    const prisma = makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "active", provider: "paddle", externalId: "sub_9", currentPeriodEnd: end },
+    ]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.updated",
+      data: { id: "sub_9", status: "active", scheduled_change: { action: "cancel" }, current_billing_period: { ends_at: end.toISOString() }, custom_data: { userId: "u1" }, items: [] },
+    });
+    expect(+prisma.__store[0].currentPeriodEnd).toBe(+end);
+    const ent: any = await service(prisma).entitlement("u1");
+    expect(ent.premium).toBe(true);
+  });
+
+  it("снятие отмены в Paddle (active без scheduled_change) возвращает статус active", async () => {
+    const end = future(10);
+    const prisma = makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "canceled", provider: "paddle", externalId: "sub_9", currentPeriodEnd: end },
+    ]);
+    await service(prisma).handlePaddleEvent({
+      event_type: "subscription.updated",
+      data: { id: "sub_9", status: "active", scheduled_change: null, current_billing_period: { ends_at: end.toISOString() }, custom_data: { userId: "u1" }, items: [] },
+    });
+    expect(prisma.__store[0].status).toBe("active");
+  });
+});
+
+describe("resume() — возобновление отменённой подписки", () => {
+  const canceledLocal = () =>
+    makePrisma([
+      { id: "s1", userId: "u1", plan: "monthly", status: "canceled", provider: "paddle", externalId: "sub_1", currentPeriodEnd: future(10) },
+    ]);
+
+  it("отмена запланирована (Paddle active + scheduled cancel) → снимаем отмену, без нового платежа", async () => {
+    const end = future(10);
+    paddle.getSubscriptionState.mockResolvedValueOnce({ status: "active", scheduledAction: "cancel", periodEnd: end.toISOString(), canceledAt: null });
+    const prisma = canceledLocal();
+    const res = await service(prisma).resume("u1");
+    expect(paddle.removeScheduledChange).toHaveBeenCalledWith("sub_1");
+    expect(res.mode).toBe("resumed");
+    expect(prisma.__store[0].status).toBe("active");
+    const info: any = await service(prisma).subscription("u1");
+    expect(info.active).toBe(true);
+    expect(info.cancelAtPeriodEnd).toBe(false);
+  });
+
+  it("в Paddle уже активна без отмены (рассинхрон) → только выравниваем локальный статус", async () => {
+    paddle.getSubscriptionState.mockResolvedValueOnce({ status: "active", scheduledAction: null, periodEnd: future(10).toISOString(), canceledAt: null });
+    const prisma = canceledLocal();
+    const res = await service(prisma).resume("u1");
+    expect(paddle.removeScheduledChange).not.toHaveBeenCalled();
+    expect(res.mode).toBe("resumed");
+    expect(prisma.__store[0].status).toBe("active");
+  });
+
+  it("в Paddle подписка окончательно отменена → mode checkout, Paddle не трогаем, локальную строку не меняем", async () => {
+    paddle.getSubscriptionState.mockResolvedValueOnce({ status: "canceled", scheduledAction: null, periodEnd: null, canceledAt: new Date().toISOString() });
+    const prisma = canceledLocal();
+    const res = await service(prisma).resume("u1");
+    expect(res.mode).toBe("checkout");
+    expect(paddle.removeScheduledChange).not.toHaveBeenCalled();
+    expect(prisma.subscription.update).not.toHaveBeenCalled();
+  });
+
+  it("past_due/paused → отказ (второй чекаут дал бы двойное списание)", async () => {
+    paddle.getSubscriptionState.mockResolvedValueOnce({ status: "past_due", scheduledAction: null, periodEnd: future(5).toISOString(), canceledAt: null });
+    const prisma = canceledLocal();
+    await expect(service(prisma).resume("u1")).rejects.toThrow();
+    expect(paddle.removeScheduledChange).not.toHaveBeenCalled();
+  });
+
+  it("нельзя возобновить чужую подписку (изоляция по userId)", async () => {
+    const prisma = canceledLocal();
+    await expect(service(prisma).resume("u2")).rejects.toThrow();
+    expect(paddle.getSubscriptionState).not.toHaveBeenCalled();
+    expect(paddle.removeScheduledChange).not.toHaveBeenCalled();
+  });
+
+  it("без Paddle-ключа возобновление недоступно", async () => {
+    paddle.paddleConfigured.mockReturnValue(false);
+    const prisma = canceledLocal();
+    await expect(service(prisma).resume("u1")).rejects.toThrow();
+    expect(paddle.getSubscriptionState).not.toHaveBeenCalled();
   });
 });

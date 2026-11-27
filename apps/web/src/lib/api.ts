@@ -304,6 +304,16 @@ export function cancelSubscription() {
   );
 }
 
+// Возобновление отменённой подписки. mode "resumed" — отмена была запланирована
+// и снята (денег не списано); mode "checkout" — подписка в Paddle уже завершена,
+// нужен новый чекаут (его открывает клиент).
+export function resumeSubscription() {
+  return request<{ ok: boolean; mode: "resumed" | "checkout"; until: string | null }>(
+    "/billing/resume",
+    { method: "POST" },
+  );
+}
+
 export function startPaymentMethodUpdate() {
   return request<{ transactionId: string }>("/billing/payment-method", {
     method: "POST",

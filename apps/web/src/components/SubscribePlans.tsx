@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ApiError, getEntitlement, guestStart, isLoggedIn, loadAuth } from "@/lib/api";
+import { ApiError, getEntitlement, getSubscription, guestStart, isLoggedIn, loadAuth } from "@/lib/api";
+import { resumeSubscriptionFlow } from "@/lib/resume";
 import { pushEvent, sendGa4Event } from "@/lib/gtm";
 import { loadLastGrade } from "@/lib/prefs";
 import { PADDLE_PLANS, openPaddleCheckout, type PlanKey } from "@/lib/paddle";
@@ -96,6 +97,11 @@ export function SubscribePlans({
   // Праздничный экран — только при активации ИМЕННО в этой сессии (после оплаты),
   // а не при обычном заходе на страницу с уже активной подпиской.
   const [celebrate, setCelebrate] = useState(false);
+  // Премиум ещё действует, но подписка отменена и не продлится — отдельное
+  // состояние: вместо «Премиум активен» показываем «Возобновить подписку».
+  const [canceling, setCanceling] = useState(false);
+  const [resumed, setResumed] = useState(false);
+  const [resumeError, setResumeError] = useState(false);
 
   const t = (ru: string, ky: string) => (locale === "ky" ? ky : ru);
   const selected = PADDLE_PLANS.find((p) => p.key === plan) ?? PADDLE_PLANS[0];
@@ -115,6 +121,15 @@ export function SubscribePlans({
         if (e.premium) {
           setUntil(e.until);
           setStatus("active");
+          // Отменена ли подписка (доступ доживает до конца периода)?
+          getSubscription()
+            .then((s) => {
+              if (s.hasSubscription && s.cancelAtPeriodEnd && s.managementEnabled) {
+                setCanceling(true);
+                if (s.plan === "annual") setPlan("annual");
+              }
+            })
+            .catch(() => undefined);
         } else {
           setStatus("available");
         }
@@ -122,6 +137,32 @@ export function SubscribePlans({
       .catch(() => setStatus("available"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // «Возобновить подписку»: сервер либо снимает запланированную отмену (без
+  // платежа), либо просит открыть новый чекаут по выбранному тарифу.
+  async function handleResume() {
+    setResumeError(false);
+    setPaying(true);
+    try {
+      await resumeSubscriptionFlow({
+        locale,
+        plan,
+        source: "subscribe_page",
+        onActive: () => {
+          getEntitlement()
+            .then((e) => {
+              if (e.premium) setUntil(e.until);
+            })
+            .catch(() => undefined);
+          setCanceling(false);
+          setResumed(true);
+        },
+      });
+    } catch {
+      setResumeError(true);
+    }
+    setPaying(false);
+  }
 
   // Вебхук Paddle может отстать на секунду-две — опрашиваем entitlement.
   async function pollEntitlement() {
@@ -355,12 +396,53 @@ export function SubscribePlans({
           </>
         )}
 
-        {status === "active" && !celebrate && (
-          <div className="rounded-2xl bg-[#e6c079] px-6 py-4 text-center font-bold text-[#191539]">
-            ⭐ {labels.activeTitle}
-            <div className="mt-0.5 text-sm font-semibold">
-              {labels.activeUntil.replace("{date}", fmtDate(until, locale))}
+        {status === "active" && !celebrate && canceling && (
+          <div>
+            <div className="rounded-2xl bg-white/[.08] px-5 py-4 text-center ring-1 ring-[#e6c079]/40">
+              <div className="font-bold text-[#e6c079]">
+                {t("Подписка отменена и не продлится", "Жазылуу жокко чыгарылды жана узартылбайт")}
+              </div>
+              <div className="mt-0.5 text-sm text-[#d9d5f5]">
+                {t("Доступ действует до", "Жеткиликтүүлүк")} {fmtDate(until, locale)}
+                {locale === "ky" ? " чейин" : ""}
+              </div>
             </div>
+            <button onClick={handleResume} disabled={paying} className={primaryBtn + " mt-3"}>
+              {paying
+                ? t("Возобновляем…", "Калыбына келтирилүүдө…")
+                : t("Возобновить подписку", "Жазылууну калыбына келтирүү")}
+            </button>
+            <p className="mt-3 text-center text-sm text-[#b9b3e6]">
+              {t(
+                "Если отмена ещё не вступила в силу — подписка просто продолжится, списание пройдёт в обычную дату. Иначе откроется оплата по выбранному тарифу.",
+                "Эгер токтотуу али күчүнө кире элек болсо — жазылуу жөн эле улантылат, төлөм кадимки күнү алынат. Болбосо тандалган тариф боюнча төлөм ачылат.",
+              )}
+            </p>
+            {resumeError && (
+              <p className="mt-2 text-center text-sm font-semibold text-[#f3a9a9]">
+                {t("Не удалось возобновить.", "Калыбына келтирүү болбоду.")}{" "}
+                <a href={ADMIN_TG} target="_blank" rel="noopener" className="underline">
+                  {t("Напишите нам в Telegram", "Telegram'га жазыңыз")}
+                </a>
+              </p>
+            )}
+          </div>
+        )}
+
+        {status === "active" && !celebrate && !canceling && (
+          <div>
+            <div className="rounded-2xl bg-[#e6c079] px-6 py-4 text-center font-bold text-[#191539]">
+              ⭐ {resumed ? t("Подписка возобновлена", "Жазылуу калыбына келтирилди") : labels.activeTitle}
+              <div className="mt-0.5 text-sm font-semibold">
+                {labels.activeUntil.replace("{date}", fmtDate(until, locale))}
+              </div>
+            </div>
+            <Link
+              href={`/${locale}/billing`}
+              className="mt-3 block text-center text-sm font-semibold text-[#b9b3e6] transition hover:text-white"
+            >
+              {t("Управлять подпиской →", "Жазылууну башкаруу →")}
+            </Link>
           </div>
         )}
 
@@ -410,7 +492,7 @@ export function SubscribePlans({
 
       {/* Блок доверия — пока подписка не активна. Главное для КГ-аудитории:
           оплата по QR через Telegram (карты КГ часто не проходят в Paddle). */}
-      {status !== "active" && (
+      {(status !== "active" || canceling) && (
         <ul className="relative mt-6 space-y-2.5 border-t border-white/10 pt-5 text-sm text-[#d9d5f5]">
           <li className="flex items-start gap-2.5">
             <span className="flex-none">🇰🇬</span>

@@ -12,7 +12,10 @@ import {
   type SubscriptionInfo,
   type BillingTransaction,
 } from "@/lib/api";
-import { openPaddleTransaction } from "@/lib/paddle";
+import { openPaddleTransaction, type PlanKey } from "@/lib/paddle";
+import { resumeSubscriptionFlow } from "@/lib/resume";
+import { sendGa4Event } from "@/lib/gtm";
+import { PRICE, approxLocal } from "@/lib/pricing";
 
 function fmtDate(iso: string, locale: string): string {
   return new Date(iso).toLocaleDateString(locale === "ky" ? "ky-KG" : "ru-RU", {
@@ -95,6 +98,30 @@ export function Billing({
     }
   }
 
+  // Возобновление отменённой подписки (доступ ещё действует). Сервер сам решает:
+  // снять запланированную отмену (без платежа) или открыть новый чекаут.
+  async function onResume(plan: PlanKey) {
+    setBusy(true);
+    setError(null);
+    try {
+      await resumeSubscriptionFlow({
+        locale,
+        plan,
+        source: "billing",
+        onActive: () => void load(),
+      });
+    } catch {
+      setError(
+        t(
+          "Не удалось возобновить. Попробуйте позже или напишите нам.",
+          "Калыбына келтирүү болбоду. Кийинчерээк аракет кылыңыз же бизге жазыңыз.",
+        ),
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function onChangeCard() {
     setBusy(true);
     setError(null);
@@ -141,8 +168,15 @@ export function Billing({
             "Премиум бардык тапшырмаларды, тесттерди жана ата-эне отчётун ачат.",
           )}
         </p>
+        <p className="mb-4 text-sm font-bold text-[#191539]">
+          {PRICE.monthly.display} / {t("мес", "ай")}{" "}
+          <span className="font-semibold text-[#8f8aa8]">({approxLocal("monthly")})</span>
+          {" · "}
+          {t("отмена в любой момент", "каалаган убакта токтотсо болот")}
+        </p>
         <Link
           href={subscribeHref}
+          onClick={() => sendGa4Event("cta_click", { placement: "subscription-renew", item: "no_subscription" })}
           className="inline-block rounded-full bg-[#6d5cf7] px-6 py-3 font-extrabold text-white transition hover:-translate-y-0.5"
         >
           {t("Оформить подписку", "Жазылууну тариздөө")}
@@ -155,6 +189,11 @@ export function Billing({
   const end = sub.currentPeriodEnd ? fmtDate(sub.currentPeriodEnd, locale) : null;
   const canManage = sub.managementEnabled;
   const canCancel = canManage && sub.active && !sub.cancelAtPeriodEnd;
+  const planKey: PlanKey = sub.plan === "annual" ? "annual" : "monthly";
+  const priceLine =
+    planKey === "annual"
+      ? `${PRICE.annual.display} / ${t("год", "жыл")}`
+      : `${PRICE.monthly.display} / ${t("мес", "ай")}`;
 
   return (
     <div className="flex flex-col gap-5">
@@ -202,12 +241,67 @@ export function Billing({
         </dl>
 
         {sub.cancelAtPeriodEnd && (
-          <p className="mt-4 rounded-2xl bg-[#fbf3e3] px-4 py-3 text-sm text-[#7a5a1e]">
-            {t(
-              "Подписка отменена и не продлится. Доступ сохранится до конца оплаченного периода.",
-              "Жазылуу жокко чыгарылды жана узартылбайт. Жеткиликтүүлүк төлөнгөн мөөнөттүн аягына чейин сакталат.",
+          <div className="mt-4 rounded-2xl bg-[#fbf3e3] px-4 py-4 text-sm text-[#7a5a1e]">
+            <p className="font-bold">
+              {end
+                ? t(
+                    `Подписка отменена и не продлится. Доступ — до ${end}`,
+                    `Жазылуу жокко чыгарылды жана узартылбайт. Жеткиликтүүлүк — ${end} чейин.`,
+                  )
+                : t("Подписка отменена и не продлится.", "Жазылуу жокко чыгарылды жана узартылбайт.")}
+            </p>
+            <p className="mt-2">
+              {t(
+                "После этой даты закроются: все задания без блокировок, разбор каждого ответа, отчёт для родителя и бонусные игры.",
+                "Бул күндөн кийин жабылат: бөгөтсүз бардык тапшырмалар, ар бир жооптун талдоосу, ата-эне отчёту жана бонус оюндар.",
+              )}
+            </p>
+            {canManage && (
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => void onResume(planKey)}
+                  className="rounded-full bg-[#6d5cf7] px-6 py-3 text-sm font-extrabold text-white shadow-[0_8px_22px_rgba(109,92,247,.3)] transition hover:-translate-y-0.5 disabled:cursor-wait disabled:opacity-60"
+                >
+                  {busy
+                    ? t("Возобновляем…", "Калыбына келтирилүүдө…")
+                    : t("Возобновить подписку", "Жазылууну калыбына келтирүү")}
+                </button>
+                <span className="font-bold text-[#191539]">
+                  {priceLine}{" "}
+                  <span className="font-semibold text-[#8f8aa8]">({approxLocal(planKey)})</span>
+                </span>
+              </div>
             )}
-          </p>
+            <p className="mt-2 text-xs text-[#8a7340]">
+              {t(
+                "Если отмена ещё не вступила в силу — подписка просто продолжится, списание пройдёт в обычную дату. Иначе откроется оплата новой подписки.",
+                "Эгер токтотуу али күчүнө кире элек болсо — жазылуу жөн эле улантылат, төлөм кадимки күнү алынат. Болбосо жаңы жазылуунун төлөмү ачылат.",
+              )}
+            </p>
+          </div>
+        )}
+
+        {!sub.active && (
+          <div className="mt-4 rounded-2xl bg-[#f7f5ff] px-4 py-4 text-sm text-[#5c5880]">
+            <p className="font-bold text-[#191539]">
+              {t("Подписка закончилась — премиум-задания закрыты.", "Жазылуу аяктады — премиум тапшырмалар жабык.")}
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <Link
+                href={subscribeHref}
+                onClick={() => sendGa4Event("cta_click", { placement: "subscription-renew", item: "expired" })}
+                className="rounded-full bg-[#6d5cf7] px-6 py-3 text-sm font-extrabold text-white transition hover:-translate-y-0.5"
+              >
+                {t("Оформить снова", "Кайра тариздөө")}
+              </Link>
+              <span className="font-bold text-[#191539]">
+                {PRICE.monthly.display} / {t("мес", "ай")}{" "}
+                <span className="font-semibold text-[#8f8aa8]">({approxLocal("monthly")})</span>
+              </span>
+            </div>
+          </div>
         )}
 
         {error && (

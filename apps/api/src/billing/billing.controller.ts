@@ -30,6 +30,11 @@ export class BillingController {
     return this.billing.cancel(userId);
   }
 
+  @Post("resume")
+  resume(@CurrentUser() userId: string) {
+    return this.billing.resume(userId);
+  }
+
   @Post("payment-method")
   paymentMethod(@CurrentUser() userId: string) {
     return this.billing.paymentMethodUpdate(userId);
