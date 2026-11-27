@@ -162,7 +162,7 @@ export default async function ArticlePage({
                   <a
                     href={article.externalRef.url}
                     target="_blank"
-                    rel="noopener"
+                    rel="nofollow noopener"
                     className="font-bold text-[#6d5cf7] underline underline-offset-2 transition hover:text-[#4b3cc9]"
                   >
                     {article.externalRef.anchor[lang]}
